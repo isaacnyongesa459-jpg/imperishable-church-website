@@ -8,129 +8,144 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="about-gallery.css">
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="logo">
-                <img src="images/church-logo.png" alt="Church Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/40x40?text=✝'">
-                <span></span>
-            </div>
-            <div class="hamburger" id="hamburger">
-                <i class="fas fa-bars"></i>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="logo">
+            <img src="images/church-logo.png" alt="Church Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/40x40?text=✝'">
+            <span></span>
+        </div>
+        <div class="hamburger" id="hamburger">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+</nav>
+
+<div class="dropdown-menu" id="dropdownMenu">
+    <div class="dropdown-content">
+        <a href="home.html" class="dropdown-item"><i class="fas fa-home"></i> Home</a>
+        <a href="about.html" class="dropdown-item active"><i class="fas fa-church"></i> About Us</a>
+        <a href="services.html" class="dropdown-item"><i class="fas fa-praying-hands"></i> Services</a>
+        <a href="events.html" class="dropdown-item"><i class="fas fa-calendar-alt"></i> Events</a>
+        <a href="donate.html" class="dropdown-item"><i class="fas fa-hand-holding-heart"></i> Give</a>
+        <a href="contact.html" class="dropdown-item"><i class="fas fa-envelope"></i> Contact</a>
+    </div>
+</div>
+
+<section class="page-header">
+    <div class="container">
+        <h1>About Our Church</h1>
+        <p>Learn more about our faith, mission, and community</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>Our Story</h2>
+                <p>
+                    Imperishable Crown Bible Baptist Church was founded in <strong>2020</strong> during the challenging season of the COVID-19 pandemic.
+                    What started with just <strong>five committed believers</strong> meeting faithfully despite the uncertainty grew steadily as God opened doors
+                    and more people were reached with the Gospel.
+                </p>
+                <p>
+                    Through prayer, perseverance, and God's grace, the church expanded into a warm spiritual family.
+                    Today, Imperishable Crown Bible Baptist Church joyfully welcomes <strong>80–100 worshippers every Sunday</strong> for fellowship, worship, and the teaching of God's Word.
+                </p>
+
+                <h2>Denomination</h2>
+                <p>Baptist</p>
+
+                <h2>Languages</h2>
+                <p>
+                    English<br>
+                    Kiswahili<br>
+                    Luhya<br>
+                    Kalenjin
+                </p>
+
+                <h2>Our Mission</h2>
+                <p>To live out and share the faith, hope, and love of Jesus Christ.</p>
+
+                <h2>Our Vision</h2>
+                <p>To break new ground by using God-given resources and opportunities to reach the unreached with the true Gospel.</p>
+
+                <h2>Our Motto</h2>
+                <p>Reaching the unreached with the true Gospel.</p>
+
+                <h2>What We Believe</h2>
+                <ul class="beliefs-list">
+                    <li><strong>The Bible</strong> – The inspired, infallible, and authoritative Word of God.</li>
+                    <li><strong>The Trinity</strong> – One God in three persons: Father, Son, and Holy Spirit.</li>
+                    <li><strong>Salvation</strong> – Salvation is by grace through faith in Jesus Christ alone.</li>
+                    <li><strong>The Church</strong> – The body of Christ called to worship, fellowship, discipleship, ministry, and mission.</li>
+                    <li><strong>The Return of Christ</strong> – Jesus Christ will return visibly and victoriously to judge the living and the dead.</li>
+                </ul>
             </div>
         </div>
-    </nav>
+    </div>
+</section>
 
-    <div class="dropdown-menu" id="dropdownMenu">
-        <div class="dropdown-content">
-            <a href="home.html" class="dropdown-item"><i class="fas fa-home"></i> Home</a>
-            <a href="about.html" class="dropdown-item active"><i class="fas fa-church"></i> About Us</a>
-            <a href="services.html" class="dropdown-item"><i class="fas fa-praying-hands"></i> Services</a>
-            <a href="events.html" class="dropdown-item"><i class="fas fa-calendar-alt"></i> Events</a>
-            <a href="donate.html" class="dropdown-item"><i class="fas fa-hand-holding-heart"></i> Give</a>
-            <a href="contact.html" class="dropdown-item"><i class="fas fa-envelope"></i> Contact</a>
+<!-- Image Gallery Section -->
+<section class="gallery-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Moments of Faith & Fellowship</h2>
+        </div>
+        <div class="section-subtitle">
+            <p>Glimpses into our worship, community life, and the joy of gathering together.</p>
+        </div>
+        <div class="gallery-grid" id="galleryGrid">
+            <!-- Gallery will be populated by JavaScript -->
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>Imperishable Crown Bible Baptist Church</h3>
+            <p><i class="fas fa-map-marker-alt"></i> 2435 - 30200, Kitale, Kenya</p>
+            <p><i class="fas fa-phone"></i> +254 723 542 142</p>
+            <p><i class="fas fa-envelope"></i> imperishablec@gmail.com</p>
+        </div>
+
+        <div class="footer-section">
+            <h3>Quick Links</h3>
+            <p><a href="services.html">Service Times</a></p>
+            <p><a href="donate.html">Give Online</a></p>
+            <p><a href="events.html">Events</a></p>
+        </div>
+
+        <div class="footer-section">
+            <h3>Follow Us</h3>
+            <div class="social-links">
+                <a href="https://facebook.com/fred.wanyonyi.948494" target="_blank">
+                    <i class="fab fa-facebook"></i>
+                </a>
+                <a href="#" target="_blank">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a href="#" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" target="_blank">
+                    <i class="fab fa-twitter"></i>
+                </a>
+            </div>
         </div>
     </div>
 
-    <section class="page-header">
-        <div class="container">
-            <h1>About Our Church</h1>
-            <p>Learn more about our faith, mission, and community</p>
-        </div>
-    </section>
+    <div class="footer-bottom">
+        <p>&copy; 2026 Imperishable Crown Bible Baptist Church. All rights reserved.</p>
+    </div>
+</footer>
 
-    <section class="section">
-        <div class="container">
-            <div class="about-content">
-                <div class="about-text">
-                    <h2>Our Story</h2>
-                    <p>
-                        Imperishable Crown Bible Baptist Church was founded in <strong>2020</strong> during the challenging season of the COVID-19 pandemic.
-                        What started with just <strong>five committed believers</strong> meeting faithfully despite the uncertainty grew steadily as God opened doors
-                        and more people were reached with the Gospel.
-                    </p>
-                    <p>
-                        Through prayer, perseverance, and God’s grace, the church expanded into a warm spiritual family.
-                        Today, Imperishable Crown Bible Baptist Church joyfully welcomes <strong>80–100 worshippers every Sunday</strong> for fellowship, worship, and the teaching of God’s Word.
-                    </p>
-
-                    <h2>Denomination</h2>
-                    <p>Baptist</p>
-
-                    <h2>Languages</h2>
-                    <p>
-                        English<br>
-                        Kiswahili<br>
-                        Luhya<br>
-                        Kalenjin
-                    </p>
-
-                    <h2>Our Mission</h2>
-                    <p>To live out and share the faith, hope, and love of Jesus Christ.</p>
-
-                    <h2>Our Vision</h2>
-                    <p>To break new ground by using God-given resources and opportunities to reach the unreached with the true Gospel.</p>
-
-                    <h2>Our Motto</h2>
-                    <p>Reaching the unreached with the true Gospel.</p>
-
-                    <h2>What We Believe</h2>
-                    <ul class="beliefs-list">
-                        <li><strong>The Bible</strong> – The inspired, infallible, and authoritative Word of God.</li>
-                        <li><strong>The Trinity</strong> – One God in three persons: Father, Son, and Holy Spirit.</li>
-                        <li><strong>Salvation</strong> – Salvation is by grace through faith in Jesus Christ alone.</li>
-                        <li><strong>The Church</strong> – The body of Christ called to worship, fellowship, discipleship, ministry, and mission.</li>
-                        <li><strong>The Return of Christ</strong> – Jesus Christ will return visibly and victoriously to judge the living and the dead.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Imperishable Crown Bible Baptist Church</h3>
-                <p><i class="fas fa-map-marker-alt"></i> 2435 - 30200, Kitale, Kenya</p>
-                <p><i class="fas fa-phone"></i> +254 723 542 142</p>
-                <p><i class="fas fa-envelope"></i> imperishablec@gmail.com</p>
-            </div>
-
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <p><a href="services.html">Service Times</a></p>
-                <p><a href="donate.html">Give Online</a></p>
-                <p><a href="events.html">Events</a></p>
-            </div>
-
-            <div class="footer-section">
-                <h3>Follow Us</h3>
-                <div class="social-links">
-                    <a href="https://facebook.com/fred.wanyonyi.948494" target="_blank">
-                        <i class="fab fa-facebook"></i>
-                    </a>
-
-                    <a href="#" target="_blank">
-                        <i class="fab fa-youtube"></i>
-                    </a>
-
-                    <a href="#" target="_blank">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-
-                    <a href="#" target="_blank">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="footer-bottom">
-            <p>&copy; 2026 Imperishable Crown Bible Baptist Church. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
+<script src="script.js"></script>
+<script src="about-gallery.js"></script>
 </body>
 </html>
