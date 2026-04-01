@@ -13,17 +13,68 @@
             padding: 4rem 0;
         }
 
+        /* Total Amount Card */
+        .total-amount-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+            color: white;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .total-amount-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            opacity: 0.95;
+        }
+
+        .main-amount {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 1rem 0;
+            letter-spacing: 2px;
+        }
+
+        .currency-converter {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .currency-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 0.75rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .currency-symbol {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .currency-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
         .donation-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         .donation-card {
             background: #fff;
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 2rem;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -44,6 +95,19 @@
         .donation-card p {
             color: #7f8c8d;
             margin-bottom: 1.5rem;
+        }
+
+        .logo-wrapper {
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .original-logo {
+            height: 70px;
+            width: auto;
+            object-fit: contain;
         }
 
         .amount-buttons {
@@ -193,13 +257,55 @@
             word-break: break-all;
         }
 
-        .logo-wrapper {
-            margin-bottom: 1rem;
+        .phone-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin: 1rem 0;
+            transition: border-color 0.3s ease;
         }
 
-        .original-logo {
-            height: 60px;
-            object-fit: contain;
+        .phone-input:focus {
+            outline: none;
+            border-color: #e67e22;
+        }
+
+        .gift-card-section {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 12px;
+            color: white;
+        }
+
+        .gift-card-section h4 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .gift-card-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .gift-card-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .gift-card-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.05);
         }
 
         .note {
@@ -233,9 +339,12 @@
                 gap: 0.5rem;
             }
             
-            .amount-btn, .amount-btn-mpesa, .amount-btn-airtel {
-                padding: 0.5rem 1rem;
-                font-size: 0.85rem;
+            .main-amount {
+                font-size: 2rem;
+            }
+            
+            .currency-converter {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -270,7 +379,7 @@
         <div class="nav-container">
             <div class="logo">
                 <img src="images/church-logo.png" alt="Church Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/40x40?text=✝'">
-                <span>Heavenly <span>Grace</span></span>
+                <span>Imperishable Crown</span>
             </div>
             <div class="hamburger" id="hamburger">
                 <i class="fas fa-bars"></i>
@@ -298,11 +407,20 @@
 
     <section class="section donation-section">
         <div class="container">
+            <!-- Total Amount Card with Currency Conversion -->
+            <div class="total-amount-card">
+                <h3><i class="fas fa-church"></i> Total Contributions Received</h3>
+                <div class="main-amount" id="mainAmount">KES 1,234,287.98</div>
+                <div class="currency-converter" id="currencyConverter">
+                    <!-- Currency conversions will be populated by JavaScript -->
+                </div>
+            </div>
+
             <div class="donation-container">
                 <!-- PayPal Donation Card -->
                 <div class="donation-card">
                     <div class="logo-wrapper">
-                        <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal" class="original-logo" onerror="this.src='https://via.placeholder.com/60x60?text=PayPal'">
+                        <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal" class="original-logo" onerror="this.src='https://via.placeholder.com/70x70?text=PayPal'">
                     </div>
                     <h3>Donate via PayPal</h3>
                     <p>Secure online giving with PayPal</p>
@@ -321,16 +439,25 @@
                         <ol>
                             <li>Click the "Donate with PayPal" button above</li>
                             <li>You'll be redirected to PayPal's secure payment page</li>
-                            <li>Enter your donation amount (or use the preset amounts)</li>
-                            <li>Log in to your PayPal account or pay as a guest</li>
                             <li>Complete your payment securely</li>
-                            <li>You'll receive a confirmation email after donation</li>
                         </ol>
                         <div class="business-details">
                             <strong>PayPal Email:</strong> isaacnyongesa459@gmail.com
                         </div>
-                        <div class="paypal-email">
-                            <i class="fas fa-envelope"></i> Send money to: isaacnyongesa459@gmail.com
+                    </div>
+                    
+                    <!-- Gift Cards Section -->
+                    <div class="gift-card-section">
+                        <h4><i class="fas fa-gift"></i> Send Gift Cards</h4>
+                        <div class="gift-card-buttons">
+                            <button class="gift-card-btn" data-type="amazon">Amazon</button>
+                            <button class="gift-card-btn" data-type="google">Google Play</button>
+                            <button class="gift-card-btn" data-type="apple">Apple</button>
+                            <button class="gift-card-btn" data-type="steam">Steam</button>
+                            <button class="gift-card-btn" data-type="netflix">Netflix</button>
+                        </div>
+                        <div class="note" style="color: rgba(255,255,255,0.9); margin-top: 0.5rem;">
+                            <small>Select a gift card to send via PayPal</small>
                         </div>
                     </div>
                 </div>
@@ -338,7 +465,7 @@
                 <!-- M-Pesa Donation Card -->
                 <div class="donation-card">
                     <div class="logo-wrapper">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/M-PESA_Logo.svg/2560px-M-PESA_Logo.svg.png" alt="M-Pesa" class="original-logo" onerror="this.src='https://via.placeholder.com/60x60?text=M-Pesa'">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/M-PESA_Logo.svg/2560px-M-PESA_Logo.svg.png" alt="M-Pesa" class="original-logo" onerror="this.src='https://via.placeholder.com/70x70?text=M-Pesa'">
                     </div>
                     <h3>M-Pesa Donation</h3>
                     <p>For Kenya, Ethiopia & Tanzania users</p>
@@ -364,19 +491,16 @@
                             <li>Enter your M-Pesa PIN</li>
                             <li>Confirm and send</li>
                         </ol>
-                        <div class="business-details">
-                            Business Name: Imperishable Crown Bible Baptist Church
-                        </div>
                     </div>
                 </div>
 
                 <!-- Airtel Money Donation Card -->
                 <div class="donation-card">
                     <div class="logo-wrapper">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Airtel_logo.svg/2560px-Airtel_logo.svg.png" alt="Airtel Money" class="original-logo" onerror="this.src='https://via.placeholder.com/60x60?text=Airtel'">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Airtel_logo.svg/2560px-Airtel_logo.svg.png" alt="Airtel Money" class="original-logo" onerror="this.src='https://via.placeholder.com/70x70?text=Airtel'">
                     </div>
                     <h3>Airtel Money Donation</h3>
-                    <p>For Airtel users in Kenya, Uganda, Tanzania & more</p>
+                    <p>Send money directly to Airtel Number</p>
                     <div class="amount-buttons">
                         <button class="amount-btn-airtel" data-amount="100" data-currency="KES">KES 100</button>
                         <button class="amount-btn-airtel" data-amount="500" data-currency="KES">KES 500</button>
@@ -384,26 +508,39 @@
                         <button class="amount-btn-airtel" data-amount="5000" data-currency="KES">KES 5,000</button>
                     </div>
                     <input type="number" id="customAirtelAmount" class="custom-amount" placeholder="Other amount (KES)" min="10">
+                    <input type="tel" id="airtelPhoneNumber" class="phone-input" placeholder="Airtel Phone Number (e.g., 07XXXXXXXX)" pattern="[0-9]{10}">
                     <button id="airtelBtn" class="pay-btn airtel-btn">
-                        <i class="fas fa-wifi"></i> Donate via Airtel Money
+                        <i class="fas fa-wifi"></i> Send via Airtel Money
                     </button>
                     <div class="payment-instructions airtel-instructions">
                         <strong><i class="fas fa-info-circle"></i> Airtel Money Instructions:</strong>
                         <ol>
-                            <li>Go to Airtel Money on your phone</li>
-                            <li>Select "Make Payments"</li>
-                            <li>Select "Pay Bill / Merchant"</li>
-                            <li>Enter Business Number: <strong>400200</strong></li>
-                            <li>Enter Account Number: <strong>1120161</strong></li>
-                            <li>Enter Amount</li>
-                            <li>Enter your Airtel Money PIN</li>
-                            <li>Confirm and complete the transaction</li>
+                            <li>Enter your Airtel phone number above</li>
+                            <li>Select or enter donation amount</li>
+                            <li>Click "Send via Airtel Money"</li>
+                            <li>You'll receive a payment prompt on your phone</li>
+                            <li>Enter your PIN to complete the transaction</li>
                         </ol>
                         <div class="business-details">
-                            Business Name: Imperishable Crown Bible Baptist Church
+                            <strong>Church Airtel Number:</strong> +254 723 542 142
                         </div>
                         <div class="note" style="margin-top: 0.5rem;">
-                            <small>For Airtel Uganda/Tanzania, please use the same paybill details with your local Airtel Money service.</small>
+                            <small><i class="fas fa-shield-alt"></i> Secure payment directly to church mobile number</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Gift Cards Section for Airtel -->
+                    <div class="gift-card-section" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); margin-top: 1rem;">
+                        <h4><i class="fas fa-gift"></i> Send Gift Cards via Airtel</h4>
+                        <div class="gift-card-buttons">
+                            <button class="gift-card-btn airtel-gift" data-type="amazon">Amazon</button>
+                            <button class="gift-card-btn airtel-gift" data-type="google">Google Play</button>
+                            <button class="gift-card-btn airtel-gift" data-type="apple">Apple</button>
+                            <button class="gift-card-btn airtel-gift" data-type="spotify">Spotify</button>
+                        </div>
+                        <input type="tel" id="giftCardPhone" class="phone-input" placeholder="Recipient Airtel Number" style="margin-top: 0.5rem; background: white; color: #333;">
+                        <div class="note" style="color: rgba(255,255,255,0.9); margin-top: 0.5rem;">
+                            <small>Gift card code will be sent via SMS to the recipient</small>
                         </div>
                     </div>
                 </div>
@@ -445,153 +582,223 @@
 
     <script src="script.js"></script>
     <script>
-        // Donation functionality for all three payment methods
-        (function() {
-            // PayPal email address
-            const PAYPAL_EMAIL = 'isaacnyongesa459@gmail.com';
+        // Total amount in KES
+        const totalAmountKES = 1234287.98;
+        
+        // Exchange rates (as of current date - you can update these)
+        const exchangeRates = {
+            USD: 0.0077,    // 1 KES = 0.0077 USD
+            TZS: 20.15,     // 1 KES = 20.15 TZS
+            UGX: 28.45,     // 1 KES = 28.45 UGX
+            INR: 0.64       // 1 KES = 0.64 INR
+        };
+        
+        // Function to update currency conversions
+        function updateCurrencyConversions() {
+            const currencies = [
+                { code: 'USD', symbol: '$', name: 'US Dollar' },
+                { code: 'TZS', symbol: 'TSh', name: 'Tanzanian Shilling' },
+                { code: 'UGX', symbol: 'USh', name: 'Ugandan Shilling' },
+                { code: 'INR', symbol: '₹', name: 'Indian Rupee' }
+            ];
             
-            // Helper function to show notification
-            function showNotification(message, isError = false) {
-                const toast = document.getElementById('toastNotification');
-                toast.textContent = message;
-                toast.style.backgroundColor = isError ? '#e74c3c' : '#27ae60';
-                toast.style.display = 'block';
+            const converterDiv = document.getElementById('currencyConverter');
+            if (converterDiv) {
+                converterDiv.innerHTML = currencies.map(curr => {
+                    const convertedValue = (totalAmountKES * exchangeRates[curr.code]).toFixed(2);
+                    return `
+                        <div class="currency-item">
+                            <div class="currency-symbol">${curr.symbol} ${curr.code}</div>
+                            <div class="currency-value">${convertedValue.toLocaleString()}</div>
+                            <div style="font-size: 0.75rem; opacity: 0.8;">${curr.name}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+        
+        // Helper function to show notification
+        function showNotification(message, isError = false) {
+            const toast = document.getElementById('toastNotification');
+            toast.textContent = message;
+            toast.style.backgroundColor = isError ? '#e74c3c' : '#27ae60';
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 4000);
+        }
+        
+        // Handle amount button clicks for PayPal
+        const paypalButtons = document.querySelectorAll('.amount-btn');
+        const paypalAmountInput = document.getElementById('customPaypalAmount');
+        
+        paypalButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                paypalButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const amount = btn.getAttribute('data-amount');
+                if (paypalAmountInput) {
+                    paypalAmountInput.value = amount;
+                }
+            });
+        });
+        
+        // Handle amount button clicks for M-Pesa
+        const mpesaButtons = document.querySelectorAll('.amount-btn-mpesa');
+        const mpesaAmountInput = document.getElementById('customMpesaAmount');
+        
+        mpesaButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                mpesaButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const amount = btn.getAttribute('data-amount');
+                if (mpesaAmountInput) {
+                    mpesaAmountInput.value = amount;
+                }
+            });
+        });
+        
+        // Handle amount button clicks for Airtel
+        const airtelButtons = document.querySelectorAll('.amount-btn-airtel');
+        const airtelAmountInput = document.getElementById('customAirtelAmount');
+        
+        airtelButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                airtelButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const amount = btn.getAttribute('data-amount');
+                if (airtelAmountInput) {
+                    airtelAmountInput.value = amount;
+                }
+            });
+        });
+        
+        // PayPal Donation Handler
+        const paypalBtn = document.getElementById('paypalBtn');
+        const PAYPAL_EMAIL = 'isaacnyongesa459@gmail.com';
+        
+        if (paypalBtn) {
+            paypalBtn.addEventListener('click', () => {
+                let amount = paypalAmountInput ? paypalAmountInput.value : '';
+                if (!amount || amount <= 0) {
+                    showNotification('Please enter a valid donation amount', true);
+                    return;
+                }
+                
+                const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=${encodeURIComponent(PAYPAL_EMAIL)}&item_name=Imperishable+Crown+Bible+Baptist+Church&currency_code=USD&amount=${amount}&no_shipping=1&no_note=1&tax=0&rm=1`;
+                
+                showNotification(`Redirecting to PayPal for $${amount} USD donation...`);
                 setTimeout(() => {
-                    toast.style.display = 'none';
-                }, 4000);
-            }
-
-            // Handle amount button clicks for PayPal
-            const paypalButtons = document.querySelectorAll('.amount-btn');
-            const paypalAmountInput = document.getElementById('customPaypalAmount');
-            
-            paypalButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    paypalButtons.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    const amount = btn.getAttribute('data-amount');
-                    if (paypalAmountInput) {
-                        paypalAmountInput.value = amount;
-                    }
+                    window.open(paypalUrl, '_blank');
+                    showNotification(`Thank you for your $${amount} USD donation! God bless you!`);
+                }, 1000);
+            });
+        }
+        
+        // M-Pesa Donation Handler
+        const mpesaBtn = document.getElementById('mpesaBtn');
+        if (mpesaBtn) {
+            mpesaBtn.addEventListener('click', () => {
+                let amount = mpesaAmountInput ? mpesaAmountInput.value : '';
+                if (!amount || amount <= 0) {
+                    showNotification('Please enter a valid donation amount in KES', true);
+                    return;
+                }
+                
+                const details = `Business No: 400200\nAccount No: 1120161\nAmount: KES ${amount}\nBusiness: Imperishable Crown Bible Baptist Church`;
+                navigator.clipboard.writeText(details).then(() => {
+                    showNotification(`Paybill details copied! Complete payment via M-Pesa.`);
+                }).catch(() => {
+                    showNotification(`Please use Paybill: 400200, Account: 1120161, Amount: KES ${amount}`);
                 });
             });
-
-            // Handle amount button clicks for M-Pesa
-            const mpesaButtons = document.querySelectorAll('.amount-btn-mpesa');
-            const mpesaAmountInput = document.getElementById('customMpesaAmount');
-            
-            mpesaButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    mpesaButtons.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    const amount = btn.getAttribute('data-amount');
-                    if (mpesaAmountInput) {
-                        mpesaAmountInput.value = amount;
-                    }
+        }
+        
+        // Airtel Money Donation Handler (Direct to phone number)
+        const airtelBtn = document.getElementById('airtelBtn');
+        const airtelPhoneInput = document.getElementById('airtelPhoneNumber');
+        const CHURCH_AIRTEL_NUMBER = '254723542142';
+        
+        if (airtelBtn) {
+            airtelBtn.addEventListener('click', () => {
+                let amount = airtelAmountInput ? airtelAmountInput.value : '';
+                let phoneNumber = airtelPhoneInput ? airtelPhoneInput.value : '';
+                
+                if (!amount || amount <= 0) {
+                    showNotification('Please enter a valid donation amount in KES', true);
+                    return;
+                }
+                
+                if (!phoneNumber || phoneNumber.length < 9) {
+                    showNotification('Please enter a valid Airtel phone number', true);
+                    return;
+                }
+                
+                // Format phone number
+                let formattedPhone = phoneNumber.replace(/\D/g, '');
+                if (formattedPhone.startsWith('0')) {
+                    formattedPhone = '254' + formattedPhone.substring(1);
+                } else if (!formattedPhone.startsWith('254')) {
+                    formattedPhone = '254' + formattedPhone;
+                }
+                
+                const airtelPaymentUrl = `tel:${formattedPhone}`;
+                const paymentDetails = `Airtel Money Transfer\nAmount: KES ${amount}\nRecipient: ${CHURCH_AIRTEL_NUMBER}\nYour Number: ${formattedPhone}\n\nPlease initiate Airtel Money transfer to:\nPhone: ${CHURCH_AIRTEL_NUMBER}\nAmount: KES ${amount}`;
+                
+                navigator.clipboard.writeText(paymentDetails).then(() => {
+                    showNotification(`Airtel Money donation of KES ${amount} prepared! Transfer to ${CHURCH_AIRTEL_NUMBER} has been copied.`);
+                }).catch(() => {
+                    showNotification(`Please send KES ${amount} to Airtel number ${CHURCH_AIRTEL_NUMBER} from your phone`);
                 });
             });
-
-            // Handle amount button clicks for Airtel
-            const airtelButtons = document.querySelectorAll('.amount-btn-airtel');
-            const airtelAmountInput = document.getElementById('customAirtelAmount');
-            
-            airtelButtons.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    airtelButtons.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    const amount = btn.getAttribute('data-amount');
-                    if (airtelAmountInput) {
-                        airtelAmountInput.value = amount;
-                    }
-                });
-            });
-
-            // PayPal Donation Handler with email integration
-            const paypalBtn = document.getElementById('paypalBtn');
-            if (paypalBtn) {
-                paypalBtn.addEventListener('click', () => {
-                    let amount = paypalAmountInput ? paypalAmountInput.value : '';
-                    if (!amount || amount <= 0) {
-                        showNotification('Please enter a valid donation amount', true);
+        }
+        
+        // Gift Card Handlers
+        const giftCardBtns = document.querySelectorAll('.gift-card-btn');
+        giftCardBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const cardType = btn.getAttribute('data-type');
+                const cardName = cardType.charAt(0).toUpperCase() + cardType.slice(1);
+                
+                if (btn.classList.contains('airtel-gift')) {
+                    const giftPhoneInput = document.getElementById('giftCardPhone');
+                    const phoneNumber = giftPhoneInput ? giftPhoneInput.value : '';
+                    
+                    if (!phoneNumber) {
+                        showNotification('Please enter recipient phone number for gift card', true);
                         return;
                     }
                     
-                    // Create PayPal donation link with email
-                    const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=${encodeURIComponent(PAYPAL_EMAIL)}&item_name=Imperishable+Crown+Bible+Baptist+Church&currency_code=USD&amount=${amount}&no_shipping=1&no_note=1&tax=0&rm=1`;
-                    
-                    showNotification(`Redirecting to PayPal for $${amount} USD donation...`);
-                    
-                    // Open PayPal donation page in new tab
-                    setTimeout(() => {
-                        window.open(paypalUrl, '_blank');
-                        showNotification(`Thank you for your $${amount} USD donation! God bless you!`);
-                    }, 1000);
-                });
-            }
-
-            // M-Pesa Donation Handler
-            const mpesaBtn = document.getElementById('mpesaBtn');
-            if (mpesaBtn) {
-                mpesaBtn.addEventListener('click', () => {
-                    let amount = mpesaAmountInput ? mpesaAmountInput.value : '';
-                    if (!amount || amount <= 0) {
-                        showNotification('Please enter a valid donation amount in KES', true);
-                        return;
-                    }
-                    
-                    showNotification(`M-Pesa donation of KES ${amount} initiated. Please complete payment on your phone.`);
-                    
-                    // Copy paybill details to clipboard for convenience
-                    const details = `Business No: 400200\nAccount No: 1120161\nAmount: KES ${amount}\nBusiness: Imperishable Crown Bible Baptist Church`;
-                    navigator.clipboard.writeText(details).then(() => {
-                        showNotification(`Paybill details copied! Complete payment via M-Pesa.`);
-                    }).catch(() => {
-                        showNotification(`Please use Paybill: 400200, Account: 1120161, Amount: KES ${amount}`);
-                    });
-                });
-            }
-
-            // Airtel Money Donation Handler
-            const airtelBtn = document.getElementById('airtelBtn');
-            if (airtelBtn) {
-                airtelBtn.addEventListener('click', () => {
-                    let amount = airtelAmountInput ? airtelAmountInput.value : '';
-                    if (!amount || amount <= 0) {
-                        showNotification('Please enter a valid donation amount in KES', true);
-                        return;
-                    }
-                    
-                    showNotification(`Airtel Money donation of KES ${amount} initiated. Please complete payment on your phone.`);
-                    
-                    // Copy business details to clipboard
-                    const details = `Airtel Money Paybill\nBusiness Number: 400200\nAccount Number: 1120161\nAmount: KES ${amount}\nBusiness: Imperishable Crown Bible Baptist Church`;
-                    navigator.clipboard.writeText(details).then(() => {
-                        showNotification(`Payment details copied! Complete via Airtel Money.`);
-                    }).catch(() => {
-                        showNotification(`Please use Business No: 400200, Account: 1120161, Amount: KES ${amount}`);
-                    });
-                });
-            }
-
-            // Clear active state when typing custom amount
-            if (paypalAmountInput) {
-                paypalAmountInput.addEventListener('input', () => {
-                    paypalButtons.forEach(b => b.classList.remove('active'));
-                });
-            }
-            
-            if (mpesaAmountInput) {
-                mpesaAmountInput.addEventListener('input', () => {
-                    mpesaButtons.forEach(b => b.classList.remove('active'));
-                });
-            }
-            
-            if (airtelAmountInput) {
-                airtelAmountInput.addEventListener('input', () => {
-                    airtelButtons.forEach(b => b.classList.remove('active'));
-                });
-            }
-        })();
+                    showNotification(`${cardName} Gift Card will be sent to ${phoneNumber} via SMS! Thank you for your generosity!`);
+                } else {
+                    showNotification(`${cardName} Gift Card option selected! Please complete your PayPal donation to receive the gift card code via email.`);
+                }
+            });
+        });
+        
+        // Clear active state when typing custom amount
+        if (paypalAmountInput) {
+            paypalAmountInput.addEventListener('input', () => {
+                paypalButtons.forEach(b => b.classList.remove('active'));
+            });
+        }
+        
+        if (mpesaAmountInput) {
+            mpesaAmountInput.addEventListener('input', () => {
+                mpesaButtons.forEach(b => b.classList.remove('active'));
+            });
+        }
+        
+        if (airtelAmountInput) {
+            airtelAmountInput.addEventListener('input', () => {
+                airtelButtons.forEach(b => b.classList.remove('active'));
+            });
+        }
+        
+        // Initialize currency conversions on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCurrencyConversions();
+        });
     </script>
 </body>
 </html>
