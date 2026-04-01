@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Imperishable Crown Bible Baptist Church | Church Leadership</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Leadership Gallery Styles */
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .leadership-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 4rem 0;
+        }
+
+        .leadership-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .leader-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            text-align: center;
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .leader-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .leader-img-wrapper {
+            position: relative;
+            overflow: hidden;
+            padding-top: 100%;
+            background: #f0f0f0;
+        }
+
+        .leader-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .leader-card:hover .leader-img {
+            transform: scale(1.05);
+        }
+
+        .leader-info {
+            padding: 1.5rem;
+            background: white;
+        }
+
+        .leader-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .leader-position {
+            font-size: 1rem;
+            color: #e67e22;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .leader-bio {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-icons a {
+            color: #95a5a6;
+            transition: color 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .social-icons a:hover {
+            color: #e67e22;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 0.75rem;
+            margin: 0;
+        }
+
+        .section-title h2:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #e67e22, #f39c12);
+            border-radius: 2px;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            max-width: 700px;
+            margin: 1rem auto 0 auto;
+            font-size: 1.1rem;
+        }
+
+        /* Lightbox Modal for Leader Details */
+        .lightbox-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            cursor: pointer;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .lightbox-content {
+            position: relative;
+            width: 90%;
+            max-width: 1000px;
+            margin: 50px auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .lightbox-img-wrapper {
+            flex: 1;
+            min-width: 300px;
+            background: #f0f0f0;
+        }
+
+        .lightbox-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .lightbox-details {
+            flex: 1;
+            padding: 2rem;
+            background: white;
+        }
+
+        .lightbox-details h2 {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .lightbox-position {
+            font-size: 1.2rem;
+            color: #e67e22;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .lightbox-bio {
+            font-size: 1rem;
+            color: #7f8c8d;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .lightbox-contact {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .lightbox-contact p {
+            margin: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .lightbox-contact i {
+            width: 25px;
+            color: #e67e22;
+        }
+
+        .close-lightbox {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            z-index: 10;
+            background: rgba(0,0,0,0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-lightbox:hover {
+            background: #e67e22;
+            color: white;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Filter Buttons */
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            padding: 0.6rem 1.5rem;
+            background: white;
+            border: 2px solid #e67e22;
+            border-radius: 50px;
+            color: #e67e22;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #e67e22;
+            color: white;
+        }
+
+        /* Count badge */
+        .member-count {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            display: inline-block;
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .member-count span {
+            font-weight: bold;
+            color: #e67e22;
+        }
+
+        @media (max-width: 768px) {
+            .leadership-section {
+                padding: 2.5rem 0;
+            }
+            
+            .leadership-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            .lightbox-content {
+                flex-direction: column;
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            
+            .lightbox-img-wrapper {
+                min-height: 300px;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .leadership-grid {
+                grid-template-columns: 1fr;
+                gap: 1.25rem;
+            }
+            
+            .filter-btn {
+                padding: 0.4rem 1rem;
+                font-size: 0.85rem;
+            }
+            
+            .lightbox-details {
+                padding: 1.5rem;
+            }
+            
+            .lightbox-details h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="logo">
+            <img src="images/church-logo.png" alt="Church Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/40x40?text=✝'">
+            <span>Imperishable Crown</span>
+        </div>
+        <div class="hamburger" id="hamburger">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+</nav>
+
+<div class="dropdown-menu" id="dropdownMenu">
+    <div class="dropdown-content">
+        <a href="home.html" class="dropdown-item"><i class="fas fa-home"></i> Home</a>
+        <a href="about.html" class="dropdown-item"><i class="fas fa-church"></i> About Us</a>
+        <a href="services.html" class="dropdown-item"><i class="fas fa-praying-hands"></i> Services</a>
+        <a href="leadership.html" class="dropdown-item active"><i class="fas fa-users"></i> Leadership</a>
+        <a href="events.html" class="dropdown-item"><i class="fas fa-calendar-alt"></i> Events</a>
+        <a href="donate.html" class="dropdown-item"><i class="fas fa-hand-holding-heart"></i> Give</a>
+        <a href="contact.html" class="dropdown-item"><i class="fas fa-envelope"></i> Contact</a>
+    </div>
+</div>
+
+<section class="page-header">
+    <div class="container">
+        <h1>Church Leadership & Members</h1>
+        <p>Meet our dedicated servants who lead and serve our church family</p>
+    </div>
+</section>
+
+<section class="leadership-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Our Church Family</h2>
+        </div>
+        <div class="section-subtitle">
+            <p>Dedicated members who serve in various capacities to build God's kingdom</p>
+        </div>
+        
+        <!-- Filter Buttons -->
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">All Members</button>
+            <button class="filter-btn" data-filter="pastor">Pastoral Team</button>
+            <button class="filter-btn" data-filter="elder">Church Elders</button>
+            <button class="filter-btn" data-filter="deacon">Deacons</button>
+            <button class="filter-btn" data-filter="leader">Ministry Leaders</button>
+        </div>
+        
+        <div class="leadership-grid" id="leadershipGrid">
+            <!-- Member 1 - Pastor -->
+            <div class="leader-card" data-category="pastor">
+                <div class="leader-img-wrapper">
+                    <img src="21.jpg" alt="Pastor John Mwangi" class="leader-img" onerror="this.src='https://via.placeholder.com/400x400?text=✝+Photo+Coming+Soon'; this.classList.add('error-img')">
+                </div>
+                <div class="leader-info">
+                    <h3 class="leader-name">Pastor John Mwangi</h3>
+                    <div class="leader-position">Senior Pastor & Founder</div>
+                    <p class="leader-bio">Called to ministry in 2020, leads with passion and vision.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member 2 - Pastor -->
+            <div class="leader-card" data-category="pastor">
+                <div class="leader-img-wrapper">
+                    <img src="22.jpg" alt="Pastor Sarah Wanjiku" class="leader-img" onerror="this.src='https://via.placeholder.com/400x400?text=✝+Photo+Coming+Soon'; this.classList.add('error-img')">
+                </div>
+                <div class="leader-info">
+                    <h3 class="leader-name">Pastor Sarah Wanjiku</h3>
+                    <div class="leader-position">Associate Pastor</div>
+                    <p class="leader-bio">Heads women's ministry and discipleship programs.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member 3 - Elder -->
+            <div class="leader-card" data-category="elder">
+                <div class="leader-img-wrapper">
+                    <img src="18.jpg" alt="Elder Peter Okoth" class="leader-img" onerror="this.src='https://via.placeholder.com/400x400?text=✝+Photo+Coming+Soon'; this.classList.add('error-img')">
+                </div>
+                <div class="leader-info">
+                    <h3 class="leader-name">Elder Peter Okoth</h3>
+                    <div class="leader-position">Church Elder</div>
+                    <p class="leader-bio">Oversees church administration and finance.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member 4 - Elder -->
+            <div class="leader-card" data-category="elder">
+                <div class="leader-img-wrapper">
+                    <img src="17.jpg" alt="Elder Mary Atieno" class="leader-img" onerror="this.src='https://via.placeholder.com/400x400?text=✝+Photo+Coming+Soon'; this.classList.add('error-img')">
+                </div>
+                <div class="leader-info">
+                    <h3 class="leader-name">Elder Mary Atieno</h3>
+                    <div class="leader-position">Church Elder</div>
+                    <p class="leader-bio">Leads prayer ministry and pastoral care.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member 5 - Deacon -->
+            <div class="leader-card" data-category="deacon">
+                <div class="leader-img-wrapper">
+                    <img src="16.jpg" alt="Deacon James Omondi" class="leader-img" onerror="this.src='https://via.placeholder.com/400x400?text=✝+Photo+Coming+Soon'; this.classList.add('error-img')">
+                </div>
+                <div class="leader-info">
+                    <h3 class="leader-name">Deacon James Omondi</h3>
+                    <div class="leader-position">Head Deacon</div>
+                    <p class="leader-bio">Coordinates outreach and community service.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member 6 - Deacon -->
+            <div class="leader-card" data-category="deacon">
+                <div class="leader-img-wrapper">
+                    <img src="15.jpg" alt="Deacon Lucy Wambui" class="leader-img" onerror="this.src='https://via.placeholder.com/400x400?text=✝+Photo+Coming+Soon'; this.classList.add('error-img')">
+                </div>
+                <div class="leader-info">
+                    <h3 class="leader-name">Deacon Lucy Wambui</h3>
+                    <div class="leader-position">Deaconess</div>
+                    <p class="leader-bio">Heads hospitality and welcome ministry.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member 7 - Leader -->
+            <div class="leader-card" data-category="leader">
+                <div class="leader-img-wrapper">
+                    <img src="14.jpg" alt="David Kipchoge" class="leader-img" onerror="this.src='https://via.placeholder.com/400x400?text=✝+Photo+Coming+Soon'; this.classList.add('error-img')">
+                </div>
+                <div class="leader-info">
+                    <h3 class="leader-name">David Kipchoge</h3>
+                    <div class="leader-position">Youth Ministry Leader</div>
+                    <p class="leader-bio">Passionate about empowering young people.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member 8 - Leader -->
+            <div class="leader-card" data-category="leader">
+                <div class="leader-img-wrapper">
+                    <img src="13.jpg" alt="Grace Nyokabi" class="leader-img" onerror="this.src='https://via.placeholder.com/400x400?text=✝+Photo+Coming+Soon'; this.classList.add('error-img')">
+                </div>
+                <div class="leader-info">
+                    <h3 class="leader-name">Grace Nyokabi</h3>
+                    <div class="leader-position">Children's Ministry Director</div>
+                    <p class="leader-bio">Nurturing faith in the next generation.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member 9 - Leader -->
+            <div class="leader-card" data-category="leader">
+                <div class="leader-img-wrapper">
+                    <img src="12.jpg" alt="Samuel Mbuvi" class="leader-img" onerror="this.src='https://via.placeholder.com/400x400?text=✝+Photo+Coming+Soon'; this.classList.add('error-img')">
+                </div>
+                <div class="leader-info">
+                    <h3 class="leader-name">Samuel Mbuvi</h3>
+                    <div class="leader-position">Worship & Music Director</div>
+                    <p class="leader-bio">Leads the worship team and choir.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Member 10 - Leader -->
+            <div class="leader-card" data-category="leader">
+                <div class="leader-img-wrapper">
+                    <img src="19.jpg" alt="Rachael Chebet" class="leader-img" onerror="this.src='https://via.placeholder.com/400x400?text=✝+Photo+Coming+Soon'; this.classList.add('error-img')">
+                </div>
+                <div class="leader-info">
+                    <h3 class="leader-name">Rachael Chebet</h3>
+                    <div class="leader-position">Women's Ministry Coordinator</div>
+                    <p class="leader-bio">Empowering women through fellowship and mentorship.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="member-count">
+            <i class="fas fa-users"></i> <span id="visibleCount">10</span> <span id="totalCount">10</span> Faithful Servants
+        </div>
+    </div>
+</section>
+
+<!-- Lightbox Modal for Member Details -->
+<div id="lightboxModal" class="lightbox-modal">
+    <span class="close-lightbox">&times;</span>
+    <div class="lightbox-content">
+        <div class="lightbox-img-wrapper">
+            <img id="lightboxImg" class="lightbox-img" src="20.jpg" alt="">
+        </div>
+        <div class="lightbox-details">
+            <h2 id="lightboxName">Pst Fred Wanyonyi</h2>
+            <div id="lightboxPosition" class="lightbox-position">Head Deacon</div>
+            <p id="lightboxBio" class="lightbox-bio">Biography and ministry information will appear here.</p>
+            <div class="lightbox-contact">
+                <p><i class="fas fa-phone"></i> <strong>Phone:</strong> <span id="lightboxPhone">+254 723 542 142</span></p>
+                <p><i class="fas fa-envelope"></i> <strong>Email:</strong> <span id="lightboxEmail">fredwanyonyi2001@icbbc.org</span></p>
+                <p><i class="fas fa-calendar-alt"></i> <strong>Serving Since:</strong> <span id="lightboxSince">2020</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section">
+            <h3>Imperishable Crown Bible Baptist Church</h3>
+            <p><i class="fas fa-map-marker-alt"></i> 2435 - 30200, Kitale, Kenya</p>
+            <p><i class="fas fa-phone"></i> +254 723 542 142</p>
+            <p><i class="fas fa-envelope"></i> imperishablec@gmail.com</p>
+        </div>
+
+        <div class="footer-section">
+            <h3>Quick Links</h3>
+            <p><a href="services.html">Service Times</a></p>
+            <p><a href="donate.html">Give Online</a></p>
+            <p><a href="events.html">Events</a></p>
+        </div>
+
+        <div class="footer-section">
+            <h3>Follow Us</h3>
+            <div class="social-links">
+                <a href="https://facebook.com/fred.wanyonyi.948494" target="_blank">
+                    <i class="fab fa-facebook"></i>
+                </a>
+                <a href="#" target="_blank">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a href="#" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="#" target="_blank">
+                    <i class="fab fa-twitter"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>&copy; 2026 Imperishable Crown Bible Baptist Church. All rights reserved.</p>
+    </div>
+</footer>
+
+<script src="script.js"></script>
+<script>
+    // Detailed member data for lightbox
+    const membersData = {
+        'Pastor John Mwangi': {
+            phone: '+254 712 345 678',
+            email: 'pastor.john@icbbc.org',
+            since: '2020',
+            bio: 'Pastor John Mwangi is the founding pastor of Imperishable Crown Bible Baptist Church. He was called to ministry in 2020 and has been faithfully serving God\'s people ever since. He holds a Bachelor\'s in Theology and is passionate about expository preaching and discipleship.'
+        },
+        'Pastor Sarah Wanjiku': {
+            phone: '+254 723 456 789',
+            email: 'pastor.sarah@icbbc.org',
+            since: '2021',
+            bio: 'Pastor Sarah joined the ministry in 2021 and oversees women\'s ministry and discipleship programs. She has a heart for mentoring young women and families.'
+        },
+        'Elder Peter Okoth': {
+            phone: '+254 734 567 890',
+            email: 'elder.peter@icbbc.org',
+            since: '2020',
+            bio: 'Elder Peter serves as the head of church administration and finance. He brings over 20 years of business management experience to the church.'
+        },
+        'Elder Mary Atieno': {
+            phone: '+254 745 678 901',
+            email: 'elder.mary@icbbc.org',
+            since: '2020',
+            bio: 'Elder Mary leads the prayer ministry and pastoral care team. She is known for her deep prayer life and compassionate heart.'
+        },
+        'Deacon James Omondi': {
+            phone: '+254 756 789 012',
+            email: 'deacon.james@icbbc.org',
+            since: '2021',
+            bio: 'Deacon James coordinates outreach programs and community service initiatives. He is passionate about serving the less fortunate.'
+        },
+        'Deacon Lucy Wambui': {
+            phone: '+254 767 890 123',
+            email: 'deacon.lucy@icbbc.org',
+            since: '2021',
+            bio: 'Deacon Lucy heads the hospitality and welcome ministry, ensuring everyone feels at home at our church.'
+        },
+        'David Kipchoge': {
+            phone: '+254 778 901 234',
+            email: 'david.kipchoge@icbbc.org',
+            since: '2022',
+            bio: 'David leads the youth ministry with passion and energy. He organizes youth conferences, camps, and discipleship programs.'
+        },
+        'Grace Nyokabi': {
+            phone: '+254 789 012 345',
+            email: 'grace.nyokabi@icbbc.org',
+            since: '2021',
+            bio: 'Grace directs the children\'s ministry, creating engaging programs that help children grow in faith.'
+        },
+        'Samuel Mbuvi': {
+            phone: '+254 790 123 456',
+            email: 'samuel.mbuvi@icbbc.org',
+            since: '2020',
+            bio: 'Samuel leads the worship team and choir. He is a gifted musician who helps the congregation worship in spirit and truth.'
+        },
+        'Rachael Chebet': {
+            phone: '+254 701 234 567',
+            email: 'rachael.chebet@icbbc.org',
+            since: '2021',
+            bio: 'Rachael coordinates women\'s ministry activities, including Bible studies, retreats, and mentorship programs.'
+        }
+    };
+
+    // Lightbox and Filter Functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('lightboxModal');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxName = document.getElementById('lightboxName');
+        const lightboxPosition = document.getElementById('lightboxPosition');
+        const lightboxBio = document.getElementById('lightboxBio');
+        const lightboxPhone = document.getElementById('lightboxPhone');
+        const lightboxEmail = document.getElementById('lightboxEmail');
+        const lightboxSince = document.getElementById('lightboxSince');
+        const closeBtn = document.querySelector('.close-lightbox');
+        const leaderCards = document.querySelectorAll('.leader-card');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const visibleCountSpan = document.getElementById('visibleCount');
+        const totalCountSpan = document.getElementById('totalCount');
+        
+        const totalMembers = leaderCards.length;
+        if (totalCountSpan) {
+            totalCountSpan.textContent = totalMembers;
+        }
+        
+        // Lightbox functionality
+        function openLightbox(card) {
+            const name = card.querySelector('.leader-name').textContent;
+            const position = card.querySelector('.leader-position').textContent;
+            const img = card.querySelector('.leader-img').src;
+            const memberInfo = membersData[name] || {
+                phone: '+254 700 000 000',
+                email: 'info@icbbc.org',
+                since: '2020',
+                bio: 'Serving the Lord faithfully at Imperishable Crown Bible Baptist Church.'
+            };
+            
+            lightboxImg.src = img;
+            lightboxName.textContent = name;
+            lightboxPosition.textContent = position;
+            lightboxBio.textContent = memberInfo.bio;
+            lightboxPhone.textContent = memberInfo.phone;
+            lightboxEmail.textContent = memberInfo.email;
+            lightboxSince.textContent = memberInfo.since;
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeLightbox() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Add click event to each leader card
+        leaderCards.forEach(card => {
+            card.addEventListener('click', function(e) {
+                openLightbox(this);
+            });
+        });
+        
+        // Close lightbox events
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeLightbox);
+        }
+        
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeLightbox();
+            }
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.style.display === 'block') {
+                closeLightbox();
+            }
+        });
+        
+        // Filter functionality
+        function filterMembers(category) {
+            let visibleCount = 0;
+            
+            leaderCards.forEach(card => {
+                const cardCategory = card.getAttribute('data-category');
+                if (category === 'all' || cardCategory === category) {
+                    card.style.display = 'block';
+                    card.style.animation = 'fadeInUp 0.6s ease forwards';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            if (visibleCountSpan) {
+                visibleCountSpan.textContent = visibleCount;
+            }
+        }
+        
+        // Add click event to filter buttons
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const filterValue = this.getAttribute('data-filter');
+                filterMembers(filterValue);
+            });
+        });
+        
+        console.log(`Leadership gallery initialized with ${totalMembers} members`);
+    });
+</script>
+</body>
+</html>
