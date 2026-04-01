@@ -43,6 +43,7 @@
             transition: all 0.4s ease;
             cursor: pointer;
             position: relative;
+            animation: fadeInUp 0.6s ease forwards;
         }
 
         .gallery-card:hover {
@@ -192,23 +193,50 @@
             }
         }
 
-        .gallery-card {
-            animation: fadeInUp 0.6s ease forwards;
-            opacity: 0;
+        /* Count badge */
+        .image-count {
+            text-align: center;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50px;
+            display: inline-block;
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .gallery-card:nth-child(1) { animation-delay: 0.1s; }
-        .gallery-card:nth-child(2) { animation-delay: 0.2s; }
-        .gallery-card:nth-child(3) { animation-delay: 0.3s; }
-        .gallery-card:nth-child(4) { animation-delay: 0.4s; }
-        .gallery-card:nth-child(5) { animation-delay: 0.5s; }
-        .gallery-card:nth-child(6) { animation-delay: 0.6s; }
-        .gallery-card:nth-child(7) { animation-delay: 0.7s; }
-        .gallery-card:nth-child(8) { animation-delay: 0.8s; }
-        .gallery-card:nth-child(9) { animation-delay: 0.9s; }
-        .gallery-card:nth-child(10) { animation-delay: 1s; }
+        .image-count span {
+            font-weight: bold;
+            color: #e67e22;
+        }
 
-        /* Responsive Design */
+        .about-text {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+        }
+
+        .beliefs-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .beliefs-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .beliefs-list li:last-child {
+            border-bottom: none;
+        }
+
+        .beliefs-list li strong {
+            color: #e67e22;
+        }
+
         @media (max-width: 768px) {
             .gallery-section {
                 padding: 2.5rem 0;
@@ -253,67 +281,6 @@
             .lightbox-content {
                 width: 95%;
             }
-        }
-
-        /* Loading spinner */
-        .loading-spinner {
-            text-align: center;
-            padding: 2rem;
-        }
-
-        .loading-spinner i {
-            font-size: 3rem;
-            color: #e67e22;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Count badge */
-        .image-count {
-            text-align: center;
-            margin-top: 2rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 50px;
-            display: inline-block;
-            width: auto;
-            margin-left: auto;
-            margin-right: auto;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .image-count span {
-            font-weight: bold;
-            color: #e67e22;
-        }
-
-        .about-text {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-        }
-
-        .beliefs-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .beliefs-list li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #ecf0f1;
-        }
-
-        .beliefs-list li:last-child {
-            border-bottom: none;
-        }
-
-        .beliefs-list li strong {
-            color: #e67e22;
         }
     </style>
 </head>
@@ -397,7 +364,7 @@
     </div>
 </section>
 
-<!-- Image Gallery Section -->
+<!-- Image Gallery Section - Images directly in HTML -->
 <section class="gallery-section">
     <div class="container">
         <div class="section-title">
@@ -406,14 +373,102 @@
         <div class="section-subtitle">
             <p>Glimpses into our worship, community life, and the joy of gathering together.</p>
         </div>
-        <div id="loadingSpinner" class="loading-spinner" style="display: none;">
-            <i class="fas fa-spinner"></i>
-            <p>Loading gallery images...</p>
-        </div>
+        
         <div class="gallery-grid" id="galleryGrid">
-            <!-- Gallery will be populated by JavaScript -->
+            <!-- Image 1 -->
+            <div class="gallery-card" data-title="Sunday Worship Service" data-desc="Lifting voices in praise and worship during our main service.">
+                <img src="1.jpg" alt="Sunday Worship Service" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+                <div class="gallery-caption">
+                    <h3>Sunday Worship Service</h3>
+                    <p>Lifting voices in praise and worship during our main service.</p>
+                </div>
+            </div>
+
+            <!-- Image 2 -->
+            <div class="gallery-card" data-title="Fellowship Meal" data-desc="Sharing love and meals together after Sunday service.">
+                <img src="2.jpg" alt="Fellowship Meal" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+                <div class="gallery-caption">
+                    <h3>Fellowship Meal</h3>
+                    <p>Sharing love and meals together after Sunday service.</p>
+                </div>
+            </div>
+
+            <!-- Image 3 -->
+            <div class="gallery-card" data-title="Graduates in our Ministry" data-desc="Celebrating academic achievements and spiritual growth.">
+                <img src="3.jpg" alt="Graduates in our Ministry" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+                <div class="gallery-caption">
+                    <h3>Graduates in our Ministry</h3>
+                    <p>Celebrating academic achievements and spiritual growth.</p>
+                </div>
+            </div>
+
+            <!-- Image 4 -->
+            <div class="gallery-card" data-title="Children's Ministry" data-desc="Raising the next generation in faith and joy.">
+                <img src="4.jpg" alt="Children's Ministry" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+                <div class="gallery-caption">
+                    <h3>Children's Ministry</h3>
+                    <p>Raising the next generation in faith and joy.</p>
+                </div>
+            </div>
+
+            <!-- Image 5 -->
+            <div class="gallery-card" data-title="Graduation Celebration" data-desc="Celebrating our graduates and their achievements.">
+                <img src="9.jpg" alt="Graduation Celebration" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+                <div class="gallery-caption">
+                    <h3>Graduation Celebration</h3>
+                    <p>Celebrating our graduates and their achievements.</p>
+                </div>
+            </div>
+
+            <!-- Image 6 -->
+            <div class="gallery-card" data-title="Church Choir" data-desc="Voices of angels leading us into His presence.">
+                <img src="7.jpg" alt="Church Choir" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+                <div class="gallery-caption">
+                    <h3>Church Choir</h3>
+                    <p>Voices of angels leading us into His presence.</p>
+                </div>
+            </div>
+
+            <!-- Image 7 -->
+            <div class="gallery-card" data-title="Outreach Mission" data-desc="Sharing the Gospel and serving our community.">
+                <img src="7.jpg" alt="Outreach Mission" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+                <div class="gallery-caption">
+                    <h3>Outreach Mission</h3>
+                    <p>Sharing the Gospel and serving our community.</p>
+                </div>
+            </div>
+
+            <!-- Image 8 -->
+            <div class="gallery-card" data-title="Youth Conference" data-desc="Empowering young people to live for Christ boldly.">
+                <img src="6.jpg" alt="Youth Conference" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+                <div class="gallery-caption">
+                    <h3> Conference</h3>
+                    <p>Empowering young people to live for Christ boldly.</p>
+                </div>
+            </div>
+
+            <!-- Image 9 -->
+            <div class="gallery-card" data-title="Baptism Sunday" data-desc="Celebrating new life in Christ through baptism.">
+                <img src="5.jpg" alt="Baptism Sunday" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+                <div class="gallery-caption">
+                    <h3>Baptism Sunday</h3>
+                    <p>Celebrating new life in Christ through baptism.</p>
+                </div>
+            </div>
+
+            <!-- Image 10 -->
+            <div class="gallery-card" data-title="Family Fellowship" data-desc="Strengthening family bonds in God's creation.">
+                <img src="8.jpg" alt="Family Fellowship" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+                <div class="gallery-caption">
+                    <h3>Family Fellowship</h3>
+                    <p>Strengthening family bonds in God's creation.</p>
+                </div>
+            </div>
         </div>
-        <div id="imageCount" class="image-count" style="text-align: center; margin-top: 2rem;"></div>
+        
+        <div class="image-count">
+            <i class="fas fa-images"></i> <span>10</span> Beautiful Moments Captured
+        </div>
     </div>
 </section>
 
@@ -468,222 +523,65 @@
 
 <script src="script.js"></script>
 <script>
-    // Gallery Data - REPLACE THE FILENAMES WITH YOUR ACTUAL IMAGE NAMES
-    // Simply change the 'filename' values below to match your actual image files in the IMAGES folder
-    
-    const galleryImages = [
-        {
-            filename: "1.jpg",  // Replace with actual filename
-            title: "Sunday Worship Service",
-            description: "Lifting voices in praise and worship during our main service."
-        },
-        {
-            filename: "2.jpg",  // Replace with actual filename
-            title: "Fellowship Meal",
-            description: "Sharing love and meals together after Sunday service."
-        },
-        {
-            filename: "3.jpg",  // Replace with actual filename
-            title: "Graduates in our ministry",
-            description: "Digging deep into God's Word every Wednesday evening."
-        },
-        {
-            filename: "4.jpg",  // Replace with actual filename
-            title: "Children's Ministry",
-            description: "Raising the next generation in faith and joy."
-        },
-        {
-            filename: "9.jpg",  // Replace with actual filename
-            title: "Graduation",
-            description: "Early morning prayer warriors seeking God's face."
-        },
-        {
-            filename: "7.jpg",  // Replace with actual filename
-            title: "Church Choir",
-            description: "Voices of angels leading us into His presence."
-        },
-        {
-            filename: "7.jpg",  // Replace with actual filename
-            title: "Outreach Mission",
-            description: "Sharing the Gospel and serving our community."
-        },
-        {
-            filename: "6.jpg",  // Replace with actual filename
-            title: "Conference",
-            description: "Empowering young people to live for Christ boldly."
-        },
-        {
-            filename: "5.jpg",  // Replace with actual filename
-            title: "Baptism Sunday",
-            description: "Celebrating new life in Christ through baptism."
-        },
-        {
-            filename: "8.jpg",  // Replace with actual filename
-            title: "Family ",
-            description: "Strengthening family bonds in God's creation."
-        }
-    ];
-    
-    // Function to create gallery cards
-    function createGalleryCards() {
-        const galleryGrid = document.getElementById('galleryGrid');
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const imageCountDiv = document.getElementById('imageCount');
-        
-        if (!galleryGrid) {
-            console.error('Gallery grid container not found');
-            return;
-        }
-        
-        // Show loading spinner
-        if (loadingSpinner) {
-            loadingSpinner.style.display = 'block';
-        }
-        
-        // Clear any existing content
-        galleryGrid.innerHTML = '';
-        
-        // Simulate loading delay for better UX
-        setTimeout(() => {
-            // Loop through images and create cards
-            galleryImages.forEach((image, index) => {
-                const imagePath = `IMAGES/${image.filename}`;
-                
-                // Create card element
-                const card = document.createElement('div');
-                card.className = 'gallery-card';
-                
-                // Create image element
-                const img = document.createElement('img');
-                img.className = 'gallery-img';
-                img.alt = image.title;
-                img.src = imagePath;
-                img.loading = 'lazy';
-                
-                // Handle image loading errors
-                img.onerror = function() {
-                    this.onerror = null; // Prevent infinite loop
-                    this.src = 'https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon';
-                    this.classList.add('error-img');
-                    console.warn(`Failed to load image: ${imagePath}`);
-                };
-                
-                // Create caption container
-                const captionDiv = document.createElement('div');
-                captionDiv.className = 'gallery-caption';
-                
-                // Create title
-                const titleElem = document.createElement('h3');
-                titleElem.textContent = image.title;
-                
-                // Create description
-                const descElem = document.createElement('p');
-                descElem.textContent = image.description;
-                
-                // Assemble the card
-                captionDiv.appendChild(titleElem);
-                captionDiv.appendChild(descElem);
-                card.appendChild(img);
-                card.appendChild(captionDiv);
-                
-                // Add click event for lightbox functionality
-                card.addEventListener('click', () => {
-                    openLightbox(imagePath, image.title, image.description);
-                });
-                
-                galleryGrid.appendChild(card);
-            });
-            
-            // Hide loading spinner
-            if (loadingSpinner) {
-                loadingSpinner.style.display = 'none';
-            }
-            
-            // Update image count
-            if (imageCountDiv) {
-                imageCountDiv.innerHTML = `<i class="fas fa-images"></i> <span>${galleryImages.length}</span> Beautiful Moments Captured`;
-            }
-            
-            console.log(`Gallery initialized with ${galleryImages.length} images`);
-        }, 500);
-    }
-    
-    // Lightbox functionality
-    function openLightbox(imageSrc, title, description) {
+    // Lightbox functionality for gallery images
+    document.addEventListener('DOMContentLoaded', function() {
         const modal = document.getElementById('lightboxModal');
         const lightboxImg = document.getElementById('lightboxImg');
         const lightboxCaption = document.getElementById('lightboxCaption');
-        
-        lightboxImg.src = imageSrc;
-        lightboxCaption.innerHTML = `<strong>${title}</strong><br>${description}`;
-        modal.style.display = 'block';
-        
-        // Prevent body scrolling when modal is open
-        document.body.style.overflow = 'hidden';
-    }
-    
-    function closeLightbox() {
-        const modal = document.getElementById('lightboxModal');
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    }
-    
-    // Initialize gallery when DOM is fully loaded
-    document.addEventListener('DOMContentLoaded', () => {
-        createGalleryCards();
-        
-        // Setup lightbox close functionality
-        const modal = document.getElementById('lightboxModal');
         const closeBtn = document.querySelector('.close-lightbox');
         
+        // Get all gallery cards
+        const galleryCards = document.querySelectorAll('.gallery-card');
+        
+        // Add click event to each gallery card
+        galleryCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const img = this.querySelector('.gallery-img');
+                const title = this.querySelector('.gallery-caption h3').textContent;
+                const description = this.querySelector('.gallery-caption p').textContent;
+                
+                lightboxImg.src = img.src;
+                lightboxCaption.innerHTML = `<strong>${title}</strong><br>${description}`;
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        // Close lightbox function
+        function closeLightbox() {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Close button click
         if (closeBtn) {
             closeBtn.addEventListener('click', closeLightbox);
         }
         
-        if (modal) {
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) {
-                    closeLightbox();
-                }
-            });
-        }
-        
-        // Close lightbox with Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal && modal.style.display === 'block') {
+        // Click outside modal to close
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
                 closeLightbox();
             }
         });
+        
+        // Escape key to close
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.style.display === 'block') {
+                closeLightbox();
+            }
+        });
+        
+        // Log success message
+        console.log('Gallery initialized with 10 images from HTML');
     });
     
-    // Optional: Function to update gallery images dynamically
-    window.updateGalleryImages = function(newImagesArray) {
-        if (newImagesArray && Array.isArray(newImagesArray)) {
-            // Clear existing array
-            galleryImages.length = 0;
-            newImagesArray.forEach(img => galleryImages.push(img));
-            // Recreate gallery cards
-            createGalleryCards();
-        }
-    };
-    
-    // Optional: Function to add a single image to gallery
-    window.addGalleryImage = function(imageData) {
-        if (imageData && imageData.filename) {
-            galleryImages.push(imageData);
-            createGalleryCards();
-        }
-    };
-    
-    // Helper function to refresh gallery with new filenames
-    window.refreshGallery = function(imagesArray) {
-        if (imagesArray && Array.isArray(imagesArray)) {
-            // Update the galleryImages array
-            galleryImages.length = 0;
-            imagesArray.forEach(img => galleryImages.push(img));
-            createGalleryCards();
-        }
-    };
+    // Optional: Function to handle image loading errors with better fallbacks
+    function handleImageError(imgElement) {
+        imgElement.src = 'https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon';
+        imgElement.classList.add('error-img');
+        console.warn(`Image failed to load: ${imgElement.alt}`);
+    }
 </script>
 </body>
 </html>
