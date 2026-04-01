@@ -118,7 +118,7 @@
             margin: 1.5rem 0;
         }
 
-        .amount-btn, .amount-btn-mpesa, .amount-btn-airtel {
+        .amount-btn, .amount-btn-mpesa, .amount-btn-airtel, .amount-btn-international {
             padding: 0.6rem 1.2rem;
             border: 2px solid #e0e0e0;
             background: #fff;
@@ -144,6 +144,12 @@
         .amount-btn-airtel:hover, .amount-btn-airtel.active {
             background: #E31E24;
             border-color: #E31E24;
+            color: #fff;
+        }
+
+        .amount-btn-international:hover, .amount-btn-international.active {
+            background: #f39c12;
+            border-color: #f39c12;
             color: #fff;
         }
 
@@ -209,6 +215,46 @@
             transform: translateY(-2px);
         }
 
+        .binance-btn {
+            background: #F3BA2F;
+            color: #000;
+        }
+
+        .binance-btn:hover {
+            background: #e5a800;
+            transform: translateY(-2px);
+        }
+
+        .stripe-btn {
+            background: #635BFF;
+            color: #fff;
+        }
+
+        .stripe-btn:hover {
+            background: #4a42d1;
+            transform: translateY(-2px);
+        }
+
+        .skrill-btn {
+            background: #861F8B;
+            color: #fff;
+        }
+
+        .skrill-btn:hover {
+            background: #6a186e;
+            transform: translateY(-2px);
+        }
+
+        .neteller-btn {
+            background: #0B5E8A;
+            color: #fff;
+        }
+
+        .neteller-btn:hover {
+            background: #094a6b;
+            transform: translateY(-2px);
+        }
+
         .payment-instructions {
             margin-top: 1.5rem;
             padding: 1rem;
@@ -229,6 +275,22 @@
 
         .paypal-instructions {
             border-left-color: #003087;
+        }
+
+        .binance-instructions {
+            border-left-color: #F3BA2F;
+        }
+
+        .stripe-instructions {
+            border-left-color: #635BFF;
+        }
+
+        .skrill-instructions {
+            border-left-color: #861F8B;
+        }
+
+        .neteller-instructions {
+            border-left-color: #0B5E8A;
         }
 
         .payment-instructions strong {
@@ -315,14 +377,14 @@
             text-align: center;
         }
 
-        .paypal-email {
-            background: #f0f0f0;
-            padding: 0.5rem;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
+        .qr-code {
+            margin: 1rem 0;
             text-align: center;
+        }
+
+        .qr-code img {
+            max-width: 150px;
+            border-radius: 12px;
         }
 
         @media (max-width: 768px) {
@@ -392,7 +454,7 @@
             <a href="home.html" class="dropdown-item"><i class="fas fa-home"></i> Home</a>
             <a href="about.html" class="dropdown-item"><i class="fas fa-church"></i> About Us</a>
             <a href="services.html" class="dropdown-item"><i class="fas fa-praying-hands"></i> Services</a>
-            <a href="leadership.html" class="dropdown-item active"><i class="fas fa-users"></i> Leadership</a>
+            <a href="leadership.html" class="dropdown-item"><i class="fas fa-users"></i> Leadership</a>
             <a href="events.html" class="dropdown-item"><i class="fas fa-calendar-alt"></i> Events</a>
             <a href="donate.html" class="dropdown-item active"><i class="fas fa-hand-holding-heart"></i> Give</a>
             <a href="contact.html" class="dropdown-item"><i class="fas fa-envelope"></i> Contact</a>
@@ -424,7 +486,7 @@
                         <img src="https://www.paypalobjects.com/webstatic/icon/pp258.png" alt="PayPal" class="original-logo" onerror="this.src='https://via.placeholder.com/70x70?text=PayPal'">
                     </div>
                     <h3>Donate via PayPal</h3>
-                    <p>Secure online giving with PayPal</p>
+                    <p>Secure online giving with PayPal (Worldwide)</p>
                     <div class="amount-buttons">
                         <button class="amount-btn" data-amount="10" data-currency="USD">$10</button>
                         <button class="amount-btn" data-amount="20" data-currency="USD">$20</button>
@@ -446,19 +508,133 @@
                             <strong>PayPal Email:</strong> isaacnyongesa459@gmail.com
                         </div>
                     </div>
-                    
-                    <!-- Gift Cards Section -->
-                    <div class="gift-card-section">
-                        <h4><i class="fas fa-gift"></i> Send Gift Cards</h4>
-                        <div class="gift-card-buttons">
-                            <button class="gift-card-btn" data-type="amazon">Amazon</button>
-                            <button class="gift-card-btn" data-type="google">Google Play</button>
-                            <button class="gift-card-btn" data-type="apple">Apple</button>
-                            <button class="gift-card-btn" data-type="steam">Steam</button>
-                            <button class="gift-card-btn" data-type="netflix">Netflix</button>
+                </div>
+
+                <!-- Binance Donation Card -->
+                <div class="donation-card">
+                    <div class="logo-wrapper">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Binance_logo.svg/2560px-Binance_logo.svg.png" alt="Binance" class="original-logo" onerror="this.src='https://via.placeholder.com/70x70?text=Binance'">
+                    </div>
+                    <h3>Donate via Binance</h3>
+                    <p>Send Crypto - USDT, BTC, ETH & More</p>
+                    <div class="amount-buttons">
+                        <button class="amount-btn-international" data-amount="10" data-currency="USDT">10 USDT</button>
+                        <button class="amount-btn-international" data-amount="50" data-currency="USDT">50 USDT</button>
+                        <button class="amount-btn-international" data-amount="100" data-currency="USDT">100 USDT</button>
+                        <button class="amount-btn-international" data-amount="500" data-currency="USDT">500 USDT</button>
+                    </div>
+                    <input type="number" id="customBinanceAmount" class="custom-amount" placeholder="Other amount (USDT)" min="1">
+                    <button id="binanceBtn" class="pay-btn binance-btn">
+                        <i class="fab fa-bitcoin"></i> Donate with Binance
+                    </button>
+                    <div class="payment-instructions binance-instructions">
+                        <strong><i class="fas fa-info-circle"></i> Binance Instructions:</strong>
+                        <ol>
+                            <li>Open Binance App or Web</li>
+                            <li>Go to Send / Withdraw</li>
+                            <li>Select BEP-20 (BSC) Network</li>
+                            <li>Send to address below</li>
+                        </ol>
+                        <div class="business-details">
+                            <strong>Binance Wallet Address (BEP-20):</strong><br>
+                            <span id="binanceAddress">0x742d35Cc6634C0532925a3b844Bc9e7598A9f6A5</span>
+                            <button onclick="copyToClipboard('binanceAddress')" style="margin-left: 0.5rem; padding: 0.2rem 0.5rem; background: #F3BA2F; border: none; border-radius: 4px; cursor: pointer;">Copy</button>
                         </div>
-                        <div class="note" style="color: rgba(255,255,255,0.9); margin-top: 0.5rem;">
-                            <small>Select a gift card to send via PayPal</small>
+                        <div class="qr-code">
+                            <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=0x742d35Cc6634C0532925a3b844Bc9e7598A9f6A5" alt="Binance QR Code">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stripe Donation Card -->
+                <div class="donation-card">
+                    <div class="logo-wrapper">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/ba/Stripe_Logo%2C_revised_2016.svg/2560px-Stripe_Logo%2C_revised_2016.svg.png" alt="Stripe" class="original-logo" onerror="this.src='https://via.placeholder.com/70x70?text=Stripe'">
+                    </div>
+                    <h3>Donate via Stripe</h3>
+                    <p>Credit/Debit Cards - Visa, Mastercard, Amex</p>
+                    <div class="amount-buttons">
+                        <button class="amount-btn-international" data-amount="10" data-currency="USD">$10</button>
+                        <button class="amount-btn-international" data-amount="25" data-currency="USD">$25</button>
+                        <button class="amount-btn-international" data-amount="50" data-currency="USD">$50</button>
+                        <button class="amount-btn-international" data-amount="100" data-currency="USD">$100</button>
+                    </div>
+                    <input type="number" id="customStripeAmount" class="custom-amount" placeholder="Other amount (USD)" min="1">
+                    <button id="stripeBtn" class="pay-btn stripe-btn">
+                        <i class="fas fa-credit-card"></i> Donate with Stripe
+                    </button>
+                    <div class="payment-instructions stripe-instructions">
+                        <strong><i class="fas fa-info-circle"></i> Stripe Instructions:</strong>
+                        <ol>
+                            <li>Click "Donate with Stripe" button</li>
+                            <li>Enter your card details securely</li>
+                            <li>Complete the payment</li>
+                        </ol>
+                        <div class="business-details">
+                            <strong>Secure Payment Processed by Stripe</strong><br>
+                            Accepts: Visa, Mastercard, American Express, Discover
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skrill Donation Card -->
+                <div class="donation-card">
+                    <div class="logo-wrapper">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Skrill_logo.svg/2560px-Skrill_logo.svg.png" alt="Skrill" class="original-logo" onerror="this.src='https://via.placeholder.com/70x70?text=Skrill'">
+                    </div>
+                    <h3>Donate via Skrill</h3>
+                    <p>Global money transfer - India, UK, USA, Europe</p>
+                    <div class="amount-buttons">
+                        <button class="amount-btn-international" data-amount="10" data-currency="USD">$10</button>
+                        <button class="amount-btn-international" data-amount="25" data-currency="USD">$25</button>
+                        <button class="amount-btn-international" data-amount="50" data-currency="USD">$50</button>
+                        <button class="amount-btn-international" data-amount="100" data-currency="USD">$100</button>
+                    </div>
+                    <input type="number" id="customSkrillAmount" class="custom-amount" placeholder="Other amount (USD)" min="1">
+                    <button id="skrillBtn" class="pay-btn skrill-btn">
+                        <i class="fas fa-globe"></i> Donate with Skrill
+                    </button>
+                    <div class="payment-instructions skrill-instructions">
+                        <strong><i class="fas fa-info-circle"></i> Skrill Instructions:</strong>
+                        <ol>
+                            <li>Login to your Skrill account</li>
+                            <li>Select "Send Money"</li>
+                            <li>Enter recipient email below</li>
+                            <li>Complete the transaction</li>
+                        </ol>
+                        <div class="business-details">
+                            <strong>Skrill Email:</strong> imperishablec@gmail.com
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Neteller Donation Card -->
+                <div class="donation-card">
+                    <div class="logo-wrapper">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Neteller_Logo.svg/2560px-Neteller_Logo.svg.png" alt="Neteller" class="original-logo" onerror="this.src='https://via.placeholder.com/70x70?text=Neteller'">
+                    </div>
+                    <h3>Donate via Neteller</h3>
+                    <p>Fast & Secure - Available in 200+ countries</p>
+                    <div class="amount-buttons">
+                        <button class="amount-btn-international" data-amount="10" data-currency="USD">$10</button>
+                        <button class="amount-btn-international" data-amount="25" data-currency="USD">$25</button>
+                        <button class="amount-btn-international" data-amount="50" data-currency="USD">$50</button>
+                        <button class="amount-btn-international" data-amount="100" data-currency="USD">$100</button>
+                    </div>
+                    <input type="number" id="customNetellerAmount" class="custom-amount" placeholder="Other amount (USD)" min="1">
+                    <button id="netellerBtn" class="pay-btn neteller-btn">
+                        <i class="fas fa-exchange-alt"></i> Donate with Neteller
+                    </button>
+                    <div class="payment-instructions neteller-instructions">
+                        <strong><i class="fas fa-info-circle"></i> Neteller Instructions:</strong>
+                        <ol>
+                            <li>Login to your Neteller account</li>
+                            <li>Select "Send Money"</li>
+                            <li>Enter recipient email below</li>
+                            <li>Complete the transaction</li>
+                        </ol>
+                        <div class="business-details">
+                            <strong>Neteller Email:</strong> imperishablec@gmail.com
                         </div>
                     </div>
                 </div>
@@ -525,24 +701,6 @@
                         <div class="business-details">
                             <strong>Church Airtel Number:</strong> +254 723 542 142
                         </div>
-                        <div class="note" style="margin-top: 0.5rem;">
-                            <small><i class="fas fa-shield-alt"></i> Secure payment directly to church mobile number</small>
-                        </div>
-                    </div>
-                    
-                    <!-- Gift Cards Section for Airtel -->
-                    <div class="gift-card-section" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%); margin-top: 1rem;">
-                        <h4><i class="fas fa-gift"></i> Send Gift Cards via Airtel</h4>
-                        <div class="gift-card-buttons">
-                            <button class="gift-card-btn airtel-gift" data-type="amazon">Amazon</button>
-                            <button class="gift-card-btn airtel-gift" data-type="google">Google Play</button>
-                            <button class="gift-card-btn airtel-gift" data-type="apple">Apple</button>
-                            <button class="gift-card-btn airtel-gift" data-type="spotify">Spotify</button>
-                        </div>
-                        <input type="tel" id="giftCardPhone" class="phone-input" placeholder="Recipient Airtel Number" style="margin-top: 0.5rem; background: white; color: #333;">
-                        <div class="note" style="color: rgba(255,255,255,0.9); margin-top: 0.5rem;">
-                            <small>Gift card code will be sent via SMS to the recipient</small>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -586,27 +744,31 @@
         // Total amount in KES
         const totalAmountKES = 1234287.98;
         
-        // Exchange rates (as of current date - you can update these)
+        // Exchange rates
         const exchangeRates = {
-            USD: 0.0077,    // 1 KES = 0.0077 USD
-            TZS: 20.15,     // 1 KES = 20.15 TZS
-            UGX: 28.45,     // 1 KES = 28.45 UGX
-            INR: 0.64       // 1 KES = 0.64 INR
+            USD: 0.0077,
+            TZS: 20.15,
+            UGX: 28.45,
+            INR: 0.64,
+            GBP: 0.0061,
+            EUR: 0.0072
         };
         
-        // Function to update currency conversions
+        // Update currency conversions
         function updateCurrencyConversions() {
             const currencies = [
                 { code: 'USD', symbol: '$', name: 'US Dollar' },
+                { code: 'GBP', symbol: '£', name: 'British Pound' },
+                { code: 'EUR', symbol: '€', name: 'Euro' },
+                { code: 'INR', symbol: '₹', name: 'Indian Rupee' },
                 { code: 'TZS', symbol: 'TSh', name: 'Tanzanian Shilling' },
-                { code: 'UGX', symbol: 'USh', name: 'Ugandan Shilling' },
-                { code: 'INR', symbol: '₹', name: 'Indian Rupee' }
+                { code: 'UGX', symbol: 'USh', name: 'Ugandan Shilling' }
             ];
             
             const converterDiv = document.getElementById('currencyConverter');
             if (converterDiv) {
                 converterDiv.innerHTML = currencies.map(curr => {
-                    const convertedValue = (totalAmountKES * exchangeRates[curr.code]).toFixed(2);
+                    const convertedValue = (totalAmountKES * (exchangeRates[curr.code] || 0)).toFixed(2);
                     return `
                         <div class="currency-item">
                             <div class="currency-symbol">${curr.symbol} ${curr.code}</div>
@@ -629,177 +791,47 @@
             }, 4000);
         }
         
-        // Handle amount button clicks for PayPal
-        const paypalButtons = document.querySelectorAll('.amount-btn');
-        const paypalAmountInput = document.getElementById('customPaypalAmount');
-        
-        paypalButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                paypalButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                const amount = btn.getAttribute('data-amount');
-                if (paypalAmountInput) {
-                    paypalAmountInput.value = amount;
-                }
+        // Copy to clipboard function
+        window.copyToClipboard = function(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                showNotification('Address copied to clipboard!');
+            }).catch(() => {
+                showNotification('Failed to copy address', true);
             });
-        });
+        };
         
-        // Handle amount button clicks for M-Pesa
-        const mpesaButtons = document.querySelectorAll('.amount-btn-mpesa');
-        const mpesaAmountInput = document.getElementById('customMpesaAmount');
-        
-        mpesaButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                mpesaButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                const amount = btn.getAttribute('data-amount');
-                if (mpesaAmountInput) {
-                    mpesaAmountInput.value = amount;
-                }
-            });
-        });
-        
-        // Handle amount button clicks for Airtel
-        const airtelButtons = document.querySelectorAll('.amount-btn-airtel');
-        const airtelAmountInput = document.getElementById('customAirtelAmount');
-        
-        airtelButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                airtelButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                const amount = btn.getAttribute('data-amount');
-                if (airtelAmountInput) {
-                    airtelAmountInput.value = amount;
-                }
-            });
-        });
-        
-        // PayPal Donation Handler
+        // PayPal Donation
         const paypalBtn = document.getElementById('paypalBtn');
         const PAYPAL_EMAIL = 'isaacnyongesa459@gmail.com';
         
         if (paypalBtn) {
             paypalBtn.addEventListener('click', () => {
-                let amount = paypalAmountInput ? paypalAmountInput.value : '';
+                let amount = document.getElementById('customPaypalAmount').value;
                 if (!amount || amount <= 0) {
                     showNotification('Please enter a valid donation amount', true);
                     return;
                 }
-                
                 const paypalUrl = `https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=${encodeURIComponent(PAYPAL_EMAIL)}&item_name=Imperishable+Crown+Bible+Baptist+Church&currency_code=USD&amount=${amount}&no_shipping=1&no_note=1&tax=0&rm=1`;
-                
                 showNotification(`Redirecting to PayPal for $${amount} USD donation...`);
                 setTimeout(() => {
                     window.open(paypalUrl, '_blank');
-                    showNotification(`Thank you for your $${amount} USD donation! God bless you!`);
                 }, 1000);
             });
         }
         
-        // M-Pesa Donation Handler
-        const mpesaBtn = document.getElementById('mpesaBtn');
-        if (mpesaBtn) {
-            mpesaBtn.addEventListener('click', () => {
-                let amount = mpesaAmountInput ? mpesaAmountInput.value : '';
+        // Binance Donation
+        const binanceBtn = document.getElementById('binanceBtn');
+        if (binanceBtn) {
+            binanceBtn.addEventListener('click', () => {
+                let amount = document.getElementById('customBinanceAmount').value;
                 if (!amount || amount <= 0) {
-                    showNotification('Please enter a valid donation amount in KES', true);
+                    showNotification('Please enter a valid donation amount in USDT', true);
                     return;
                 }
-                
-                const details = `Business No: 400200\nAccount No: 1120161\nAmount: KES ${amount}\nBusiness: Imperishable Crown Bible Baptist Church`;
-                navigator.clipboard.writeText(details).then(() => {
-                    showNotification(`Paybill details copied! Complete payment via M-Pesa.`);
-                }).catch(() => {
-                    showNotification(`Please use Paybill: 400200, Account: 1120161, Amount: KES ${amount}`);
-                });
+                showNotification(`Binance donation of ${amount} USDT prepared! Please send to the wallet address provided.`);
             });
         }
         
-        // Airtel Money Donation Handler (Direct to phone number)
-        const airtelBtn = document.getElementById('airtelBtn');
-        const airtelPhoneInput = document.getElementById('airtelPhoneNumber');
-        const CHURCH_AIRTEL_NUMBER = '254723542142';
-        
-        if (airtelBtn) {
-            airtelBtn.addEventListener('click', () => {
-                let amount = airtelAmountInput ? airtelAmountInput.value : '';
-                let phoneNumber = airtelPhoneInput ? airtelPhoneInput.value : '';
-                
-                if (!amount || amount <= 0) {
-                    showNotification('Please enter a valid donation amount in KES', true);
-                    return;
-                }
-                
-                if (!phoneNumber || phoneNumber.length < 9) {
-                    showNotification('Please enter a valid Airtel phone number', true);
-                    return;
-                }
-                
-                // Format phone number
-                let formattedPhone = phoneNumber.replace(/\D/g, '');
-                if (formattedPhone.startsWith('0')) {
-                    formattedPhone = '254' + formattedPhone.substring(1);
-                } else if (!formattedPhone.startsWith('254')) {
-                    formattedPhone = '254' + formattedPhone;
-                }
-                
-                const airtelPaymentUrl = `tel:${formattedPhone}`;
-                const paymentDetails = `Airtel Money Transfer\nAmount: KES ${amount}\nRecipient: ${CHURCH_AIRTEL_NUMBER}\nYour Number: ${formattedPhone}\n\nPlease initiate Airtel Money transfer to:\nPhone: ${CHURCH_AIRTEL_NUMBER}\nAmount: KES ${amount}`;
-                
-                navigator.clipboard.writeText(paymentDetails).then(() => {
-                    showNotification(`Airtel Money donation of KES ${amount} prepared! Transfer to ${CHURCH_AIRTEL_NUMBER} has been copied.`);
-                }).catch(() => {
-                    showNotification(`Please send KES ${amount} to Airtel number ${CHURCH_AIRTEL_NUMBER} from your phone`);
-                });
-            });
-        }
-        
-        // Gift Card Handlers
-        const giftCardBtns = document.querySelectorAll('.gift-card-btn');
-        giftCardBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const cardType = btn.getAttribute('data-type');
-                const cardName = cardType.charAt(0).toUpperCase() + cardType.slice(1);
-                
-                if (btn.classList.contains('airtel-gift')) {
-                    const giftPhoneInput = document.getElementById('giftCardPhone');
-                    const phoneNumber = giftPhoneInput ? giftPhoneInput.value : '';
-                    
-                    if (!phoneNumber) {
-                        showNotification('Please enter recipient phone number for gift card', true);
-                        return;
-                    }
-                    
-                    showNotification(`${cardName} Gift Card will be sent to ${phoneNumber} via SMS! Thank you for your generosity!`);
-                } else {
-                    showNotification(`${cardName} Gift Card option selected! Please complete your PayPal donation to receive the gift card code via email.`);
-                }
-            });
-        });
-        
-        // Clear active state when typing custom amount
-        if (paypalAmountInput) {
-            paypalAmountInput.addEventListener('input', () => {
-                paypalButtons.forEach(b => b.classList.remove('active'));
-            });
-        }
-        
-        if (mpesaAmountInput) {
-            mpesaAmountInput.addEventListener('input', () => {
-                mpesaButtons.forEach(b => b.classList.remove('active'));
-            });
-        }
-        
-        if (airtelAmountInput) {
-            airtelAmountInput.addEventListener('input', () => {
-                airtelButtons.forEach(b => b.classList.remove('active'));
-            });
-        }
-        
-        // Initialize currency conversions on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            updateCurrencyConversions();
-        });
-    </script>
-</body>
-</html>
+        // Stripe Donation
+        const stripeBtn = document.getElementById
