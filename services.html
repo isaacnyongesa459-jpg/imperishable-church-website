@@ -3,17 +3,338 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Heavenly Grace Church | Services</title>
+    <title>Imperishable Crown Bible Baptist Church | Services</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Enhanced Services Page Styles */
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            padding: 4rem 0;
+        }
+
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .service-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #e67e22, #f39c12);
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .service-card i {
+            font-size: 3rem;
+            color: #e67e22;
+            margin-bottom: 1rem;
+        }
+
+        .service-card h3 {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .service-time {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #e67e22;
+            margin-bottom: 0.5rem;
+        }
+
+        .service-location {
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+            font-style: italic;
+        }
+
+        .service-description {
+            color: #95a5a6;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .service-features {
+            list-style: none;
+            padding: 0;
+            margin-top: 1rem;
+            text-align: left;
+        }
+
+        .service-features li {
+            padding: 0.5rem 0;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .service-features li i {
+            font-size: 0.9rem;
+            color: #e67e22;
+            margin: 0;
+        }
+
+        .btn-join {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.6rem 1.5rem;
+            background: #e67e22;
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-join:hover {
+            background: #d35400;
+            transform: scale(1.05);
+        }
+
+        /* Weekly Schedule Section */
+        .schedule-section {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 4rem 0;
+        }
+
+        .schedule-table {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+
+        .schedule-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .schedule-table th {
+            background: #e67e22;
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .schedule-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #ecf0f1;
+            color: #2c3e50;
+        }
+
+        .schedule-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .day-icon {
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+            color: #e67e22;
+        }
+
+        /* Special Events Section */
+        .special-events {
+            margin-top: 3rem;
+        }
+
+        .event-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            color: white;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .event-card:hover {
+            transform: translateX(10px);
+        }
+
+        .event-card h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-card p {
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-date {
+            font-size: 0.9rem;
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+        }
+
+        /* Live Stream Section */
+        .livestream-section {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+        }
+
+        .livestream-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #e74c3c;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .livestream-btn:hover {
+            background: #c0392b;
+            transform: scale(1.05);
+        }
+
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(231, 76, 60, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+            }
+        }
+
+        /* Modal for Join Button */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            max-width: 400px;
+            text-align: center;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .modal-content h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .modal-btn-confirm {
+            background: #e67e22;
+            color: white;
+        }
+
+        .modal-btn-cancel {
+            background: #95a5a6;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .service-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .schedule-table {
+                overflow-x: auto;
+            }
+            
+            .schedule-table table {
+                min-width: 600px;
+            }
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
                 <img src="images/church-logo.png" alt="Church Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/40x40?text=✝'">
-                <span>Heavenly <span>Grace</span></span>
+                <span>Imperishable Crown</span>
             </div>
             <div class="hamburger" id="hamburger">
                 <i class="fas fa-bars"></i>
@@ -26,7 +347,7 @@
             <a href="home.html" class="dropdown-item"><i class="fas fa-home"></i> Home</a>
             <a href="about.html" class="dropdown-item"><i class="fas fa-church"></i> About Us</a>
             <a href="services.html" class="dropdown-item active"><i class="fas fa-praying-hands"></i> Services</a>
-            <a href="leadership.html" class="dropdown-item active"><i class="fas fa-users"></i> Leadership</a>
+            <a href="leadership.html" class="dropdown-item"><i class="fas fa-users"></i> Leadership</a>
             <a href="events.html" class="dropdown-item"><i class="fas fa-calendar-alt"></i> Events</a>
             <a href="donate.html" class="dropdown-item"><i class="fas fa-hand-holding-heart"></i> Give</a>
             <a href="contact.html" class="dropdown-item"><i class="fas fa-envelope"></i> Contact</a>
@@ -36,67 +357,198 @@
     <section class="page-header">
         <div class="container">
             <h1>Our Services</h1>
-            <p>Join us for worship and fellowship</p>
+            <p>Join us for worship, fellowship, and spiritual growth</p>
         </div>
     </section>
 
+    <!-- Main Services Section -->
     <section class="section">
         <div class="container">
+            <h2 style="text-align: center; margin-bottom: 2rem;">Weekly Services</h2>
             <div class="service-grid">
                 <div class="service-card">
                     <i class="fas fa-church"></i>
                     <h3>Sunday Worship Service</h3>
                     <div class="service-time">8:00 AM & 10:30 AM</div>
-                    <p>Main Sanctuary</p>
-                    <p>Come as you are for a powerful worship experience with live music and inspiring messages.</p>
+                    <div class="service-location"><i class="fas fa-map-marker-alt"></i> Main Sanctuary</div>
+                    <p class="service-description">Experience powerful worship, inspiring messages, and a warm community. Our Sunday services feature live worship music, practical Bible teaching, and opportunities for prayer.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-music"></i> Live Worship Band</li>
+                        <li><i class="fas fa-bible"></i> Expository Preaching</li>
+                        <li><i class="fas fa-child"></i> Children's Ministry Available</li>
+                        <li><i class="fas fa-coffee"></i> Fellowship Breakfast (9:30 AM)</li>
+                    </ul>
+                    <button class="btn-join" onclick="openModal('Sunday Worship')">Plan Your Visit</button>
                 </div>
+
                 <div class="service-card">
                     <i class="fas fa-praying-hands"></i>
                     <h3>Wednesday Prayer Meeting</h3>
-                    <div class="service-time">6:00 PM</div>
-                    <p>Prayer Chapel</p>
-                    <p>Join us for a time of prayer, intercession, and spiritual renewal.</p>
+                    <div class="service-time">6:00 PM - 7:30 PM</div>
+                    <div class="service-location"><i class="fas fa-map-marker-alt"></i> Prayer Chapel</div>
+                    <p class="service-description">Midweek spiritual renewal through prayer, intercession, and worship. Join us as we seek God's face together for our church, community, and nation.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-pray"></i> Group Prayer Sessions</li>
+                        <li><i class="fas fa-hands-praying"></i> Intercessory Prayer</li>
+                        <li><i class="fas fa-heart"></i> Testimony Sharing</li>
+                        <li><i class="fas fa-church"></i> Anointing Service (Last Wednesday)</li>
+                    </ul>
+                    <button class="btn-join" onclick="openModal('Wednesday Prayer')">Join Prayer</button>
                 </div>
+
                 <div class="service-card">
                     <i class="fas fa-bible"></i>
                     <h3>Friday Bible Study</h3>
-                    <div class="service-time">7:00 PM</div>
-                    <p>Fellowship Hall</p>
-                    <p>Deepen your understanding of God's Word through interactive Bible study.</p>
+                    <div class="service-time">7:00 PM - 8:30 PM</div>
+                    <div class="service-location"><i class="fas fa-map-marker-alt"></i> Fellowship Hall</div>
+                    <p class="service-description">Deepen your understanding of God's Word through interactive verse-by-verse Bible study. Perfect for spiritual growth and building strong biblical foundations.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-book-open"></i> Verse-by-Verse Teaching</li>
+                        <li><i class="fas fa-comments"></i> Group Discussion</li>
+                        <li><i class="fas fa-question-circle"></i> Q&A Session</li>
+                        <li><i class="fas fa-hand-holding-heart"></i> Study Materials Provided</li>
+                    </ul>
+                    <button class="btn-join" onclick="openModal('Friday Bible Study')">Join Study</button>
                 </div>
+
                 <div class="service-card">
                     <i class="fas fa-child"></i>
                     <h3>Children's Church</h3>
                     <div class="service-time">10:30 AM (Sunday)</div>
-                    <p>Children's Wing</p>
-                    <p>Age-appropriate teaching and activities for children ages 3-12.</p>
+                    <div class="service-location"><i class="fas fa-map-marker-alt"></i> Children's Wing</div>
+                    <p class="service-description">Age-appropriate teaching and activities for children ages 3-12. Safe, fun, and educational environment where kids learn about God's love.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-puzzle-piece"></i> Interactive Bible Lessons</li>
+                        <li><i class="fas fa-music"></i> Kids Worship Songs</li>
+                        <li><i class="fas fa-paint-brush"></i> Arts & Crafts</li>
+                        <li><i class="fas fa-gamepad"></i> Fun Activities & Games</li>
+                    </ul>
+                    <button class="btn-join" onclick="openModal('Children\'s Church')">Register Child</button>
                 </div>
+
                 <div class="service-card">
                     <i class="fas fa-music"></i>
                     <h3>Youth Service</h3>
                     <div class="service-time">4:00 PM (Saturday)</div>
-                    <p>Youth Center</p>
-                    <p>Dynamic worship and relevant teaching for teenagers and young adults.</p>
+                    <div class="service-location"><i class="fas fa-map-marker-alt"></i> Youth Center</div>
+                    <p class="service-description">Dynamic worship and relevant teaching for teenagers and young adults (ages 13-25). Addressing real-life issues from a biblical perspective.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-guitar"></i> Contemporary Worship</li>
+                        <li><i class="fas fa-chalkboard-teacher"></i> Youth Relevant Topics</li>
+                        <li><i class="fas fa-utensils"></i> Fellowship & Snacks</li>
+                        <li><i class="fas fa-futbol"></i> Sports & Games</li>
+                    </ul>
+                    <button class="btn-join" onclick="openModal('Youth Service')">Join Youth</button>
                 </div>
+
                 <div class="service-card">
                     <i class="fas fa-users"></i>
                     <h3>Small Groups</h3>
                     <div class="service-time">Various Times</div>
-                    <p>Throughout the week</p>
-                    <p>Connect with others in small group settings across the city.</p>
+                    <div class="service-location"><i class="fas fa-map-marker-alt"></i> Throughout the Week</div>
+                    <p class="service-description">Connect with others in intimate small group settings across the city. Perfect for building meaningful relationships and growing together in faith.</p>
+                    <ul class="service-features">
+                        <li><i class="fas fa-home"></i> Home-Based Groups</li>
+                        <li><i class="fas fa-business-time"></i> Workplace Groups</li>
+                        <li><i class="fas fa-venus-mars"></i> Men's & Women's Groups</li>
+                        <li><i class="fas fa-heart"></i> Couples & Singles Groups</li>
+                    </ul>
+                    <button class="btn-join" onclick="openModal('Small Groups')">Find a Group</button>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Weekly Schedule Section -->
+    <section class="schedule-section">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 2rem;">Weekly Schedule at a Glance</h2>
+            <div class="schedule-table">
+                <table>
+                    <thead>
+                        <tr><th>Day</th><th>Service</th><th>Time</th><th>Location</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><i class="fas fa-sun day-icon"></i> Sunday</td><td>Morning Worship</td><td>8:00 AM</td><td>Main Sanctuary</td></tr>
+                        <tr><td><i class="fas fa-sun day-icon"></i> Sunday</td><td>Second Service</td><td>10:30 AM</td><td>Main Sanctuary</td></tr>
+                        <tr><td><i class="fas fa-sun day-icon"></i> Sunday</td><td>Children's Church</td><td>10:30 AM</td><td>Children's Wing</td></tr>
+                        <tr><td><i class="fas fa-sun day-icon"></i> Sunday</td><td>Youth Fellowship</td><td>2:00 PM</td><td>Youth Center</td></tr>
+                        <tr><td><i class="fas fa-calendar-day day-icon"></i> Tuesday</td><td>Women's Ministry</td><td>10:00 AM</td><td>Fellowship Hall</td></tr>
+                        <tr><td><i class="fas fa-calendar-day day-icon"></i> Wednesday</td><td>Prayer Meeting</td><td>6:00 PM</td><td>Prayer Chapel</td></tr>
+                        <tr><td><i class="fas fa-calendar-day day-icon"></i> Thursday</td><td>Men's Fellowship</td><td>7:00 PM</td><td>Fellowship Hall</td></tr>
+                        <tr><td><i class="fas fa-calendar-day day-icon"></i> Friday</td><td>Bible Study</td><td>7:00 PM</td><td>Fellowship Hall</td></tr>
+                        <tr><td><i class="fas fa-calendar-day day-icon"></i> Saturday</td><td>Youth Service</td><td>4:00 PM</td><td>Youth Center</td></tr>
+                        <tr><td><i class="fas fa-calendar-day day-icon"></i> Saturday</td><td>Choir Practice</td><td>5:00 PM</td><td>Main Sanctuary</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Special Events Section -->
+    <section class="section">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 2rem;">Upcoming Special Events</h2>
+            <div class="special-events">
+                <div class="event-card">
+                    <h4>🔥 Annual Prayer & Fasting Week</h4>
+                    <p>Join us for a week of prayer, fasting, and spiritual renewal.</p>
+                    <span class="event-date"><i class="fas fa-calendar"></i> April 15-21, 2026</span>
+                </div>
+                <div class="event-card">
+                    <h4>🎉 Easter Celebration Service</h4>
+                    <p>Celebrate the resurrection of our Lord Jesus Christ with us.</p>
+                    <span class="event-date"><i class="fas fa-calendar"></i> April 20, 2026 | 8:00 AM & 10:30 AM</span>
+                </div>
+                <div class="event-card">
+                    <h4>👨‍👩‍👧‍👦 Family Conference 2026</h4>
+                    <p>Strengthening families through God's Word. Guest speakers, workshops, and fun activities.</p>
+                    <span class="event-date"><i class="fas fa-calendar"></i> May 10-12, 2026</span>
+                </div>
+                <div class="event-card">
+                    <h4>🎓 Graduation & Thanksgiving Service</h4>
+                    <p>Celebrating our graduates and thanking God for His faithfulness.</p>
+                    <span class="event-date"><i class="fas fa-calendar"></i> June 15, 2026 | 10:30 AM</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Stream Section -->
+    <section class="livestream-section">
+        <div class="container">
+            <h2><i class="fas fa-video"></i> Can't Join In Person?</h2>
+            <p>Watch our services live from anywhere in the world</p>
+            <a href="#" class="livestream-btn pulse" onclick="showNotification('Live stream will begin Sunday 8:00 AM EAT')">
+                <i class="fas fa-play"></i> Watch Live Stream
+            </a>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">Previous sermons available on our YouTube channel</p>
+        </div>
+    </section>
+
+    <!-- Modal for Join Buttons -->
+    <div id="joinModal" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-church" style="font-size: 3rem; color: #e67e22;"></i>
+            <h3 id="modalTitle">Join Service</h3>
+            <p>Please provide your contact information to help us prepare for your visit.</p>
+            <input type="text" id="visitorName" placeholder="Your Full Name">
+            <input type="email" id="visitorEmail" placeholder="Email Address">
+            <input type="tel" id="visitorPhone" placeholder="Phone Number">
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-confirm" onclick="submitJoinRequest()">Submit</button>
+                <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
                 <h3>Imperishable Crown Bible Baptist Church</h3>
-                
-                <p><i class="fas fa-map-marker-alt"></i> 191 Maramu Avenue, Kitale, Kenya</p>
+                <p><i class="fas fa-map-marker-alt"></i>2436 - 30200, Kitale, Kenya</p>
                 <p><i class="fas fa-phone"></i> +254 723 542 142</p>
-                <p><i class="fas fa-envelope"></i> fredwanyonyi2001@gmail.com</p>
+                <p><i class="fas fa-envelope"></i> imperishablec@gmail.com</p>
             </div>
             <div class="footer-section">
                 <h3>Quick Links</h3>
@@ -120,5 +572,89 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+        // Modal functionality
+        let currentService = '';
+        
+        function openModal(serviceName) {
+            currentService = serviceName;
+            const modal = document.getElementById('joinModal');
+            const modalTitle = document.getElementById('modalTitle');
+            modalTitle.textContent = `Join ${serviceName}`;
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('joinModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            // Clear form fields
+            document.getElementById('visitorName').value = '';
+            document.getElementById('visitorEmail').value = '';
+            document.getElementById('visitorPhone').value = '';
+        }
+        
+        function submitJoinRequest() {
+            const name = document.getElementById('visitorName').value;
+            const email = document.getElementById('visitorEmail').value;
+            const phone = document.getElementById('visitorPhone').value;
+            
+            if (!name || !email) {
+                showNotification('Please provide your name and email address', true);
+                return;
+            }
+            
+            showNotification(`Thank you ${name}! We've received your request to join ${currentService}. Our team will contact you soon.`);
+            closeModal();
+        }
+        
+        function showNotification(message, isError = false) {
+            // Create temporary notification
+            const notification = document.createElement('div');
+            notification.textContent = message;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.right = '20px';
+            notification.style.backgroundColor = isError ? '#e74c3c' : '#27ae60';
+            notification.style.color = 'white';
+            notification.style.padding = '1rem 1.5rem';
+            notification.style.borderRadius = '8px';
+            notification.style.zIndex = '1001';
+            notification.style.animation = 'slideIn 0.3s ease';
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 4000);
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('joinModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+        
+        // Add CSS for notification animation if not exists
+        if (!document.querySelector('#notification-style')) {
+            const style = document.createElement('style');
+            style.id = 'notification-style';
+            style.textContent = `
+                @keyframes slideIn {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    </script>
 </body>
 </html>
