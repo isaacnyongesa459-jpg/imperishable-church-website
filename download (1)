@@ -1,0 +1,27 @@
+# M-PESA DARaja credentials
+# NEVER put real credentials in donate.html or frontend JavaScript.
+
+# Get these from your Daraja app.
+MPESA_CONSUMER_KEY=YOUR_CONSUMER_KEY
+MPESA_CONSUMER_SECRET=YOUR_CONSUMER_SECRET
+
+# Shortcode / Till / Paybill configured for your Daraja app.
+MPESA_SHORTCODE=YOUR_SHORTCODE
+
+# STK Push passkey from your Daraja app.
+MPESA_PASSKEY=YOUR_PASSKEY
+
+# Sandbox URL for testing.
+# Change to the production URL only after your app is approved/configured for production.
+MPESA_BASE_URL=https://sandbox.safaricom.co.ke
+
+# Daraja must be able to reach this URL from the internet.
+# For local testing, use a public HTTPS tunnel such as ngrok or Cloudflare Tunnel.
+MPESA_CALLBACK_URL=https://YOUR_PUBLIC_DOMAIN/api/mpesa/callback
+
+# STK Push settings
+MPESA_TRANSACTION_TYPE=CustomerPayBillOnline
+MPESA_ACCOUNT_REFERENCE=CHURCH-DONATION
+MPESA_TRANSACTION_DESC=Church donation
+
+PORT=3000
