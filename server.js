@@ -7,20 +7,20 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Parse JSON requests.
+// Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Serve the existing church website files.
-app.use(express.static(__dirname));
+// Serve static frontend assets from 'public' folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 /**
- * Convert a Kenyan phone number into the 2547XXXXXXXX / 2541XXXXXXXX
- * format expected by M-Pesa.
+ * Format phone number to standard 254XXXXXXXXX format
  */
 function normalizeKenyanPhone(phone) {
     const digits = String(phone || '').replace(/\D/g, '');
 
-    if (/^07\d{8}$/.test(digits) || /^01\d{8}$/.test(digits)) {
+    if (/^07\d{8}$/.test(digits) \vert{}\vert{} /^01\d{8}$/.test(digits)) {
         return `254${digits.slice(1)}`;
     }
 
@@ -28,15 +28,11 @@ function normalizeKenyanPhone(phone) {
         return digits;
     }
 
-    if (/^\+254[71]\d{8}$/.test(String(phone).trim())) {
-        return digits;
-    }
-
     return null;
 }
 
 /**
- * Get an OAuth access token from Daraja.
+ * Request Daraja OAuth Access Token
  */
 async function getMpesaAccessToken() {
     const credentials = Buffer.from(
@@ -56,7 +52,7 @@ async function getMpesaAccessToken() {
 }
 
 /**
- * Generate the timestamp and password required by the STK Push API.
+ * Generate password required by Safaricom STK Push API
  */
 function createStkPassword(timestamp) {
     return Buffer.from(
@@ -65,7 +61,7 @@ function createStkPassword(timestamp) {
 }
 
 /**
- * M-Pesa STK Push endpoint.
+ * Endpoint to initiate M-Pesa STK Push
  */
 app.post('/api/mpesa/stkpush', async (req, res) => {
     try {
@@ -80,11 +76,11 @@ app.post('/api/mpesa/stkpush', async (req, res) => {
 
         if (!phone) {
             return res.status(400).json({
-                error: 'Enter a valid Kenyan Safaricom number, e.g. 0712345678.'
+                error: 'Enter a valid Kenyan Safaricom number (e.g., 0712345678 or 0112345678).'
             });
         }
 
-        const required = [
+        const requiredVars = [
             'MPESA_CONSUMER_KEY',
             'MPESA_CONSUMER_SECRET',
             'MPESA_SHORTCODE',
@@ -93,17 +89,16 @@ app.post('/api/mpesa/stkpush', async (req, res) => {
             'MPESA_BASE_URL'
         ];
 
-        const missing = required.filter((name) => !process.env[name]);
-
+        const missing = requiredVars.filter((key) => !process.env[key]);
         if (missing.length > 0) {
             return res.status(500).json({
-                error: `M-Pesa server configuration is incomplete. Missing: ${missing.join(', ')}`
+                error: `M-Pesa server configuration incomplete. Missing: ${missing.join(', ')}`
             });
         }
 
         const accessToken = await getMpesaAccessToken();
 
-        // Daraja timestamps use YYYYMMDDHHmmss.
+        // Format Timestamp YYYYMMDDHHmmss
         const now = new Date();
         const timestamp =
             now.getFullYear().toString() +
@@ -123,8 +118,8 @@ app.post('/api/mpesa/stkpush', async (req, res) => {
             PartyB: process.env.MPESA_SHORTCODE,
             PhoneNumber: phone,
             CallBackURL: process.env.MPESA_CALLBACK_URL,
-            AccountReference: process.env.MPESA_ACCOUNT_REFERENCE || 'CHURCH-DONATION',
-            TransactionDesc: process.env.MPESA_TRANSACTION_DESC || 'Church donation'
+            AccountReference: process.env.MPESA_ACCOUNT_REFERENCE || 'ChurchDonation',
+            TransactionDesc: process.env.MPESA_TRANSACTION_DESC || 'Church Contribution'
         };
 
         const response = await axios.post(
@@ -138,55 +133,45 @@ app.post('/api/mpesa/stkpush', async (req, res) => {
             }
         );
 
-        console.log('STK Push response:', response.data);
-
         return res.json({
             success: true,
-            message: 'STK Push sent. Check your phone and enter your M-Pesa PIN.',
+            message: 'STK Push sent successfully. Please check your phone and enter M-Pesa PIN.',
             checkoutRequestID: response.data.CheckoutRequestID,
             customerMessage: response.data.CustomerMessage
         });
     } catch (error) {
-        console.error(
-            'M-Pesa error:',
-            error.response?.data || error.message
-        );
-
+        console.error('M-Pesa STK Push error:', error.response?.data || error.message);
         return res.status(500).json({
-            error:
-                error.response?.data?.errorMessage ||
-                error.response?.data?.ResponseDescription ||
-                'Unable to start the M-Pesa payment.'
+            error: error.response?.data?.errorMessage ||
+                   error.response?.data?.ResponseDescription ||
+                   'Unable to complete M-Pesa payment request.'
         });
     }
 });
 
 /**
- * Daraja sends the final transaction result to this endpoint.
- *
- * IMPORTANT:
- * Do not trust a browser request to this URL as proof of payment.
- * In a production system, store and verify the callback transaction data.
+ * Daraja Webhook/Callback Listener
  */
 app.post('/api/mpesa/callback', (req, res) => {
-    console.log('M-Pesa callback received:');
-    console.dir(req.body, { depth: null });
-
-    // Acknowledge the callback quickly.
+    console.log('M-Pesa Callback Received:', JSON.stringify(req.body, null, 2));
     res.json({
         ResultCode: 0,
         ResultDesc: 'Callback received successfully'
     });
 });
 
-// Simple health check.
+/**
+ * Health Check API
+ */
 app.get('/api/health', (req, res) => {
-    res.json({
-        status: 'ok',
-        service: 'Imperishable Crown M-Pesa backend'
-    });
+    res.json({ status: 'ok', service: 'Imperishable Crown M-Pesa API Backend' });
+});
+
+// Fallback route to serve front-end root
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, () => {
-    console.log(`Church website running at http://localhost:${PORT}`);
+    console.log(`Server running at http://localhost:${PORT}`);
 });
