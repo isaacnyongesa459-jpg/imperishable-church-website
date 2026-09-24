@@ -6,326 +6,13 @@
     <title>Imperishable Crown Bible Baptist Church | M-Pesa Giving</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Additional styles for donation section */
-        .donation-section {
-            padding: 4rem 0;
-        }
-
-        /* Total Amount Card */
-        .total-amount-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 3rem;
-            text-align: center;
-            color: white;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-        }
-
-        .total-amount-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            opacity: 0.95;
-        }
-
-        .main-amount {
-            font-size: 3rem;
-            font-weight: 800;
-            margin: 1rem 0;
-            letter-spacing: 2px;
-        }
-
-        .currency-converter {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(255,255,255,0.2);
-        }
-
-        .currency-item {
-            background: rgba(255,255,255,0.1);
-            border-radius: 12px;
-            padding: 0.75rem;
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease;
-        }
-
-        .currency-item:hover {
-            transform: scale(1.05);
-            background: rgba(255,255,255,0.2);
-        }
-
-        .currency-symbol {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .currency-value {
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-
-        .donation-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            max-width: 1600px;
-            margin: 0 auto;
-        }
-
-        .donation-card {
-            background: #fff;
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            text-align: center;
-        }
-
-        .donation-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
-        }
-
-        .donation-card h3 {
-            font-size: 1.5rem;
-            margin: 1rem 0;
-            color: #2c3e50;
-        }
-
-        .donation-card p {
-            color: #7f8c8d;
-            margin-bottom: 1.5rem;
-        }
-
-        .logo-wrapper {
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .original-logo {
-            height: 70px;
-            width: auto;
-            object-fit: contain;
-        }
-
-        .amount-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            justify-content: center;
-            margin: 1.5rem 0;
-        }
-
-        .amount-btn, .amount-btn-mpesa {
-            padding: 0.6rem 1.2rem;
-            border: 2px solid #e0e0e0;
-            background: #fff;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .amount-btn:hover, .amount-btn.active {
-            background: #003087;
-            border-color: #003087;
-            color: #fff;
-        }
-
-        .amount-btn-mpesa:hover, .amount-btn-mpesa.active {
-            background: #4CAF50;
-            border-color: #4CAF50;
-            color: #fff;
-        }
-
-        .amount-btn-airtel:hover, .amount-btn-airtel.active {
-            background: #E31E24;
-            border-color: #E31E24;
-            color: #fff;
-        }
-
-        .amount-btn-international:hover, .amount-btn-international.active {
-            background: #f39c12;
-            border-color: #f39c12;
-            color: #fff;
-        }
-
-        .custom-amount {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            margin: 1rem 0;
-            text-align: center;
-            transition: border-color 0.3s ease;
-        }
-
-        .custom-amount:focus {
-            outline: none;
-            border-color: #e67e22;
-        }
-
-        .pay-btn {
-            width: 100%;
-            padding: 0.9rem;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 0.5rem 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .mpesa-btn { background: #4CAF50; color: #fff; }
-        .mpesa-btn:hover { background: #45a049; transform: translateY(-2px); }
-
-        .payment-instructions {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background: #f8f9fa;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            text-align: left;
-            border-left: 4px solid;
-        }
-
-        .mpesa-instructions { border-left-color: #4CAF50; }
-
-        .payment-instructions strong {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #2c3e50;
-        }
-
-        .payment-instructions ol, .payment-instructions ul {
-            margin: 0.5rem 0 0 1.25rem;
-            padding: 0;
-        }
-
-        .payment-instructions li {
-            margin-bottom: 0.3rem;
-            line-height: 1.5;
-        }
-
-        .payment-instructions .business-details {
-            background: #fff;
-            padding: 0.5rem;
-            border-radius: 6px;
-            margin-top: 0.5rem;
-            font-family: monospace;
-            font-size: 0.9rem;
-            word-break: break-all;
-        }
-
-        .phone-input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 1rem;
-            margin: 1rem 0;
-            transition: border-color 0.3s ease;
-        }
-
-        .phone-input:focus {
-            outline: none;
-            border-color: #e67e22;
-        }
-
-        .qr-code {
-            margin: 1rem 0;
-            text-align: center;
-        }
-
-        .qr-code img {
-            max-width: 120px;
-            border-radius: 12px;
-        }
-
-        .copy-btn {
-            margin-left: 0.5rem;
-            padding: 0.2rem 0.5rem;
-            background: #F3BA2F;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        .copy-btn:hover {
-            background: #e5a800;
-        }
-
-        @media (max-width: 768px) {
-            .donation-container {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-            
-            .donation-card {
-                padding: 1.5rem;
-            }
-            
-            .amount-buttons {
-                gap: 0.5rem;
-            }
-            
-            .main-amount {
-                font-size: 2rem;
-            }
-            
-            .currency-converter {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .toast-notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #2c3e50;
-            color: #fff;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            z-index: 1000;
-            animation: slideIn 0.3s ease;
-            display: none;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="stylesdonate.css">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
-                <img src="images/church-logo.png" alt="Church Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/40x40?text=✝'">
+                <i class="fas fa-cross" style="font-size: 1.5rem; color: #4CAF50; margin-right: 8px;"></i>
                 <span>Imperishable Crown</span>
             </div>
             <div class="hamburger" id="hamburger">
@@ -336,67 +23,53 @@
 
     <div class="dropdown-menu" id="dropdownMenu">
         <div class="dropdown-content">
-            <a href="home.html" class="dropdown-item"><i class="fas fa-home"></i> Home</a>
-            <a href="about.html" class="dropdown-item"><i class="fas fa-church"></i> About Us</a>
-            <a href="services.html" class="dropdown-item"><i class="fas fa-praying-hands"></i> Services</a>
-            <a href="leadership.html" class="dropdown-item"><i class="fas fa-users"></i> Leadership</a>
-            <a href="events.html" class="dropdown-item"><i class="fas fa-calendar-alt"></i> Events</a>
-            <a href="donate.html" class="dropdown-item active"><i class="fas fa-hand-holding-heart"></i> Give</a>
-            <a href="contact.html" class="dropdown-item"><i class="fas fa-envelope"></i> Contact</a>
+            <a href="#" class="dropdown-item"><i class="fas fa-home"></i> Home</a>
+            <a href="#" class="dropdown-item active"><i class="fas fa-hand-holding-heart"></i> Give</a>
+            <a href="#" class="dropdown-item"><i class="fas fa-envelope"></i> Contact</a>
         </div>
     </div>
 
     <section class="page-header">
         <div class="container">
             <h1>Support Our Ministry via M-Pesa</h1>
-            <p>Your generosity helps us serve our community and spread God's love</p>
+            <p>Your generosity helps us serve our community and spread God's love.</p>
         </div>
     </section>
 
     <section class="section donation-section">
         <div class="container">
-            <!-- Total Amount Card with ALL Currency Conversions -->
             <div class="total-amount-card">
                 <h3><i class="fas fa-church"></i> Total Contributions Received</h3>
                 <div class="main-amount" id="mainAmount">KES 1,234,287.98</div>
-                <div class="currency-converter" id="currencyConverter">
-                    <!-- Currency conversions will be populated by JavaScript -->
-                </div>
             </div>
 
             <div class="donation-container">
-                <!-- 7. M-Pesa - Kenya, Tanzania, Ethiopia -->
                 <div class="donation-card">
                     <div class="logo-wrapper">
                         <i class="fas fa-mobile-alt" style="font-size: 4rem; color: #4CAF50;"></i>
                     </div>
-                    <h3>M-Pesa</h3>
+                    <h3>M-Pesa Giving</h3>
                     <p>Kenya, Tanzania, Ethiopia</p>
+                    
                     <div class="amount-buttons">
                         <button class="amount-btn-mpesa" data-amount="100">KES 100</button>
                         <button class="amount-btn-mpesa" data-amount="500">KES 500</button>
                         <button class="amount-btn-mpesa" data-amount="1000">KES 1,000</button>
                         <button class="amount-btn-mpesa" data-amount="5000">KES 5,000</button>
                     </div>
+
                     <input type="number" id="customMpesaAmount" class="custom-amount" placeholder="Other amount (KES)" min="10" step="1">
-                    <input
-                        type="tel"
-                        id="mpesaPhoneNumber"
-                        class="phone-input"
-                        placeholder="M-Pesa phone number (07XXXXXXXX or 01XXXXXXXX)"
-                        inputmode="numeric"
-                        autocomplete="tel"
-                    >
+                    <input type="tel" id="mpesaPhoneNumber" class="phone-input" placeholder="M-Pesa phone number (07XXXXXXXX or 01XXXXXXXX)" inputmode="numeric" autocomplete="tel">
+                    
                     <button id="mpesaBtn" class="pay-btn mpesa-btn">
                         <i class="fas fa-mobile-alt"></i> Donate via M-Pesa
                     </button>
+
                     <div class="payment-instructions mpesa-instructions">
                         <strong><i class="fas fa-mobile-alt"></i> M-Pesa STK Push:</strong>
-                        <div class="business-details">Enter your M-Pesa number and amount above, then click Donate. Your phone should receive an STK Push. The payment will be processed by the server.</div>
+                        <div class="business-details">Enter your M-Pesa phone number and amount above, then click Donate. Check your phone for the M-Pesa prompt and enter your PIN.</div>
                     </div>
                 </div>
-
-            </div>
             </div>
         </div>
     </section>
@@ -405,24 +78,9 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h3>Imperishable Crown Bible Baptist Church</h3>
-                <p><i class="fas fa-map-marker-alt"></i>2435 30200, Kitale, Kenya</p>
-                <p><i class="fas fa-phone"></i>+254 723 542 142</p>
+                <p><i class="fas fa-map-marker-alt"></i> Kitale, Kenya</p>
+                <p><i class="fas fa-phone"></i> +254 723 542 142</p>
                 <p><i class="fas fa-envelope"></i> imperishablec@gmail.com</p>
-            </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <p><a href="services.html">Service Times</a></p>
-                <p><a href="donate.html">Give Online</a></p>
-                <p><a href="events.html">Events</a></p>
-            </div>
-            <div class="footer-section">
-                <h3>Follow Us</h3>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                </div>
             </div>
         </div>
         <div class="footer-bottom">
@@ -433,83 +91,5 @@
     <div id="toastNotification" class="toast-notification"></div>
 
     <script src="script.js"></script>
-    <script>
-        // Small notification helper
-        function showNotification(message, isError = false) {
-            const toast = document.getElementById('toastNotification');
-            toast.textContent = message;
-            toast.style.backgroundColor = isError ? '#e74c3c' : '#27ae60';
-            toast.style.display = 'block';
-
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 5000);
-        }
-
-        // M-Pesa amount buttons
-        const mpesaButtons = document.querySelectorAll('.amount-btn-mpesa');
-        const mpesaAmountInput = document.getElementById('customMpesaAmount');
-
-        mpesaButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                mpesaButtons.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-
-                if (mpesaAmountInput) {
-                    mpesaAmountInput.value = btn.dataset.amount;
-                }
-            });
-        });
-
-        // Start an M-Pesa STK Push through our Node/Express backend
-        const mpesaBtn = document.getElementById('mpesaBtn');
-
-        if (mpesaBtn) {
-            mpesaBtn.addEventListener('click', async () => {
-                const amount = Number(mpesaAmountInput?.value);
-                const phone = document.getElementById('mpesaPhoneNumber')?.value.trim();
-
-                if (!Number.isInteger(amount) || amount < 10) {
-                    showNotification('Please enter a valid amount of at least KES 10.', true);
-                    return;
-                }
-
-                if (!phone) {
-                    showNotification('Please enter the M-Pesa phone number that will receive the STK Push.', true);
-                    return;
-                }
-
-                mpesaBtn.disabled = true;
-                mpesaBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending STK Push...';
-
-                try {
-                    const response = await fetch('/api/mpesa/stkpush', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ amount, phone })
-                    });
-
-                    const data = await response.json();
-
-                    if (!response.ok) {
-                        throw new Error(data.error || 'Unable to start the M-Pesa payment.');
-                    }
-
-                    showNotification(
-                        data.message ||
-                        'STK Push sent. Check your phone and enter your M-Pesa PIN.'
-                    );
-                } catch (error) {
-                    console.error(error);
-                    showNotification(error.message || 'Payment request failed.', true);
-                } finally {
-                    mpesaBtn.disabled = false;
-                    mpesaBtn.innerHTML = '<i class="fas fa-mobile-alt"></i> Donate via M-Pesa';
-                }
-            });
-        }
-    </script>
 </body>
 </html>
