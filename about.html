@@ -3,339 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Imperishable Crown Bible Baptist Church | About Us</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Additional styles for better visual appearance */
-        .page-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 4rem 0;
-            text-align: center;
-        }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        /* Gallery Section Styles */
-        .gallery-section {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            padding: 4rem 0;
-        }
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
 
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .gallery-card {
-            background: #fff;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.4s ease;
-            cursor: pointer;
-            position: relative;
-            animation: fadeInUp 0.6s ease forwards;
-        }
-
-        .gallery-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        .gallery-img {
-            width: 100%;
-            height: 280px;
-            object-fit: cover;
-            display: block;
-            background-color: #f0f0f0;
-            transition: transform 0.5s ease;
-        }
-
-        .gallery-card:hover .gallery-img {
-            transform: scale(1.05);
-        }
-
-        .gallery-caption {
-            padding: 1.5rem;
-            text-align: center;
-            background: white;
-        }
-
-        .gallery-caption h3 {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            color: #2c3e50;
-        }
-
-        .gallery-caption p {
-            font-size: 0.95rem;
-            color: #7f8c8d;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        .section-title {
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
-        .section-title h2 {
-            font-size: 2.5rem;
-            color: #2c3e50;
-            position: relative;
-            display: inline-block;
-            padding-bottom: 0.75rem;
-            margin: 0;
-        }
-
-        .section-title h2:after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(90deg, #e67e22, #f39c12);
-            border-radius: 2px;
-        }
-
-        .section-subtitle {
-            text-align: center;
-            color: #7f8c8d;
-            max-width: 700px;
-            margin: 1rem auto 0 auto;
-            font-size: 1.1rem;
-        }
-
-        /* Image Error Fallback */
-        .gallery-img.error-img {
-            object-fit: contain;
-            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
-            padding: 2rem;
-        }
-
-        /* Lightbox Modal */
-        .lightbox-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 9999;
-            cursor: pointer;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .lightbox-content {
-            position: relative;
-            width: 90%;
-            max-width: 1200px;
-            margin: 50px auto;
-            text-align: center;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .lightbox-img {
-            max-width: 100%;
-            max-height: 80vh;
-            border-radius: 8px;
-            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .lightbox-caption {
-            color: white;
-            margin-top: 1rem;
-            font-size: 1.1rem;
-        }
-
-        .close-lightbox {
-            position: absolute;
-            top: 20px;
-            right: 40px;
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .close-lightbox:hover {
-            color: #e67e22;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Count badge */
-        .image-count {
-            text-align: center;
-            margin-top: 2rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 50px;
-            display: inline-block;
-            width: auto;
-            margin-left: auto;
-            margin-right: auto;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .image-count span {
-            font-weight: bold;
-            color: #e67e22;
-        }
-
-        .about-text {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-        }
-
-        .beliefs-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .beliefs-list li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #ecf0f1;
-        }
-
-        .beliefs-list li:last-child {
-            border-bottom: none;
-        }
-
-        .beliefs-list li strong {
-            color: #e67e22;
-        }
-
-        @media (max-width: 768px) {
-            .gallery-section {
-                padding: 2.5rem 0;
-            }
-            
-            .gallery-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                gap: 1.5rem;
-            }
-            
-            .gallery-img {
-                height: 240px;
-            }
-            
-            .gallery-caption {
-                padding: 1rem;
-            }
-            
-            .gallery-caption h3 {
-                font-size: 1.1rem;
-            }
-            
-            .section-title h2 {
-                font-size: 2rem;
-            }
-            
-            .section-subtitle {
-                font-size: 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .gallery-grid {
-                grid-template-columns: 1fr;
-                gap: 1.25rem;
-            }
-            
-            .gallery-img {
-                height: 220px;
-            }
-            
-            .lightbox-content {
-                width: 95%;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="about.css">
 </head>
+
 <body>
 
+<!-- ================= NAVBAR ================= -->
 <nav class="navbar">
     <div class="nav-container">
+
         <div class="logo">
-            <img src="images/church-logo.png" alt="Church Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/40x40?text=✝'">
+            <img src="images/church-logo.png"
+                 alt="Church Logo"
+                 class="logo-img"
+                 onerror="this.src='https://via.placeholder.com/40x40?text=✝'">
+
             <span>Imperishable Crown</span>
         </div>
+
         <div class="hamburger" id="hamburger">
             <i class="fas fa-bars"></i>
         </div>
+
     </div>
 </nav>
 
+
+<!-- ================= DROPDOWN MENU ================= -->
 <div class="dropdown-menu" id="dropdownMenu">
+
     <div class="dropdown-content">
-        <a href="home.html" class="dropdown-item"><i class="fas fa-home"></i> Home</a>
-        <a href="about.html" class="dropdown-item active"><i class="fas fa-church"></i> About Us</a>
-        <a href="services.html" class="dropdown-item"><i class="fas fa-praying-hands"></i> Services</a>
-        <a href="leadership.html" class="dropdown-item active"><i class="fas fa-users"></i> Leadership</a>
-        <a href="events.html" class="dropdown-item"><i class="fas fa-calendar-alt"></i> Events</a>
-        <a href="donate.html" class="dropdown-item"><i class="fas fa-hand-holding-heart"></i> Give</a>
-        <a href="contact.html" class="dropdown-item"><i class="fas fa-envelope"></i> Contact</a>
+
+        <a href="home.html" class="dropdown-item">
+            <i class="fas fa-home"></i>
+            Home
+        </a>
+
+        <a href="about.html" class="dropdown-item active">
+            <i class="fas fa-church"></i>
+            About Us
+        </a>
+
+        <a href="services.html" class="dropdown-item">
+            <i class="fas fa-praying-hands"></i>
+            Services
+        </a>
+
+        <a href="leadership.html" class="dropdown-item">
+            <i class="fas fa-users"></i>
+            Leadership
+        </a>
+
+        <a href="events.html" class="dropdown-item">
+            <i class="fas fa-calendar-alt"></i>
+            Events
+        </a>
+
+        <a href="donate.html" class="dropdown-item">
+            <i class="fas fa-hand-holding-heart"></i>
+            Give
+        </a>
+
+        <a href="contact.html" class="dropdown-item">
+            <i class="fas fa-envelope"></i>
+            Contact
+        </a>
+
     </div>
 </div>
 
+
+<!-- ================= PAGE HEADER ================= -->
 <section class="page-header">
+
     <div class="container">
+
         <h1>About Our Church</h1>
-        <p>Learn more about our faith, mission, and community</p>
+
+        <p>
+            Learn more about our faith, mission, and community
+        </p>
+
     </div>
+
 </section>
 
+
+<!-- ================= ABOUT SECTION ================= -->
 <section class="section">
+
     <div class="container">
+
         <div class="about-content">
+
             <div class="about-text">
+
                 <h2>Our Story</h2>
+
                 <p>
-                    Imperishable Crown Bible Baptist Church was founded in <strong>2020</strong> during the challenging season of the COVID-19 pandemic.
-                    What started with just <strong>five committed believers</strong> meeting faithfully despite the uncertainty grew steadily as God opened doors
-                    and more people were reached with the Gospel.
+                    Imperishable Crown Bible Baptist Church was founded in
+                    <strong>2020</strong> during the challenging season of the
+                    COVID-19 pandemic.
                 </p>
+
                 <p>
-                    Through prayer, perseverance, and God's grace, the church expanded into a warm spiritual family.
-                    Today, Imperishable Crown Bible Baptist Church joyfully welcomes <strong>80–100 worshippers every Sunday</strong> for fellowship, worship, and the teaching of God's Word.
+                    What started with just
+                    <strong>five committed believers</strong>
+                    meeting faithfully despite the uncertainty grew steadily
+                    as God opened doors and more people were reached with the Gospel.
                 </p>
+
+                <p>
+                    Through prayer, perseverance, and God's grace, the church
+                    expanded into a warm spiritual family.
+                </p>
+
+                <p>
+                    Today, Imperishable Crown Bible Baptist Church joyfully
+                    welcomes <strong>80–100 worshippers every Sunday</strong>
+                    for fellowship, worship, and the teaching of God's Word.
+                </p>
+
 
                 <h2>Denomination</h2>
                 <p>Baptist</p>
 
+
                 <h2>Languages</h2>
+
                 <p>
                     English<br>
                     Kiswahili<br>
@@ -343,246 +147,425 @@
                     Kalenjin
                 </p>
 
+
                 <h2>Our Mission</h2>
-                <p>To live out and share the faith, hope, and love of Jesus Christ.</p>
+
+                <p>
+                    To live out and share the faith, hope, and love of Jesus Christ.
+                </p>
+
 
                 <h2>Our Vision</h2>
-                <p>To break new ground by using God-given resources and opportunities to reach the unreached with the true Gospel.</p>
+
+                <p>
+                    To break new ground by using God-given resources and
+                    opportunities to reach the unreached with the true Gospel.
+                </p>
+
 
                 <h2>Our Motto</h2>
-                <p>Reaching the unreached with the true Gospel.</p>
+
+                <p>
+                    Reaching the unreached with the true Gospel.
+                </p>
+
 
                 <h2>What We Believe</h2>
+
                 <ul class="beliefs-list">
-                    <li><strong>The Bible</strong> – The inspired, infallible, and authoritative Word of God.</li>
-                    <li><strong>The Trinity</strong> – One God in three persons: Father, Son, and Holy Spirit.</li>
-                    <li><strong>Salvation</strong> – Salvation is by grace through faith in Jesus Christ alone.</li>
-                    <li><strong>The Church</strong> – The body of Christ called to worship, fellowship, discipleship, ministry, and mission.</li>
-                    <li><strong>The Return of Christ</strong> – Jesus Christ will return visibly and victoriously to judge the living and the dead.</li>
+
+                    <li>
+                        <strong>The Bible</strong> –
+                        The inspired, infallible, and authoritative Word of God.
+                    </li>
+
+                    <li>
+                        <strong>The Trinity</strong> –
+                        One God in three persons: Father, Son, and Holy Spirit.
+                    </li>
+
+                    <li>
+                        <strong>Salvation</strong> –
+                        Salvation is by grace through faith in Jesus Christ alone.
+                    </li>
+
+                    <li>
+                        <strong>The Church</strong> –
+                        The body of Christ called to worship, fellowship,
+                        discipleship, ministry, and mission.
+                    </li>
+
+                    <li>
+                        <strong>The Return of Christ</strong> –
+                        Jesus Christ will return visibly and victoriously
+                        to judge the living and the dead.
+                    </li>
+
                 </ul>
+
             </div>
+
         </div>
+
     </div>
+
 </section>
 
-<!-- Image Gallery Section - Images directly in HTML -->
+
+<!-- ================= GALLERY ================= -->
 <section class="gallery-section">
+
     <div class="container">
+
         <div class="section-title">
+
             <h2>Moments of Faith & Fellowship</h2>
+
         </div>
+
         <div class="section-subtitle">
-            <p>Glimpses into our worship, community life, and the joy of gathering together.</p>
+
+            <p>
+                Glimpses into our worship, community life,
+                and the joy of gathering together.
+            </p>
+
         </div>
-        
+
+
         <div class="gallery-grid" id="galleryGrid">
-            <!-- Image 1 -->
-            <div class="gallery-card" data-title="Sunday Worship Service" data-desc="Lifting voices in praise and worship during our main service.">
-                <img src="1.jpg" alt="Sunday Worship Service" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+
+            <!-- IMAGE 1 -->
+            <div class="gallery-card"
+                 data-title="Sunday Worship Service"
+                 data-desc="Lifting voices in praise and worship during our main service.">
+
+                <img src="1.jpg"
+                     alt="Sunday Worship Service"
+                     class="gallery-img"
+                     onerror="imageError(this)">
+
                 <div class="gallery-caption">
                     <h3>Sunday Worship Service</h3>
-                    <p>Lifting voices in praise and worship during our main service.</p>
+                    <p>
+                        Lifting voices in praise and worship during our main service.
+                    </p>
                 </div>
+
             </div>
 
-            <!-- Image 2 -->
-            <div class="gallery-card" data-title="Fellowship Meal" data-desc="Sharing love and meals together after Sunday service.">
-                <img src="2.jpg" alt="Fellowship Meal" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+
+            <!-- IMAGE 2 -->
+            <div class="gallery-card"
+                 data-title="Fellowship Meal"
+                 data-desc="Sharing love and meals together after Sunday service.">
+
+                <img src="2.jpg"
+                     alt="Fellowship Meal"
+                     class="gallery-img"
+                     onerror="imageError(this)">
+
                 <div class="gallery-caption">
                     <h3>Fellowship Meal</h3>
-                    <p>Sharing love and meals together after Sunday service.</p>
+                    <p>
+                        Sharing love and meals together after Sunday service.
+                    </p>
                 </div>
+
             </div>
 
-            <!-- Image 3 -->
-            <div class="gallery-card" data-title="Graduates in our Ministry" data-desc="Celebrating academic achievements and spiritual growth.">
-                <img src="3.jpg" alt="Graduates in our Ministry" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+
+            <!-- IMAGE 3 -->
+            <div class="gallery-card"
+                 data-title="Graduates in our Ministry"
+                 data-desc="Celebrating academic achievements and spiritual growth.">
+
+                <img src="3.jpg"
+                     alt="Graduates in our Ministry"
+                     class="gallery-img"
+                     onerror="imageError(this)">
+
                 <div class="gallery-caption">
                     <h3>Graduates in our Ministry</h3>
-                    <p>Celebrating academic achievements and spiritual growth.</p>
+                    <p>
+                        Celebrating academic achievements and spiritual growth.
+                    </p>
                 </div>
+
             </div>
 
-            <!-- Image 4 -->
-            <div class="gallery-card" data-title="Children's Ministry" data-desc="Raising the next generation in faith and joy.">
-                <img src="4.jpg" alt="Children's Ministry" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+
+            <!-- IMAGE 4 -->
+            <div class="gallery-card"
+                 data-title="Children's Ministry"
+                 data-desc="Raising the next generation in faith and joy.">
+
+                <img src="4.jpg"
+                     alt="Children's Ministry"
+                     class="gallery-img"
+                     onerror="imageError(this)">
+
                 <div class="gallery-caption">
                     <h3>Children's Ministry</h3>
-                    <p>Raising the next generation in faith and joy.</p>
+                    <p>
+                        Raising the next generation in faith and joy.
+                    </p>
                 </div>
+
             </div>
 
-            <!-- Image 5 -->
-            <div class="gallery-card" data-title="Graduation Celebration" data-desc="Celebrating our graduates and their achievements.">
-                <img src="9.jpg" alt="Graduation Celebration" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+
+            <!-- IMAGE 5 -->
+            <div class="gallery-card"
+                 data-title="Graduation Celebration"
+                 data-desc="Celebrating our graduates and their achievements.">
+
+                <img src="9.jpg"
+                     alt="Graduation Celebration"
+                     class="gallery-img"
+                     onerror="imageError(this)">
+
                 <div class="gallery-caption">
                     <h3>Graduation Celebration</h3>
-                    <p>Celebrating our graduates and their achievements.</p>
+                    <p>
+                        Celebrating our graduates and their achievements.
+                    </p>
                 </div>
+
             </div>
 
-            <!-- Image 6 -->
-            <div class="gallery-card" data-title="Church Choir" data-desc="Voices of angels leading us into His presence.">
-                <img src="7.jpg" alt="Church Choir" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+
+            <!-- IMAGE 6 -->
+            <div class="gallery-card"
+                 data-title="Church Choir"
+                 data-desc="Voices of angels leading us into His presence.">
+
+                <img src="7.jpg"
+                     alt="Church Choir"
+                     class="gallery-img"
+                     onerror="imageError(this)">
+
                 <div class="gallery-caption">
                     <h3>Church Choir</h3>
-                    <p>Voices of angels leading us into His presence.</p>
+                    <p>
+                        Voices of angels leading us into His presence.
+                    </p>
                 </div>
+
             </div>
 
-            <!-- Image 7 -->
-            <div class="gallery-card" data-title="Outreach Mission" data-desc="Sharing the Gospel and serving our community.">
-                <img src="7.jpg" alt="Outreach Mission" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+
+            <!-- IMAGE 7 -->
+            <div class="gallery-card"
+                 data-title="Outreach Mission"
+                 data-desc="Sharing the Gospel and serving our community.">
+
+                <img src="7.jpg"
+                     alt="Outreach Mission"
+                     class="gallery-img"
+                     onerror="imageError(this)">
+
                 <div class="gallery-caption">
                     <h3>Outreach Mission</h3>
-                    <p>Sharing the Gospel and serving our community.</p>
+                    <p>
+                        Sharing the Gospel and serving our community.
+                    </p>
                 </div>
+
             </div>
 
-            <!-- Image 8 -->
-            <div class="gallery-card" data-title="Youth Conference" data-desc="Empowering young people to live for Christ boldly.">
-                <img src="6.jpg" alt="Youth Conference" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+
+            <!-- IMAGE 8 -->
+            <div class="gallery-card"
+                 data-title="Youth Conference"
+                 data-desc="Empowering young people to live for Christ boldly.">
+
+                <img src="6.jpg"
+                     alt="Youth Conference"
+                     class="gallery-img"
+                     onerror="imageError(this)">
+
                 <div class="gallery-caption">
-                    <h3> Conference</h3>
-                    <p>Empowering young people to live for Christ boldly.</p>
+                    <h3>Youth Conference</h3>
+                    <p>
+                        Empowering young people to live for Christ boldly.
+                    </p>
                 </div>
+
             </div>
 
-            <!-- Image 9 -->
-            <div class="gallery-card" data-title="Baptism Sunday" data-desc="Celebrating new life in Christ through baptism.">
-                <img src="5.jpg" alt="Baptism Sunday" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+
+            <!-- IMAGE 9 -->
+            <div class="gallery-card"
+                 data-title="Baptism Sunday"
+                 data-desc="Celebrating new life in Christ through baptism.">
+
+                <img src="5.jpg"
+                     alt="Baptism Sunday"
+                     class="gallery-img"
+                     onerror="imageError(this)">
+
                 <div class="gallery-caption">
                     <h3>Baptism Sunday</h3>
-                    <p>Celebrating new life in Christ through baptism.</p>
+                    <p>
+                        Celebrating new life in Christ through baptism.
+                    </p>
                 </div>
+
             </div>
 
-            <!-- Image 10 -->
-            <div class="gallery-card" data-title="Family Fellowship" data-desc="Strengthening family bonds in God's creation.">
-                <img src="8.jpg" alt="Family Fellowship" class="gallery-img" onerror="this.src='https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon'; this.classList.add('error-img')">
+
+            <!-- IMAGE 10 -->
+            <div class="gallery-card"
+                 data-title="Family Fellowship"
+                 data-desc="Strengthening family bonds in God's creation.">
+
+                <img src="8.jpg"
+                     alt="Family Fellowship"
+                     class="gallery-img"
+                     onerror="imageError(this)">
+
                 <div class="gallery-caption">
                     <h3>Family Fellowship</h3>
-                    <p>Strengthening family bonds in God's creation.</p>
+                    <p>
+                        Strengthening family bonds in God's creation.
+                    </p>
                 </div>
+
             </div>
+
         </div>
-        
+
+
         <div class="image-count">
-            <i class="fas fa-images"></i> <span>10</span> Beautiful Moments Captured
+
+            <i class="fas fa-images"></i>
+
+            <span>10</span>
+
+            Beautiful Moments Captured
+
         </div>
+
     </div>
+
 </section>
 
-<!-- Lightbox Modal -->
+
+<!-- ================= LIGHTBOX ================= -->
 <div id="lightboxModal" class="lightbox-modal">
-    <span class="close-lightbox">&times;</span>
+
+    <span class="close-lightbox" id="closeLightbox">
+        &times;
+    </span>
+
     <div class="lightbox-content">
-        <img id="lightboxImg" class="lightbox-img" src="" alt="">
-        <div id="lightboxCaption" class="lightbox-caption"></div>
+
+        <img id="lightboxImg"
+             class="lightbox-img"
+             src=""
+             alt="">
+
+        <div id="lightboxCaption"
+             class="lightbox-caption">
+        </div>
+
     </div>
+
 </div>
 
+
+<!-- ================= FOOTER ================= -->
 <footer class="footer">
+
     <div class="footer-content">
-        <div class="footer-section">
-            <h3>Imperishable Crown Bible Baptist Church</h3>
-            <p><i class="fas fa-map-marker-alt"></i> 2435 - 30200, Kitale, Kenya</p>
-            <p><i class="fas fa-phone"></i> +254 723 542 142</p>
-            <p><i class="fas fa-envelope"></i> imperishablec@gmail.com</p>
-        </div>
 
         <div class="footer-section">
+
+            <h3>
+                Imperishable Crown Bible Baptist Church
+            </h3>
+
+            <p>
+                <i class="fas fa-map-marker-alt"></i>
+                2435 - 30200, Kitale, Kenya
+            </p>
+
+            <p>
+                <i class="fas fa-phone"></i>
+                +254 723 542 142
+            </p>
+
+            <p>
+                <i class="fas fa-envelope"></i>
+                imperishablec@gmail.com
+            </p>
+
+        </div>
+
+
+        <div class="footer-section">
+
             <h3>Quick Links</h3>
-            <p><a href="services.html">Service Times</a></p>
-            <p><a href="donate.html">Give Online</a></p>
-            <p><a href="events.html">Events</a></p>
+
+            <p>
+                <a href="services.html">Service Times</a>
+            </p>
+
+            <p>
+                <a href="donate.html">Give Online</a>
+            </p>
+
+            <p>
+                <a href="events.html">Events</a>
+            </p>
+
         </div>
 
+
         <div class="footer-section">
+
             <h3>Follow Us</h3>
+
             <div class="social-links">
-                <a href="https://facebook.com/fred.wanyonyi.948494" target="_blank">
+
+                <a href="https://facebook.com/fred.wanyonyi.948494"
+                   target="_blank">
                     <i class="fab fa-facebook"></i>
                 </a>
+
                 <a href="#" target="_blank">
                     <i class="fab fa-youtube"></i>
                 </a>
+
                 <a href="#" target="_blank">
                     <i class="fab fa-instagram"></i>
                 </a>
+
                 <a href="#" target="_blank">
                     <i class="fab fa-twitter"></i>
                 </a>
+
             </div>
+
         </div>
+
     </div>
+
 
     <div class="footer-bottom">
-        <p>&copy; 2026 Imperishable Crown Bible Baptist Church. All rights reserved.</p>
+
+        <p>
+            &copy; 2026 Imperishable Crown Bible Baptist Church.
+            All rights reserved.
+        </p>
+
     </div>
+
 </footer>
 
-<script src="script.js"></script>
-<script>
-    // Lightbox functionality for gallery images
-    document.addEventListener('DOMContentLoaded', function() {
-        const modal = document.getElementById('lightboxModal');
-        const lightboxImg = document.getElementById('lightboxImg');
-        const lightboxCaption = document.getElementById('lightboxCaption');
-        const closeBtn = document.querySelector('.close-lightbox');
-        
-        // Get all gallery cards
-        const galleryCards = document.querySelectorAll('.gallery-card');
-        
-        // Add click event to each gallery card
-        galleryCards.forEach(card => {
-            card.addEventListener('click', function() {
-                const img = this.querySelector('.gallery-img');
-                const title = this.querySelector('.gallery-caption h3').textContent;
-                const description = this.querySelector('.gallery-caption p').textContent;
-                
-                lightboxImg.src = img.src;
-                lightboxCaption.innerHTML = `<strong>${title}</strong><br>${description}`;
-                modal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            });
-        });
-        
-        // Close lightbox function
-        function closeLightbox() {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        }
-        
-        // Close button click
-        if (closeBtn) {
-            closeBtn.addEventListener('click', closeLightbox);
-        }
-        
-        // Click outside modal to close
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                closeLightbox();
-            }
-        });
-        
-        // Escape key to close
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && modal.style.display === 'block') {
-                closeLightbox();
-            }
-        });
-        
-        // Log success message
-        console.log('Gallery initialized with 10 images from HTML');
-    });
-    
-    // Optional: Function to handle image loading errors with better fallbacks
-    function handleImageError(imgElement) {
-        imgElement.src = 'https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon';
-        imgElement.classList.add('error-img');
-        console.warn(`Image failed to load: ${imgElement.alt}`);
-    }
-</script>
+
+<script src="about.js"></script>
+
 </body>
 </html>
