@@ -1,0 +1,777 @@
+/* ========================================
+   IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
+   HOME PAGE STYLES
+======================================== */
+
+
+/* ========================================
+   RESET
+======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #ffffff;
+    color: #333;
+    line-height: 1.6;
+}
+
+
+/* ========================================
+   NAVIGATION BAR
+======================================== */
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+
+    background: rgba(20, 20, 20, 0.95);
+
+    z-index: 1000;
+
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.nav-container {
+    max-width: 1200px;
+
+    margin: auto;
+
+    padding: 15px 25px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+
+/* ========================================
+   LOGO
+======================================== */
+
+.logo {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    color: white;
+}
+
+
+.logo-img {
+    width: 45px;
+
+    height: 45px;
+
+    object-fit: cover;
+
+    border-radius: 50%;
+}
+
+
+.logo-name {
+    font-size: 1rem;
+
+    font-weight: 600;
+}
+
+
+/* ========================================
+   HAMBURGER
+======================================== */
+
+.hamburger {
+    width: 45px;
+
+    height: 45px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: transparent;
+
+    color: white;
+
+    font-size: 1.5rem;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+
+.hamburger:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+
+/* ========================================
+   DROPDOWN MENU
+======================================== */
+
+.dropdown-menu {
+    position: fixed;
+
+    top: 75px;
+
+    right: 20px;
+
+    width: 250px;
+
+    background: white;
+
+    border-radius: 12px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+
+    z-index: 999;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform: translateY(-10px);
+
+    transition: all 0.3s ease;
+}
+
+
+.dropdown-menu.show {
+    opacity: 1;
+
+    visibility: visible;
+
+    transform: translateY(0);
+}
+
+
+.dropdown-content {
+    padding: 10px;
+}
+
+
+.dropdown-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 13px 15px;
+
+    color: #333;
+
+    text-decoration: none;
+
+    border-radius: 8px;
+
+    font-weight: 500;
+
+    transition: 0.3s;
+}
+
+
+.dropdown-item i {
+    width: 20px;
+
+    text-align: center;
+}
+
+
+.dropdown-item:hover {
+    background: #f1f1f1;
+
+    color: #e67e22;
+}
+
+
+.dropdown-item.active {
+    background: #e67e22;
+
+    color: white;
+}
+
+
+/* ========================================
+   HERO SECTION
+======================================== */
+
+.hero {
+    background:
+        linear-gradient(
+            rgba(0, 0, 0, 0.55),
+            rgba(0, 0, 0, 0.55)
+        ),
+        url('11.jpg');
+
+    background-size: cover;
+
+    background-position: center;
+
+    background-attachment: fixed;
+
+    min-height: 90vh;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    color: white;
+
+    position: relative;
+
+    padding: 100px 20px 50px;
+}
+
+
+.hero-content {
+    max-width: 800px;
+
+    padding: 2rem;
+
+    animation: fadeInUp 1s ease;
+}
+
+
+.hero-content h1 {
+    font-size: 3rem;
+
+    margin-bottom: 1rem;
+
+    text-shadow:
+        2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+
+.hero-content p {
+    font-size: 1.2rem;
+
+    margin-bottom: 2rem;
+
+    text-shadow:
+        1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+
+/* ========================================
+   BUTTONS
+======================================== */
+
+.hero-buttons {
+    display: flex;
+
+    justify-content: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+}
+
+
+.btn {
+    display: inline-block;
+
+    padding: 12px 30px;
+
+    border-radius: 50px;
+
+    text-decoration: none;
+
+    font-weight: 600;
+
+    transition: all 0.3s ease;
+
+    cursor: pointer;
+}
+
+
+.btn-primary {
+    background: #e67e22;
+
+    color: white;
+
+    border: 2px solid #e67e22;
+}
+
+
+.btn-primary:hover {
+    background: #d35400;
+
+    border-color: #d35400;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+
+.btn-outline {
+    background: transparent;
+
+    color: white;
+
+    border: 2px solid white;
+}
+
+
+.btn-outline:hover {
+    background: white;
+
+    color: #e67e22;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+
+/* ========================================
+   GENERAL SECTION
+======================================== */
+
+.section {
+    padding: 80px 20px;
+}
+
+
+.container {
+    max-width: 1100px;
+
+    margin: auto;
+}
+
+
+.section-title {
+    text-align: center;
+
+    font-size: 2.2rem;
+
+    margin-bottom: 40px;
+
+    color: #333;
+}
+
+
+/* ========================================
+   MISSION
+======================================== */
+
+.mission-box {
+    max-width: 850px;
+
+    margin: 0 auto 50px;
+
+    padding: 30px;
+
+    text-align: center;
+
+    background: #f8f8f8;
+
+    border-left: 5px solid #e67e22;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+
+.mission-box p {
+    font-size: 1.1rem;
+
+    color: #555;
+}
+
+
+/* ========================================
+   FEATURES
+======================================== */
+
+.features-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 25px;
+}
+
+
+.feature-card {
+    text-align: center;
+
+    padding: 35px 25px;
+
+    background: white;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.08);
+
+    transition: 0.3s;
+}
+
+
+.feature-card:hover {
+    transform: translateY(-8px);
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+
+.feature-card i {
+    font-size: 2.5rem;
+
+    color: #e67e22;
+
+    margin-bottom: 15px;
+}
+
+
+.feature-card h3 {
+    margin-bottom: 10px;
+
+    font-size: 1.3rem;
+}
+
+
+.feature-card p {
+    color: #666;
+}
+
+
+/* ========================================
+   QUICK INFORMATION
+======================================== */
+
+.quick-info {
+    padding: 60px 20px;
+
+    background: #f5f5f5;
+}
+
+
+.info-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 30px;
+}
+
+
+.info-item {
+    text-align: center;
+
+    padding: 20px;
+}
+
+
+.info-item i {
+    font-size: 2rem;
+
+    color: #e67e22;
+
+    margin-bottom: 12px;
+}
+
+
+.info-item h4 {
+    font-size: 1.1rem;
+
+    margin-bottom: 5px;
+}
+
+
+.info-item p {
+    color: #666;
+}
+
+
+/* ========================================
+   FOOTER
+======================================== */
+
+.footer {
+    background: #181818;
+
+    color: white;
+
+    padding-top: 60px;
+}
+
+
+.footer-content {
+    max-width: 1100px;
+
+    margin: auto;
+
+    padding: 0 20px 40px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 40px;
+}
+
+
+.footer-section h3 {
+    margin-bottom: 20px;
+
+    font-size: 1.1rem;
+}
+
+
+.footer-section p {
+    margin-bottom: 10px;
+
+    color: #ccc;
+
+    font-size: 0.9rem;
+}
+
+
+.footer-section p i {
+    width: 22px;
+
+    color: #e67e22;
+}
+
+
+.footer-section a {
+    color: #ccc;
+
+    text-decoration: none;
+
+    transition: 0.3s;
+}
+
+
+.footer-section a:hover {
+    color: #e67e22;
+}
+
+
+/* ========================================
+   SOCIAL LINKS
+======================================== */
+
+.social-links {
+    display: flex;
+
+    gap: 15px;
+}
+
+
+.social-links a {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 40px;
+
+    height: 40px;
+
+    border-radius: 50%;
+
+    background: #292929;
+
+    color: white;
+
+    transition: 0.3s;
+}
+
+
+.social-links a:hover {
+    background: #e67e22;
+
+    transform: translateY(-3px);
+}
+
+
+/* ========================================
+   FOOTER BOTTOM
+======================================== */
+
+.footer-bottom {
+    text-align: center;
+
+    padding: 20px;
+
+    border-top: 1px solid #333;
+
+    color: #aaa;
+
+    font-size: 0.85rem;
+}
+
+
+/* ========================================
+   ANIMATIONS
+======================================== */
+
+@keyframes fadeInUp {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 768px) {
+
+    .hero {
+        background-attachment: scroll;
+    }
+
+
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+
+
+    .hero-content p {
+        font-size: 1rem;
+    }
+
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .footer-content {
+        grid-template-columns: 1fr;
+
+        text-align: center;
+    }
+
+
+    .social-links {
+        justify-content: center;
+    }
+}
+
+
+/* ========================================
+   SMALL PHONES
+======================================== */
+
+@media (max-width: 480px) {
+
+    .logo-name {
+        font-size: 0.85rem;
+    }
+
+
+    .logo-img {
+        width: 38px;
+
+        height: 38px;
+    }
+
+
+    .hero {
+        min-height: 85vh;
+
+        padding-top: 90px;
+    }
+
+
+    .hero-content {
+        padding: 1rem;
+    }
+
+
+    .hero-content h1 {
+        font-size: 1.5rem;
+    }
+
+
+    .hero-content p {
+        font-size: 0.9rem;
+    }
+
+
+    .hero-buttons {
+        flex-direction: column;
+
+        align-items: center;
+    }
+
+
+    .btn {
+        width: 200px;
+
+        text-align: center;
+    }
+
+
+    .dropdown-menu {
+        right: 10px;
+
+        left: 10px;
+
+        width: auto;
+    }
+
+
+    .section {
+        padding: 60px 15px;
+    }
+
+
+    .section-title {
+        font-size: 1.8rem;
+    }
+}
