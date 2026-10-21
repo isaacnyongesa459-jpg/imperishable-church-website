@@ -1,283 +1,373 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Imperishable Crown Bible Baptist Church | Home</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Hero Section with Background Image */
-      /*  .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1438032005730-c779502df39b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            min-height: 90vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-            position: relative;
-        }
 
-        /* Alternative: You can also use a local image from your IMAGES folder */
-        /* Uncomment the line below and comment the one above if you want to use a local image */
-        
-        .hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('11.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            min-height: 90vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-            position: relative;
-        }
-        */
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
-        .hero-content {
-            max-width: 800px;
-            padding: 2rem;
-            animation: fadeInUp 1s ease;
-        }
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-        .hero-content h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-        }
-
-        .hero-content p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Button Styles */
-        .btn {
-            display: inline-block;
-            padding: 12px 30px;
-            margin: 0 10px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            background: #e67e22;
-            color: white;
-            border: 2px solid #e67e22;
-        }
-
-        .btn-primary:hover {
-            background: #d35400;
-            border-color: #d35400;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .btn-outline {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-        }
-
-        .btn-outline:hover {
-            background: white;
-            color: #e67e22;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .hero-content h1 {
-                font-size: 2rem;
-            }
-            
-            .hero-content p {
-                font-size: 1rem;
-            }
-            
-            .btn {
-                padding: 10px 20px;
-                margin: 0 5px;
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero {
-                background-attachment: scroll;
-            }
-            
-            .hero-content h1 {
-                font-size: 1.5rem;
-            }
-            
-            .hero-content p {
-                font-size: 0.9rem;
-            }
-            
-            .btn {
-                display: block;
-                margin: 10px auto;
-                width: 200px;
-            }
-        }
-    </style>
+    <!-- Home Page CSS -->
+    <link rel="stylesheet" href="home.css">
 </head>
+
 <body>
+
     <!-- Navigation Bar -->
     <nav class="navbar">
+
         <div class="nav-container">
+
             <div class="logo">
-                <img src="images/church-logo.png" alt="Church Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/40x40?text=✝'">
-                <span> <span></span></span>
+                <img
+                    src="images/church-logo.png"
+                    alt="Imperishable Crown Bible Baptist Church Logo"
+                    class="logo-img"
+                >
+
+                <span class="logo-name">
+                    Imperishable Crown
+                </span>
             </div>
-            <div class="hamburger" id="hamburger">
+
+            <!-- Hamburger Button -->
+            <button
+                class="hamburger"
+                id="hamburger"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+            >
                 <i class="fas fa-bars"></i>
-            </div>
+            </button>
+
         </div>
+
     </nav>
+
 
     <!-- Dropdown Menu -->
     <div class="dropdown-menu" id="dropdownMenu">
+
         <div class="dropdown-content">
+
             <a href="home.html" class="dropdown-item active">
-                <i class="fas fa-home"></i> Home
+                <i class="fas fa-home"></i>
+                Home
             </a>
+
             <a href="about.html" class="dropdown-item">
-                <i class="fas fa-church"></i> About Us
+                <i class="fas fa-church"></i>
+                About Us
             </a>
+
             <a href="services.html" class="dropdown-item">
-                <i class="fas fa-praying-hands"></i> Services
+                <i class="fas fa-praying-hands"></i>
+                Services
             </a>
-            <a href="leadership.html" class="dropdown-item active"><i class="fas fa-users"></i> Leadership</a>
+
+            <a href="leadership.html" class="dropdown-item">
+                <i class="fas fa-users"></i>
+                Leadership
+            </a>
+
             <a href="events.html" class="dropdown-item">
-                <i class="fas fa-calendar-alt"></i> Events
+                <i class="fas fa-calendar-alt"></i>
+                Events
             </a>
+
             <a href="donate.html" class="dropdown-item">
-                <i class="fas fa-hand-holding-heart"></i> Give
+                <i class="fas fa-hand-holding-heart"></i>
+                Give
             </a>
+
             <a href="contact.html" class="dropdown-item">
-                <i class="fas fa-envelope"></i> Contact
+                <i class="fas fa-envelope"></i>
+                Contact
             </a>
+
         </div>
+
     </div>
 
-    <!-- Hero Section with Background Image -->
+
+    <!-- Hero Section -->
     <section class="hero">
+
         <div class="hero-content">
-            <h1>Welcome to Imperishable Crown Bible Baptist Church</h1>
-            <p>A place of worship, community, and spiritual growth. Join us as we journey together in faith.</p>
-            <div>
-                <a href="services.html" class="btn btn-primary">View Services</a>
-                <a href="donate.html" class="btn btn-outline">Give Online</a>
+
+            <h1>
+                Welcome to Imperishable Crown Bible Baptist Church
+            </h1>
+
+            <p>
+                A place of worship, community, and spiritual growth.
+                Join us as we journey together in faith.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a href="services.html" class="btn btn-primary">
+                    View Services
+                </a>
+
+                <a href="donate.html" class="btn btn-outline">
+                    Give Online
+                </a>
+
             </div>
+
         </div>
+
     </section>
 
-    <!-- Featured Content -->
+
+    <!-- Mission Section -->
     <section class="section">
+
         <div class="container">
-            <h2 class="section-title">Our Mission</h2>
+
+            <h2 class="section-title">
+                Our Mission
+            </h2>
+
             <div class="mission-box">
-                <p>To love God, serve our community, and make disciples of all nations through worship, teaching, and compassionate outreach.</p>
+
+                <p>
+                    To love God, serve our community, and make disciples
+                    of all nations through worship, teaching, and
+                    compassionate outreach.
+                </p>
+
             </div>
-            
+
+
+            <!-- Features -->
             <div class="features-grid">
+
                 <div class="feature-card">
+
                     <i class="fas fa-heart"></i>
-                    <h3>Love God</h3>
-                    <p>Worshiping with passion and devotion</p>
+
+                    <h3>
+                        Love God
+                    </h3>
+
+                    <p>
+                        Worshiping with passion and devotion.
+                    </p>
+
                 </div>
+
+
                 <div class="feature-card">
+
                     <i class="fas fa-hands-helping"></i>
-                    <h3>Serve Others</h3>
-                    <p>Making a difference in our community</p>
+
+                    <h3>
+                        Serve Others
+                    </h3>
+
+                    <p>
+                        Making a difference in our community.
+                    </p>
+
                 </div>
+
+
                 <div class="feature-card">
+
                     <i class="fas fa-globe"></i>
-                    <h3>Share Faith</h3>
-                    <p>Spreading hope to all nations</p>
+
+                    <h3>
+                        Share Faith
+                    </h3>
+
+                    <p>
+                        Spreading hope to all nations.
+                    </p>
+
                 </div>
+
             </div>
+
         </div>
+
     </section>
 
-    <!-- Quick Info -->
+
+    <!-- Quick Information -->
     <section class="quick-info">
+
         <div class="container">
+
             <div class="info-grid">
+
                 <div class="info-item">
+
                     <i class="fas fa-clock"></i>
-                    <h4>Sunday Services</h4>
-                    <p>8:00 AM & 10:30 AM</p>
+
+                    <h4>
+                        Sunday Services
+                    </h4>
+
+                    <p>
+                        8:00 AM & 10:30 AM
+                    </p>
+
                 </div>
+
+
                 <div class="info-item">
+
                     <i class="fas fa-map-marker-alt"></i>
-                    <h4>Our Location</h4>
-                    <p>2435 30200, Kitale, Kenya</p>
+
+                    <h4>
+                        Our Location
+                    </h4>
+
+                    <p>
+                        2435 30200, Kitale, Kenya
+                    </p>
+
                 </div>
+
+
                 <div class="info-item">
+
                     <i class="fas fa-phone"></i>
-                    <h4>Contact Us</h4>
-                    <p>+254 723 542 142</p>
+
+                    <h4>
+                        Contact Us
+                    </h4>
+
+                    <p>
+                        +254 723 542 142
+                    </p>
+
                 </div>
+
             </div>
+
         </div>
+
     </section>
+
 
     <!-- Footer -->
     <footer class="footer">
+
         <div class="footer-content">
+
+            <!-- Church Information -->
             <div class="footer-section">
-                <h3>Imperishable Crown Bible Baptist Church</h3>
-                <p><i class="fas fa-map-marker-alt"></i> 2435 30200, Kitale, Kenya</p>
-                <p><i class="fas fa-phone"></i> +254 723 542 142</p>
-                <p><i class="fas fa-envelope"></i> imperishablec@gmail.com</p>
+
+                <h3>
+                    Imperishable Crown Bible Baptist Church
+                </h3>
+
+                <p>
+                    <i class="fas fa-map-marker-alt"></i>
+                    2435 30200, Kitale, Kenya
+                </p>
+
+                <p>
+                    <i class="fas fa-phone"></i>
+                    +254 723 542 142
+                </p>
+
+                <p>
+                    <i class="fas fa-envelope"></i>
+                    imperishablec@gmail.com
+                </p>
+
             </div>
+
+
+            <!-- Quick Links -->
             <div class="footer-section">
-                <h3>Quick Links</h3>
-                <p><a href="services.html">Service Times</a></p>
-                <p><a href="donate.html">Give Online</a></p>
-                <p><a href="events.html">Events</a></p>
+
+                <h3>
+                    Quick Links
+                </h3>
+
+                <p>
+                    <a href="services.html">
+                        Service Times
+                    </a>
+                </p>
+
+                <p>
+                    <a href="donate.html">
+                        Give Online
+                    </a>
+                </p>
+
+                <p>
+                    <a href="events.html">
+                        Events
+                    </a>
+                </p>
+
             </div>
+
+
+            <!-- Social Media -->
             <div class="footer-section">
-                <h3>Follow Us</h3>
+
+                <h3>
+                    Follow Us
+                </h3>
+
                 <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
+
+                    <a href="#" aria-label="Facebook">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+
+                    <a href="#" aria-label="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+
+                    <a href="#" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+
+                    <a href="#" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+
                 </div>
+
             </div>
+
         </div>
+
+
+        <!-- Copyright -->
         <div class="footer-bottom">
-            <p>&copy; 2026 Imperishable Crown Bible Baptist Church. All rights reserved.</p>
+
+            <p>
+                &copy; 2026 Imperishable Crown Bible Baptist Church.
+                All rights reserved.
+            </p>
+
         </div>
+
     </footer>
 
-    <script src="script.js"></script>
+
+    <!-- Home Page JavaScript -->
+    <script src="home.js"></script>
+
 </body>
 </html>
