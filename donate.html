@@ -1,95 +1,503 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Imperishable Crown Bible Baptist Church | M-Pesa Giving</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="stylesdonate.css">
+
+    <title>Imperishable Crown Bible Baptist Church | Giving</title>
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
+
+    <!-- Donation CSS -->
+    <link rel="stylesheet" href="donate.css">
 </head>
+
 <body>
+
+    <!-- Navigation -->
     <nav class="navbar">
+
         <div class="nav-container">
+
             <div class="logo">
-                <i class="fas fa-cross" style="font-size: 1.5rem; color: #4CAF50; margin-right: 8px;"></i>
-                <span>Imperishable Crown</span>
+
+                <i class="fas fa-cross"></i>
+
+                <span>
+                    Imperishable Crown
+                </span>
+
             </div>
-            <div class="hamburger" id="hamburger">
+
+            <button
+                class="hamburger"
+                id="hamburger"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+            >
                 <i class="fas fa-bars"></i>
-            </div>
+            </button>
+
         </div>
+
     </nav>
 
+
+    <!-- Dropdown Menu -->
     <div class="dropdown-menu" id="dropdownMenu">
+
         <div class="dropdown-content">
-            <a href="#" class="dropdown-item"><i class="fas fa-home"></i> Home</a>
-            <a href="#" class="dropdown-item active"><i class="fas fa-hand-holding-heart"></i> Give</a>
-            <a href="#" class="dropdown-item"><i class="fas fa-envelope"></i> Contact</a>
+
+            <a href="home.html" class="dropdown-item">
+                <i class="fas fa-home"></i>
+                Home
+            </a>
+
+            <a href="about.html" class="dropdown-item">
+                <i class="fas fa-church"></i>
+                About Us
+            </a>
+
+            <a href="services.html" class="dropdown-item">
+                <i class="fas fa-praying-hands"></i>
+                Services
+            </a>
+
+            <a href="leadership.html" class="dropdown-item">
+                <i class="fas fa-users"></i>
+                Leadership
+            </a>
+
+            <a href="events.html" class="dropdown-item">
+                <i class="fas fa-calendar-alt"></i>
+                Events
+            </a>
+
+            <a href="donate.html" class="dropdown-item active">
+                <i class="fas fa-hand-holding-heart"></i>
+                Give
+            </a>
+
+            <a href="contact.html" class="dropdown-item">
+                <i class="fas fa-envelope"></i>
+                Contact
+            </a>
+
         </div>
+
     </div>
 
+
+    <!-- Page Header -->
     <section class="page-header">
+
         <div class="container">
-            <h1>Support Our Ministry via M-Pesa</h1>
-            <p>Your generosity helps us serve our community and spread God's love.</p>
+
+            <h1>
+                Support Our Ministry
+            </h1>
+
+            <p>
+                Your generosity helps us serve our community
+                and spread God's love.
+            </p>
+
         </div>
+
     </section>
 
+
+    <!-- Donation Section -->
     <section class="section donation-section">
+
         <div class="container">
+
+            <!-- Total Contributions -->
             <div class="total-amount-card">
-                <h3><i class="fas fa-church"></i> Total Contributions Received</h3>
-                <div class="main-amount" id="mainAmount">KES 1,234,287.98</div>
+
+                <h3>
+                    <i class="fas fa-church"></i>
+                    Total Contributions Received
+                </h3>
+
+                <div
+                    class="main-amount"
+                    id="mainAmount"
+                >
+                    KES 0.00
+                </div>
+
             </div>
 
-            <div class="donation-container">
+
+            <!-- Payment Methods -->
+            <div class="payment-methods">
+
+                <!-- M-PESA -->
                 <div class="donation-card">
-                    <div class="logo-wrapper">
-                        <i class="fas fa-mobile-alt" style="font-size: 4rem; color: #4CAF50;"></i>
-                    </div>
-                    <h3>M-Pesa Giving</h3>
-                    <p>Kenya, Tanzania, Ethiopia</p>
-                    
-                    <div class="amount-buttons">
-                        <button class="amount-btn-mpesa" data-amount="100">KES 100</button>
-                        <button class="amount-btn-mpesa" data-amount="500">KES 500</button>
-                        <button class="amount-btn-mpesa" data-amount="1000">KES 1,000</button>
-                        <button class="amount-btn-mpesa" data-amount="5000">KES 5,000</button>
+
+                    <div class="payment-icon mpesa-icon">
+                        <i class="fas fa-mobile-alt"></i>
                     </div>
 
-                    <input type="number" id="customMpesaAmount" class="custom-amount" placeholder="Other amount (KES)" min="10" step="1">
-                    <input type="tel" id="mpesaPhoneNumber" class="phone-input" placeholder="M-Pesa phone number (07XXXXXXXX or 01XXXXXXXX)" inputmode="numeric" autocomplete="tel">
-                    
-                    <button id="mpesaBtn" class="pay-btn mpesa-btn">
-                        <i class="fas fa-mobile-alt"></i> Donate via M-Pesa
+                    <h3>
+                        M-Pesa Giving
+                    </h3>
+
+                    <p>
+                        Donate securely using M-Pesa
+                    </p>
+
+
+                    <div class="amount-buttons">
+
+                        <button
+                            class="amount-btn"
+                            data-method="mpesa"
+                            data-amount="100"
+                        >
+                            KES 100
+                        </button>
+
+                        <button
+                            class="amount-btn"
+                            data-method="mpesa"
+                            data-amount="500"
+                        >
+                            KES 500
+                        </button>
+
+                        <button
+                            class="amount-btn"
+                            data-method="mpesa"
+                            data-amount="1000"
+                        >
+                            KES 1,000
+                        </button>
+
+                        <button
+                            class="amount-btn"
+                            data-method="mpesa"
+                            data-amount="5000"
+                        >
+                            KES 5,000
+                        </button>
+
+                    </div>
+
+
+                    <input
+                        type="number"
+                        id="customMpesaAmount"
+                        class="custom-amount"
+                        placeholder="Other amount (KES)"
+                        min="10"
+                        step="1"
+                    >
+
+
+                    <input
+                        type="tel"
+                        id="mpesaPhoneNumber"
+                        class="phone-input"
+                        placeholder="M-Pesa phone number"
+                        inputmode="numeric"
+                        autocomplete="tel"
+                    >
+
+
+                    <button
+                        id="mpesaBtn"
+                        class="pay-btn mpesa-btn"
+                    >
+                        <i class="fas fa-mobile-alt"></i>
+                        Donate via M-Pesa
                     </button>
 
-                    <div class="payment-instructions mpesa-instructions">
-                        <strong><i class="fas fa-mobile-alt"></i> M-Pesa STK Push:</strong>
-                        <div class="business-details">Enter your M-Pesa phone number and amount above, then click Donate. Check your phone for the M-Pesa prompt and enter your PIN.</div>
+
+                    <div class="payment-instructions">
+
+                        <strong>
+                            <i class="fas fa-info-circle"></i>
+                            M-Pesa STK Push
+                        </strong>
+
+                        <p>
+                            Enter your phone number and amount,
+                            then click Donate. You will receive
+                            an M-Pesa payment prompt on your phone.
+                        </p>
+
                     </div>
+
                 </div>
+
+
+                <!-- AIRTEL MONEY -->
+                <div class="donation-card">
+
+                    <div class="payment-icon airtel-icon">
+                        <i class="fas fa-mobile-screen-button"></i>
+                    </div>
+
+                    <h3>
+                        Airtel Money
+                    </h3>
+
+                    <p>
+                        Donate using Airtel Money
+                    </p>
+
+
+                    <input
+                        type="number"
+                        id="customAirtelAmount"
+                        class="custom-amount"
+                        placeholder="Amount (KES)"
+                        min="10"
+                        step="1"
+                    >
+
+
+                    <input
+                        type="tel"
+                        id="airtelPhoneNumber"
+                        class="phone-input"
+                        placeholder="Airtel phone number"
+                        inputmode="numeric"
+                        autocomplete="tel"
+                    >
+
+
+                    <button
+                        id="airtelBtn"
+                        class="pay-btn airtel-btn"
+                    >
+                        <i class="fas fa-mobile-alt"></i>
+                        Donate via Airtel
+                    </button>
+
+
+                    <div class="payment-instructions">
+
+                        <strong>
+                            <i class="fas fa-info-circle"></i>
+                            Airtel Money
+                        </strong>
+
+                        <p>
+                            Your payment will be processed
+                            through the Airtel Money API.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BANK -->
+                <div class="donation-card">
+
+                    <div class="payment-icon bank-icon">
+                        <i class="fas fa-building-columns"></i>
+                    </div>
+
+                    <h3>
+                        Bank Transfer
+                    </h3>
+
+                    <p>
+                        Make a direct bank contribution
+                    </p>
+
+
+                    <div class="bank-details">
+
+                        <p>
+                            <strong>Bank:</strong>
+                            <span id="bankName">
+                                Loading...
+                            </span>
+                        </p>
+
+                        <p>
+                            <strong>Account Name:</strong>
+                            <span id="accountName">
+                                Loading...
+                            </span>
+                        </p>
+
+                        <p>
+                            <strong>Account Number:</strong>
+                            <span id="accountNumber">
+                                Loading...
+                            </span>
+                        </p>
+
+                        <p>
+                            <strong>Branch:</strong>
+                            <span id="bankBranch">
+                                Loading...
+                            </span>
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        id="bankBtn"
+                        class="pay-btn bank-btn"
+                    >
+                        <i class="fas fa-building-columns"></i>
+                        Continue with Bank
+                    </button>
+
+                </div>
+
+
+                <!-- PAYPAL -->
+                <div class="donation-card">
+
+                    <div class="payment-icon paypal-icon">
+                        <i class="fab fa-paypal"></i>
+                    </div>
+
+                    <h3>
+                        PayPal
+                    </h3>
+
+                    <p>
+                        Donate internationally through PayPal
+                    </p>
+
+
+                    <input
+                        type="number"
+                        id="paypalAmount"
+                        class="custom-amount"
+                        placeholder="Amount"
+                        min="1"
+                        step="0.01"
+                    >
+
+
+                    <button
+                        id="paypalBtn"
+                        class="pay-btn paypal-btn"
+                    >
+                        <i class="fab fa-paypal"></i>
+                        Donate with PayPal
+                    </button>
+
+                </div>
+
+
+                <!-- VENMO -->
+                <div class="donation-card">
+
+                    <div class="payment-icon venmo-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+
+                    <h3>
+                        Venmo
+                    </h3>
+
+                    <p>
+                        Donate through Venmo
+                    </p>
+
+
+                    <input
+                        type="number"
+                        id="venmoAmount"
+                        class="custom-amount"
+                        placeholder="Amount"
+                        min="1"
+                        step="0.01"
+                    >
+
+
+                    <button
+                        id="venmoBtn"
+                        class="pay-btn venmo-btn"
+                    >
+                        <i class="fas fa-wallet"></i>
+                        Donate with Venmo
+                    </button>
+
+                </div>
+
             </div>
+
         </div>
+
     </section>
 
+
+    <!-- Footer -->
     <footer class="footer">
+
         <div class="footer-content">
+
             <div class="footer-section">
-                <h3>Imperishable Crown Bible Baptist Church</h3>
-                <p><i class="fas fa-map-marker-alt"></i> Kitale, Kenya</p>
-                <p><i class="fas fa-phone"></i> +254 723 542 142</p>
-                <p><i class="fas fa-envelope"></i> imperishablec@gmail.com</p>
+
+                <h3>
+                    Imperishable Crown Bible Baptist Church
+                </h3>
+
+                <p>
+                    <i class="fas fa-map-marker-alt"></i>
+                    Kitale, Kenya
+                </p>
+
+                <p>
+                    <i class="fas fa-phone"></i>
+                    +254 723 542 142
+                </p>
+
+                <p>
+                    <i class="fas fa-envelope"></i>
+                    imperishablec@gmail.com
+                </p>
+
             </div>
+
         </div>
+
+
         <div class="footer-bottom">
-            <p>&copy; 2026 Imperishable Crown Bible Baptist Church. All rights reserved.</p>
+
+            <p>
+                &copy; 2026 Imperishable Crown Bible Baptist Church.
+                All rights reserved.
+            </p>
+
         </div>
+
     </footer>
 
-    <div id="toastNotification" class="toast-notification"></div>
 
-    <script src="scriptdonate.js"></script>
+    <!-- Toast Notification -->
+    <div
+        id="toastNotification"
+        class="toast-notification"
+    ></div>
+
+
+    <!-- Donation JavaScript -->
+    <script src="donate.js"></script>
+
 </body>
 </html>
