@@ -1,82 +1,99 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    /* =========================================
+    /* ==========================================
        HAMBURGER MENU
-    ========================================= */
+    ========================================== */
 
     const hamburger = document.getElementById("hamburger");
     const dropdownMenu = document.getElementById("dropdownMenu");
 
-    hamburger.addEventListener("click", function (event) {
+    if (hamburger && dropdownMenu) {
 
-        event.stopPropagation();
+        hamburger.addEventListener("click", function (event) {
 
-        dropdownMenu.classList.toggle("show");
+            event.stopPropagation();
 
-        const icon = hamburger.querySelector("i");
+            const isOpen =
+                dropdownMenu.classList.toggle("show");
 
-        if (dropdownMenu.classList.contains("show")) {
-            icon.classList.remove("fa-bars");
-            icon.classList.add("fa-xmark");
-        } else {
-            icon.classList.remove("fa-xmark");
-            icon.classList.add("fa-bars");
-        }
+            hamburger.setAttribute(
+                "aria-expanded",
+                isOpen
+            );
 
-    });
+            const icon =
+                hamburger.querySelector("i");
 
+            if (isOpen) {
 
-    /* =========================================
-       CLOSE MENU WHEN CLICKING OUTSIDE
-    ========================================= */
+                icon.classList.remove("fa-bars");
+                icon.classList.add("fa-xmark");
 
-    document.addEventListener("click", function (event) {
+            } else {
 
-        if (
-            !dropdownMenu.contains(event.target) &&
-            !hamburger.contains(event.target)
-        ) {
+                icon.classList.remove("fa-xmark");
+                icon.classList.add("fa-bars");
 
-            dropdownMenu.classList.remove("show");
-
-            const icon = hamburger.querySelector("i");
-
-            icon.classList.remove("fa-xmark");
-            icon.classList.add("fa-bars");
-        }
-
-    });
-
-
-    /* =========================================
-       CLOSE MENU AFTER CLICKING A LINK
-    ========================================= */
-
-    const menuLinks =
-        document.querySelectorAll(".dropdown-item");
-
-    menuLinks.forEach(function (link) {
-
-        link.addEventListener("click", function () {
-
-            dropdownMenu.classList.remove("show");
-
-            const icon = hamburger.querySelector("i");
-
-            icon.classList.remove("fa-xmark");
-            icon.classList.add("fa-bars");
+            }
 
         });
 
-    });
+
+        /* Close menu when clicking outside */
+
+        document.addEventListener("click", function (event) {
+
+            if (
+                !dropdownMenu.contains(event.target) &&
+                !hamburger.contains(event.target)
+            ) {
+
+                closeMenu();
+
+            }
+
+        });
 
 
-    /* =========================================
-       GALLERY LIGHTBOX
-    ========================================= */
+        /* Close menu after selecting a link */
 
-    const galleryCards =
-        document.querySelectorAll(".gallery-card");
+        const menuLinks =
+            document.querySelectorAll(".dropdown-item");
+
+        menuLinks.forEach(function (link) {
+
+            link.addEventListener("click", function () {
+
+                closeMenu();
+
+            });
+
+        });
+
+
+        function closeMenu() {
+
+            dropdownMenu.classList.remove("show");
+
+            hamburger.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            const icon =
+                hamburger.querySelector("i");
+
+            icon.classList.remove("fa-xmark");
+            icon.classList.add("fa-bars");
+
+        }
+
+    }
+
+
+    /* ==========================================
+       LIGHTBOX
+    ========================================== */
 
     const modal =
         document.getElementById("lightboxModal");
@@ -90,6 +107,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const closeLightbox =
         document.getElementById("closeLightbox");
 
+    const galleryCards =
+        document.querySelectorAll(".gallery-card");
+
 
     galleryCards.forEach(function (card) {
 
@@ -99,17 +119,25 @@ document.addEventListener("DOMContentLoaded", function () {
                 card.querySelector(".gallery-img");
 
             const title =
-                card.getAttribute("data-title");
+                card.dataset.title;
 
             const description =
-                card.getAttribute("data-desc");
+                card.dataset.desc;
+
+
+            if (!image || !modal) {
+                return;
+            }
+
 
             lightboxImg.src = image.src;
 
             lightboxImg.alt = image.alt;
 
+
             lightboxCaption.innerHTML =
                 `<strong>${title}</strong><br>${description}`;
+
 
             modal.classList.add("show");
 
@@ -120,29 +148,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    /* =========================================
+    /* ==========================================
        CLOSE LIGHTBOX
-    ========================================= */
-
-    closeLightbox.addEventListener("click", function (event) {
-
-        event.stopPropagation();
-
-        closeModal();
-
-    });
-
-
-    modal.addEventListener("click", function (event) {
-
-        if (event.target === modal) {
-            closeModal();
-        }
-
-    });
-
+    ========================================== */
 
     function closeModal() {
+
+        if (!modal) {
+            return;
+        }
 
         modal.classList.remove("show");
 
@@ -155,33 +169,72 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* =========================================
-       ESC KEY CLOSES LIGHTBOX
-    ========================================= */
+    if (closeLightbox) {
 
-    document.addEventListener("keydown", function (event) {
+        closeLightbox.addEventListener(
+            "click",
+            function (event) {
 
-        if (event.key === "Escape") {
+                event.stopPropagation();
 
-            closeModal();
+                closeModal();
 
-            dropdownMenu.classList.remove("show");
+            }
+        );
+
+    }
+
+
+    if (modal) {
+
+        modal.addEventListener(
+            "click",
+            function (event) {
+
+                if (event.target === modal) {
+
+                    closeModal();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* ==========================================
+       ESC KEY
+    ========================================== */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (event.key === "Escape") {
+
+                closeModal();
+
+            }
 
         }
-
-    });
+    );
 
 });
 
 
-/* =========================================
-   IMAGE ERROR FALLBACK
-========================================= */
+/* ==========================================
+   IMAGE ERROR HANDLER
+========================================== */
 
 function imageError(image) {
 
+    if (!image) {
+        return;
+    }
+
     image.src =
-        "https://via.placeholder.com/400x280?text=✝+Image+Coming+Soon";
+        "https://via.placeholder.com/600x400?text=✝+Image+Coming+Soon";
 
     image.classList.add("error-img");
 
