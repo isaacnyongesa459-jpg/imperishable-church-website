@@ -20,20 +20,9 @@ body {
     max-width: 100%;
     min-height: 100vh;
     overflow-x: hidden;
-
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     background: #f8f9fa;
     color: #2c3e50;
-    line-height: 1.6;
-}
-
-img {
-    max-width: 100%;
-}
-
-button,
-input {
-    font-family: inherit;
 }
 
 
@@ -66,7 +55,6 @@ input {
     width: 100%;
     max-width: 1200px;
     min-height: 70px;
-
     margin: 0 auto;
     padding: 10px 20px;
 
@@ -94,11 +82,14 @@ input {
 }
 
 .logo span {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 700;
 
-    white-space: nowrap;
+    white-space: normal;
 }
+
+
+/* HAMBURGER */
 
 .hamburger {
     width: 45px;
@@ -115,29 +106,32 @@ input {
     color: #2c3e50;
 
     cursor: pointer;
+
+    flex-shrink: 0;
 }
 
-.hamburger:active {
-    transform: scale(0.95);
+.hamburger:hover {
+    color: #e67e22;
 }
 
 
 /* =====================================================
-   MOBILE MENU
+   MOBILE DROPDOWN MENU
 ===================================================== */
 
 .dropdown-menu {
+    display: none;
+
+    width: 100%;
+    max-width: 100%;
+
     position: absolute;
     top: 70px;
     left: 0;
 
-    width: 100%;
-
     background: #ffffff;
 
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-
-    display: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 
     z-index: 999;
 }
@@ -149,9 +143,7 @@ input {
 .dropdown-content {
     width: 100%;
     max-width: 1200px;
-
     margin: 0 auto;
-    padding: 10px 20px;
 }
 
 .dropdown-item {
@@ -161,25 +153,25 @@ input {
 
     width: 100%;
 
-    padding: 14px 12px;
+    padding: 15px 20px;
 
     text-decoration: none;
+
     color: #2c3e50;
 
-    border-radius: 8px;
+    border-bottom: 1px solid #eeeeee;
 
-    transition: 0.2s ease;
+    transition: 0.3s;
 }
 
 .dropdown-item i {
     width: 22px;
     text-align: center;
-    color: #e67e22;
 }
 
 .dropdown-item:hover,
 .dropdown-item.active {
-    background: #fff4e8;
+    background: #fdf2e9;
     color: #e67e22;
 }
 
@@ -190,13 +182,7 @@ input {
 
 .page-header {
     width: 100%;
-
-    background: linear-gradient(
-        135deg,
-        #667eea 0%,
-        #764ba2 100%
-    );
-
+    background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
 
     padding: 70px 20px;
@@ -207,17 +193,12 @@ input {
 .page-header h1 {
     font-size: clamp(2rem, 6vw, 3.5rem);
     line-height: 1.2;
-
     margin-bottom: 12px;
 }
 
 .page-header p {
     font-size: clamp(0.95rem, 3vw, 1.15rem);
-
-    max-width: 700px;
-    margin: 0 auto;
-
-    opacity: 0.95;
+    line-height: 1.6;
 }
 
 
@@ -231,15 +212,15 @@ input {
 }
 
 .section-heading {
+    width: 100%;
     text-align: center;
     margin-bottom: 40px;
 }
 
 .section-heading h2 {
     font-size: clamp(1.7rem, 5vw, 2.5rem);
+    margin-bottom: 12px;
     color: #2c3e50;
-
-    margin-bottom: 10px;
 }
 
 .section-heading p {
@@ -248,7 +229,7 @@ input {
 
     color: #7f8c8d;
 
-    font-size: 1rem;
+    line-height: 1.7;
 }
 
 
@@ -261,8 +242,10 @@ input {
 
     display: grid;
 
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(
+        3,
+        minmax(0, 1fr)
+    );
 
     gap: 25px;
 }
@@ -278,22 +261,20 @@ input {
 
     background: #ffffff;
 
-    border-radius: 18px;
+    border-radius: 20px;
 
     padding: 30px 25px;
 
     text-align: center;
 
-    box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
 
     position: relative;
 
     overflow: hidden;
 
-    transition:
-        transform 0.3s ease,
-        box-shadow 0.3s ease;
+    transition: transform 0.3s ease,
+                box-shadow 0.3s ease;
 }
 
 .service-card::before {
@@ -315,16 +296,14 @@ input {
 }
 
 .service-card:hover {
-    transform: translateY(-8px);
+    transform: translateY(-7px);
 
     box-shadow:
-        0 18px 40px rgba(0, 0, 0, 0.12);
+        0 18px 40px rgba(0, 0, 0, 0.13);
 }
 
 
-/* =====================================================
-   SERVICE ICON
-===================================================== */
+/* ICON */
 
 .service-icon {
     width: 75px;
@@ -332,47 +311,34 @@ input {
 
     margin: 0 auto 18px;
 
-    border-radius: 50%;
-
-    background: #fff4e8;
-
     display: flex;
     align-items: center;
     justify-content: center;
-}
 
-.service-icon i {
-    font-size: 2rem;
+    border-radius: 50%;
+
+    background: #fdf2e9;
+
     color: #e67e22;
+
+    font-size: 2rem;
 }
 
 .service-card h3 {
-    color: #2c3e50;
-
     font-size: 1.35rem;
+    line-height: 1.4;
 
-    line-height: 1.3;
-
-    margin-bottom: 15px;
+    margin-bottom: 12px;
 }
-
-
-/* =====================================================
-   SERVICE INFORMATION
-===================================================== */
 
 .service-time {
     color: #e67e22;
 
-    font-size: 1.05rem;
+    font-size: 1.1rem;
 
     font-weight: 700;
 
     margin-bottom: 7px;
-}
-
-.service-time i {
-    margin-right: 5px;
 }
 
 .service-location {
@@ -385,65 +351,62 @@ input {
 
 .service-location i {
     color: #e67e22;
-    margin-right: 5px;
 }
 
 .service-description {
-    color: #6f7a7d;
-
-    font-size: 0.92rem;
+    color: #7f8c8d;
 
     line-height: 1.7;
+
+    font-size: 0.93rem;
 
     margin-bottom: 20px;
 }
 
 
-/* =====================================================
-   FEATURES
-===================================================== */
+/* FEATURES */
 
 .service-features {
     list-style: none;
 
-    width: 100%;
-
     text-align: left;
 
-    margin-bottom: 20px;
+    margin: 0 0 20px;
 }
 
 .service-features li {
     display: flex;
+
     align-items: flex-start;
 
     gap: 9px;
 
     padding: 8px 0;
 
-    color: #6f7a7d;
+    color: #6c757d;
 
-    font-size: 0.88rem;
+    font-size: 0.9rem;
+
+    line-height: 1.4;
 }
 
 .service-features li i {
     color: #e67e22;
 
-    margin-top: 4px;
+    width: 18px;
 
     flex-shrink: 0;
+
+    margin-top: 3px;
 }
 
 
-/* =====================================================
-   BUTTON
-===================================================== */
+/* BUTTON */
 
 .btn-join {
-    width: auto;
-    max-width: 100%;
+    width: 100%;
 
-    padding: 11px 22px;
+    padding: 13px 18px;
 
     border: none;
 
@@ -453,17 +416,21 @@ input {
 
     color: white;
 
-    font-size: 0.9rem;
+    font-family: inherit;
+
+    font-size: 0.95rem;
+
     font-weight: 600;
 
     cursor: pointer;
 
-    transition: 0.3s ease;
+    transition: 0.3s;
 }
 
 .btn-join:hover {
     background: #d35400;
-    transform: scale(1.03);
+
+    transform: translateY(-2px);
 }
 
 
@@ -474,66 +441,79 @@ input {
 .schedule-section {
     width: 100%;
 
-    background: linear-gradient(
-        135deg,
-        #f5f7fa 0%,
-        #c3cfe2 100%
-    );
-
     padding: 70px 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #f5f7fa,
+            #c3cfe2
+        );
 }
 
-.schedule-wrapper {
+.schedule-grid {
     width: 100%;
+
+    display: grid;
+
+    grid-template-columns: repeat(
+        2,
+        minmax(0, 1fr)
+    );
+
+    gap: 15px;
+}
+
+.schedule-card {
+    width: 100%;
+    min-width: 0;
 
     background: white;
 
-    border-radius: 18px;
+    border-radius: 15px;
+
+    padding: 20px;
 
     box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.08);
+        0 5px 20px rgba(0,0,0,0.07);
 
-    overflow-x: auto;
+    border-left: 5px solid #e67e22;
 }
 
-.schedule-table {
-    width: 100%;
+.schedule-day {
+    display: inline-block;
 
-    border-collapse: collapse;
+    background: #fdf2e9;
 
-    min-width: 650px;
-}
-
-.schedule-table th {
-    background: #e67e22;
-
-    color: white;
-
-    padding: 16px;
-
-    text-align: left;
-
-    font-size: 0.95rem;
-}
-
-.schedule-table td {
-    padding: 15px;
-
-    border-bottom: 1px solid #ecf0f1;
-
-    color: #2c3e50;
-
-    font-size: 0.9rem;
-}
-
-.schedule-table tbody tr:hover {
-    background: #fffaf5;
-}
-
-.schedule-table td i {
     color: #e67e22;
 
-    margin-right: 7px;
+    padding: 5px 12px;
+
+    border-radius: 50px;
+
+    font-size: 0.8rem;
+
+    font-weight: 700;
+
+    margin-bottom: 10px;
+}
+
+.schedule-card h3 {
+    font-size: 1.05rem;
+
+    margin-bottom: 7px;
+}
+
+.schedule-card p {
+    color: #e67e22;
+
+    font-weight: 600;
+
+    margin-bottom: 5px;
+}
+
+.schedule-card small {
+    color: #7f8c8d;
 }
 
 
@@ -543,60 +523,64 @@ input {
 
 .special-events {
     width: 100%;
-    max-width: 900px;
-
-    margin: 0 auto;
 }
 
 .event-card {
     width: 100%;
 
-    background: linear-gradient(
-        135deg,
-        #667eea 0%,
-        #764ba2 100%
-    );
+    padding: 25px;
+
+    margin-bottom: 15px;
+
+    border-radius: 18px;
 
     color: white;
 
-    padding: 25px;
+    background:
+        linear-gradient(
+            135deg,
+            #667eea,
+            #764ba2
+        );
 
-    border-radius: 15px;
-
-    margin-bottom: 18px;
+    box-shadow:
+        0 8px 25px rgba(0,0,0,0.1);
 
     transition: transform 0.3s ease;
 }
 
 .event-card:hover {
-    transform: translateX(5px);
+    transform: translateY(-4px);
 }
 
 .event-card h3 {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
+
+    line-height: 1.4;
+
     margin-bottom: 8px;
 }
 
 .event-card p {
-    font-size: 0.9rem;
-
-    opacity: 0.9;
+    line-height: 1.6;
 
     margin-bottom: 15px;
+
+    opacity: 0.9;
 }
 
 .event-date {
     display: inline-block;
 
-    background: rgba(255,255,255,0.18);
+    max-width: 100%;
 
-    padding: 6px 12px;
+    padding: 7px 13px;
 
     border-radius: 50px;
 
-    font-size: 0.8rem;
+    background: rgba(255,255,255,0.2);
 
-    max-width: 100%;
+    font-size: 0.85rem;
 }
 
 
@@ -612,14 +596,14 @@ input {
     text-align: center;
 }
 
-.livestream-icon {
+.live-icon {
     font-size: 2.5rem;
 
     margin-bottom: 15px;
 }
 
 .livestream-section h2 {
-    font-size: clamp(1.7rem, 5vw, 2.4rem);
+    color: white;
 
     margin-bottom: 10px;
 }
@@ -629,7 +613,9 @@ input {
 
     margin: 0 auto;
 
-    opacity: 0.85;
+    line-height: 1.7;
+
+    opacity: 0.9;
 }
 
 .livestream-btn {
@@ -640,9 +626,11 @@ input {
 
     gap: 8px;
 
-    margin-top: 20px;
+    margin-top: 25px;
 
-    padding: 13px 25px;
+    padding: 14px 25px;
+
+    border-radius: 50px;
 
     background: #e74c3c;
 
@@ -650,39 +638,11 @@ input {
 
     text-decoration: none;
 
-    border-radius: 50px;
-
     font-weight: 600;
-
-    transition: 0.3s ease;
 }
 
 .livestream-btn:hover {
     background: #c0392b;
-
-    transform: scale(1.04);
-}
-
-.pulse {
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-
-    0% {
-        box-shadow:
-            0 0 0 0 rgba(231, 76, 60, 0.7);
-    }
-
-    70% {
-        box-shadow:
-            0 0 0 10px rgba(231, 76, 60, 0);
-    }
-
-    100% {
-        box-shadow:
-            0 0 0 0 rgba(231, 76, 60, 0);
-    }
 }
 
 
@@ -691,6 +651,8 @@ input {
 ===================================================== */
 
 .modal {
+    display: none;
+
     position: fixed;
 
     inset: 0;
@@ -698,16 +660,14 @@ input {
     width: 100%;
     height: 100%;
 
+    padding: 20px;
+
     background: rgba(0,0,0,0.65);
 
-    z-index: 2000;
-
-    display: none;
+    z-index: 5000;
 
     align-items: center;
     justify-content: center;
-
-    padding: 20px;
 }
 
 .modal.show {
@@ -715,51 +675,34 @@ input {
 }
 
 .modal-content {
+    position: relative;
+
     width: 100%;
-    max-width: 420px;
+
+    max-width: 430px;
 
     max-height: 90vh;
 
     overflow-y: auto;
 
-    background: white;
-
     padding: 30px 25px;
 
-    border-radius: 18px;
+    border-radius: 20px;
+
+    background: white;
 
     text-align: center;
-
-    position: relative;
-
-    animation: modalIn 0.25s ease;
-}
-
-@keyframes modalIn {
-
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .modal-close {
     position: absolute;
 
-    top: 10px;
+    top: 12px;
     right: 15px;
-
-    width: 35px;
-    height: 35px;
 
     border: none;
 
-    background: transparent;
+    background: none;
 
     font-size: 28px;
 
@@ -777,13 +720,13 @@ input {
 }
 
 .modal-content h3 {
-    color: #2c3e50;
-
     margin-bottom: 10px;
 }
 
 .modal-content p {
-    color: #777;
+    color: #7f8c8d;
+
+    line-height: 1.6;
 
     font-size: 0.9rem;
 
@@ -791,22 +734,26 @@ input {
 }
 
 .modal-content input {
+    display: block;
+
     width: 100%;
 
     padding: 13px;
 
-    margin: 6px 0;
+    margin: 10px 0;
 
     border: 1px solid #ddd;
 
     border-radius: 8px;
 
-    outline: none;
+    font-family: inherit;
 
-    font-size: 0.95rem;
+    font-size: 1rem;
 }
 
 .modal-content input:focus {
+    outline: none;
+
     border-color: #e67e22;
 }
 
@@ -827,18 +774,22 @@ input {
 
     border-radius: 8px;
 
-    cursor: pointer;
+    font-family: inherit;
 
     font-weight: 600;
+
+    cursor: pointer;
 }
 
 .modal-btn.cancel {
     background: #95a5a6;
+
     color: white;
 }
 
 .modal-btn.confirm {
     background: #e67e22;
+
     color: white;
 }
 
@@ -850,19 +801,14 @@ input {
 .footer {
     width: 100%;
 
-    background: #1f2933;
+    background: #1f2937;
 
     color: white;
+
+    padding-top: 50px;
 }
 
 .footer-content {
-    width: 100%;
-    max-width: 1200px;
-
-    margin: 0 auto;
-
-    padding: 50px 20px;
-
     display: grid;
 
     grid-template-columns:
@@ -882,34 +828,32 @@ input {
 }
 
 .footer-section p {
-    color: #d5d8dc;
+    color: #d1d5db;
 
-    font-size: 0.88rem;
+    line-height: 1.7;
 
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 
     overflow-wrap: anywhere;
 }
 
 .footer-section p i {
-    color: #e67e22;
-
     width: 20px;
+
+    color: #e67e22;
 }
 
-.footer-section > a {
+.footer-section a {
     display: block;
 
-    color: #d5d8dc;
+    color: #d1d5db;
 
     text-decoration: none;
-
-    font-size: 0.9rem;
 
     margin-bottom: 8px;
 }
 
-.footer-section > a:hover {
+.footer-section a:hover {
     color: #e67e22;
 }
 
@@ -934,27 +878,27 @@ input {
 
     color: white;
 
-    text-decoration: none;
-
-    transition: 0.3s ease;
+    margin: 0;
 }
 
 .social-links a:hover {
     background: #e67e22;
 
-    transform: translateY(-3px);
+    color: white;
 }
 
 .footer-bottom {
-    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 40px;
 
     padding: 20px;
 
     text-align: center;
+
+    border-top: 1px solid rgba(255,255,255,0.1);
 }
 
 .footer-bottom p {
-    color: #bfc5ca;
+    color: #aaa;
 
     font-size: 0.8rem;
 }
@@ -985,18 +929,28 @@ input {
 
 @media (max-width: 600px) {
 
+    /* GLOBAL MOBILE FIX */
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
     .container {
+        width: 100%;
         padding-left: 15px;
         padding-right: 15px;
     }
 
-    /* Navigation */
+
+    /* NAVIGATION */
 
     .nav-container {
         min-height: 62px;
 
-        padding:
-            8px 15px;
+        padding: 8px 15px;
     }
 
     .logo-img {
@@ -1005,36 +959,25 @@ input {
     }
 
     .logo span {
-        font-size: 0.92rem;
+        font-size: 0.88rem;
 
-        white-space: normal;
-
-        line-height: 1.2;
+        max-width: 210px;
     }
 
     .hamburger {
-        width: 42px;
-        height: 42px;
-
-        font-size: 1.35rem;
-
-        flex-shrink: 0;
+        width: 40px;
+        height: 40px;
     }
 
     .dropdown-menu {
         top: 62px;
     }
 
-    .dropdown-content {
-        padding: 8px 15px 15px;
-    }
 
-
-    /* Header */
+    /* HEADER */
 
     .page-header {
-        padding:
-            45px 15px;
+        padding: 50px 15px;
     }
 
     .page-header h1 {
@@ -1046,18 +989,15 @@ input {
     }
 
 
-    /* Sections */
+    /* SECTIONS */
 
-    .section {
-        padding: 45px 0;
-    }
-
+    .section,
     .schedule-section {
         padding: 45px 0;
     }
 
     .section-heading {
-        margin-bottom: 28px;
+        margin-bottom: 30px;
     }
 
     .section-heading h2 {
@@ -1065,11 +1005,11 @@ input {
     }
 
     .section-heading p {
-        font-size: 0.88rem;
+        font-size: 0.9rem;
     }
 
 
-    /* Service Cards */
+    /* SERVICE CARDS */
 
     .service-grid {
         width: 100%;
@@ -1082,19 +1022,9 @@ input {
     .service-card {
         width: 100%;
 
-        padding:
-            25px 18px;
+        padding: 25px 18px;
 
-        border-radius: 15px;
-    }
-
-    .service-icon {
-        width: 65px;
-        height: 65px;
-    }
-
-    .service-icon i {
-        font-size: 1.7rem;
+        border-radius: 16px;
     }
 
     .service-card h3 {
@@ -1102,98 +1032,60 @@ input {
     }
 
     .service-description {
-        font-size: 0.88rem;
+        font-size: 0.9rem;
     }
 
     .service-features li {
-        font-size: 0.84rem;
-    }
-
-    .btn-join {
-        width: 100%;
-
-        padding: 12px 15px;
+        font-size: 0.85rem;
     }
 
 
-    /* Schedule */
+    /* SCHEDULE */
 
-    .schedule-wrapper {
-        border-radius: 12px;
+    .schedule-grid {
+        grid-template-columns: 1fr;
 
-        /*
-           The table is allowed to scroll
-           INSIDE its own container instead
-           of expanding the whole page.
-        */
-        overflow-x: auto;
-
-        -webkit-overflow-scrolling: touch;
+        gap: 12px;
     }
 
-    .schedule-table {
-        min-width: 620px;
-    }
-
-    .schedule-table th,
-    .schedule-table td {
-        padding: 12px;
-
-        font-size: 0.8rem;
+    .schedule-card {
+        padding: 17px;
     }
 
 
-    /* Events */
+    /* EVENTS */
 
     .event-card {
         padding: 20px;
 
-        border-radius: 12px;
+        border-radius: 15px;
     }
 
     .event-card h3 {
-        font-size: 1rem;
+        font-size: 1.05rem;
     }
 
     .event-card p {
-        font-size: 0.84rem;
+        font-size: 0.9rem;
     }
 
     .event-date {
-        font-size: 0.72rem;
+        font-size: 0.75rem;
 
         line-height: 1.5;
+
+        border-radius: 10px;
     }
 
 
-    /* Live stream */
-
-    .livestream-section {
-        padding:
-            50px 15px;
-    }
-
-    .livestream-section p {
-        font-size: 0.85rem;
-    }
-
-    .livestream-btn {
-        width: 100%;
-        max-width: 280px;
-    }
-
-
-    /* Modal */
+    /* MODAL */
 
     .modal {
         padding: 15px;
     }
 
     .modal-content {
-        padding:
-            30px 18px 20px;
-
-        border-radius: 15px;
+        padding: 28px 18px;
     }
 
     .modal-buttons {
@@ -1205,23 +1097,22 @@ input {
     }
 
 
-    /* Footer */
+    /* FOOTER */
+
+    .footer {
+        padding-top: 40px;
+    }
 
     .footer-content {
         grid-template-columns: 1fr;
 
         gap: 30px;
 
-        padding:
-            40px 15px;
-    }
-
-    .footer-section {
         text-align: center;
     }
 
     .footer-section p {
-        font-size: 0.82rem;
+        font-size: 0.85rem;
     }
 
     .social-links {
@@ -1229,12 +1120,14 @@ input {
     }
 
     .footer-bottom {
-        padding:
-            18px 15px;
+        margin-top: 30px;
+
+        padding: 18px 15px;
     }
 
     .footer-bottom p {
-        font-size: 0.72rem;
+        font-size: 0.7rem;
+        line-height: 1.5;
     }
 
 }
@@ -1244,10 +1137,12 @@ input {
    VERY SMALL PHONES
 ===================================================== */
 
-@media (max-width: 380px) {
+@media (max-width: 360px) {
 
     .logo span {
-        font-size: 0.82rem;
+        font-size: 0.78rem;
+
+        max-width: 170px;
     }
 
     .page-header h1 {
@@ -1255,16 +1150,14 @@ input {
     }
 
     .service-card {
-        padding:
-            22px 15px;
+        padding: 22px 15px;
     }
 
-    .service-card h3 {
-        font-size: 1.1rem;
-    }
+    .service-icon {
+        width: 65px;
+        height: 65px;
 
-    .service-time {
-        font-size: 0.95rem;
+        font-size: 1.7rem;
     }
 
 }
