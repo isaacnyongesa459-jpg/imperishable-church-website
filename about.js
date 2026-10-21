@@ -1,28 +1,34 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
 
-    /* ==========================================
+    /* =====================================
        HAMBURGER MENU
-    ========================================== */
+    ===================================== */
 
-    const hamburger = document.getElementById("hamburger");
-    const dropdownMenu = document.getElementById("dropdownMenu");
+    const hamburger =
+        document.getElementById("hamburger");
+
+    const dropdownMenu =
+        document.getElementById("dropdownMenu");
+
 
     if (hamburger && dropdownMenu) {
 
-        hamburger.addEventListener("click", function (event) {
+        hamburger.addEventListener("click", (event) => {
 
             event.stopPropagation();
 
+            dropdownMenu.classList.toggle("show");
+
+            const icon =
+                hamburger.querySelector("i");
+
             const isOpen =
-                dropdownMenu.classList.toggle("show");
+                dropdownMenu.classList.contains("show");
 
             hamburger.setAttribute(
                 "aria-expanded",
                 isOpen
             );
-
-            const icon =
-                hamburger.querySelector("i");
 
             if (isOpen) {
 
@@ -39,9 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
 
-        /* Close menu when clicking outside */
-
-        document.addEventListener("click", function (event) {
+        document.addEventListener("click", (event) => {
 
             if (
                 !dropdownMenu.contains(event.target) &&
@@ -55,20 +59,17 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
 
-        /* Close menu after selecting a link */
+        document
+            .querySelectorAll(".dropdown-item")
+            .forEach(link => {
 
-        const menuLinks =
-            document.querySelectorAll(".dropdown-item");
+                link.addEventListener("click", () => {
 
-        menuLinks.forEach(function (link) {
+                    closeMenu();
 
-            link.addEventListener("click", function () {
-
-                closeMenu();
+                });
 
             });
-
-        });
 
 
         function closeMenu() {
@@ -91,9 +92,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* ==========================================
-       LIGHTBOX
-    ========================================== */
+    /* =====================================
+       GALLERY LIGHTBOX
+    ===================================== */
+
+    const cards =
+        document.querySelectorAll(".gallery-card");
 
     const modal =
         document.getElementById("lightboxModal");
@@ -101,41 +105,34 @@ document.addEventListener("DOMContentLoaded", function () {
     const lightboxImg =
         document.getElementById("lightboxImg");
 
-    const lightboxCaption =
+    const caption =
         document.getElementById("lightboxCaption");
 
-    const closeLightbox =
+    const closeButton =
         document.getElementById("closeLightbox");
 
-    const galleryCards =
-        document.querySelectorAll(".gallery-card");
 
+    cards.forEach(card => {
 
-    galleryCards.forEach(function (card) {
-
-        card.addEventListener("click", function () {
+        card.addEventListener("click", () => {
 
             const image =
                 card.querySelector(".gallery-img");
 
+            if (!image) return;
+
             const title =
-                card.dataset.title;
+                card.dataset.title || "";
 
             const description =
-                card.dataset.desc;
-
-
-            if (!image || !modal) {
-                return;
-            }
+                card.dataset.desc || "";
 
 
             lightboxImg.src = image.src;
 
             lightboxImg.alt = image.alt;
 
-
-            lightboxCaption.innerHTML =
+            caption.innerHTML =
                 `<strong>${title}</strong><br>${description}`;
 
 
@@ -148,15 +145,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    /* ==========================================
+    /* =====================================
        CLOSE LIGHTBOX
-    ========================================== */
+    ===================================== */
 
-    function closeModal() {
-
-        if (!modal) {
-            return;
-        }
+    function closeLightbox() {
 
         modal.classList.remove("show");
 
@@ -164,77 +157,53 @@ document.addEventListener("DOMContentLoaded", function () {
 
         lightboxImg.src = "";
 
-        lightboxCaption.innerHTML = "";
+        caption.innerHTML = "";
 
     }
 
 
-    if (closeLightbox) {
-
-        closeLightbox.addEventListener(
-            "click",
-            function (event) {
-
-                event.stopPropagation();
-
-                closeModal();
-
-            }
-        );
-
-    }
+    closeButton.addEventListener(
+        "click",
+        closeLightbox
+    );
 
 
-    if (modal) {
+    modal.addEventListener("click", event => {
 
-        modal.addEventListener(
-            "click",
-            function (event) {
+        if (event.target === modal) {
 
-                if (event.target === modal) {
+            closeLightbox();
 
-                    closeModal();
+        }
 
-                }
-
-            }
-        );
-
-    }
+    });
 
 
-    /* ==========================================
-       ESC KEY
-    ========================================== */
+    document.addEventListener("keydown", event => {
 
-    document.addEventListener(
-        "keydown",
-        function (event) {
+        if (event.key === "Escape") {
 
-            if (event.key === "Escape") {
+            closeLightbox();
 
-                closeModal();
-
+            if (dropdownMenu) {
+                dropdownMenu.classList.remove("show");
             }
 
         }
-    );
+
+    });
 
 });
 
 
-/* ==========================================
-   IMAGE ERROR HANDLER
-========================================== */
+/* =====================================
+   IMAGE ERROR
+===================================== */
 
 function imageError(image) {
 
-    if (!image) {
-        return;
-    }
-
     image.src =
-        "https://via.placeholder.com/600x400?text=✝+Image+Coming+Soon";
+        "https://via.placeholder.com/600x400?text=Image+Coming+Soon";
 
     image.classList.add("error-img");
 
