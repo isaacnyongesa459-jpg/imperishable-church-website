@@ -9,7 +9,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (hamburger && dropdownMenu) {
 
-        hamburger.addEventListener("click", function () {
+        hamburger.addEventListener("click", function (event) {
+
+            event.stopPropagation();
 
             const isOpen =
                 dropdownMenu.classList.toggle("show");
@@ -25,41 +27,15 @@ document.addEventListener("DOMContentLoaded", function () {
             if (isOpen) {
 
                 icon.classList.remove("fa-bars");
+
                 icon.classList.add("fa-times");
 
             } else {
 
                 icon.classList.remove("fa-times");
-                icon.classList.add("fa-bars");
 
+                icon.classList.add("fa-bars");
             }
-
-        });
-
-
-        /* Close menu when clicking a link */
-
-        const menuLinks =
-            dropdownMenu.querySelectorAll("a");
-
-        menuLinks.forEach(function (link) {
-
-            link.addEventListener("click", function () {
-
-                dropdownMenu.classList.remove("show");
-
-                hamburger.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-
-                const icon =
-                    hamburger.querySelector("i");
-
-                icon.classList.remove("fa-times");
-                icon.classList.add("fa-bars");
-
-            });
 
         });
 
@@ -84,8 +60,37 @@ document.addEventListener("DOMContentLoaded", function () {
                     hamburger.querySelector("i");
 
                 icon.classList.remove("fa-times");
+
                 icon.classList.add("fa-bars");
             }
+
+        });
+
+
+        /* Close menu after clicking a link */
+
+        const menuLinks =
+            dropdownMenu.querySelectorAll(".dropdown-item");
+
+        menuLinks.forEach(function (link) {
+
+            link.addEventListener("click", function () {
+
+                dropdownMenu.classList.remove("show");
+
+                hamburger.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+                const icon =
+                    hamburger.querySelector("i");
+
+                icon.classList.remove("fa-times");
+
+                icon.classList.add("fa-bars");
+
+            });
 
         });
 
@@ -95,59 +100,47 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 /* =====================================================
-   MODAL
+   SERVICE MODAL
 ===================================================== */
+
+const modal =
+    document.getElementById("serviceModal");
+
+const modalTitle =
+    document.getElementById("modalTitle");
+
 
 function openModal(serviceName) {
 
-    const modal =
-        document.getElementById("joinModal");
+    if (!modal) return;
 
-    const modalTitle =
-        document.getElementById("modalTitle");
-
-    if (!modal) {
-        return;
-    }
-
-    if (modalTitle) {
-
-        modalTitle.textContent =
-            "Join " + serviceName;
-
-    }
+    modalTitle.textContent =
+        "Join " + serviceName;
 
     modal.classList.add("show");
 
-    modal.setAttribute(
-        "aria-hidden",
-        "false"
-    );
-
     document.body.style.overflow = "hidden";
 
+    const nameInput =
+        document.getElementById("visitorName");
+
+    if (nameInput) {
+
+        setTimeout(function () {
+
+            nameInput.focus();
+
+        }, 100);
+
+    }
 }
 
 
-/* =====================================================
-   CLOSE MODAL
-===================================================== */
-
 function closeModal() {
 
-    const modal =
-        document.getElementById("joinModal");
-
-    if (!modal) {
-        return;
-    }
+    if (!modal) return;
 
     modal.classList.remove("show");
-
-    modal.setAttribute(
-        "aria-hidden",
-        "true"
-    );
 
     document.body.style.overflow = "";
 
@@ -155,17 +148,10 @@ function closeModal() {
 
 
 /* =====================================================
-   CLOSE MODAL BY CLICKING BACKGROUND
+   CLOSE MODAL WHEN CLICKING BACKGROUND
 ===================================================== */
 
-document.addEventListener("DOMContentLoaded", function () {
-
-    const modal =
-        document.getElementById("joinModal");
-
-    if (!modal) {
-        return;
-    }
+if (modal) {
 
     modal.addEventListener("click", function (event) {
 
@@ -177,11 +163,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     });
 
-});
+}
 
 
 /* =====================================================
-   ESCAPE KEY CLOSES MODAL
+   ESC KEY CLOSES MODAL
 ===================================================== */
 
 document.addEventListener("keydown", function (event) {
@@ -196,19 +182,16 @@ document.addEventListener("keydown", function (event) {
 
 
 /* =====================================================
-   VISIT FORM
+   FORM
 ===================================================== */
 
-document.addEventListener("DOMContentLoaded", function () {
+const visitForm =
+    document.getElementById("visitForm");
 
-    const form =
-        document.getElementById("visitForm");
 
-    if (!form) {
-        return;
-    }
+if (visitForm) {
 
-    form.addEventListener("submit", function (event) {
+    visitForm.addEventListener("submit", function (event) {
 
         event.preventDefault();
 
@@ -231,14 +214,14 @@ document.addEventListener("DOMContentLoaded", function () {
         alert(
             "Thank you, " +
             name +
-            "! We will be happy to welcome you to church."
+            "! We look forward to welcoming you."
         );
 
 
-        form.reset();
+        visitForm.reset();
 
         closeModal();
 
     });
 
-});
+}
