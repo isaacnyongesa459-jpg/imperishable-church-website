@@ -1,755 +1,791 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Imperishable Crown Bible Baptist Church | Services</title>
 
-    <title>Imperishable Crown Bible Baptist Church | Services</title>
+<!-- Font Awesome -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet">
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-          rel="stylesheet">
+<!-- Services CSS -->
+<link rel="stylesheet" href="services.css">
 
-    <!-- Services CSS -->
-    <link rel="stylesheet" href="services.css">
-</head>
+</head><body><!-- ================= NAVIGATION ================= --><nav class="navbar"><div class="nav-container">
 
-<body>
+    <a href="home.html" class="logo">
 
-<!-- ================= NAVIGATION ================= -->
-
-<nav class="navbar">
-
-    <div class="nav-container">
-
-        <a href="home.html" class="logo">
-
-            <img
-                src="images/church-logo.png"
-                alt="Church Logo"
-                class="logo-img"
-                onerror="this.style.display='none'"
-            >
-
-            <span>Imperishable Crown</span>
-
-        </a>
-
-        <button
-            class="hamburger"
-            id="hamburger"
-            aria-label="Open navigation menu"
-            aria-expanded="false"
-            type="button"
+        <img
+            src="images/church-logo.png"
+            alt="Church Logo"
+            class="logo-img"
+            onerror="this.style.display='none'"
         >
-            <i class="fas fa-bars"></i>
-        </button>
+
+        <span>Imperishable Crown</span>
+
+    </a>
+
+    <!-- HAMBURGER BUTTON -->
+
+    <button
+        type="button"
+        class="hamburger"
+        id="hamburger"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+    >
+        <i class="fas fa-bars"></i>
+    </button>
+
+</div>
+
+</nav><!-- ================= NAVIGATION MENU ================= --><div class="dropdown-menu" id="dropdownMenu"><div class="dropdown-content">
+
+    <a href="home.html" class="dropdown-item">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+    </a>
+
+    <a href="about.html" class="dropdown-item">
+        <i class="fas fa-church"></i>
+        <span>About Us</span>
+    </a>
+
+    <a href="services.html" class="dropdown-item active">
+        <i class="fas fa-praying-hands"></i>
+        <span>Services</span>
+    </a>
+
+    <a href="leadership.html" class="dropdown-item">
+        <i class="fas fa-users"></i>
+        <span>Leadership</span>
+    </a>
+
+    <a href="events.html" class="dropdown-item">
+        <i class="fas fa-calendar-alt"></i>
+        <span>Events</span>
+    </a>
+
+    <a href="donate.html" class="dropdown-item">
+        <i class="fas fa-hand-holding-heart"></i>
+        <span>Give</span>
+    </a>
+
+    <a href="contact.html" class="dropdown-item">
+        <i class="fas fa-envelope"></i>
+        <span>Contact</span>
+    </a>
+
+</div>
+
+</div><!-- ================= PAGE HEADER ================= --><header class="page-header"><div class="container">
+
+    <h1>Our Services</h1>
+
+    <p>
+        Join us for worship, fellowship, and spiritual growth
+    </p>
+
+</div>
+
+</header><!-- ================= SERVICES ================= --><main><section class="section"><div class="container">
+
+    <div class="section-heading">
+
+        <h2>Weekly Services</h2>
+
+        <p>
+            Find a service that fits your schedule and join us
+            in worship and fellowship.
+        </p>
 
     </div>
 
-</nav>
+
+    <div class="service-grid">
 
 
-<!-- ================= MOBILE / DROPDOWN NAVIGATION ================= -->
+        <!-- SERVICE 1 -->
 
-<div class="dropdown-menu" id="dropdownMenu">
+        <article class="service-card">
 
-    <div class="dropdown-content">
+            <div class="service-icon">
+                <i class="fas fa-church"></i>
+            </div>
 
-        <a href="home.html" class="dropdown-item">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </a>
+            <h3>Sunday Worship Service</h3>
 
-        <a href="about.html" class="dropdown-item">
-            <i class="fas fa-church"></i>
-            <span>About Us</span>
-        </a>
+            <div class="service-time">
+                8:00 AM &amp; 10:30 AM
+            </div>
 
-        <a href="services.html" class="dropdown-item active">
-            <i class="fas fa-praying-hands"></i>
-            <span>Services</span>
-        </a>
+            <div class="service-location">
+                <i class="fas fa-map-marker-alt"></i>
+                Main Sanctuary
+            </div>
 
-        <a href="leadership.html" class="dropdown-item">
-            <i class="fas fa-users"></i>
-            <span>Leadership</span>
-        </a>
+            <p class="service-description">
+                Experience powerful worship, inspiring messages,
+                and a warm community. Our Sunday services feature
+                worship music, Bible teaching, and prayer.
+            </p>
 
-        <a href="events.html" class="dropdown-item">
-            <i class="fas fa-calendar-alt"></i>
-            <span>Events</span>
-        </a>
+            <ul class="service-features">
 
-        <a href="donate.html" class="dropdown-item">
-            <i class="fas fa-hand-holding-heart"></i>
-            <span>Give</span>
-        </a>
+                <li>
+                    <i class="fas fa-music"></i>
+                    Live Worship
+                </li>
 
-        <a href="contact.html" class="dropdown-item">
+                <li>
+                    <i class="fas fa-bible"></i>
+                    Bible Teaching
+                </li>
+
+                <li>
+                    <i class="fas fa-child"></i>
+                    Children's Ministry
+                </li>
+
+                <li>
+                    <i class="fas fa-coffee"></i>
+                    Fellowship Breakfast
+                </li>
+
+            </ul>
+
+            <button
+                type="button"
+                class="btn-join"
+                data-service="Sunday Worship Service"
+            >
+                Plan Your Visit
+            </button>
+
+        </article>
+
+
+        <!-- SERVICE 2 -->
+
+        <article class="service-card">
+
+            <div class="service-icon">
+                <i class="fas fa-praying-hands"></i>
+            </div>
+
+            <h3>Wednesday Prayer Meeting</h3>
+
+            <div class="service-time">
+                6:00 PM - 7:30 PM
+            </div>
+
+            <div class="service-location">
+                <i class="fas fa-map-marker-alt"></i>
+                Prayer Chapel
+            </div>
+
+            <p class="service-description">
+                Midweek spiritual renewal through prayer,
+                intercession, and worship. Join us as we seek
+                God's face together.
+            </p>
+
+            <ul class="service-features">
+
+                <li>
+                    <i class="fas fa-pray"></i>
+                    Group Prayer
+                </li>
+
+                <li>
+                    <i class="fas fa-hands-praying"></i>
+                    Intercession
+                </li>
+
+                <li>
+                    <i class="fas fa-heart"></i>
+                    Testimony Sharing
+                </li>
+
+                <li>
+                    <i class="fas fa-church"></i>
+                    Anointing Service
+                </li>
+
+            </ul>
+
+            <button
+                type="button"
+                class="btn-join"
+                data-service="Wednesday Prayer Meeting"
+            >
+                Join Prayer
+            </button>
+
+        </article>
+
+
+        <!-- SERVICE 3 -->
+
+        <article class="service-card">
+
+            <div class="service-icon">
+                <i class="fas fa-bible"></i>
+            </div>
+
+            <h3>Friday Bible Study</h3>
+
+            <div class="service-time">
+                7:00 PM - 8:30 PM
+            </div>
+
+            <div class="service-location">
+                <i class="fas fa-map-marker-alt"></i>
+                Fellowship Hall
+            </div>
+
+            <p class="service-description">
+                Deepen your understanding of God's Word through
+                interactive Bible study and discussion.
+            </p>
+
+            <ul class="service-features">
+
+                <li>
+                    <i class="fas fa-book-open"></i>
+                    Verse-by-Verse Teaching
+                </li>
+
+                <li>
+                    <i class="fas fa-comments"></i>
+                    Group Discussion
+                </li>
+
+                <li>
+                    <i class="fas fa-question-circle"></i>
+                    Q&amp;A Session
+                </li>
+
+                <li>
+                    <i class="fas fa-hand-holding-heart"></i>
+                    Study Materials
+                </li>
+
+            </ul>
+
+            <button
+                type="button"
+                class="btn-join"
+                data-service="Friday Bible Study"
+            >
+                Join Study
+            </button>
+
+        </article>
+
+
+        <!-- SERVICE 4 -->
+
+        <article class="service-card">
+
+            <div class="service-icon">
+                <i class="fas fa-child"></i>
+            </div>
+
+            <h3>Children's Church</h3>
+
+            <div class="service-time">
+                10:30 AM (Sunday)
+            </div>
+
+            <div class="service-location">
+                <i class="fas fa-map-marker-alt"></i>
+                Children's Wing
+            </div>
+
+            <p class="service-description">
+                Age-appropriate teaching and activities for
+                children ages 3-12 in a safe and joyful environment.
+            </p>
+
+            <ul class="service-features">
+
+                <li>
+                    <i class="fas fa-puzzle-piece"></i>
+                    Bible Lessons
+                </li>
+
+                <li>
+                    <i class="fas fa-music"></i>
+                    Kids Worship
+                </li>
+
+                <li>
+                    <i class="fas fa-paint-brush"></i>
+                    Arts &amp; Crafts
+                </li>
+
+                <li>
+                    <i class="fas fa-gamepad"></i>
+                    Games &amp; Activities
+                </li>
+
+            </ul>
+
+            <button
+                type="button"
+                class="btn-join"
+                data-service="Children's Church"
+            >
+                Register Child
+            </button>
+
+        </article>
+
+
+        <!-- SERVICE 5 -->
+
+        <article class="service-card">
+
+            <div class="service-icon">
+                <i class="fas fa-music"></i>
+            </div>
+
+            <h3>Youth Service</h3>
+
+            <div class="service-time">
+                4:00 PM (Saturday)
+            </div>
+
+            <div class="service-location">
+                <i class="fas fa-map-marker-alt"></i>
+                Youth Center
+            </div>
+
+            <p class="service-description">
+                Dynamic worship and relevant biblical teaching
+                for teenagers and young adults ages 13-25.
+            </p>
+
+            <ul class="service-features">
+
+                <li>
+                    <i class="fas fa-guitar"></i>
+                    Contemporary Worship
+                </li>
+
+                <li>
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    Youth Topics
+                </li>
+
+                <li>
+                    <i class="fas fa-utensils"></i>
+                    Fellowship &amp; Snacks
+                </li>
+
+                <li>
+                    <i class="fas fa-futbol"></i>
+                    Sports &amp; Games
+                </li>
+
+            </ul>
+
+            <button
+                type="button"
+                class="btn-join"
+                data-service="Youth Service"
+            >
+                Join Youth
+            </button>
+
+        </article>
+
+
+        <!-- SERVICE 6 -->
+
+        <article class="service-card">
+
+            <div class="service-icon">
+                <i class="fas fa-users"></i>
+            </div>
+
+            <h3>Small Groups</h3>
+
+            <div class="service-time">
+                Various Times
+            </div>
+
+            <div class="service-location">
+                <i class="fas fa-map-marker-alt"></i>
+                Throughout the Week
+            </div>
+
+            <p class="service-description">
+                Connect with others in small groups and build
+                meaningful relationships while growing together
+                in faith.
+            </p>
+
+            <ul class="service-features">
+
+                <li>
+                    <i class="fas fa-home"></i>
+                    Home-Based Groups
+                </li>
+
+                <li>
+                    <i class="fas fa-business-time"></i>
+                    Workplace Groups
+                </li>
+
+                <li>
+                    <i class="fas fa-venus-mars"></i>
+                    Men's &amp; Women's Groups
+                </li>
+
+                <li>
+                    <i class="fas fa-heart"></i>
+                    Couples &amp; Singles
+                </li>
+
+            </ul>
+
+            <button
+                type="button"
+                class="btn-join"
+                data-service="Small Groups"
+            >
+                Find a Group
+            </button>
+
+        </article>
+
+    </div>
+
+</div>
+
+</section><!-- ================= SCHEDULE ================= --><section class="schedule-section"><div class="container">
+
+    <div class="section-heading">
+
+        <h2>Weekly Schedule</h2>
+
+        <p>
+            Our regular weekly activities at a glance.
+        </p>
+
+    </div>
+
+
+    <div class="schedule-grid">
+
+        <div class="schedule-card">
+            <span class="schedule-day">Sunday</span>
+            <h3>Morning Worship</h3>
+            <p><i class="fas fa-clock"></i> 8:00 AM</p>
+            <small>Main Sanctuary</small>
+        </div>
+
+        <div class="schedule-card">
+            <span class="schedule-day">Sunday</span>
+            <h3>Second Service</h3>
+            <p><i class="fas fa-clock"></i> 10:30 AM</p>
+            <small>Main Sanctuary</small>
+        </div>
+
+        <div class="schedule-card">
+            <span class="schedule-day">Sunday</span>
+            <h3>Children's Church</h3>
+            <p><i class="fas fa-clock"></i> 10:30 AM</p>
+            <small>Children's Wing</small>
+        </div>
+
+        <div class="schedule-card">
+            <span class="schedule-day">Sunday</span>
+            <h3>Youth Fellowship</h3>
+            <p><i class="fas fa-clock"></i> 2:00 PM</p>
+            <small>Youth Center</small>
+        </div>
+
+        <div class="schedule-card">
+            <span class="schedule-day">Tuesday</span>
+            <h3>Women's Ministry</h3>
+            <p><i class="fas fa-clock"></i> 10:00 AM</p>
+            <small>Fellowship Hall</small>
+        </div>
+
+        <div class="schedule-card">
+            <span class="schedule-day">Wednesday</span>
+            <h3>Prayer Meeting</h3>
+            <p><i class="fas fa-clock"></i> 6:00 PM</p>
+            <small>Prayer Chapel</small>
+        </div>
+
+        <div class="schedule-card">
+            <span class="schedule-day">Thursday</span>
+            <h3>Men's Fellowship</h3>
+            <p><i class="fas fa-clock"></i> 7:00 PM</p>
+            <small>Fellowship Hall</small>
+        </div>
+
+        <div class="schedule-card">
+            <span class="schedule-day">Friday</span>
+            <h3>Bible Study</h3>
+            <p><i class="fas fa-clock"></i> 7:00 PM</p>
+            <small>Fellowship Hall</small>
+        </div>
+
+        <div class="schedule-card">
+            <span class="schedule-day">Saturday</span>
+            <h3>Youth Service</h3>
+            <p><i class="fas fa-clock"></i> 4:00 PM</p>
+            <small>Youth Center</small>
+        </div>
+
+        <div class="schedule-card">
+            <span class="schedule-day">Saturday</span>
+            <h3>Choir Practice</h3>
+            <p><i class="fas fa-clock"></i> 5:00 PM</p>
+            <small>Main Sanctuary</small>
+        </div>
+
+    </div>
+
+</div>
+
+</section><!-- ================= SPECIAL EVENTS ================= --><section class="section"><div class="container">
+
+    <div class="section-heading">
+
+        <h2>Upcoming Special Events</h2>
+
+        <p>
+            Special moments we look forward to sharing together.
+        </p>
+
+    </div>
+
+
+    <div class="special-events">
+
+        <article class="event-card">
+
+            <h3>🔥 Annual Prayer &amp; Fasting Week</h3>
+
+            <p>
+                Join us for a week of prayer, fasting,
+                and spiritual renewal.
+            </p>
+
+            <span class="event-date">
+                <i class="fas fa-calendar"></i>
+                April 15-21, 2026
+            </span>
+
+        </article>
+
+
+        <article class="event-card">
+
+            <h3>🎉 Easter Celebration Service</h3>
+
+            <p>
+                Celebrate the resurrection of our Lord
+                Jesus Christ with us.
+            </p>
+
+            <span class="event-date">
+                <i class="fas fa-calendar"></i>
+                April 20, 2026
+            </span>
+
+        </article>
+
+
+        <article class="event-card">
+
+            <h3>👨‍👩‍👧‍👦 Family Fellowship</h3>
+
+            <p>
+                A special time for families to worship,
+                fellowship, and grow together.
+            </p>
+
+            <span class="event-date">
+                <i class="fas fa-calendar"></i>
+                Date to be announced
+            </span>
+
+        </article>
+
+    </div>
+
+</div>
+
+</section><!-- ================= LIVE STREAM ================= --><section class="livestream-section section"><div class="container">
+
+    <div class="live-icon">
+        <i class="fas fa-video"></i>
+    </div>
+
+    <h2>Join Us Online</h2>
+
+    <p>
+        Can't make it to church? Join our online worship
+        whenever live streaming is available.
+    </p>
+
+    <a href="#"
+       class="livestream-btn pulse">
+
+        <i class="fab fa-youtube"></i>
+        Watch Live
+
+    </a>
+
+</div>
+
+</section></main><!-- ================= MODAL ================= --><div class="modal" id="serviceModal"><div class="modal-content">
+
+    <button
+        type="button"
+        class="modal-close"
+        id="modalClose"
+        aria-label="Close modal"
+    >
+        &times;
+    </button>
+
+    <div class="modal-icon">
+        <i class="fas fa-church"></i>
+    </div>
+
+    <h3 id="modalTitle">Join Us</h3>
+
+    <p>
+        Thank you for your interest. Please enter your
+        name and phone number and we will be happy to
+        assist you.
+    </p>
+
+    <form id="visitForm">
+
+        <input
+            type="text"
+            id="visitorName"
+            placeholder="Your name"
+            required
+        >
+
+        <input
+            type="tel"
+            id="visitorPhone"
+            placeholder="Phone number"
+            required
+        >
+
+        <div class="modal-buttons">
+
+            <button
+                type="button"
+                class="modal-btn cancel"
+                id="modalCancel"
+            >
+                Cancel
+            </button>
+
+            <button
+                type="submit"
+                class="modal-btn confirm"
+            >
+                Continue
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+</div><!-- ================= FOOTER ================= --><footer class="footer"><div class="footer-content container">
+
+    <div class="footer-section">
+
+        <h3>
+            Imperishable Crown Bible Baptist Church
+        </h3>
+
+        <p>
+            <i class="fas fa-map-marker-alt"></i>
+            2435 - 30200, Kitale, Kenya
+        </p>
+
+        <p>
+            <i class="fas fa-phone"></i>
+            +254 700 000 000
+        </p>
+
+        <p>
             <i class="fas fa-envelope"></i>
-            <span>Contact</span>
-        </a>
+            info@imperishablecrown.org
+        </p>
+
+    </div>
+
+
+    <div class="footer-section">
+
+        <h3>Quick Links</h3>
+
+        <a href="home.html">Home</a>
+        <a href="about.html">About Us</a>
+        <a href="services.html">Services</a>
+        <a href="leadership.html">Leadership</a>
+        <a href="events.html">Events</a>
+        <a href="donate.html">Give</a>
+        <a href="contact.html">Contact</a>
+
+    </div>
+
+
+    <div class="footer-section">
+
+        <h3>Follow Us</h3>
+
+        <div class="footer-social">
+
+            <a href="#" aria-label="Facebook">
+                <i class="fab fa-facebook"></i>
+            </a>
+
+            <a href="#" aria-label="YouTube">
+                <i class="fab fa-youtube"></i>
+            </a>
+
+            <a href="#" aria-label="WhatsApp">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+
+        </div>
 
     </div>
 
 </div>
 
 
-<!-- ================= PAGE HEADER ================= -->
+<div class="footer-bottom">
 
-<header class="page-header">
+    <p>
+        &copy; 2026 Imperishable Crown Bible Baptist Church.
+        All Rights Reserved.
+    </p>
 
-    <div class="container">
+</div>
 
-        <div class="header-icon">
-            <i class="fas fa-church"></i>
-        </div>
-
-        <h1>Our Services</h1>
-
-        <p>
-            Join us for worship, fellowship, prayer and spiritual growth.
-        </p>
-
-    </div>
-
-</header>
-
-
-<!-- ================= SERVICES ================= -->
-
-<main>
-
-<section class="section">
-
-    <div class="container">
-
-        <div class="section-heading">
-
-            <span class="section-label">WORSHIP WITH US</span>
-
-            <h2>Weekly Services</h2>
-
-            <p>
-                Find a service that fits your schedule and join us
-                in worship and fellowship.
-            </p>
-
-        </div>
-
-
-        <div class="service-grid">
-
-
-            <!-- SERVICE 1 -->
-
-            <article class="service-card">
-
-                <div class="service-icon">
-                    <i class="fas fa-church"></i>
-                </div>
-
-                <h3>Sunday Worship Service</h3>
-
-                <div class="service-time">
-                    <i class="fas fa-clock"></i>
-                    8:00 AM &amp; 10:30 AM
-                </div>
-
-                <div class="service-location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    Main Sanctuary
-                </div>
-
-                <p class="service-description">
-                    Experience powerful worship, inspiring messages,
-                    and a warm Christian community. Our Sunday services
-                    include worship, Bible teaching and prayer.
-                </p>
-
-                <ul class="service-features">
-
-                    <li>
-                        <i class="fas fa-music"></i>
-                        Live Worship
-                    </li>
-
-                    <li>
-                        <i class="fas fa-bible"></i>
-                        Bible Teaching
-                    </li>
-
-                    <li>
-                        <i class="fas fa-child"></i>
-                        Children's Ministry
-                    </li>
-
-                    <li>
-                        <i class="fas fa-users"></i>
-                        Fellowship
-                    </li>
-
-                </ul>
-
-                <button
-                    class="btn-join"
-                    type="button"
-                    onclick="openModal('Sunday Worship Service')"
-                >
-                    Plan Your Visit
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-
-            </article>
-
-
-            <!-- SERVICE 2 -->
-
-            <article class="service-card">
-
-                <div class="service-icon">
-                    <i class="fas fa-praying-hands"></i>
-                </div>
-
-                <h3>Wednesday Prayer Meeting</h3>
-
-                <div class="service-time">
-                    <i class="fas fa-clock"></i>
-                    6:00 PM - 7:30 PM
-                </div>
-
-                <div class="service-location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    Prayer Chapel
-                </div>
-
-                <p class="service-description">
-                    Midweek spiritual renewal through prayer,
-                    intercession and worship. Join us as we seek
-                    God's face together.
-                </p>
-
-                <ul class="service-features">
-
-                    <li>
-                        <i class="fas fa-pray"></i>
-                        Group Prayer
-                    </li>
-
-                    <li>
-                        <i class="fas fa-hands-praying"></i>
-                        Intercession
-                    </li>
-
-                    <li>
-                        <i class="fas fa-heart"></i>
-                        Testimony Sharing
-                    </li>
-
-                    <li>
-                        <i class="fas fa-church"></i>
-                        Worship
-                    </li>
-
-                </ul>
-
-                <button
-                    class="btn-join"
-                    type="button"
-                    onclick="openModal('Wednesday Prayer Meeting')"
-                >
-                    Join Prayer
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-
-            </article>
-
-
-            <!-- SERVICE 3 -->
-
-            <article class="service-card">
-
-                <div class="service-icon">
-                    <i class="fas fa-bible"></i>
-                </div>
-
-                <h3>Friday Bible Study</h3>
-
-                <div class="service-time">
-                    <i class="fas fa-clock"></i>
-                    7:00 PM - 8:30 PM
-                </div>
-
-                <div class="service-location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    Fellowship Hall
-                </div>
-
-                <p class="service-description">
-                    Deepen your understanding of God's Word through
-                    interactive Bible study, discussion and reflection.
-                </p>
-
-                <ul class="service-features">
-
-                    <li>
-                        <i class="fas fa-book-open"></i>
-                        Verse-by-Verse Teaching
-                    </li>
-
-                    <li>
-                        <i class="fas fa-comments"></i>
-                        Group Discussion
-                    </li>
-
-                    <li>
-                        <i class="fas fa-question-circle"></i>
-                        Q&amp;A Session
-                    </li>
-
-                    <li>
-                        <i class="fas fa-book"></i>
-                        Study Materials
-                    </li>
-
-                </ul>
-
-                <button
-                    class="btn-join"
-                    type="button"
-                    onclick="openModal('Friday Bible Study')"
-                >
-                    Join Study
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-
-            </article>
-
-
-            <!-- SERVICE 4 -->
-
-            <article class="service-card">
-
-                <div class="service-icon">
-                    <i class="fas fa-child"></i>
-                </div>
-
-                <h3>Children's Church</h3>
-
-                <div class="service-time">
-                    <i class="fas fa-clock"></i>
-                    10:30 AM Sunday
-                </div>
-
-                <div class="service-location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    Children's Wing
-                </div>
-
-                <p class="service-description">
-                    Age-appropriate Bible teaching and activities
-                    for children ages 3-12 in a safe and joyful
-                    environment.
-                </p>
-
-                <ul class="service-features">
-
-                    <li>
-                        <i class="fas fa-book-bible"></i>
-                        Bible Lessons
-                    </li>
-
-                    <li>
-                        <i class="fas fa-music"></i>
-                        Kids Worship
-                    </li>
-
-                    <li>
-                        <i class="fas fa-paint-brush"></i>
-                        Arts &amp; Crafts
-                    </li>
-
-                    <li>
-                        <i class="fas fa-gamepad"></i>
-                        Games &amp; Activities
-                    </li>
-
-                </ul>
-
-                <button
-                    class="btn-join"
-                    type="button"
-                    onclick="openModal('Children Church')"
-                >
-                    Register Child
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-
-            </article>
-
-
-            <!-- SERVICE 5 -->
-
-            <article class="service-card">
-
-                <div class="service-icon">
-                    <i class="fas fa-music"></i>
-                </div>
-
-                <h3>Youth Service</h3>
-
-                <div class="service-time">
-                    <i class="fas fa-clock"></i>
-                    4:00 PM Saturday
-                </div>
-
-                <div class="service-location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    Youth Center
-                </div>
-
-                <p class="service-description">
-                    Dynamic worship and relevant biblical teaching
-                    for teenagers and young adults ages 13-25.
-                </p>
-
-                <ul class="service-features">
-
-                    <li>
-                        <i class="fas fa-guitar"></i>
-                        Contemporary Worship
-                    </li>
-
-                    <li>
-                        <i class="fas fa-chalkboard-teacher"></i>
-                        Youth Topics
-                    </li>
-
-                    <li>
-                        <i class="fas fa-utensils"></i>
-                        Fellowship &amp; Snacks
-                    </li>
-
-                    <li>
-                        <i class="fas fa-futbol"></i>
-                        Sports &amp; Games
-                    </li>
-
-                </ul>
-
-                <button
-                    class="btn-join"
-                    type="button"
-                    onclick="openModal('Youth Service')"
-                >
-                    Join Youth
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-
-            </article>
-
-
-            <!-- SERVICE 6 -->
-
-            <article class="service-card">
-
-                <div class="service-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-
-                <h3>Small Groups</h3>
-
-                <div class="service-time">
-                    <i class="fas fa-clock"></i>
-                    Various Times
-                </div>
-
-                <div class="service-location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    Throughout the Week
-                </div>
-
-                <p class="service-description">
-                    Connect with others in small groups and build
-                    meaningful relationships while growing together
-                    in faith.
-                </p>
-
-                <ul class="service-features">
-
-                    <li>
-                        <i class="fas fa-home"></i>
-                        Home-Based Groups
-                    </li>
-
-                    <li>
-                        <i class="fas fa-building"></i>
-                        Workplace Groups
-                    </li>
-
-                    <li>
-                        <i class="fas fa-venus-mars"></i>
-                        Men's &amp; Women's Groups
-                    </li>
-
-                    <li>
-                        <i class="fas fa-heart"></i>
-                        Couples &amp; Singles
-                    </li>
-
-                </ul>
-
-                <button
-                    class="btn-join"
-                    type="button"
-                    onclick="openModal('Small Groups')"
-                >
-                    Find a Group
-                    <i class="fas fa-arrow-right"></i>
-                </button>
-
-            </article>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ================= SCHEDULE ================= -->
-
-<section class="schedule-section">
-
-    <div class="container">
-
-        <div class="section-heading">
-
-            <span class="section-label">EVERY WEEK</span>
-
-            <h2>Weekly Schedule</h2>
-
-            <p>
-                Our regular weekly activities at a glance.
-            </p>
-
-        </div>
-
-
-        <div class="schedule-grid">
-
-            <div class="schedule-card">
-                <span class="schedule-day">Sunday</span>
-                <h3>Morning Worship</h3>
-                <p><i class="fas fa-clock"></i> 8:00 AM</p>
-                <small>Main Sanctuary</small>
-            </div>
-
-            <div class="schedule-card">
-                <span class="schedule-day">Sunday</span>
-                <h3>Second Service</h3>
-                <p><i class="fas fa-clock"></i> 10:30 AM</p>
-                <small>Main Sanctuary</small>
-            </div>
-
-            <div class="schedule-card">
-                <span class="schedule-day">Sunday</span>
-                <h3>Children's Church</h3>
-                <p><i class="fas fa-clock"></i> 10:30 AM</p>
-                <small>Children's Wing</small>
-            </div>
-
-            <div class="schedule-card">
-                <span class="schedule-day">Sunday</span>
-                <h3>Youth Fellowship</h3>
-                <p><i class="fas fa-clock"></i> 2:00 PM</p>
-                <small>Youth Center</small>
-            </div>
-
-            <div class="schedule-card">
-                <span class="schedule-day">Tuesday</span>
-                <h3>Women's Ministry</h3>
-                <p><i class="fas fa-clock"></i> 10:00 AM</p>
-                <small>Fellowship Hall</small>
-            </div>
-
-            <div class="schedule-card">
-                <span class="schedule-day">Wednesday</span>
-                <h3>Prayer Meeting</h3>
-                <p><i class="fas fa-clock"></i> 6:00 PM</p>
-                <small>Prayer Chapel</small>
-            </div>
-
-            <div class="schedule-card">
-                <span class="schedule-day">Thursday</span>
-                <h3>Men's Fellowship</h3>
-                <p><i class="fas fa-clock"></i> 7:00 PM</p>
-                <small>Fellowship Hall</small>
-            </div>
-
-            <div class="schedule-card">
-                <span class="schedule-day">Friday</span>
-                <h3>Bible Study</h3>
-                <p><i class="fas fa-clock"></i> 7:00 PM</p>
-                <small>Fellowship Hall</small>
-            </div>
-
-            <div class="schedule-card">
-                <span class="schedule-day">Saturday</span>
-                <h3>Youth Service</h3>
-                <p><i class="fas fa-clock"></i> 4:00 PM</p>
-                <small>Youth Center</small>
-            </div>
-
-            <div class="schedule-card">
-                <span class="schedule-day">Saturday</span>
-                <h3>Choir Practice</h3>
-                <p><i class="fas fa-clock"></i> 5:00 PM</p>
-                <small>Main Sanctuary</small>
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ================= SPECIAL EVENTS ================= -->
-
-<section class="section">
-
-    <div class="container">
-
-        <div class="section-heading">
-
-            <span class="section-label">SPECIAL MOMENTS</span>
-
-            <h2>Upcoming Special Events</h2>
-
-            <p>
-                Special moments we look forward to sharing together.
-            </p>
-
-        </div>
-
-
-        <div class="special-events">
-
-            <article class="event-card">
-
-                <div class="event-icon">
-                    <i class="fas fa-fire"></i>
-                </div>
-
-                <h3>Annual Prayer &amp; Fasting Week</h3>
-
-                <p>
-                    Join us for a week of prayer, fasting,
-                    and spiritual renewal.
-                </p>
-
-                <span class="event-date">
-                    <i class="fas fa-calendar"></i>
-                    April 15-21, 2026
-                </span>
-
-            </article>
-
-
-            <article class="event-card">
-
-                <div class="event-icon">
-                    <i class="fas fa-cross"></i>
-                </div>
-
-                <h3>Easter Celebration Service</h3>
-
-                <p>
-                    Celebrate the resurrection of our Lord
-                    Jesus Christ with us.
-                </p>
-
-                <span class="event-date">
-                    <i class="fas fa-calendar"></i>
-                    April 20, 2026
-                </span>
-
-            </article>
-
-
-            <article class="event-card">
-
-                <div class="event-icon">
-                    <i class="fas fa-people-group"></i>
-                </div>
-
-                <h3>Family Fellowship</h3>
-
-                <p>
-                    A special time for families to worship,
-                    fellowship, and grow together.
-                </p>
-
-                <span class="event-date">
-                    <i class="fas fa-calendar"></i>
-                    Date to be announced
-                </span>
-
-            </article>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- ================= ONLINE ================= -->
-
-<section class="livestream-section">
-
-    <div class="container">
-
-        <div class="live-icon">
-            <i class="fas fa-video"></i>
-        </div>
-
-        <h2>Join Us Online</h2>
-
-        <p>
-            Can't make it to church? Join our online worship
-            whenever live streaming is available.
-        </p>
-
-        <a href="#" class="livestream-btn" id="liveStreamBtn">
-            <i class="fab fa-youtube"></i>
-            Watch Live
-        </a>
-
-    </div>
-
-</section>
-
-</main>
-
-
-<!-- ================= SERVICE MODAL ================= -->
-
-<div class="modal" id="serviceModal">
-
-    <div class="modal-content">
-
-        <button
-            class="modal-close"
-            id="modalClose"
-            type="button"
-            aria-label="Close modal"
-        >
-            &times;
-     
+</footer><!-- JAVASCRIPT --><script src="services.js"></script></body>
+</html>
