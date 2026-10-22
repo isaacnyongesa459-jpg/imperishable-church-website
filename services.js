@@ -1,22 +1,21 @@
-document.addEventListener("DOMContentLoaded", function () {
+/* =====================================================
+   IMPERISHABLE CROWN - SERVICES JAVASCRIPT
+   ===================================================== */
 
-/* ==========================================
-   HAMBURGER NAVIGATION
-   ========================================== */
+
+/* ================= NAVIGATION ================= */
 
 const hamburger = document.getElementById("hamburger");
 const dropdownMenu = document.getElementById("dropdownMenu");
 
-if (!hamburger || !dropdownMenu) {
-    console.error("Navigation elements were not found.");
-    return;
-}
 
+/*
+    When the three-line button is clicked,
+    add/remove the "show" class.
+*/
 
-// Open / close navigation
 hamburger.addEventListener("click", function (event) {
 
-    // Prevent document click from immediately closing it
     event.stopPropagation();
 
     dropdownMenu.classList.toggle("show");
@@ -25,11 +24,11 @@ hamburger.addEventListener("click", function (event) {
 
     hamburger.setAttribute(
         "aria-expanded",
-        isOpen ? "true" : "false"
+        isOpen
     );
 
+    /* Change hamburger icon to X */
 
-    // Change bars to X
     const icon = hamburger.querySelector("i");
 
     if (isOpen) {
@@ -47,139 +46,119 @@ hamburger.addEventListener("click", function (event) {
 });
 
 
-/* ==========================================
-   NAVIGATION LINKS
-   ========================================== */
-
-const navigationLinks =
-    document.querySelectorAll(".dropdown-item");
-
-navigationLinks.forEach(function (link) {
-
-    link.addEventListener("click", function () {
-
-        dropdownMenu.classList.remove("show");
-
-        hamburger.setAttribute(
-            "aria-expanded",
-            "false"
-        );
-
-        const icon = hamburger.querySelector("i");
-
-        icon.classList.remove("fa-times");
-        icon.classList.add("fa-bars");
-
-    });
-
-});
-
-
-/* ==========================================
-   CLOSE MENU WHEN CLICKING OUTSIDE
-   ========================================== */
+/*
+    Close menu when clicking anywhere
+    outside the navigation menu.
+*/
 
 document.addEventListener("click", function (event) {
 
+    const clickedInsideMenu =
+        dropdownMenu.contains(event.target);
+
+    const clickedHamburger =
+        hamburger.contains(event.target);
+
+
     if (
-        !dropdownMenu.contains(event.target) &&
-        !hamburger.contains(event.target)
+        !clickedInsideMenu &&
+        !clickedHamburger
     ) {
 
-        dropdownMenu.classList.remove("show");
-
-        hamburger.setAttribute(
-            "aria-expanded",
-            "false"
-        );
-
-        const icon = hamburger.querySelector("i");
-
-        icon.classList.remove("fa-times");
-        icon.classList.add("fa-bars");
+        closeNavigation();
 
     }
 
 });
 
 
-/* ==========================================
-   SERVICE MODAL
-   ========================================== */
+/*
+    Close menu when a navigation link
+    is clicked.
+*/
 
-const modal =
-    document.getElementById("serviceModal");
-
-const modalTitle =
-    document.getElementById("modalTitle");
-
-const modalClose =
-    document.getElementById("modalClose");
-
-const modalCancel =
-    document.getElementById("modalCancel");
-
-const visitForm =
-    document.getElementById("visitForm");
+const navigationLinks =
+    document.querySelectorAll(".dropdown-item");
 
 
-// All service buttons
-const serviceButtons =
-    document.querySelectorAll(".btn-join");
+navigationLinks.forEach(function (link) {
 
+    link.addEventListener("click", function () {
 
-serviceButtons.forEach(function (button) {
-
-    button.addEventListener("click", function () {
-
-        const serviceName =
-            button.getAttribute("data-service");
-
-        modalTitle.textContent = serviceName;
-
-        modal.classList.add("show");
-
-        document.body.style.overflow = "hidden";
+        closeNavigation();
 
     });
 
 });
 
 
-// Close modal
+/*
+    Navigation close function
+*/
+
+function closeNavigation() {
+
+    dropdownMenu.classList.remove("show");
+
+    hamburger.setAttribute(
+        "aria-expanded",
+        "false"
+    );
+
+    const icon = hamburger.querySelector("i");
+
+    icon.classList.remove("fa-times");
+    icon.classList.add("fa-bars");
+
+}
+
+
+/* ================= SERVICE MODAL ================= */
+
+const serviceModal =
+    document.getElementById("serviceModal");
+
+const modalTitle =
+    document.getElementById("modalTitle");
+
+
+/*
+    Open service modal
+*/
+
+function openModal(serviceName) {
+
+    modalTitle.textContent =
+        serviceName;
+
+    serviceModal.classList.add("show");
+
+    document.body.style.overflow = "hidden";
+
+}
+
+
+/*
+    Close service modal
+*/
+
 function closeModal() {
 
-    modal.classList.remove("show");
+    serviceModal.classList.remove("show");
 
     document.body.style.overflow = "";
 
 }
 
 
-if (modalClose) {
+/*
+    Close modal when clicking
+    outside the modal content.
+*/
 
-    modalClose.addEventListener(
-        "click",
-        closeModal
-    );
+serviceModal.addEventListener("click", function (event) {
 
-}
-
-
-if (modalCancel) {
-
-    modalCancel.addEventListener(
-        "click",
-        closeModal
-    );
-
-}
-
-
-// Close modal when clicking background
-modal.addEventListener("click", function (event) {
-
-    if (event.target === modal) {
+    if (event.target === serviceModal) {
 
         closeModal();
 
@@ -188,23 +167,28 @@ modal.addEventListener("click", function (event) {
 });
 
 
-// Close modal using ESC
+/*
+    Close modal using ESC key.
+*/
+
 document.addEventListener("keydown", function (event) {
 
     if (event.key === "Escape") {
 
-        closeModal();
+        closeNavigation();
 
-        dropdownMenu.classList.remove("show");
+        closeModal();
 
     }
 
 });
 
 
-/* ==========================================
-   VISITOR FORM
-   ========================================== */
+/* ================= VISIT FORM ================= */
+
+const visitForm =
+    document.getElementById("visitForm");
+
 
 visitForm.addEventListener("submit", function (event) {
 
@@ -241,4 +225,13 @@ visitForm.addEventListener("submit", function (event) {
 
 });
 
-});
+
+/* ================= PAGE LOADED ================= */
+
+console.log(
+    "Imperishable Crown Services page loaded successfully."
+);
+
+console.log(
+    "Navigation menu JavaScript is working."
+);
