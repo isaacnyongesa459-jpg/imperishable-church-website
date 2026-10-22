@@ -44,6 +44,7 @@
             id="hamburger"
             aria-label="Open navigation menu"
             aria-expanded="false"
+            type="button"
         >
             <i class="fas fa-bars"></i>
         </button>
@@ -53,7 +54,7 @@
 </nav>
 
 
-<!-- MOBILE MENU -->
+<!-- ================= MOBILE / DROPDOWN NAVIGATION ================= -->
 
 <div class="dropdown-menu" id="dropdownMenu">
 
@@ -105,10 +106,14 @@
 
     <div class="container">
 
+        <div class="header-icon">
+            <i class="fas fa-church"></i>
+        </div>
+
         <h1>Our Services</h1>
 
         <p>
-            Join us for worship, fellowship, and spiritual growth
+            Join us for worship, fellowship, prayer and spiritual growth.
         </p>
 
     </div>
@@ -125,6 +130,8 @@
     <div class="container">
 
         <div class="section-heading">
+
+            <span class="section-label">WORSHIP WITH US</span>
 
             <h2>Weekly Services</h2>
 
@@ -150,6 +157,7 @@
                 <h3>Sunday Worship Service</h3>
 
                 <div class="service-time">
+                    <i class="fas fa-clock"></i>
                     8:00 AM &amp; 10:30 AM
                 </div>
 
@@ -160,8 +168,8 @@
 
                 <p class="service-description">
                     Experience powerful worship, inspiring messages,
-                    and a warm community. Our Sunday services feature
-                    worship music, Bible teaching, and prayer.
+                    and a warm Christian community. Our Sunday services
+                    include worship, Bible teaching and prayer.
                 </p>
 
                 <ul class="service-features">
@@ -182,17 +190,19 @@
                     </li>
 
                     <li>
-                        <i class="fas fa-coffee"></i>
-                        Fellowship Breakfast
+                        <i class="fas fa-users"></i>
+                        Fellowship
                     </li>
 
                 </ul>
 
                 <button
                     class="btn-join"
-                    onclick="openModal('Sunday Worship')"
+                    type="button"
+                    onclick="openModal('Sunday Worship Service')"
                 >
                     Plan Your Visit
+                    <i class="fas fa-arrow-right"></i>
                 </button>
 
             </article>
@@ -209,6 +219,7 @@
                 <h3>Wednesday Prayer Meeting</h3>
 
                 <div class="service-time">
+                    <i class="fas fa-clock"></i>
                     6:00 PM - 7:30 PM
                 </div>
 
@@ -219,7 +230,7 @@
 
                 <p class="service-description">
                     Midweek spiritual renewal through prayer,
-                    intercession, and worship. Join us as we seek
+                    intercession and worship. Join us as we seek
                     God's face together.
                 </p>
 
@@ -242,16 +253,18 @@
 
                     <li>
                         <i class="fas fa-church"></i>
-                        Anointing Service
+                        Worship
                     </li>
 
                 </ul>
 
                 <button
                     class="btn-join"
-                    onclick="openModal('Wednesday Prayer')"
+                    type="button"
+                    onclick="openModal('Wednesday Prayer Meeting')"
                 >
                     Join Prayer
+                    <i class="fas fa-arrow-right"></i>
                 </button>
 
             </article>
@@ -268,6 +281,7 @@
                 <h3>Friday Bible Study</h3>
 
                 <div class="service-time">
+                    <i class="fas fa-clock"></i>
                     7:00 PM - 8:30 PM
                 </div>
 
@@ -278,7 +292,7 @@
 
                 <p class="service-description">
                     Deepen your understanding of God's Word through
-                    interactive Bible study and discussion.
+                    interactive Bible study, discussion and reflection.
                 </p>
 
                 <ul class="service-features">
@@ -299,7 +313,7 @@
                     </li>
 
                     <li>
-                        <i class="fas fa-hand-holding-heart"></i>
+                        <i class="fas fa-book"></i>
                         Study Materials
                     </li>
 
@@ -307,9 +321,11 @@
 
                 <button
                     class="btn-join"
+                    type="button"
                     onclick="openModal('Friday Bible Study')"
                 >
                     Join Study
+                    <i class="fas fa-arrow-right"></i>
                 </button>
 
             </article>
@@ -326,7 +342,8 @@
                 <h3>Children's Church</h3>
 
                 <div class="service-time">
-                    10:30 AM (Sunday)
+                    <i class="fas fa-clock"></i>
+                    10:30 AM Sunday
                 </div>
 
                 <div class="service-location">
@@ -335,14 +352,15 @@
                 </div>
 
                 <p class="service-description">
-                    Age-appropriate teaching and activities for
-                    children ages 3-12 in a safe and joyful environment.
+                    Age-appropriate Bible teaching and activities
+                    for children ages 3-12 in a safe and joyful
+                    environment.
                 </p>
 
                 <ul class="service-features">
 
                     <li>
-                        <i class="fas fa-puzzle-piece"></i>
+                        <i class="fas fa-book-bible"></i>
                         Bible Lessons
                     </li>
 
@@ -365,9 +383,11 @@
 
                 <button
                     class="btn-join"
+                    type="button"
                     onclick="openModal('Children Church')"
                 >
                     Register Child
+                    <i class="fas fa-arrow-right"></i>
                 </button>
 
             </article>
@@ -384,7 +404,8 @@
                 <h3>Youth Service</h3>
 
                 <div class="service-time">
-                    4:00 PM (Saturday)
+                    <i class="fas fa-clock"></i>
+                    4:00 PM Saturday
                 </div>
 
                 <div class="service-location">
@@ -423,9 +444,11 @@
 
                 <button
                     class="btn-join"
+                    type="button"
                     onclick="openModal('Youth Service')"
                 >
                     Join Youth
+                    <i class="fas fa-arrow-right"></i>
                 </button>
 
             </article>
@@ -442,6 +465,7 @@
                 <h3>Small Groups</h3>
 
                 <div class="service-time">
+                    <i class="fas fa-clock"></i>
                     Various Times
                 </div>
 
@@ -464,7 +488,7 @@
                     </li>
 
                     <li>
-                        <i class="fas fa-business-time"></i>
+                        <i class="fas fa-building"></i>
                         Workplace Groups
                     </li>
 
@@ -482,9 +506,11 @@
 
                 <button
                     class="btn-join"
+                    type="button"
                     onclick="openModal('Small Groups')"
                 >
                     Find a Group
+                    <i class="fas fa-arrow-right"></i>
                 </button>
 
             </article>
@@ -503,6 +529,8 @@
     <div class="container">
 
         <div class="section-heading">
+
+            <span class="section-label">EVERY WEEK</span>
 
             <h2>Weekly Schedule</h2>
 
@@ -600,6 +628,8 @@
 
         <div class="section-heading">
 
+            <span class="section-label">SPECIAL MOMENTS</span>
+
             <h2>Upcoming Special Events</h2>
 
             <p>
@@ -613,7 +643,11 @@
 
             <article class="event-card">
 
-                <h3>🔥 Annual Prayer &amp; Fasting Week</h3>
+                <div class="event-icon">
+                    <i class="fas fa-fire"></i>
+                </div>
+
+                <h3>Annual Prayer &amp; Fasting Week</h3>
 
                 <p>
                     Join us for a week of prayer, fasting,
@@ -630,7 +664,11 @@
 
             <article class="event-card">
 
-                <h3>🎉 Easter Celebration Service</h3>
+                <div class="event-icon">
+                    <i class="fas fa-cross"></i>
+                </div>
+
+                <h3>Easter Celebration Service</h3>
 
                 <p>
                     Celebrate the resurrection of our Lord
@@ -647,7 +685,11 @@
 
             <article class="event-card">
 
-                <h3>👨‍👩‍👧‍👦 Family Fellowship</h3>
+                <div class="event-icon">
+                    <i class="fas fa-people-group"></i>
+                </div>
+
+                <h3>Family Fellowship</h3>
 
                 <p>
                     A special time for families to worship,
@@ -668,9 +710,9 @@
 </section>
 
 
-<!-- ================= LIVE STREAM ================= -->
+<!-- ================= ONLINE ================= -->
 
-<section class="livestream-section section">
+<section class="livestream-section">
 
     <div class="container">
 
@@ -685,13 +727,9 @@
             whenever live streaming is available.
         </p>
 
-        <a href="#"
-           class="livestream-btn pulse">
-
+        <a href="#" class="livestream-btn" id="liveStreamBtn">
             <i class="fab fa-youtube"></i>
-
             Watch Live
-
         </a>
 
     </div>
@@ -701,87 +739,17 @@
 </main>
 
 
-<!-- ================= MODAL ================= -->
+<!-- ================= SERVICE MODAL ================= -->
 
 <div class="modal" id="serviceModal">
 
     <div class="modal-content">
 
-        <button class="modal-close" onclick="closeModal()">
+        <button
+            class="modal-close"
+            id="modalClose"
+            type="button"
+            aria-label="Close modal"
+        >
             &times;
-        </button>
-
-        <div class="modal-icon">
-            <i class="fas fa-church"></i>
-        </div>
-
-        <h3 id="modalTitle">Join Us</h3>
-
-        <p>
-            Thank you for your interest. Please enter your
-            name and phone number and we will be happy to
-            assist you.
-        </p>
-
-        <form id="visitForm">
-
-            <input
-                type="text"
-                id="visitorName"
-                placeholder="Your name"
-                required
-            >
-
-            <input
-                type="tel"
-                id="visitorPhone"
-                placeholder="Phone number"
-                required
-            >
-
-            <div class="modal-buttons">
-
-                <button
-                    type="button"
-                    class="modal-btn cancel"
-                    onclick="closeModal()"
-                >
-                    Cancel
-                </button>
-
-                <button
-                    type="submit"
-                    class="modal-btn confirm"
-                >
-                    Continue
-                </button>
-
-            </div>
-
-        </form>
-
-    </div>
-
-</div>
-
-
-<!-- ================= FOOTER ================= -->
-
-<footer class="footer">
-
-    <div class="footer-content container">
-
-        <div class="footer-section">
-
-            <h3>
-                Imperishable Crown Bible Baptist Church
-            </h3>
-
-            <p>
-                <i class="fas fa-map-marker-alt"></i>
-                2435 - 30200, Kitale, Kenya
-            </p>
-
-            <p>
-                <i class="fas fa-phone"></i>
-         
+     
