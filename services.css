@@ -1,6 +1,7 @@
 /* =====================================================
-   RESET
-===================================================== */
+   IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
+   SERVICES PAGE
+   ===================================================== */
 
 * {
     margin: 0;
@@ -9,54 +10,47 @@
 }
 
 html {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: hidden;
     scroll-behavior: smooth;
 }
 
 body {
-    width: 100%;
-    max-width: 100%;
-    min-height: 100vh;
-    overflow-x: hidden;
     font-family: "Poppins", sans-serif;
-    background: #f8f9fa;
     color: #2c3e50;
+    background: #f7f8fc;
+    line-height: 1.6;
 }
 
+button,
+input {
+    font-family: inherit;
+}
 
-/* =====================================================
-   CONTAINER
-===================================================== */
+a {
+    text-decoration: none;
+}
 
 .container {
-    width: 100%;
-    max-width: 1200px;
+    width: min(1200px, 92%);
     margin: 0 auto;
-    padding-left: 20px;
-    padding-right: 20px;
 }
 
 
 /* =====================================================
    NAVIGATION
-===================================================== */
+   ===================================================== */
 
 .navbar {
     width: 100%;
     background: #ffffff;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
     position: relative;
     z-index: 1000;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
 }
 
 .nav-container {
-    width: 100%;
-    max-width: 1200px;
     min-height: 70px;
-    margin: 0 auto;
-    padding: 10px 20px;
+    width: min(1200px, 92%);
+    margin: auto;
 
     display: flex;
     align-items: center;
@@ -68,213 +62,315 @@ body {
     align-items: center;
     gap: 10px;
 
-    text-decoration: none;
     color: #2c3e50;
-
-    min-width: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
 }
 
 .logo-img {
     width: 45px;
     height: 45px;
     object-fit: contain;
-    flex-shrink: 0;
 }
-
-.logo span {
-    font-size: 1.05rem;
-    font-weight: 700;
-
-    white-space: normal;
-}
-
-
-/* HAMBURGER */
 
 .hamburger {
-    width: 45px;
-    height: 45px;
-
-    border: none;
-    background: transparent;
+    width: 48px;
+    height: 48px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
-    font-size: 1.5rem;
+    border: none;
+    border-radius: 10px;
+
+    background: #f5f7fa;
     color: #2c3e50;
+
+    font-size: 1.4rem;
 
     cursor: pointer;
 
-    flex-shrink: 0;
+    transition: 0.3s ease;
 }
 
 .hamburger:hover {
-    color: #e67e22;
+    background: #e67e22;
+    color: #ffffff;
 }
 
 
 /* =====================================================
-   MOBILE DROPDOWN MENU
-===================================================== */
+   DROPDOWN NAVIGATION
+   ===================================================== */
 
 .dropdown-menu {
-    display: none;
-
-    width: 100%;
-    max-width: 100%;
-
     position: absolute;
     top: 70px;
     left: 0;
 
+    width: 100%;
+
     background: #ffffff;
 
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-
     z-index: 999;
+
+    display: none;
+
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+
+    transform: translateY(-10px);
+    opacity: 0;
+
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease;
 }
 
 .dropdown-menu.show {
     display: block;
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .dropdown-content {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
+    width: min(1200px, 92%);
+    margin: auto;
+    padding: 8px 0;
 }
 
 .dropdown-item {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 15px;
 
-    width: 100%;
-
-    padding: 15px 20px;
-
-    text-decoration: none;
+    padding: 15px 18px;
 
     color: #2c3e50;
 
+    font-size: 0.95rem;
+    font-weight: 500;
+
     border-bottom: 1px solid #eeeeee;
 
-    transition: 0.3s;
+    transition: 0.25s ease;
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
 }
 
 .dropdown-item i {
-    width: 22px;
+    width: 25px;
     text-align: center;
+    color: #e67e22;
 }
 
 .dropdown-item:hover,
 .dropdown-item.active {
-    background: #fdf2e9;
+    background: #fff6ed;
     color: #e67e22;
+    padding-left: 25px;
 }
 
 
 /* =====================================================
    PAGE HEADER
-===================================================== */
+   ===================================================== */
 
 .page-header {
-    width: 100%;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
+    position: relative;
+    overflow: hidden;
 
-    padding: 70px 20px;
+    padding: 80px 0;
 
     text-align: center;
+    color: #ffffff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #667eea 0%,
+            #764ba2 100%
+        );
+}
+
+.page-header::before {
+    content: "";
+
+    position: absolute;
+
+    width: 300px;
+    height: 300px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    top: -150px;
+    left: -100px;
+}
+
+.page-header::after {
+    content: "";
+
+    position: absolute;
+
+    width: 250px;
+    height: 250px;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.08);
+
+    bottom: -130px;
+    right: -80px;
+}
+
+.page-header .container {
+    position: relative;
+    z-index: 2;
+}
+
+.header-icon {
+    width: 75px;
+    height: 75px;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.15);
+
+    font-size: 2rem;
 }
 
 .page-header h1 {
     font-size: clamp(2rem, 6vw, 3.5rem);
-    line-height: 1.2;
+    font-weight: 800;
+
     margin-bottom: 12px;
 }
 
 .page-header p {
-    font-size: clamp(0.95rem, 3vw, 1.15rem);
-    line-height: 1.6;
+    max-width: 700px;
+    margin: auto;
+
+    font-size: 1.05rem;
+
+    opacity: 0.92;
 }
 
 
 /* =====================================================
-   SECTIONS
-===================================================== */
+   GENERAL SECTIONS
+   ===================================================== */
 
 .section {
-    width: 100%;
-    padding: 70px 0;
+    padding: 80px 0;
 }
 
 .section-heading {
-    width: 100%;
     text-align: center;
-    margin-bottom: 40px;
+    max-width: 750px;
+    margin: 0 auto 45px;
+}
+
+.section-label {
+    display: inline-block;
+
+    margin-bottom: 10px;
+
+    color: #e67e22;
+
+    font-size: 0.8rem;
+    font-weight: 700;
+
+    letter-spacing: 2px;
 }
 
 .section-heading h2 {
-    font-size: clamp(1.7rem, 5vw, 2.5rem);
-    margin-bottom: 12px;
+    position: relative;
+
+    display: inline-block;
+
     color: #2c3e50;
+
+    font-size: clamp(2rem, 5vw, 2.7rem);
+    font-weight: 800;
+
+    padding-bottom: 15px;
+}
+
+.section-heading h2::after {
+    content: "";
+
+    position: absolute;
+
+    width: 70px;
+    height: 4px;
+
+    bottom: 0;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    background: linear-gradient(
+        90deg,
+        #e67e22,
+        #f39c12
+    );
+
+    border-radius: 10px;
 }
 
 .section-heading p {
-    max-width: 700px;
-    margin: 0 auto;
+    margin-top: 15px;
 
     color: #7f8c8d;
 
-    line-height: 1.7;
+    font-size: 1rem;
 }
 
 
 /* =====================================================
-   SERVICE GRID
-===================================================== */
+   SERVICE CARDS
+   ===================================================== */
 
 .service-grid {
-    width: 100%;
-
     display: grid;
 
-    grid-template-columns: repeat(
-        3,
-        minmax(0, 1fr)
-    );
+    grid-template-columns:
+        repeat(auto-fit, minmax(280px, 1fr));
 
-    gap: 25px;
+    gap: 28px;
 }
 
-
-/* =====================================================
-   SERVICE CARD
-===================================================== */
-
 .service-card {
-    width: 100%;
-    min-width: 0;
+    position: relative;
 
     background: #ffffff;
 
-    border-radius: 20px;
+    padding: 35px 28px;
 
-    padding: 30px 25px;
+    border-radius: 20px;
 
     text-align: center;
 
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.08);
 
-    position: relative;
+    border: 1px solid #eeeeee;
 
     overflow: hidden;
 
-    transition: transform 0.3s ease,
-                box-shadow 0.3s ease;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
 }
 
 .service-card::before {
@@ -296,20 +392,17 @@ body {
 }
 
 .service-card:hover {
-    transform: translateY(-7px);
+    transform: translateY(-8px);
 
     box-shadow:
         0 18px 40px rgba(0, 0, 0, 0.13);
 }
 
-
-/* ICON */
-
 .service-icon {
     width: 75px;
     height: 75px;
 
-    margin: 0 auto 18px;
+    margin: 5px auto 22px;
 
     display: flex;
     align-items: center;
@@ -317,224 +410,303 @@ body {
 
     border-radius: 50%;
 
-    background: #fdf2e9;
+    color: #ffffff;
 
-    color: #e67e22;
+    background: linear-gradient(
+        135deg,
+        #667eea,
+        #764ba2
+    );
 
-    font-size: 2rem;
+    font-size: 1.8rem;
 }
 
 .service-card h3 {
-    font-size: 1.35rem;
-    line-height: 1.4;
+    color: #2c3e50;
 
-    margin-bottom: 12px;
+    font-size: 1.25rem;
+    font-weight: 700;
+
+    margin-bottom: 15px;
 }
 
 .service-time {
+    display: inline-block;
+
+    margin-bottom: 10px;
+
     color: #e67e22;
 
-    font-size: 1.1rem;
-
+    font-size: 0.9rem;
     font-weight: 700;
+}
 
-    margin-bottom: 7px;
+.service-time i {
+    margin-right: 5px;
 }
 
 .service-location {
     color: #7f8c8d;
 
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 
     margin-bottom: 18px;
 }
 
 .service-location i {
     color: #e67e22;
+    margin-right: 5px;
 }
 
 .service-description {
     color: #7f8c8d;
 
+    font-size: 0.9rem;
+
     line-height: 1.7;
 
-    font-size: 0.93rem;
-
-    margin-bottom: 20px;
+    margin-bottom: 22px;
 }
-
-
-/* FEATURES */
 
 .service-features {
     list-style: none;
 
     text-align: left;
 
-    margin: 0 0 20px;
+    margin-bottom: 25px;
 }
 
 .service-features li {
     display: flex;
+    align-items: center;
 
-    align-items: flex-start;
+    gap: 10px;
 
-    gap: 9px;
+    padding: 7px 0;
 
-    padding: 8px 0;
+    color: #5d6d7e;
 
-    color: #6c757d;
-
-    font-size: 0.9rem;
-
-    line-height: 1.4;
+    font-size: 0.85rem;
 }
 
 .service-features li i {
+    width: 20px;
+
     color: #e67e22;
-
-    width: 18px;
-
-    flex-shrink: 0;
-
-    margin-top: 3px;
 }
-
-
-/* BUTTON */
 
 .btn-join {
     width: 100%;
 
-    padding: 13px 18px;
-
     border: none;
+
+    padding: 13px 18px;
 
     border-radius: 50px;
 
-    background: #e67e22;
+    background: linear-gradient(
+        135deg,
+        #e67e22,
+        #f39c12
+    );
 
-    color: white;
+    color: #ffffff;
 
-    font-family: inherit;
-
-    font-size: 0.95rem;
-
-    font-weight: 600;
+    font-size: 0.9rem;
+    font-weight: 700;
 
     cursor: pointer;
 
-    transition: 0.3s;
+    transition: 0.3s ease;
+}
+
+.btn-join i {
+    margin-left: 7px;
 }
 
 .btn-join:hover {
-    background: #d35400;
-
     transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 20px rgba(230, 126, 34, 0.3);
 }
 
 
 /* =====================================================
    SCHEDULE
-===================================================== */
+   ===================================================== */
 
 .schedule-section {
-    width: 100%;
-
-    padding: 70px 0;
+    padding: 80px 0;
 
     background:
         linear-gradient(
             135deg,
             #f5f7fa,
-            #c3cfe2
+            #e9edf5
         );
 }
 
 .schedule-grid {
-    width: 100%;
-
     display: grid;
 
-    grid-template-columns: repeat(
-        2,
-        minmax(0, 1fr)
-    );
+    grid-template-columns:
+        repeat(auto-fit, minmax(210px, 1fr));
 
-    gap: 15px;
+    gap: 20px;
 }
 
 .schedule-card {
-    width: 100%;
-    min-width: 0;
+    background: #ffffff;
 
-    background: white;
+    padding: 25px 20px;
 
     border-radius: 15px;
 
-    padding: 20px;
+    text-align: center;
+
+    border-left: 4px solid #e67e22;
 
     box-shadow:
-        0 5px 20px rgba(0,0,0,0.07);
+        0 5px 20px rgba(0, 0, 0, 0.06);
 
-    border-left: 5px solid #e67e22;
+    transition: 0.3s ease;
+}
+
+.schedule-card:hover {
+    transform: translateY(-5px);
 }
 
 .schedule-day {
     display: inline-block;
 
-    background: #fdf2e9;
+    padding: 5px 13px;
+
+    margin-bottom: 10px;
+
+    border-radius: 30px;
+
+    background: #fff2e5;
 
     color: #e67e22;
 
-    padding: 5px 12px;
-
-    border-radius: 50px;
-
-    font-size: 0.8rem;
-
+    font-size: 0.75rem;
     font-weight: 700;
-
-    margin-bottom: 10px;
 }
 
 .schedule-card h3 {
-    font-size: 1.05rem;
+    font-size: 1rem;
 
-    margin-bottom: 7px;
+    color: #2c3e50;
+
+    margin-bottom: 8px;
 }
 
 .schedule-card p {
     color: #e67e22;
 
+    font-size: 0.85rem;
     font-weight: 600;
-
-    margin-bottom: 5px;
 }
 
 .schedule-card small {
-    color: #7f8c8d;
+    color: #8b969e;
+
+    font-size: 0.75rem;
 }
 
 
 /* =====================================================
    SPECIAL EVENTS
-===================================================== */
+   ===================================================== */
 
 .special-events {
-    width: 100%;
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fit, minmax(280px, 1fr));
+
+    gap: 25px;
 }
 
 .event-card {
-    width: 100%;
+    padding: 30px;
 
-    padding: 25px;
-
-    margin-bottom: 15px;
+    background: #ffffff;
 
     border-radius: 18px;
 
-    color: white;
+    box-shadow:
+        0 7px 25px rgba(0, 0, 0, 0.07);
+
+    border: 1px solid #eeeeee;
+
+    transition: 0.3s ease;
+}
+
+.event-card:hover {
+    transform: translateY(-6px);
+}
+
+.event-icon {
+    width: 55px;
+    height: 55px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 18px;
+
+    border-radius: 15px;
+
+    background: #fff2e5;
+
+    color: #e67e22;
+
+    font-size: 1.4rem;
+}
+
+.event-card h3 {
+    color: #2c3e50;
+
+    font-size: 1.15rem;
+
+    margin-bottom: 10px;
+}
+
+.event-card p {
+    color: #7f8c8d;
+
+    font-size: 0.9rem;
+
+    line-height: 1.7;
+
+    margin-bottom: 18px;
+}
+
+.event-date {
+    color: #e67e22;
+
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.event-date i {
+    margin-right: 5px;
+}
+
+
+/* =====================================================
+   LIVESTREAM
+   ===================================================== */
+
+.livestream-section {
+    padding: 80px 0;
+
+    text-align: center;
+
+    color: #ffffff;
 
     background:
         linear-gradient(
@@ -542,78 +714,35 @@ body {
             #667eea,
             #764ba2
         );
-
-    box-shadow:
-        0 8px 25px rgba(0,0,0,0.1);
-
-    transition: transform 0.3s ease;
-}
-
-.event-card:hover {
-    transform: translateY(-4px);
-}
-
-.event-card h3 {
-    font-size: 1.2rem;
-
-    line-height: 1.4;
-
-    margin-bottom: 8px;
-}
-
-.event-card p {
-    line-height: 1.6;
-
-    margin-bottom: 15px;
-
-    opacity: 0.9;
-}
-
-.event-date {
-    display: inline-block;
-
-    max-width: 100%;
-
-    padding: 7px 13px;
-
-    border-radius: 50px;
-
-    background: rgba(255,255,255,0.2);
-
-    font-size: 0.85rem;
-}
-
-
-/* =====================================================
-   LIVE STREAM
-===================================================== */
-
-.livestream-section {
-    background: #2c3e50;
-
-    color: white;
-
-    text-align: center;
 }
 
 .live-icon {
-    font-size: 2.5rem;
+    width: 80px;
+    height: 80px;
 
-    margin-bottom: 15px;
+    margin: 0 auto 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.15);
+
+    font-size: 2rem;
 }
 
 .livestream-section h2 {
-    color: white;
+    font-size: 2.2rem;
 
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 .livestream-section p {
-    max-width: 600px;
+    max-width: 650px;
 
-    margin: 0 auto;
-
-    line-height: 1.7;
+    margin: 0 auto 25px;
 
     opacity: 0.9;
 }
@@ -622,52 +751,50 @@ body {
     display: inline-flex;
 
     align-items: center;
-    justify-content: center;
+    gap: 10px;
 
-    gap: 8px;
-
-    margin-top: 25px;
-
-    padding: 14px 25px;
+    padding: 13px 25px;
 
     border-radius: 50px;
 
-    background: #e74c3c;
+    background: #ffffff;
 
-    color: white;
+    color: #e67e22;
 
-    text-decoration: none;
+    font-weight: 700;
 
-    font-weight: 600;
+    transition: 0.3s ease;
 }
 
 .livestream-btn:hover {
-    background: #c0392b;
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
 
 /* =====================================================
    MODAL
-===================================================== */
+   ===================================================== */
 
 .modal {
-    display: none;
-
     position: fixed;
 
     inset: 0;
 
-    width: 100%;
-    height: 100%;
+    z-index: 9999;
 
-    padding: 20px;
-
-    background: rgba(0,0,0,0.65);
-
-    z-index: 5000;
+    display: none;
 
     align-items: center;
     justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.75);
+
+    backdrop-filter: blur(4px);
 }
 
 .modal.show {
@@ -677,21 +804,35 @@ body {
 .modal-content {
     position: relative;
 
-    width: 100%;
-
-    max-width: 430px;
+    width: min(500px, 100%);
 
     max-height: 90vh;
 
     overflow-y: auto;
 
-    padding: 30px 25px;
+    padding: 40px 30px;
+
+    background: #ffffff;
 
     border-radius: 20px;
 
-    background: white;
-
     text-align: center;
+
+    animation: modalIn 0.3s ease;
+}
+
+@keyframes modalIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(25px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+
 }
 
 .modal-close {
@@ -700,61 +841,87 @@ body {
     top: 12px;
     right: 15px;
 
+    width: 40px;
+    height: 40px;
+
     border: none;
 
-    background: none;
+    border-radius: 50%;
 
-    font-size: 28px;
+    background: #f1f2f6;
 
-    color: #777;
+    color: #2c3e50;
+
+    font-size: 1.5rem;
 
     cursor: pointer;
 }
 
+.modal-close:hover {
+    background: #e67e22;
+    color: #ffffff;
+}
+
 .modal-icon {
-    font-size: 2.5rem;
+    width: 65px;
+    height: 65px;
 
-    color: #e67e22;
+    margin: 0 auto 15px;
 
-    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    color: #ffffff;
+
+    background: linear-gradient(
+        135deg,
+        #667eea,
+        #764ba2
+    );
+
+    font-size: 1.5rem;
 }
 
 .modal-content h3 {
+    color: #2c3e50;
+
+    font-size: 1.5rem;
+
     margin-bottom: 10px;
 }
 
-.modal-content p {
+.modal-content > p {
     color: #7f8c8d;
-
-    line-height: 1.6;
 
     font-size: 0.9rem;
 
-    margin-bottom: 15px;
+    margin-bottom: 25px;
 }
 
 .modal-content input {
-    display: block;
-
     width: 100%;
 
-    padding: 13px;
+    padding: 13px 15px;
 
-    margin: 10px 0;
+    margin-bottom: 12px;
 
-    border: 1px solid #ddd;
+    border: 1px solid #dddddd;
 
-    border-radius: 8px;
+    border-radius: 10px;
 
-    font-family: inherit;
+    outline: none;
 
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
 
 .modal-content input:focus {
-    outline: none;
-
     border-color: #e67e22;
+
+    box-shadow:
+        0 0 0 3px rgba(230, 126, 34, 0.1);
 }
 
 .modal-buttons {
@@ -762,7 +929,7 @@ body {
 
     gap: 10px;
 
-    margin-top: 15px;
+    margin-top: 10px;
 }
 
 .modal-btn {
@@ -770,11 +937,7 @@ body {
 
     padding: 12px;
 
-    border: none;
-
-    border-radius: 8px;
-
-    font-family: inherit;
+    border-radius: 10px;
 
     font-weight: 600;
 
@@ -782,382 +945,221 @@ body {
 }
 
 .modal-btn.cancel {
-    background: #95a5a6;
+    border: 1px solid #ddd;
 
-    color: white;
+    background: #ffffff;
+
+    color: #555;
 }
 
 .modal-btn.confirm {
+    border: none;
+
     background: #e67e22;
 
-    color: white;
+    color: #ffffff;
+}
+
+.modal-btn:hover {
+    opacity: 0.9;
 }
 
 
 /* =====================================================
    FOOTER
-===================================================== */
+   ===================================================== */
 
 .footer {
-    width: 100%;
+    background: #202a35;
 
-    background: #1f2937;
+    color: #ffffff;
 
-    color: white;
-
-    padding-top: 50px;
+    padding-top: 55px;
 }
 
 .footer-content {
     display: grid;
 
     grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+        2fr 1fr 1fr;
 
     gap: 40px;
-}
 
-.footer-section {
-    min-width: 0;
+    padding-bottom: 40px;
 }
 
 .footer-section h3 {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
 
-    margin-bottom: 15px;
+    margin-bottom: 18px;
 }
 
 .footer-section p {
-    color: #d1d5db;
+    color: #c8ced4;
 
-    line-height: 1.7;
+    font-size: 0.85rem;
 
-    margin-bottom: 8px;
-
-    overflow-wrap: anywhere;
+    margin-bottom: 10px;
 }
 
 .footer-section p i {
-    width: 20px;
-
+    width: 22px;
     color: #e67e22;
 }
 
-.footer-section a {
+.footer-section > a {
     display: block;
 
-    color: #d1d5db;
+    width: fit-content;
 
-    text-decoration: none;
+    color: #c8ced4;
+
+    font-size: 0.85rem;
 
     margin-bottom: 8px;
+
+    transition: 0.2s;
 }
 
-.footer-section a:hover {
+.footer-section > a:hover {
     color: #e67e22;
 }
 
-.social-links {
+.footer-social {
     display: flex;
 
     gap: 12px;
 }
 
-.social-links a {
+.footer-social a {
     width: 40px;
     height: 40px;
 
     display: flex;
-
     align-items: center;
     justify-content: center;
 
     border-radius: 50%;
 
-    background: rgba(255,255,255,0.1);
+    background: #2d3946;
 
-    color: white;
+    color: #ffffff;
 
-    margin: 0;
+    transition: 0.3s ease;
 }
 
-.social-links a:hover {
+.footer-social a:hover {
     background: #e67e22;
-
-    color: white;
+    transform: translateY(-3px);
 }
 
 .footer-bottom {
-    margin-top: 40px;
-
     padding: 20px;
 
     text-align: center;
 
-    border-top: 1px solid rgba(255,255,255,0.1);
-}
+    border-top: 1px solid rgba(255,255,255,0.08);
 
-.footer-bottom p {
-    color: #aaa;
+    color: #aeb6be;
 
-    font-size: 0.8rem;
-}
-
-
-/* =====================================================
-   TABLET
-===================================================== */
-
-@media (max-width: 900px) {
-
-    .service-grid {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-    }
-
-    .footer-content {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-    }
-
+    font-size: 0.75rem;
 }
 
 
 /* =====================================================
-   MOBILE
-===================================================== */
+   RESPONSIVE DESIGN
+   ===================================================== */
 
-@media (max-width: 600px) {
-
-    /* GLOBAL MOBILE FIX */
-
-    html,
-    body {
-        width: 100%;
-        max-width: 100%;
-        overflow-x: hidden;
-    }
-
-    .container {
-        width: 100%;
-        padding-left: 15px;
-        padding-right: 15px;
-    }
-
-
-    /* NAVIGATION */
+@media (max-width: 768px) {
 
     .nav-container {
-        min-height: 62px;
-
-        padding: 8px 15px;
-    }
-
-    .logo-img {
-        width: 38px;
-        height: 38px;
-    }
-
-    .logo span {
-        font-size: 0.88rem;
-
-        max-width: 210px;
-    }
-
-    .hamburger {
-        width: 40px;
-        height: 40px;
+        min-height: 65px;
     }
 
     .dropdown-menu {
-        top: 62px;
+        top: 65px;
     }
-
-
-    /* HEADER */
 
     .page-header {
-        padding: 50px 15px;
+        padding: 60px 0;
     }
 
-    .page-header h1 {
-        font-size: 2rem;
+    .section {
+        padding: 60px 0;
     }
 
-    .page-header p {
-        font-size: 0.9rem;
-    }
-
-
-    /* SECTIONS */
-
-    .section,
     .schedule-section {
-        padding: 45px 0;
+        padding: 60px 0;
     }
 
-    .section-heading {
-        margin-bottom: 30px;
-    }
-
-    .section-heading h2 {
-        font-size: 1.7rem;
-    }
-
-    .section-heading p {
-        font-size: 0.9rem;
-    }
-
-
-    /* SERVICE CARDS */
-
-    .service-grid {
-        width: 100%;
-
-        grid-template-columns: 1fr;
-
-        gap: 18px;
-    }
-
-    .service-card {
-        width: 100%;
-
-        padding: 25px 18px;
-
-        border-radius: 16px;
-    }
-
-    .service-card h3 {
-        font-size: 1.2rem;
-    }
-
-    .service-description {
-        font-size: 0.9rem;
-    }
-
-    .service-features li {
-        font-size: 0.85rem;
-    }
-
-
-    /* SCHEDULE */
-
-    .schedule-grid {
-        grid-template-columns: 1fr;
-
-        gap: 12px;
-    }
-
-    .schedule-card {
-        padding: 17px;
-    }
-
-
-    /* EVENTS */
-
-    .event-card {
-        padding: 20px;
-
-        border-radius: 15px;
-    }
-
-    .event-card h3 {
-        font-size: 1.05rem;
-    }
-
-    .event-card p {
-        font-size: 0.9rem;
-    }
-
-    .event-date {
-        font-size: 0.75rem;
-
-        line-height: 1.5;
-
-        border-radius: 10px;
-    }
-
-
-    /* MODAL */
-
-    .modal {
-        padding: 15px;
-    }
-
-    .modal-content {
-        padding: 28px 18px;
-    }
-
-    .modal-buttons {
-        flex-direction: column;
-    }
-
-    .modal-btn {
-        width: 100%;
-    }
-
-
-    /* FOOTER */
-
-    .footer {
-        padding-top: 40px;
+    .livestream-section {
+        padding: 60px 0;
     }
 
     .footer-content {
         grid-template-columns: 1fr;
 
         gap: 30px;
-
-        text-align: center;
-    }
-
-    .footer-section p {
-        font-size: 0.85rem;
-    }
-
-    .social-links {
-        justify-content: center;
-    }
-
-    .footer-bottom {
-        margin-top: 30px;
-
-        padding: 18px 15px;
-    }
-
-    .footer-bottom p {
-        font-size: 0.7rem;
-        line-height: 1.5;
     }
 
 }
 
 
-/* =====================================================
-   VERY SMALL PHONES
-===================================================== */
+@media (max-width: 480px) {
 
-@media (max-width: 360px) {
-
-    .logo span {
-        font-size: 0.78rem;
-
-        max-width: 170px;
+    .container {
+        width: 90%;
     }
 
-    .page-header h1 {
-        font-size: 1.7rem;
+    .logo span {
+        font-size: 0.9rem;
+    }
+
+    .logo-img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .hamburger {
+        width: 43px;
+        height: 43px;
+    }
+
+    .page-header {
+        padding: 50px 0;
+    }
+
+    .header-icon {
+        width: 65px;
+        height: 65px;
+    }
+
+    .section {
+        padding: 50px 0;
+    }
+
+    .service-grid {
+        grid-template-columns: 1fr;
     }
 
     .service-card {
-        padding: 22px 15px;
+        padding: 30px 22px;
     }
 
-    .service-icon {
-        width: 65px;
-        height: 65px;
+    .schedule-grid {
+        grid-template-columns: 1fr;
+    }
 
-        font-size: 1.7rem;
+    .special-events {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        padding: 35px 20px;
+    }
+
+    .modal-buttons {
+        flex-direction: column;
     }
 
 }
