@@ -1,144 +1,173 @@
 /* =====================================================
-   MOBILE NAVIGATION
-===================================================== */
+   IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
+   SERVICES JAVASCRIPT
+   ===================================================== */
+
+
+/* =====================================================
+   NAVIGATION MENU
+   ===================================================== */
 
 document.addEventListener("DOMContentLoaded", function () {
 
     const hamburger = document.getElementById("hamburger");
     const dropdownMenu = document.getElementById("dropdownMenu");
 
-    if (hamburger && dropdownMenu) {
+    if (!hamburger || !dropdownMenu) {
+        console.error("Navigation elements were not found.");
+        return;
+    }
 
-        hamburger.addEventListener("click", function (event) {
 
-            event.stopPropagation();
+    /* OPEN / CLOSE MENU */
 
-            const isOpen =
-                dropdownMenu.classList.toggle("show");
+    hamburger.addEventListener("click", function (event) {
+
+        event.stopPropagation();
+
+        dropdownMenu.classList.toggle("show");
+
+        const icon = hamburger.querySelector("i");
+
+        const isOpen = dropdownMenu.classList.contains("show");
+
+        if (isOpen) {
+
+            icon.classList.remove("fa-bars");
+            icon.classList.add("fa-xmark");
 
             hamburger.setAttribute(
                 "aria-expanded",
-                isOpen
+                "true"
             );
 
-            const icon =
-                hamburger.querySelector("i");
+        } else {
 
-            if (isOpen) {
+            icon.classList.remove("fa-xmark");
+            icon.classList.add("fa-bars");
 
-                icon.classList.remove("fa-bars");
+            hamburger.setAttribute(
+                "aria-expanded",
+                "false"
+            );
 
-                icon.classList.add("fa-times");
+        }
 
-            } else {
-
-                icon.classList.remove("fa-times");
-
-                icon.classList.add("fa-bars");
-            }
-
-        });
+    });
 
 
-        /* Close menu when clicking outside */
+    /* CLOSE MENU AFTER CLICKING A LINK */
 
-        document.addEventListener("click", function (event) {
+    const menuLinks =
+        document.querySelectorAll(".dropdown-item");
 
-            if (
-                !dropdownMenu.contains(event.target) &&
-                !hamburger.contains(event.target)
-            ) {
+    menuLinks.forEach(function (link) {
 
-                dropdownMenu.classList.remove("show");
+        link.addEventListener("click", function () {
 
-                hamburger.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
+            dropdownMenu.classList.remove("show");
 
-                const icon =
-                    hamburger.querySelector("i");
+            const icon = hamburger.querySelector("i");
 
-                icon.classList.remove("fa-times");
+            icon.classList.remove("fa-xmark");
+            icon.classList.add("fa-bars");
 
-                icon.classList.add("fa-bars");
-            }
+            hamburger.setAttribute(
+                "aria-expanded",
+                "false"
+            );
 
         });
 
+    });
 
-        /* Close menu after clicking a link */
 
-        const menuLinks =
-            dropdownMenu.querySelectorAll(".dropdown-item");
+    /* CLOSE MENU WHEN CLICKING OUTSIDE */
 
-        menuLinks.forEach(function (link) {
+    document.addEventListener("click", function (event) {
 
-            link.addEventListener("click", function () {
+        if (
+            !dropdownMenu.contains(event.target) &&
+            !hamburger.contains(event.target)
+        ) {
 
-                dropdownMenu.classList.remove("show");
+            dropdownMenu.classList.remove("show");
 
-                hamburger.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
+            const icon = hamburger.querySelector("i");
 
-                const icon =
-                    hamburger.querySelector("i");
+            icon.classList.remove("fa-xmark");
+            icon.classList.add("fa-bars");
 
-                icon.classList.remove("fa-times");
+            hamburger.setAttribute(
+                "aria-expanded",
+                "false"
+            );
 
-                icon.classList.add("fa-bars");
+        }
 
-            });
+    });
 
-        });
 
-    }
+    /* CLOSE MENU WITH ESCAPE KEY */
+
+    document.addEventListener("keydown", function (event) {
+
+        if (event.key === "Escape") {
+
+            dropdownMenu.classList.remove("show");
+
+            const icon = hamburger.querySelector("i");
+
+            icon.classList.remove("fa-xmark");
+            icon.classList.add("fa-bars");
+
+            hamburger.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+        }
+
+    });
 
 });
 
 
 /* =====================================================
    SERVICE MODAL
-===================================================== */
-
-const modal =
-    document.getElementById("serviceModal");
-
-const modalTitle =
-    document.getElementById("modalTitle");
-
+   ===================================================== */
 
 function openModal(serviceName) {
 
-    if (!modal) return;
+    const modal =
+        document.getElementById("serviceModal");
 
-    modalTitle.textContent =
-        "Join " + serviceName;
+    const modalTitle =
+        document.getElementById("modalTitle");
+
+    if (!modal || !modalTitle) {
+        return;
+    }
+
+    modalTitle.textContent = serviceName;
 
     modal.classList.add("show");
 
     document.body.style.overflow = "hidden";
 
-    const nameInput =
-        document.getElementById("visitorName");
-
-    if (nameInput) {
-
-        setTimeout(function () {
-
-            nameInput.focus();
-
-        }, 100);
-
-    }
 }
 
 
+/* CLOSE MODAL */
+
 function closeModal() {
 
-    if (!modal) return;
+    const modal =
+        document.getElementById("serviceModal");
+
+    if (!modal) {
+        return;
+    }
 
     modal.classList.remove("show");
 
@@ -148,80 +177,154 @@ function closeModal() {
 
 
 /* =====================================================
-   CLOSE MODAL WHEN CLICKING BACKGROUND
-===================================================== */
+   MODAL CONTROLS
+   ===================================================== */
 
-if (modal) {
+document.addEventListener("DOMContentLoaded", function () {
 
-    modal.addEventListener("click", function (event) {
+    const modal =
+        document.getElementById("serviceModal");
 
-        if (event.target === modal) {
+    const closeButton =
+        document.getElementById("modalClose");
 
-            closeModal();
-
-        }
-
-    });
-
-}
+    const cancelButton =
+        document.getElementById("cancelModal");
 
 
-/* =====================================================
-   ESC KEY CLOSES MODAL
-===================================================== */
+    if (closeButton) {
 
-document.addEventListener("keydown", function (event) {
-
-    if (event.key === "Escape") {
-
-        closeModal();
+        closeButton.addEventListener(
+            "click",
+            closeModal
+        );
 
     }
+
+
+    if (cancelButton) {
+
+        cancelButton.addEventListener(
+            "click",
+            closeModal
+        );
+
+    }
+
+
+    /* CLICK OUTSIDE MODAL */
+
+    if (modal) {
+
+        modal.addEventListener(
+            "click",
+            function (event) {
+
+                if (event.target === modal) {
+                    closeModal();
+                }
+
+            }
+        );
+
+    }
+
+
+    /* ESCAPE KEY */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (event.key === "Escape") {
+                closeModal();
+            }
+
+        }
+    );
 
 });
 
 
 /* =====================================================
-   FORM
-===================================================== */
+   VISITOR FORM
+   ===================================================== */
 
-const visitForm =
-    document.getElementById("visitForm");
+document.addEventListener("DOMContentLoaded", function () {
 
-
-if (visitForm) {
-
-    visitForm.addEventListener("submit", function (event) {
-
-        event.preventDefault();
-
-        const name =
-            document.getElementById("visitorName").value.trim();
-
-        const phone =
-            document.getElementById("visitorPhone").value.trim();
+    const visitForm =
+        document.getElementById("visitForm");
 
 
-        if (!name || !phone) {
+    if (!visitForm) {
+        return;
+    }
 
-            alert("Please enter your name and phone number.");
 
-            return;
+    visitForm.addEventListener(
+        "submit",
+        function (event) {
+
+            event.preventDefault();
+
+
+            const name =
+                document.getElementById(
+                    "visitorName"
+                ).value.trim();
+
+
+            const phone =
+                document.getElementById(
+                    "visitorPhone"
+                ).value.trim();
+
+
+            if (!name || !phone) {
+
+                alert(
+                    "Please enter your name and phone number."
+                );
+
+                return;
+
+            }
+
+
+            alert(
+                "Thank you, " +
+                name +
+                "! Your request has been received. " +
+                "We will contact you on " +
+                phone +
+                "."
+            );
+
+
+            visitForm.reset();
+
+            closeModal();
 
         }
+    );
+
+});
 
 
-        alert(
-            "Thank you, " +
-            name +
-            "! We look forward to welcoming you."
-        );
+/* =====================================================
+   CURRENT YEAR
+   ===================================================== */
 
+document.addEventListener("DOMContentLoaded", function () {
 
-        visitForm.reset();
+    const year =
+        document.getElementById("currentYear");
 
-        closeModal();
+    if (year) {
 
-    });
+        year.textContent =
+            new Date().getFullYear();
 
-}
+    }
+
+});
