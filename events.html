@@ -3,79 +3,276 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Imperishable Crown Bible Baptist Church | Events</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link rel="stylesheet" href="events.css">
 </head>
+
 <body>
+
+    <!-- ============================= -->
+    <!-- NAVIGATION -->
+    <!-- ============================= -->
+
     <nav class="navbar">
+
         <div class="nav-container">
+
             <div class="logo">
-                <img src="images/church-logo.png" alt="Church Logo" class="logo-img" onerror="this.src='https://via.placeholder.com/40x40?text=✝'">
-                <span> <span></span></span>
+                <img
+                    src="images/church-logo.png"
+                    alt="Church Logo"
+                    class="logo-img"
+                    onerror="this.src='https://via.placeholder.com/40x40?text=✝'"
+                >
+
+                <span class="church-name">
+                    Imperishable Crown
+                </span>
             </div>
-            <div class="hamburger" id="hamburger">
+
+            <!-- Hamburger Button -->
+            <button
+                class="hamburger"
+                id="hamburger"
+                aria-label="Open navigation menu"
+                aria-expanded="false"
+            >
                 <i class="fas fa-bars"></i>
-            </div>
+            </button>
+
         </div>
+
     </nav>
 
+
+    <!-- ============================= -->
+    <!-- DROPDOWN MENU -->
+    <!-- ============================= -->
+
     <div class="dropdown-menu" id="dropdownMenu">
+
         <div class="dropdown-content">
-            <a href="home.html" class="dropdown-item"><i class="fas fa-home"></i> Home</a>
-            <a href="about.html" class="dropdown-item"><i class="fas fa-church"></i> About Us</a>
-            <a href="services.html" class="dropdown-item"><i class="fas fa-praying-hands"></i> Services</a>
-            <a href="events.html" class="dropdown-item active"><i class="fas fa-calendar-alt"></i> Events</a>
-            <a href="leadership.html" class="dropdown-item active"><i class="fas fa-users"></i> Leadership</a>
-            <a href="donate.html" class="dropdown-item"><i class="fas fa-hand-holding-heart"></i> Give</a>
-            <a href="contact.html" class="dropdown-item"><i class="fas fa-envelope"></i> Contact</a>
+
+            <a href="home.html" class="dropdown-item">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+
+            <a href="about.html" class="dropdown-item">
+                <i class="fas fa-church"></i>
+                <span>About Us</span>
+            </a>
+
+            <a href="services.html" class="dropdown-item">
+                <i class="fas fa-praying-hands"></i>
+                <span>Services</span>
+            </a>
+
+            <a href="events.html" class="dropdown-item active">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Events</span>
+            </a>
+
+            <a href="leadership.html" class="dropdown-item">
+                <i class="fas fa-users"></i>
+                <span>Leadership</span>
+            </a>
+
+            <a href="donate.html" class="dropdown-item">
+                <i class="fas fa-hand-holding-heart"></i>
+                <span>Give</span>
+            </a>
+
+            <a href="contact.html" class="dropdown-item">
+                <i class="fas fa-envelope"></i>
+                <span>Contact</span>
+            </a>
+
         </div>
+
     </div>
 
+
+    <!-- ============================= -->
+    <!-- PAGE HEADER -->
+    <!-- ============================= -->
+
     <section class="page-header">
+
         <div class="container">
+
+            <span class="section-label">
+                <i class="fas fa-calendar-alt"></i>
+                Church Calendar
+            </span>
+
             <h1>Upcoming Events</h1>
-            <p>Join us for these special gatherings and celebrations</p>
+
+            <p>
+                Join us for these special gatherings,
+                celebrations and fellowship moments.
+            </p>
+
         </div>
+
     </section>
+
+
+    <!-- ============================= -->
+    <!-- EVENTS SECTION -->
+    <!-- ============================= -->
 
     <section class="section">
+
         <div class="container">
-            <div class="events-grid" id="eventsGrid"></div>
+
+            <div class="section-heading">
+
+                <span>What's Happening</span>
+
+                <h2>Church Events</h2>
+
+                <p>
+                    Stay connected with everything happening
+                    at Imperishable Crown Bible Baptist Church.
+                </p>
+
+            </div>
+
+
+            <!-- Events generated by JavaScript -->
+
+            <div
+                class="events-grid"
+                id="eventsGrid"
+            ></div>
+
         </div>
+
     </section>
 
+
+    <!-- ============================= -->
+    <!-- FOOTER -->
+    <!-- ============================= -->
+
     <footer class="footer">
+
         <div class="footer-content">
+
+            <!-- Church Information -->
+
             <div class="footer-section">
-                <h3>Imperishable Crown Bible Baptist Church</h3>
-               
-                <p><i class="fas fa-map-marker-alt"></i> 191 Maramu Avenue, Kitale, Kenya</p>
-                <p><i class="fas fa-phone"></i> +254 723 542 142</p>
-                <p><i class="fas fa-envelope"></i> fredwanyonyi2001@gmail.com</p>
+
+                <h3>
+                    Imperishable Crown Bible Baptist Church
+                </h3>
+
+                <p>
+                    <i class="fas fa-map-marker-alt"></i>
+                    191 Maramu Avenue, Kitale, Kenya
+                </p>
+
+                <p>
+                    <i class="fas fa-phone"></i>
+                    +254 723 542 142
+                </p>
+
+                <p>
+                    <i class="fas fa-envelope"></i>
+                    fredwanyonyi2001@gmail.com
+                </p>
+
             </div>
+
+
+            <!-- Quick Links -->
+
             <div class="footer-section">
+
                 <h3>Quick Links</h3>
-                <p><a href="services.html">Service Times</a></p>
-                <p><a href="donate.html">Give Online</a></p>
-                <p><a href="events.html">Events</a></p>
+
+                <p>
+                    <a href="services.html">
+                        Service Times
+                    </a>
+                </p>
+
+                <p>
+                    <a href="donate.html">
+                        Give Online
+                    </a>
+                </p>
+
+                <p>
+                    <a href="events.html">
+                        Events
+                    </a>
+                </p>
+
             </div>
+
+
+            <!-- Social Media -->
+
             <div class="footer-section">
+
                 <h3>Follow Us</h3>
+
                 <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
+
+                    <a href="#" aria-label="Facebook">
+                        <i class="fab fa-facebook"></i>
+                    </a>
+
+                    <a href="#" aria-label="YouTube">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+
+                    <a href="#" aria-label="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+
+                    <a href="#" aria-label="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+
                 </div>
+
             </div>
+
         </div>
+
+
+        <!-- Copyright -->
+
         <div class="footer-bottom">
-            <p>&copy; 2026 Imperishable Crown Bible Baptist Church. All rights reserved.</p>
+
+            <p>
+                &copy; 2026 Imperishable Crown Bible Baptist Church.
+                All rights reserved.
+            </p>
+
         </div>
+
     </footer>
 
-    <script src="script.js"></script>
+
+    <!-- JavaScript -->
+
+    <script src="events.js"></script>
+
 </body>
 </html>
