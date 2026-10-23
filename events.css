@@ -1,0 +1,902 @@
+/* ========================================
+   IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
+   EVENTS PAGE CSS
+======================================== */
+
+
+/* ========================================
+   GENERAL RESET
+======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+html {
+    scroll-behavior: smooth;
+}
+
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: #f7f8fc;
+    color: #222;
+    line-height: 1.6;
+}
+
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+button {
+    font-family: inherit;
+}
+
+
+/* ========================================
+   CONTAINER
+======================================== */
+
+.container {
+    width: 90%;
+    max-width: 1150px;
+    margin: 0 auto;
+}
+
+
+/* ========================================
+   NAVBAR
+======================================== */
+
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    width: 100%;
+
+    background: #ffffff;
+
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+}
+
+
+.nav-container {
+    width: 90%;
+    max-width: 1150px;
+
+    min-height: 75px;
+
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+/* ========================================
+   LOGO
+======================================== */
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+
+.logo-img {
+    width: 45px;
+    height: 45px;
+
+    object-fit: contain;
+
+    border-radius: 50%;
+}
+
+
+.church-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1d3557;
+}
+
+
+/* ========================================
+   HAMBURGER
+======================================== */
+
+.hamburger {
+    width: 45px;
+    height: 45px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #1d3557;
+    color: white;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: 0.3s ease;
+}
+
+
+.hamburger:hover {
+    background: #457b9d;
+    transform: scale(1.05);
+}
+
+
+/* ========================================
+   DROPDOWN MENU
+======================================== */
+
+.dropdown-menu {
+    position: fixed;
+
+    top: 75px;
+    right: 5%;
+
+    width: 260px;
+
+    background: white;
+
+    border-radius: 12px;
+
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+
+    z-index: 999;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateY(-15px);
+
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease,
+        visibility 0.3s ease;
+}
+
+
+.dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+
+.dropdown-content {
+    padding: 10px;
+}
+
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 14px 16px;
+
+    margin-bottom: 3px;
+
+    border-radius: 8px;
+
+    color: #333;
+
+    font-size: 15px;
+    font-weight: 500;
+
+    transition: 0.25s ease;
+}
+
+
+.dropdown-item i {
+    width: 20px;
+
+    text-align: center;
+
+    color: #1d3557;
+}
+
+
+.dropdown-item:hover {
+    background: #eef4f8;
+    color: #1d3557;
+
+    transform: translateX(4px);
+}
+
+
+.dropdown-item.active {
+    background: #1d3557;
+    color: white;
+}
+
+
+.dropdown-item.active i {
+    color: white;
+}
+
+
+/* ========================================
+   PAGE HEADER
+======================================== */
+
+.page-header {
+    padding: 90px 20px;
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            rgba(29, 53, 87, 0.9),
+            rgba(29, 53, 87, 0.9)
+        ),
+        url("images/church-background.jpg");
+
+    background-size: cover;
+    background-position: center;
+
+    color: white;
+}
+
+
+.section-label {
+    display: inline-flex;
+
+    align-items: center;
+    gap: 8px;
+
+    margin-bottom: 12px;
+
+    padding: 7px 15px;
+
+    border-radius: 30px;
+
+    background: rgba(255, 255, 255, 0.15);
+
+    font-size: 13px;
+    font-weight: 500;
+}
+
+
+.page-header h1 {
+    font-size: 42px;
+
+    font-weight: 800;
+
+    margin-bottom: 12px;
+}
+
+
+.page-header p {
+    max-width: 650px;
+
+    margin: 0 auto;
+
+    font-size: 16px;
+
+    opacity: 0.9;
+}
+
+
+/* ========================================
+   MAIN SECTION
+======================================== */
+
+.section {
+    padding: 80px 0;
+}
+
+
+.section-heading {
+    text-align: center;
+
+    max-width: 700px;
+
+    margin: 0 auto 50px;
+}
+
+
+.section-heading > span {
+    color: #457b9d;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 2px;
+}
+
+
+.section-heading h2 {
+    margin: 8px 0 12px;
+
+    font-size: 32px;
+
+    color: #1d3557;
+
+    font-weight: 800;
+}
+
+
+.section-heading p {
+    color: #666;
+
+    font-size: 15px;
+}
+
+
+/* ========================================
+   EVENTS GRID
+======================================== */
+
+.events-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 25px;
+}
+
+
+/* ========================================
+   EVENT CARD
+======================================== */
+
+.event-card {
+    background: white;
+
+    border-radius: 15px;
+
+    overflow: hidden;
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.07);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+
+.event-card:hover {
+    transform: translateY(-8px);
+
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.12);
+}
+
+
+/* ========================================
+   EVENT IMAGE
+======================================== */
+
+.event-image {
+    height: 210px;
+
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+.event-image img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    transition: transform 0.5s ease;
+}
+
+
+.event-card:hover .event-image img {
+    transform: scale(1.07);
+}
+
+
+/* ========================================
+   DATE BADGE
+======================================== */
+
+.event-date {
+    position: absolute;
+
+    top: 15px;
+    left: 15px;
+
+    width: 65px;
+
+    padding: 8px 5px;
+
+    text-align: center;
+
+    background: white;
+
+    border-radius: 10px;
+
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+}
+
+
+.event-date .month {
+    display: block;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    color: #e63946;
+
+    text-transform: uppercase;
+}
+
+
+.event-date .day {
+    display: block;
+
+    font-size: 25px;
+
+    line-height: 1.1;
+
+    font-weight: 800;
+
+    color: #1d3557;
+}
+
+
+/* ========================================
+   EVENT CONTENT
+======================================== */
+
+.event-content {
+    padding: 25px;
+}
+
+
+.event-category {
+    display: inline-block;
+
+    margin-bottom: 10px;
+
+    padding: 5px 11px;
+
+    border-radius: 20px;
+
+    background: #eef4f8;
+
+    color: #457b9d;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.5px;
+}
+
+
+.event-content h3 {
+    margin-bottom: 10px;
+
+    color: #1d3557;
+
+    font-size: 20px;
+
+    font-weight: 700;
+}
+
+
+.event-description {
+    margin-bottom: 18px;
+
+    color: #666;
+
+    font-size: 14px;
+}
+
+
+.event-info {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+    padding-top: 15px;
+
+    border-top: 1px solid #eee;
+}
+
+
+.event-info p {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    color: #555;
+
+    font-size: 13px;
+}
+
+
+.event-info i {
+    width: 18px;
+
+    color: #457b9d;
+
+    text-align: center;
+}
+
+
+/* ========================================
+   EVENT BUTTON
+======================================== */
+
+.event-button {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin-top: 18px;
+
+    padding: 10px 16px;
+
+    border-radius: 7px;
+
+    background: #1d3557;
+
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    transition: 0.3s ease;
+}
+
+
+.event-button:hover {
+    background: #457b9d;
+
+    transform: translateY(-2px);
+}
+
+
+/* ========================================
+   EMPTY EVENTS
+======================================== */
+
+.no-events {
+    grid-column: 1 / -1;
+
+    padding: 60px 20px;
+
+    text-align: center;
+
+    background: white;
+
+    border-radius: 15px;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+}
+
+
+.no-events i {
+    margin-bottom: 15px;
+
+    font-size: 45px;
+
+    color: #457b9d;
+}
+
+
+.no-events h3 {
+    margin-bottom: 8px;
+
+    color: #1d3557;
+}
+
+
+.no-events p {
+    color: #777;
+}
+
+
+/* ========================================
+   FOOTER
+======================================== */
+
+.footer {
+    background: #172a46;
+
+    color: white;
+
+    padding-top: 60px;
+}
+
+
+.footer-content {
+    width: 90%;
+    max-width: 1150px;
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        2fr 1fr 1fr;
+
+    gap: 50px;
+
+    padding-bottom: 45px;
+}
+
+
+.footer-section h3 {
+    margin-bottom: 20px;
+
+    font-size: 18px;
+
+    font-weight: 700;
+}
+
+
+.footer-section p {
+    margin-bottom: 12px;
+
+    color: #cbd5e1;
+
+    font-size: 14px;
+}
+
+
+.footer-section p i {
+    width: 22px;
+
+    color: #8ecae6;
+}
+
+
+.footer-section a {
+    color: #cbd5e1;
+
+    transition: 0.3s ease;
+}
+
+
+.footer-section a:hover {
+    color: white;
+
+    padding-left: 4px;
+}
+
+
+/* ========================================
+   SOCIAL LINKS
+======================================== */
+
+.social-links {
+    display: flex;
+
+    gap: 10px;
+}
+
+
+.social-links a {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.1);
+
+    color: white;
+
+    transition: 0.3s ease;
+}
+
+
+.social-links a:hover {
+    background: white;
+
+    color: #1d3557;
+
+    transform: translateY(-3px);
+}
+
+
+/* ========================================
+   FOOTER BOTTOM
+======================================== */
+
+.footer-bottom {
+    padding: 20px;
+
+    text-align: center;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+.footer-bottom p {
+    margin: 0;
+
+    color: #aebdcd;
+
+    font-size: 12px;
+}
+
+
+/* ========================================
+   TABLET
+======================================== */
+
+@media (max-width: 900px) {
+
+    .events-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .footer-content {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+
+/* ========================================
+   MOBILE
+======================================== */
+
+@media (max-width: 600px) {
+
+    .nav-container {
+        min-height: 68px;
+    }
+
+
+    .logo-img {
+        width: 40px;
+        height: 40px;
+    }
+
+
+    .church-name {
+        font-size: 14px;
+    }
+
+
+    .hamburger {
+        width: 42px;
+        height: 42px;
+    }
+
+
+    .dropdown-menu {
+        top: 68px;
+
+        right: 4%;
+
+        left: 4%;
+
+        width: auto;
+    }
+
+
+    .page-header {
+        padding: 65px 15px;
+    }
+
+
+    .page-header h1 {
+        font-size: 31px;
+    }
+
+
+    .page-header p {
+        font-size: 14px;
+    }
+
+
+    .section {
+        padding: 55px 0;
+    }
+
+
+    .section-heading {
+        margin-bottom: 35px;
+    }
+
+
+    .section-heading h2 {
+        font-size: 27px;
+    }
+
+
+    .events-grid {
+        grid-template-columns: 1fr;
+
+        gap: 20px;
+    }
+
+
+    .event-image {
+        height: 200px;
+    }
+
+
+    .event-content {
+        padding: 20px;
+    }
+
+
+    .footer-content {
+        grid-template-columns: 1fr;
+
+        gap: 30px;
+
+        text-align: center;
+    }
+
+
+    .social-links {
+        justify-content: center;
+    }
+
+}
+
+
+/* ========================================
+   SMALL MOBILE
+======================================== */
+
+@media (max-width: 380px) {
+
+    .church-name {
+        font-size: 12px;
+    }
+
+
+    .page-header h1 {
+        font-size: 27px;
+    }
+
+
+    .event-content h3 {
+        font-size: 18px;
+    }
+
+}
