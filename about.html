@@ -1,146 +1,419 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Imperishable Crown Bible Baptist Church | About Us</title>
 
+    <!-- Font Awesome -->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <link href="https://googleapis.com"
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
           rel="stylesheet">
 
-    <!-- ONLY this CSS for this page -->
+    <!-- About Page CSS -->
     <link rel="stylesheet" href="about.css">
 </head>
 
 <body>
 
-<!-- NAVBAR -->
-<nav class="navbar">
-    <div class="nav-container">
-        <a href="home.html" class="logo">
-            <img src="images/church-logo.png"
-                 alt="Church Logo"
-                 class="logo-img"
-                 onerror="this.src='https://via.placeholder.com/45x45?text=✝'">
-            <span>Imperishable Crown</span>
+    <!-- ========================================
+         NAVIGATION BAR
+    ========================================= -->
+
+    <nav class="navbar">
+
+        <div class="nav-container">
+
+            <!-- LOGO -->
+            <a href="home.html" class="logo">
+
+                <img src="images/church-logo.png"
+                     alt="Imperishable Crown Bible Baptist Church Logo"
+                     class="logo-img"
+                     onerror="this.style.display='none'">
+
+                <span>Imperishable Crown</span>
+
+            </a>
+
+
+            <!-- HAMBURGER BUTTON -->
+            <button class="hamburger"
+                    id="hamburger"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false">
+
+                <i class="fas fa-bars"></i>
+
+            </button>
+
+        </div>
+
+    </nav>
+
+
+    <!-- ========================================
+         DROPDOWN NAVIGATION MENU
+    ========================================= -->
+
+    <div class="dropdown-menu" id="dropdownMenu">
+
+        <a href="home.html" class="dropdown-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
         </a>
-        <button class="hamburger" id="hamburger" aria-label="Menu">
-            <i class="fas fa-bars"></i>
-        </button>
+
+        <a href="about.html" class="dropdown-item active">
+            <i class="fas fa-church"></i>
+            <span>About Us</span>
+        </a>
+
+        <a href="services.html" class="dropdown-item">
+            <i class="fas fa-praying-hands"></i>
+            <span>Services</span>
+        </a>
+
+        <a href="leadership.html" class="dropdown-item">
+            <i class="fas fa-users"></i>
+            <span>Leadership</span>
+        </a>
+
+        <a href="events.html" class="dropdown-item">
+            <i class="fas fa-calendar-alt"></i>
+            <span>Events</span>
+        </a>
+
+        <a href="donate.html" class="dropdown-item">
+            <i class="fas fa-hand-holding-heart"></i>
+            <span>Give</span>
+        </a>
+
+        <a href="contact.html" class="dropdown-item">
+            <i class="fas fa-envelope"></i>
+            <span>Contact</span>
+        </a>
+
     </div>
-</nav>
 
-<!-- MENU -->
-<div class="dropdown-menu" id="dropdownMenu">
-    <a href="home.html" class="dropdown-item"><i class="fas fa-home"></i> Home</a>
-    <a href="about.html" class="dropdown-item active"><i class="fas fa-church"></i> About Us</a>
-    <a href="services.html" class="dropdown-item"><i class="fas fa-praying-hands"></i> Services</a>
-    <a href="leadership.html" class="dropdown-item"><i class="fas fa-users"></i> Leadership</a>
-    <a href="events.html" class="dropdown-item"><i class="fas fa-calendar-alt"></i> Events</a>
-    <a href="donate.html" class="dropdown-item"><i class="fas fa-hand-holding-heart"></i> Give</a>
-    <a href="contact.html" class="dropdown-item"><i class="fas fa-envelope"></i> Contact</a>
-</div>
 
-<!-- PAGE HEADER -->
-<header class="page-header">
-    <div class="container">
-        <h1>About Our Church</h1>
-        <p>Learn more about our faith, mission, and community</p>
-    </div>
-</header>
+    <!-- ========================================
+         PAGE HEADER
+    ========================================= -->
 
-<!-- ABOUT -->
-<section class="about-section">
-    <div class="container">
-        <div class="about-text">
-            <h2>Our Story</h2>
-            <p>Imperishable Crown Bible Baptist Church was founded in <strong>2020</strong> during the challenging season of the COVID-19 pandemic.</p>
-            <p>What started with just <strong>five committed believers</strong> meeting faithfully despite the uncertainty grew steadily as God opened doors and more people were reached with the Gospel.</p>
-            <p>Through prayer, perseverance, and God's grace, the church expanded into a warm spiritual family.</p>
-            <p>Today, Imperishable Crown Bible Baptist Church joyfully welcomes <strong>80–100 worshippers every Sunday</strong> for fellowship, worship, and the teaching of God's Word.</p>
+    <header class="page-header">
 
-            <h2>Denomination</h2>
-            <p>Baptist</p>
+        <div class="container">
 
-            <h2>Languages</h2>
-            <p>English<br>Kiswahili<br>Luhya<br>Kalenjin</p>
+            <p class="eyebrow">WELCOME TO OUR CHURCH</p>
 
-            <h2>Our Mission</h2>
-            <p>To live out and share the faith, hope, and love of Jesus Christ.</p>
+            <h1>About Our Church</h1>
 
-            <h2>Our Vision</h2>
-            <p>To break new ground by using God-given resources and opportunities to reach the unreached with the true Gospel.</p>
+            <p class="header-text">
+                Learn more about our faith, mission, vision,
+                and community.
+            </p>
 
-            <h2>Our Motto</h2>
-            <p>Reaching the unreached with the true Gospel.</p>
-
-            <h2>What We Believe</h2>
-            <ul class="beliefs-list">
-                <li><strong>The Bible</strong> – The inspired, infallible, and authoritative Word of God.</li>
-                <li><strong>The Trinity</strong> – One God in three persons: Father, Son, and Holy Spirit.</li>
-                <li><strong>Salvation</strong> – Salvation is by grace through faith in Jesus Christ alone.</li>
-                <li><strong>The Church</strong> – The body of Christ called to worship, fellowship, discipleship, ministry, and mission.</li>
-                <li><strong>The Return of Christ</strong> – Jesus Christ will return visibly and victoriously to judge the living and the dead.</li>
-            </ul>
-        </div>
-    </div>
-</section>
-
-<!-- GALLERY -->
-<section class="gallery-section">
-    <div class="container">
-        <div class="section-heading">
-            <h2>Moments of Faith & Fellowship</h2>
-            <p>Glimpses into our worship, community life, and the joy of gathering together.</p>
         </div>
 
-        <div class="gallery-grid">
-            <div class="gallery-card" data-title="Sunday Worship Service" data-desc="Lifting voices in praise and worship during our main service.">
-                <img src="1.jpg" alt="Sunday Worship Service" class="gallery-img" onerror="imageError(this)">
-                <div class="gallery-caption">
-                    <h3>Sunday Worship Service</h3>
-                    <p>Lifting voices in praise and worship during our main service.</p>
-                </div>
+    </header>
+
+
+    <!-- ========================================
+         ABOUT SECTION
+    ========================================= -->
+
+    <section class="about-section">
+
+        <div class="container">
+
+            <div class="about-text">
+
+                <h2>Our Story</h2>
+
+                <p>
+                    Imperishable Crown Bible Baptist Church was founded
+                    in <strong>2020</strong> during the challenging season
+                    of the COVID-19 pandemic.
+                </p>
+
+                <p>
+                    What started with just <strong>five committed believers</strong>
+                    meeting faithfully despite the uncertainty grew steadily
+                    as God opened doors and more people were reached with
+                    the Gospel.
+                </p>
+
+                <p>
+                    Through prayer, perseverance, and God's grace, the church
+                    expanded into a warm spiritual family.
+                </p>
+
+                <p>
+                    Today, Imperishable Crown Bible Baptist Church joyfully
+                    welcomes <strong>80–100 worshippers every Sunday</strong>
+                    for fellowship, worship, and the teaching of God's Word.
+                </p>
+
+
+                <h2>Denomination</h2>
+
+                <p>Baptist</p>
+
+
+                <h2>Languages</h2>
+
+                <p>
+                    English<br>
+                    Kiswahili<br>
+                    Luhya<br>
+                    Kalenjin
+                </p>
+
+
+                <h2>Our Mission</h2>
+
+                <p>
+                    To live out and share the faith, hope, and love of
+                    Jesus Christ.
+                </p>
+
+
+                <h2>Our Vision</h2>
+
+                <p>
+                    To break new ground by using God-given resources
+                    and opportunities to reach the unreached with the
+                    true Gospel.
+                </p>
+
+
+                <h2>Our Motto</h2>
+
+                <p class="motto">
+                    Reaching the unreached with the true Gospel.
+                </p>
+
+
+                <h2>What We Believe</h2>
+
+                <ul class="beliefs-list">
+
+                    <li>
+                        <strong>The Bible</strong> –
+                        The inspired, infallible, and authoritative
+                        Word of God.
+                    </li>
+
+                    <li>
+                        <strong>The Trinity</strong> –
+                        One God in three persons: Father, Son,
+                        and Holy Spirit.
+                    </li>
+
+                    <li>
+                        <strong>Salvation</strong> –
+                        Salvation is by grace through faith in
+                        Jesus Christ alone.
+                    </li>
+
+                    <li>
+                        <strong>The Church</strong> –
+                        The body of Christ called to worship,
+                        fellowship, discipleship, ministry,
+                        and mission.
+                    </li>
+
+                    <li>
+                        <strong>The Return of Christ</strong> –
+                        Jesus Christ will return visibly and
+                        victoriously to judge the living and
+                        the dead.
+                    </li>
+
+                </ul>
+
             </div>
 
-            <div class="gallery-card" data-title="Fellowship Meal" data-desc="Sharing love and meals together after Sunday service.">
-                <img src="2.jpg" alt="Fellowship Meal" class="gallery-img" onerror="imageError(this)">
-                <div class="gallery-caption">
-                    <h3>Fellowship Meal</h3>
-                    <p>Sharing love and meals together after Sunday service.</p>
-                </div>
-            </div>
-
-            <div class="gallery-card" data-title="Graduates in our Ministry" data-desc="Celebrating academic achievements and spiritual growth.">
-                <img src="3.jpg" alt="Graduates in our Ministry" class="gallery-img" onerror="imageError(this)">
-                <div class="gallery-caption">
-                    <h3>Graduates in our Ministry</h3>
-                    <p>Celebrating academic achievements and spiritual growth.</p>
-                </div>
-            </div>
-
-            <div class="gallery-card" data-title="Children's Ministry" data-desc="Raising the next generation in faith and joy.">
-                <img src="4.jpg" alt="Children's Ministry" class="gallery-img" onerror="imageError(this)">
-                <div class="gallery-caption">
-                    <h3>Children's Ministry</h3>
-                    <p>Raising the next generation in faith and joy.</p>
-                </div>
-            </div>
-
-            <div class="gallery-card" data-title="Graduation Celebration" data-desc="Celebrating our graduates and their achievements.">
-                <img src="9.jpg" alt="Graduation Celebration" class="gallery-img" onerror="imageError(this)">
-                <div class="gallery-caption">
-                    <h3>Graduation Celebration</h3>
-                    <p>Celebrating our graduates and their achievements.</p>
-                </div>
-            </div>
         </div>
-    </div>
-</section>
+
+    </section>
+
+
+    <!-- ========================================
+         GALLERY
+    ========================================= -->
+
+    <section class="gallery-section">
+
+        <div class="container">
+
+            <div class="section-heading">
+
+                <p class="eyebrow">OUR COMMUNITY</p>
+
+                <h2>Moments of Faith & Fellowship</h2>
+
+                <p>
+                    Glimpses into our worship, community life,
+                    and the joy of gathering together.
+                </p>
+
+            </div>
+
+
+            <div class="gallery-grid">
+
+                <!-- IMAGE 1 -->
+
+                <div class="gallery-card"
+                     data-title="Sunday Worship Service"
+                     data-desc="Lifting voices in praise and worship during our main service.">
+
+                    <img src="1.jpg"
+                         alt="Sunday Worship Service"
+                         class="gallery-img">
+
+                    <div class="gallery-caption">
+
+                        <h3>Sunday Worship Service</h3>
+
+                        <p>
+                            Lifting voices in praise and worship
+                            during our main service.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- IMAGE 2 -->
+
+                <div class="gallery-card"
+                     data-title="Fellowship Meal"
+                     data-desc="Sharing love and meals together after Sunday service.">
+
+                    <img src="2.jpg"
+                         alt="Fellowship Meal"
+                         class="gallery-img">
+
+                    <div class="gallery-caption">
+
+                        <h3>Fellowship Meal</h3>
+
+                        <p>
+                            Sharing love and meals together
+                            after Sunday service.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- IMAGE 3 -->
+
+                <div class="gallery-card"
+                     data-title="Graduates in our Ministry"
+                     data-desc="Celebrating academic achievements and spiritual growth.">
+
+                    <img src="3.jpg"
+                         alt="Graduates in our Ministry"
+                         class="gallery-img">
+
+                    <div class="gallery-caption">
+
+                        <h3>Graduates in our Ministry</h3>
+
+                        <p>
+                            Celebrating academic achievements
+                            and spiritual growth.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- IMAGE 4 -->
+
+                <div class="gallery-card"
+                     data-title="Children's Ministry"
+                     data-desc="Raising the next generation in faith and joy.">
+
+                    <img src="4.jpg"
+                         alt="Children's Ministry"
+                         class="gallery-img">
+
+                    <div class="gallery-caption">
+
+                        <h3>Children's Ministry</h3>
+
+                        <p>
+                            Raising the next generation in
+                            faith and joy.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- IMAGE 5 -->
+
+                <div class="gallery-card"
+                     data-title="Graduation Celebration"
+                     data-desc="Celebrating our graduates and their achievements.">
+
+                    <img src="9.jpg"
+                         alt="Graduation Celebration"
+                         class="gallery-img">
+
+                    <div class="gallery-caption">
+
+                        <h3>Graduation Celebration</h3>
+
+                        <p>
+                            Celebrating our graduates and
+                            their achievements.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========================================
+         FOOTER
+    ========================================= -->
+
+    <footer class="footer">
+
+        <div class="container">
+
+            <p>
+                © 2026 Imperishable Crown Bible Baptist Church.
+                All Rights Reserved.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+    <!-- About Page JavaScript -->
+    <script src="about.js"></script>
 
 </body>
 </html>
