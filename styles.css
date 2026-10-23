@@ -1,254 +1,440 @@
-/* ================================
-   RESET
-================================ */
+/* ========================================
+IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
+WELCOME PAGE STYLES
+======================================== */
+
+/* ========================================
+RESET
+======================================== */
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  }
 
-
-/* ================================
-   BODY
-================================ */
+/* ========================================
+BODY
+======================================== */
 
 body {
-    font-family: 'Poppins', sans-serif;
-    min-height: 100vh;
+min-height: 100vh;
+font-family: "Poppins", sans-serif;
 
-    background: linear-gradient(
+display: flex;
+flex-direction: column;
+justify-content: center;
+align-items: center;
+
+position: relative;
+overflow: hidden;
+
+color: #ffffff;
+
+background:
+    linear-gradient(
         135deg,
-        #667eea 0%,
-        #764ba2 100%
+        rgba(10, 20, 40, 0.97),
+        rgba(18, 55, 91, 0.94)
     );
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    position: relative;
-    overflow: hidden;
 }
 
-
-/* ================================
-   ANIMATED BACKGROUND
-================================ */
+/* ========================================
+BACKGROUND DECORATION
+======================================== */
 
 body::before {
-    content: '';
+content: "";
 
-    position: absolute;
+position: absolute;
+width: 500px;
+height: 500px;
 
-    width: 200%;
-    height: 200%;
+top: -250px;
+left: -250px;
 
-    background: radial-gradient(
-        circle,
-        rgba(255, 255, 255, 0.1) 1px,
-        transparent 1px
-    );
+border-radius: 50%;
 
-    background-size: 50px 50px;
+background: rgba(255, 255, 255, 0.04);
 
-    animation: moveBackground 20s linear infinite;
+pointer-events: none;
 
-    opacity: 0.3;
 }
 
+body::after {
+content: "";
 
-@keyframes moveBackground {
+position: absolute;
+width: 450px;
+height: 450px;
 
-    0% {
-        transform: translate(0, 0);
-    }
+right: -225px;
+bottom: -225px;
 
-    100% {
-        transform: translate(50px, 50px);
-    }
+border-radius: 50%;
+
+background: rgba(255, 255, 255, 0.04);
+
+pointer-events: none;
+
 }
 
-
-/* ================================
-   SPLASH CONTAINER
-================================ */
+/* ========================================
+SPLASH CONTAINER
+======================================== */
 
 .splash-container {
-    text-align: center;
+width: min(90%, 850px);
 
-    z-index: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+text-align: center;
 
-    padding: 2rem;
+position: relative;
+z-index: 2;
 
-    animation: fadeInUp 1s ease;
+padding: 30px;
+
 }
 
-
-/* ================================
-   CHURCH ICON
-================================ */
+/* ========================================
+CHURCH ICON
+======================================== */
 
 .church-icon {
-    font-size: 5rem;
+width: 95px;
+height: 95px;
 
-    color: white;
+display: flex;
+justify-content: center;
+align-items: center;
 
-    margin-bottom: 1rem;
+margin-bottom: 25px;
 
-    animation: bounce 2s ease infinite;
+border-radius: 50%;
+
+background: rgba(255, 255, 255, 0.10);
+
+border: 1px solid rgba(255, 255, 255, 0.18);
+
+box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.25);
+
+animation: iconFloat 3s ease-in-out infinite;
+
 }
 
-
-@keyframes bounce {
-
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-20px);
-    }
+.church-icon i {
+font-size: 42px;
+color: #f5c542;
 }
 
-
-/* ================================
-   CHURCH NAME
-================================ */
+/* ========================================
+CHURCH NAME
+======================================== */
 
 h1 {
-    font-size: 4rem;
+font-size: clamp(2rem, 5vw, 4rem);
 
-    color: white;
+line-height: 1.15;
 
-    margin-bottom: 1rem;
+font-weight: 800;
 
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+letter-spacing: -1px;
+
+margin-bottom: 15px;
+
+text-shadow:
+    0 5px 20px rgba(0, 0, 0, 0.25);
+
 }
 
+h1 span {
+display: block;
 
-/* ================================
-   TAGLINE
-================================ */
+font-size: 0.62em;
+
+font-weight: 600;
+
+letter-spacing: 1px;
+
+margin-top: 8px;
+
+color: #f5c542;
+
+}
+
+/* ========================================
+TAGLINE
+======================================== */
 
 .tagline {
-    font-size: 1.2rem;
+font-size: clamp(0.95rem, 2vw, 1.2rem);
 
-    color: rgba(255, 255, 255, 0.9);
+font-weight: 300;
 
-    margin-bottom: 3rem;
+letter-spacing: 0.5px;
 
-    letter-spacing: 2px;
+color: rgba(255, 255, 255, 0.85);
+
+margin-bottom: 35px;
+
 }
 
-
-/* ================================
-   JOIN BUTTON
-================================ */
+/* ========================================
+JOIN BUTTON
+======================================== */
 
 .join-btn {
-    display: inline-block;
+display: inline-flex;
 
-    padding: 1.2rem 3rem;
+align-items: center;
+justify-content: center;
 
-    font-size: 1.2rem;
+gap: 12px;
 
-    font-weight: 600;
+min-width: 210px;
 
-    color: #764ba2;
+padding: 15px 25px;
 
-    background: white;
+border-radius: 50px;
 
-    border: none;
+text-decoration: none;
 
-    border-radius: 50px;
+font-family: "Poppins", sans-serif;
 
-    cursor: pointer;
+font-size: 0.95rem;
 
-    transition: all 0.3s;
+font-weight: 600;
 
-    text-decoration: none;
+color: #152238;
 
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+background: #f5c542;
+
+box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.25);
+
+transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+
 }
-
-
-.join-btn:hover {
-    transform: translateY(-3px);
-
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-
-    background: #f0f0f0;
-}
-
 
 .join-btn i {
-    margin-left: 10px;
-
-    transition: transform 0.3s;
+transition: transform 0.25s ease;
 }
 
+.join-btn:hover {
+transform: translateY(-4px);
+
+background: #ffd65c;
+
+box-shadow:
+    0 15px 35px rgba(0, 0, 0, 0.30);
+
+}
 
 .join-btn:hover i {
-    transform: translateX(5px);
+transform: translateX(5px);
 }
 
+.join-btn:active {
+transform: translateY(-1px);
+}
 
-/* ================================
-   BIBLE VERSE
-================================ */
+/* ========================================
+VERSE
+======================================== */
 
 .verse {
-    position: absolute;
+position: absolute;
 
-    bottom: 30px;
+left: 50%;
 
-    color: rgba(255, 255, 255, 0.6);
+bottom: 30px;
 
-    font-size: 0.9rem;
+transform: translateX(-50%);
 
-    text-align: center;
+width: min(90%, 700px);
 
+z-index: 2;
+
+display: flex;
+
+justify-content: center;
+align-items: center;
+
+gap: 10px;
+
+text-align: center;
+
+color: rgba(255, 255, 255, 0.72);
+
+font-size: 0.85rem;
+
+font-weight: 300;
+
+line-height: 1.6;
+
+}
+
+.verse i {
+color: #f5c542;
+}
+
+.verse p {
+margin: 0;
+}
+
+.verse span {
+font-weight: 500;
+color: rgba(255, 255, 255, 0.9);
+}
+
+/* ========================================
+ANIMATIONS
+======================================== */
+
+@keyframes iconFloat {
+
+0%,
+100% {
+    transform: translateY(0);
+}
+
+50% {
+    transform: translateY(-8px);
+}
+
+}
+
+@keyframes pageAppear {
+
+from {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+to {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+}
+
+.splash-container {
+animation: pageAppear 0.9s ease forwards;
+}
+
+/* ========================================
+KEYBOARD ACCESSIBILITY
+======================================== */
+
+.join-btn:focus-visible {
+outline: 3px solid #ffffff;
+outline-offset: 5px;
+}
+
+/* ========================================
+MOBILE RESPONSIVENESS
+======================================== */
+
+@media (max-width: 600px) {
+
+body {
+    padding: 20px;
+}
+
+
+.splash-container {
+    padding: 20px 10px;
+}
+
+
+.church-icon {
+    width: 80px;
+    height: 80px;
+
+    margin-bottom: 20px;
+}
+
+
+.church-icon i {
+    font-size: 34px;
+}
+
+
+h1 {
+    font-size: 2rem;
+    letter-spacing: -0.5px;
+}
+
+
+h1 span {
+    font-size: 0.65em;
+}
+
+
+.tagline {
+    margin-bottom: 28px;
+}
+
+
+.join-btn {
     width: 100%;
+    max-width: 260px;
 }
 
 
-/* ================================
-   FADE IN ANIMATION
-================================ */
+.verse {
+    bottom: 18px;
 
-@keyframes fadeInUp {
+    font-size: 0.72rem;
 
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
+    width: 90%;
+}
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+}
+
+/* ========================================
+VERY SMALL SCREENS
+======================================== */
+
+@media (max-height: 600px) {
+
+.church-icon {
+    width: 65px;
+    height: 65px;
+
+    margin-bottom: 12px;
 }
 
 
-/* ================================
-   MOBILE RESPONSIVENESS
-================================ */
+.church-icon i {
+    font-size: 28px;
+}
 
-@media (max-width: 768px) {
 
-    h1 {
-        font-size: 2.5rem;
-    }
+h1 {
+    font-size: 1.7rem;
+}
 
-    .tagline {
-        font-size: 1rem;
-    }
 
-    .join-btn {
-        padding: 1rem 2rem;
+.tagline {
+    margin-bottom: 18px;
+}
 
-        font-size: 1rem;
-    }
+
+.join-btn {
+    padding: 11px 22px;
+}
+
+
+.verse {
+    bottom: 10px;
+}
+
 }
