@@ -5,52 +5,111 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    const hamburger = document.getElementById("hamburger");
-    const dropdownMenu = document.getElementById("dropdownMenu");
+    // ========================================
+    // GET ELEMENTS
+    // ========================================
+
+    const hamburger =
+        document.getElementById("hamburger");
+
+    const dropdownMenu =
+        document.getElementById("dropdownMenu");
+
+    const dropdownItems =
+        document.querySelectorAll(".dropdown-item");
+
+
+    // ========================================
+    // CHECK ELEMENTS
+    // ========================================
 
     if (!hamburger || !dropdownMenu) {
+        console.error(
+            "Navigation elements were not found."
+        );
+
         return;
     }
 
 
-    // Open and close the menu
-    hamburger.addEventListener("click", () => {
+    // ========================================
+    // OPEN / CLOSE MENU
+    // ========================================
 
-        dropdownMenu.classList.toggle("show");
+    hamburger.addEventListener("click", (event) => {
 
-        const isOpen = dropdownMenu.classList.contains("show");
+        // Prevent the document click event
+        // from immediately closing the menu.
+        event.stopPropagation();
 
-        hamburger.setAttribute("aria-expanded", isOpen);
+        const isOpen =
+            dropdownMenu.classList.toggle("show");
+
+
+        // Update accessibility state
+        hamburger.setAttribute(
+            "aria-expanded",
+            isOpen
+        );
+
 
         // Change hamburger icon
         if (isOpen) {
-            hamburger.innerHTML = '<i class="fas fa-times"></i>';
+
+            hamburger.innerHTML =
+                '<i class="fas fa-times"></i>';
+
+            hamburger.setAttribute(
+                "aria-label",
+                "Close navigation menu"
+            );
+
         } else {
-            hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+
+            hamburger.innerHTML =
+                '<i class="fas fa-bars"></i>';
+
+            hamburger.setAttribute(
+                "aria-label",
+                "Open navigation menu"
+            );
         }
 
     });
 
 
-    // Close menu when a menu item is clicked
-    const menuItems = document.querySelectorAll(".dropdown-item");
+    // ========================================
+    // CLOSE MENU WHEN CLICKING A LINK
+    // ========================================
 
-    menuItems.forEach((item) => {
+    dropdownItems.forEach((item) => {
 
         item.addEventListener("click", () => {
 
             dropdownMenu.classList.remove("show");
 
-            hamburger.setAttribute("aria-expanded", "false");
+            hamburger.setAttribute(
+                "aria-expanded",
+                "false"
+            );
 
-            hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+            hamburger.innerHTML =
+                '<i class="fas fa-bars"></i>';
+
+            hamburger.setAttribute(
+                "aria-label",
+                "Open navigation menu"
+            );
 
         });
 
     });
 
 
-    // Close menu when clicking outside it
+    // ========================================
+    // CLOSE MENU WHEN CLICKING OUTSIDE
+    // ========================================
+
     document.addEventListener("click", (event) => {
 
         const clickedInsideMenu =
@@ -60,15 +119,79 @@ document.addEventListener("DOMContentLoaded", () => {
             hamburger.contains(event.target);
 
 
-        if (!clickedInsideMenu && !clickedHamburger) {
+        if (
+            !clickedInsideMenu &&
+            !clickedHamburger
+        ) {
 
             dropdownMenu.classList.remove("show");
 
-            hamburger.setAttribute("aria-expanded", "false");
+            hamburger.setAttribute(
+                "aria-expanded",
+                "false"
+            );
 
-            hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+            hamburger.innerHTML =
+                '<i class="fas fa-bars"></i>';
 
+            hamburger.setAttribute(
+                "aria-label",
+                "Open navigation menu"
+            );
         }
+
+    });
+
+
+    // ========================================
+    // CLOSE MENU WITH ESCAPE KEY
+    // ========================================
+
+    document.addEventListener("keydown", (event) => {
+
+        if (event.key === "Escape") {
+
+            dropdownMenu.classList.remove("show");
+
+            hamburger.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            hamburger.innerHTML =
+                '<i class="fas fa-bars"></i>';
+
+            hamburger.setAttribute(
+                "aria-label",
+                "Open navigation menu"
+            );
+
+            hamburger.focus();
+        }
+
+    });
+
+
+    // ========================================
+    // CLOSE MENU AFTER WINDOW RESIZE
+    // ========================================
+
+    window.addEventListener("resize", () => {
+
+        dropdownMenu.classList.remove("show");
+
+        hamburger.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        hamburger.innerHTML =
+            '<i class="fas fa-bars"></i>';
+
+        hamburger.setAttribute(
+            "aria-label",
+            "Open navigation menu"
+        );
 
     });
 
