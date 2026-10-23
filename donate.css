@@ -8,11 +8,9 @@
     box-sizing: border-box;
 }
 
-
 html {
     scroll-behavior: smooth;
 }
-
 
 body {
     font-family: 'Poppins', sans-serif;
@@ -39,7 +37,6 @@ body {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
-
 .nav-container {
     max-width: 1200px;
     margin: auto;
@@ -51,7 +48,6 @@ body {
     justify-content: space-between;
 }
 
-
 .logo {
     display: flex;
     align-items: center;
@@ -59,16 +55,22 @@ body {
     color: white;
 
     font-weight: 600;
-}
 
+    white-space: nowrap;
+}
 
 .logo i {
     font-size: 1.5rem;
+
     color: #4CAF50;
 
     margin-right: 8px;
 }
 
+
+/* ========================================
+   HAMBURGER BUTTON
+======================================== */
 
 .hamburger {
     width: 45px;
@@ -85,17 +87,24 @@ body {
 
     cursor: pointer;
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     transition: 0.3s;
 }
 
-
 .hamburger:hover {
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.hamburger:active {
+    transform: scale(0.95);
 }
 
 
 /* ========================================
-   DROPDOWN
+   DROPDOWN MENU
 ======================================== */
 
 .dropdown-menu {
@@ -111,7 +120,7 @@ body {
     border-radius: 12px;
 
     box-shadow:
-        0 10px 30px rgba(0,0,0,0.25);
+        0 10px 30px rgba(0, 0, 0, 0.25);
 
     z-index: 999;
 
@@ -120,9 +129,16 @@ body {
 
     transform: translateY(-10px);
 
-    transition: 0.3s;
+    transition:
+        opacity 0.3s ease,
+        transform 0.3s ease,
+        visibility 0.3s ease;
 }
 
+
+/* IMPORTANT:
+   JavaScript should add the "show" class
+*/
 
 .dropdown-menu.show {
     opacity: 1;
@@ -131,11 +147,9 @@ body {
     transform: translateY(0);
 }
 
-
 .dropdown-content {
     padding: 10px;
 }
-
 
 .dropdown-item {
     display: flex;
@@ -156,21 +170,21 @@ body {
     transition: 0.3s;
 }
 
-
 .dropdown-item i {
     width: 20px;
+
     text-align: center;
 }
 
-
 .dropdown-item:hover {
     background: #f1f1f1;
+
     color: #e67e22;
 }
 
-
 .dropdown-item.active {
     background: #e67e22;
+
     color: white;
 }
 
@@ -194,15 +208,15 @@ body {
 
     background:
         linear-gradient(
-            rgba(0,0,0,0.65),
-            rgba(0,0,0,0.65)
+            rgba(0, 0, 0, 0.65),
+            rgba(0, 0, 0, 0.65)
         ),
         url('11.jpg');
 
     background-size: cover;
+
     background-position: center;
 }
-
 
 .page-header h1 {
     font-size: 3rem;
@@ -210,11 +224,10 @@ body {
     margin-bottom: 10px;
 }
 
-
 .page-header p {
     font-size: 1.1rem;
 
-    color: rgba(255,255,255,0.9);
+    color: rgba(255, 255, 255, 0.9);
 }
 
 
@@ -226,15 +239,15 @@ body {
     padding: 70px 20px;
 }
 
-
 .container {
     max-width: 1100px;
+
     margin: auto;
 }
 
 
 /* ========================================
-   TOTAL AMOUNT
+   TOTAL CONTRIBUTIONS
 ======================================== */
 
 .total-amount-card {
@@ -249,9 +262,8 @@ body {
     margin-bottom: 45px;
 
     box-shadow:
-        0 5px 25px rgba(0,0,0,0.08);
+        0 5px 25px rgba(0, 0, 0, 0.08);
 }
-
 
 .total-amount-card h3 {
     margin-bottom: 15px;
@@ -259,11 +271,9 @@ body {
     font-size: 1.2rem;
 }
 
-
 .total-amount-card h3 i {
     color: #4CAF50;
 }
-
 
 .main-amount {
     font-size: 2.5rem;
@@ -281,10 +291,11 @@ body {
 .payment-methods {
     display: grid;
 
-    grid-template-columns:
-        repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
 
     gap: 30px;
+
+    align-items: stretch;
 }
 
 
@@ -302,19 +313,24 @@ body {
     text-align: center;
 
     box-shadow:
-        0 5px 25px rgba(0,0,0,0.08);
+        0 5px 25px rgba(0, 0, 0, 0.08);
 
-    transition: 0.3s;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
 }
-
 
 .donation-card:hover {
     transform: translateY(-5px);
 
     box-shadow:
-        0 10px 30px rgba(0,0,0,0.12);
+        0 10px 30px rgba(0, 0, 0, 0.12);
 }
 
+
+/* ========================================
+   PAYMENT ICON
+======================================== */
 
 .payment-icon {
     width: 80px;
@@ -332,43 +348,28 @@ body {
     font-size: 2.5rem;
 }
 
-
 .mpesa-icon {
     background: #e8f5e9;
+
     color: #4CAF50;
 }
 
-
-.airtel-icon {
-    background: #ffebee;
-    color: #e53935;
-}
-
-
-.bank-icon {
-    background: #e3f2fd;
-    color: #1976d2;
-}
-
-
 .paypal-icon {
     background: #e8eaf6;
+
     color: #003087;
 }
 
 
-.venmo-icon {
-    background: #e3f2fd;
-    color: #008cff;
-}
-
+/* ========================================
+   DONATION CARD TEXT
+======================================== */
 
 .donation-card h3 {
     font-size: 1.4rem;
 
     margin-bottom: 8px;
 }
-
 
 .donation-card > p {
     color: #777;
@@ -384,14 +385,12 @@ body {
 .amount-buttons {
     display: grid;
 
-    grid-template-columns:
-        repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);
 
     gap: 10px;
 
     margin-bottom: 15px;
 }
-
 
 .amount-btn {
     padding: 12px;
@@ -412,7 +411,6 @@ body {
 
     transition: 0.3s;
 }
-
 
 .amount-btn:hover,
 .amount-btn.selected {
@@ -447,13 +445,12 @@ body {
     transition: 0.3s;
 }
 
-
 .custom-amount:focus,
 .phone-input:focus {
     border-color: #4CAF50;
 
     box-shadow:
-        0 0 0 3px rgba(76,175,80,0.12);
+        0 0 0 3px rgba(76, 175, 80, 0.12);
 }
 
 
@@ -483,37 +480,23 @@ body {
     transition: 0.3s;
 }
 
-
 .pay-btn:hover {
     transform: translateY(-2px);
 
     box-shadow:
-        0 5px 15px rgba(0,0,0,0.15);
+        0 5px 15px rgba(0, 0, 0, 0.15);
 }
 
+.pay-btn:active {
+    transform: translateY(0);
+}
 
 .mpesa-btn {
     background: #4CAF50;
 }
 
-
-.airtel-btn {
-    background: #e53935;
-}
-
-
-.bank-btn {
-    background: #1976d2;
-}
-
-
 .paypal-btn {
     background: #003087;
-}
-
-
-.venmo-btn {
-    background: #008cff;
 }
 
 
@@ -535,18 +518,15 @@ body {
     font-size: 0.85rem;
 }
 
-
 .payment-instructions strong {
     display: block;
 
     margin-bottom: 6px;
 }
 
-
 .payment-instructions i {
     color: #4CAF50;
 }
-
 
 .payment-instructions p {
     color: #666;
@@ -554,38 +534,7 @@ body {
 
 
 /* ========================================
-   BANK DETAILS
-======================================== */
-
-.bank-details {
-    text-align: left;
-
-    background: #f5f8fc;
-
-    padding: 18px;
-
-    border-radius: 8px;
-
-    margin-bottom: 20px;
-}
-
-
-.bank-details p {
-    margin-bottom: 8px;
-
-    font-size: 0.9rem;
-
-    word-break: break-word;
-}
-
-
-.bank-details p:last-child {
-    margin-bottom: 0;
-}
-
-
-/* ========================================
-   TOAST
+   TOAST NOTIFICATION
 ======================================== */
 
 .toast-notification {
@@ -605,19 +554,17 @@ body {
     border-radius: 8px;
 
     box-shadow:
-        0 5px 20px rgba(0,0,0,0.25);
+        0 5px 20px rgba(0, 0, 0, 0.25);
 
     z-index: 2000;
 
     opacity: 0;
-
     visibility: hidden;
 
     transform: translateY(20px);
 
     transition: 0.3s;
 }
-
 
 .toast-notification.show {
     opacity: 1;
@@ -640,7 +587,6 @@ body {
     padding-top: 50px;
 }
 
-
 .footer-content {
     max-width: 1100px;
 
@@ -649,11 +595,9 @@ body {
     padding: 0 20px 40px;
 }
 
-
 .footer-section h3 {
     margin-bottom: 20px;
 }
-
 
 .footer-section p {
     margin-bottom: 10px;
@@ -661,13 +605,11 @@ body {
     color: #ccc;
 }
 
-
 .footer-section p i {
     width: 22px;
 
     color: #4CAF50;
 }
-
 
 .footer-bottom {
     text-align: center;
@@ -688,20 +630,21 @@ body {
 
 @media (max-width: 768px) {
 
+    .nav-container {
+        padding: 13px 18px;
+    }
+
     .payment-methods {
         grid-template-columns: 1fr;
     }
-
 
     .page-header h1 {
         font-size: 2.2rem;
     }
 
-
     .main-amount {
         font-size: 2rem;
     }
-
 }
 
 
@@ -711,33 +654,57 @@ body {
 
 @media (max-width: 480px) {
 
-    .logo span {
-        font-size: 0.9rem;
+    .nav-container {
+        padding: 12px 15px;
     }
 
+    .logo {
+        max-width: calc(100% - 55px);
+    }
+
+    .logo span {
+        font-size: 0.9rem;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .hamburger {
+        width: 42px;
+        height: 42px;
+
+        font-size: 1.35rem;
+    }
 
     .dropdown-menu {
+        top: 68px;
+
         left: 10px;
         right: 10px;
 
         width: auto;
+
+        max-height: calc(100vh - 80px);
+
+        overflow-y: auto;
     }
 
+    .dropdown-item {
+        padding: 12px 14px;
+    }
 
     .section {
         padding: 55px 15px;
     }
 
-
     .donation-card {
         padding: 25px 20px;
     }
 
-
     .amount-buttons {
         grid-template-columns: 1fr;
     }
-
 
     .page-header {
         min-height: 300px;
@@ -745,14 +712,28 @@ body {
         padding-top: 120px;
     }
 
-
     .page-header h1 {
         font-size: 1.8rem;
     }
-
 
     .page-header p {
         font-size: 0.9rem;
     }
 
+    .total-amount-card {
+        padding: 25px 15px;
+    }
+
+    .main-amount {
+        font-size: 1.8rem;
+    }
+
+    .toast-notification {
+        left: 15px;
+        right: 15px;
+
+        bottom: 15px;
+
+        max-width: none;
+    }
 }
