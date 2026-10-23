@@ -1,393 +1,307 @@
-document.addEventListener("DOMContentLoaded", function () {
+// ========================================
+// IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
+// LEADERSHIP PAGE JAVASCRIPT
+// ========================================
 
-    /* =========================
-       NAVIGATION
-       ========================= */
+document.addEventListener("DOMContentLoaded", () => {
+
+    // ========================================
+    // GET HTML ELEMENTS
+    // ========================================
 
     const hamburger = document.getElementById("hamburger");
     const dropdownMenu = document.getElementById("dropdownMenu");
 
-    const menuLinks =
-        document.querySelectorAll(".dropdown-item");
+    const filterButtons = document.querySelectorAll(".filter-btn");
+    const leaderCards = document.querySelectorAll(".leader-card");
+
+    const memberCount = document.getElementById("memberCount");
+
+    const lightboxModal = document.getElementById("lightboxModal");
+    const closeLightbox = document.getElementById("closeLightbox");
+
+    const modalImage = document.getElementById("modalImage");
+    const modalName = document.getElementById("modalName");
+    const modalPosition = document.getElementById("modalPosition");
+    const modalBio = document.getElementById("modalBio");
+
+    const year = document.getElementById("year");
 
 
-    function toggleMenu(forceState) {
+    // ========================================
+    // HAMBURGER MENU
+    // ========================================
 
-        const shouldOpen =
-            typeof forceState === "boolean"
-                ? forceState
-                : !dropdownMenu.classList.contains("open");
+    hamburger.addEventListener("click", () => {
 
-
-        dropdownMenu.classList.toggle(
-            "open",
-            shouldOpen
-        );
-
+        const isOpen =
+            dropdownMenu.classList.toggle("show");
 
         hamburger.setAttribute(
             "aria-expanded",
-            String(shouldOpen)
+            isOpen
         );
 
 
-        const icon =
-            hamburger.querySelector("i");
+        // Change hamburger icon
+        const icon = hamburger.querySelector("i");
 
-
-        if (shouldOpen) {
+        if (isOpen) {
 
             icon.classList.remove("fa-bars");
-
             icon.classList.add("fa-xmark");
-
-            hamburger.setAttribute(
-                "aria-label",
-                "Close navigation menu"
-            );
 
         } else {
 
             icon.classList.remove("fa-xmark");
-
             icon.classList.add("fa-bars");
 
-            hamburger.setAttribute(
-                "aria-label",
-                "Open navigation menu"
-            );
-
         }
-
-    }
-
-
-    hamburger.addEventListener(
-        "click",
-        function (event) {
-
-            event.stopPropagation();
-
-            toggleMenu();
-
-        }
-    );
-
-
-    /* Close menu after clicking a link */
-
-    menuLinks.forEach(function (link) {
-
-        link.addEventListener(
-            "click",
-            function () {
-
-                toggleMenu(false);
-
-            }
-        );
 
     });
 
 
-    /* Close menu when clicking outside */
+    // ========================================
+    // CLOSE MENU WHEN LINK IS CLICKED
+    // ========================================
 
-    document.addEventListener(
-        "click",
-        function (event) {
+    const menuLinks =
+        document.querySelectorAll(".dropdown-item");
 
-            if (
-                dropdownMenu.classList.contains("open") &&
-                !dropdownMenu.contains(event.target) &&
-                !hamburger.contains(event.target)
-            ) {
+    menuLinks.forEach((link) => {
 
-                toggleMenu(false);
+        link.addEventListener("click", () => {
 
-            }
+            dropdownMenu.classList.remove("show");
 
-        }
-    );
+            hamburger.setAttribute(
+                "aria-expanded",
+                "false"
+            );
 
+            const icon = hamburger.querySelector("i");
 
-    /* Close menu with Escape */
-
-    document.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (event.key === "Escape") {
-
-                toggleMenu(false);
-
-            }
-
-        }
-    );
-
-
-
-    /* =========================
-       MEMBER FILTERING
-       ========================= */
-
-    const filterButtons =
-        document.querySelectorAll(".filter-btn");
-
-    const cards =
-        document.querySelectorAll(".leader-card");
-
-    const memberCount =
-        document.getElementById("memberCount");
-
-
-    function updateCount(number) {
-
-        const word =
-            number === 1
-                ? "member"
-                : "members";
-
-
-        memberCount.innerHTML =
-            `Showing <span>${number}</span> ${word}`;
-
-    }
-
-
-    function filterMembers(category) {
-
-        let visibleCount = 0;
-
-
-        cards.forEach(function (card) {
-
-            const matches =
-                category === "all" ||
-                card.dataset.category === category;
-
-
-            if (matches) {
-
-                card.classList.remove("hidden");
-
-                visibleCount++;
-
-            } else {
-
-                card.classList.add("hidden");
-
-            }
+            icon.classList.remove("fa-xmark");
+            icon.classList.add("fa-bars");
 
         });
 
-
-        updateCount(visibleCount);
-
-    }
+    });
 
 
-    filterButtons.forEach(function (button) {
+    // ========================================
+    // CLOSE MENU WHEN CLICKING OUTSIDE
+    // ========================================
 
-        button.addEventListener(
-            "click",
-            function () {
+    document.addEventListener("click", (event) => {
 
-                filterButtons.forEach(
-                    function (btn) {
+        const clickedInsideMenu =
+            dropdownMenu.contains(event.target);
 
-                        btn.classList.remove(
-                            "active"
-                        );
-
-                    }
-                );
+        const clickedHamburger =
+            hamburger.contains(event.target);
 
 
-                button.classList.add("active");
+        if (
+            !clickedInsideMenu &&
+            !clickedHamburger &&
+            dropdownMenu.classList.contains("show")
+        ) {
 
+            dropdownMenu.classList.remove("show");
 
-                filterMembers(
-                    button.dataset.filter
-                );
+            hamburger.setAttribute(
+                "aria-expanded",
+                "false"
+            );
 
-            }
-        );
+            const icon = hamburger.querySelector("i");
+
+            icon.classList.remove("fa-xmark");
+            icon.classList.add("fa-bars");
+
+        }
 
     });
 
 
+    // ========================================
+    // FILTER MEMBERS
+    // ========================================
 
-    /* =========================
-       MEMBER DETAILS MODAL
-       ========================= */
+    filterButtons.forEach((button) => {
 
-    const modal =
-        document.getElementById("lightboxModal");
+        button.addEventListener("click", () => {
 
-    const closeModalButton =
-        document.getElementById("closeLightbox");
-
-    const modalImage =
-        document.getElementById("modalImage");
-
-    const modalName =
-        document.getElementById("modalName");
-
-    const modalPosition =
-        document.getElementById("modalPosition");
-
-    const modalBio =
-        document.getElementById("modalBio");
+            // Get selected category
+            const filter =
+                button.getAttribute("data-filter");
 
 
-    function openModal(card) {
-
-        modalImage.src =
-            card.dataset.image;
-
-        modalImage.alt =
-            card.dataset.name;
-
-        modalName.textContent =
-            card.dataset.name;
-
-        modalPosition.textContent =
-            card.dataset.position;
-
-        modalBio.textContent =
-            card.dataset.bio;
+            // Remove active from all buttons
+            filterButtons.forEach((btn) => {
+                btn.classList.remove("active");
+            });
 
 
-        modal.classList.add("open");
-
-        modal.setAttribute(
-            "aria-hidden",
-            "false"
-        );
+            // Add active to clicked button
+            button.classList.add("active");
 
 
-        document.body.style.overflow =
-            "hidden";
+            // Count visible members
+            let visibleCount = 0;
 
 
-        closeModalButton.focus();
+            // Check every leader card
+            leaderCards.forEach((card) => {
 
-    }
+                const category =
+                    card.getAttribute("data-category");
 
+
+                if (
+                    filter === "all" ||
+                    category === filter
+                ) {
+
+                    card.classList.remove("hidden");
+
+                    visibleCount++;
+
+                } else {
+
+                    card.classList.add("hidden");
+
+                }
+
+            });
+
+
+            // Update member count
+            memberCount.innerHTML =
+                `Showing <span>${visibleCount}</span> members`;
+
+        });
+
+    });
+
+
+    // ========================================
+    // OPEN MEMBER DETAILS MODAL
+    // ========================================
+
+    leaderCards.forEach((card) => {
+
+        card.addEventListener("click", (event) => {
+
+            // Don't open modal when clicking
+            // social media links
+            if (event.target.closest(".social-icons a")) {
+                return;
+            }
+
+
+            // Get information from data attributes
+            const name =
+                card.getAttribute("data-name");
+
+            const position =
+                card.getAttribute("data-position");
+
+            const bio =
+                card.getAttribute("data-bio");
+
+            const image =
+                card.getAttribute("data-image");
+
+
+            // Put information into modal
+            modalName.textContent = name;
+
+            modalPosition.textContent = position;
+
+            modalBio.textContent = bio;
+
+            modalImage.src = image;
+
+            modalImage.alt = name;
+
+
+            // Open modal
+            lightboxModal.classList.add("show");
+
+            lightboxModal.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
+
+            // Prevent page from scrolling
+            document.body.style.overflow = "hidden";
+
+        });
+
+    });
+
+
+    // ========================================
+    // CLOSE MEMBER MODAL
+    // ========================================
 
     function closeModal() {
 
-        modal.classList.remove("open");
+        lightboxModal.classList.remove("show");
 
-        modal.setAttribute(
+        lightboxModal.setAttribute(
             "aria-hidden",
             "true"
         );
 
-
-        document.body.style.overflow =
-            "";
-
-
-        setTimeout(function () {
-
-            if (!modal.classList.contains("open")) {
-
-                modalImage.src = "";
-
-            }
-
-        }, 250);
+        document.body.style.overflow = "";
 
     }
 
 
-    /* Open modal when member card is clicked */
-
-    cards.forEach(function (card) {
-
-        card.addEventListener(
-            "click",
-            function (event) {
-
-                /*
-                 Don't open the member modal
-                 when clicking social icons.
-                */
-
-                if (
-                    event.target.closest(
-                        ".social-icons a"
-                    )
-                ) {
-
-                    event.preventDefault();
-
-                    return;
-
-                }
-
-
-                openModal(card);
-
-            }
-        );
-
-    });
-
-
-    /* Close modal */
-
-    closeModalButton.addEventListener(
+    closeLightbox.addEventListener(
         "click",
         closeModal
     );
 
 
-    /* Close by clicking dark background */
+    // ========================================
+    // CLOSE MODAL WHEN CLICKING BACKGROUND
+    // ========================================
 
-    modal.addEventListener(
-        "click",
-        function (event) {
+    lightboxModal.addEventListener("click", (event) => {
 
-            if (event.target === modal) {
+        if (event.target === lightboxModal) {
+            closeModal();
+        }
 
-                closeModal();
+    });
 
-            }
+
+    // ========================================
+    // CLOSE MODAL WITH ESCAPE KEY
+    // ========================================
+
+    document.addEventListener("keydown", (event) => {
+
+        if (
+            event.key === "Escape" &&
+            lightboxModal.classList.contains("show")
+        ) {
+
+            closeModal();
 
         }
-    );
+
+    });
 
 
-    /* Close with Escape */
-
-    document.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (
-                event.key === "Escape" &&
-                modal.classList.contains("open")
-            ) {
-
-                closeModal();
-
-            }
-
-        }
-    );
-
-
-
-    /* =========================
-       CURRENT YEAR
-       ========================= */
-
-    const year =
-        document.getElementById("year");
-
+    // ========================================
+    // CURRENT YEAR
+    // ========================================
 
     if (year) {
 
@@ -395,5 +309,32 @@ document.addEventListener("DOMContentLoaded", function () {
             new Date().getFullYear();
 
     }
+
+
+    // ========================================
+    // IMAGE ERROR HANDLING
+    // ========================================
+
+    const leaderImages =
+        document.querySelectorAll(".leader-img");
+
+
+    leaderImages.forEach((image) => {
+
+        image.addEventListener("error", () => {
+
+            // Prevent infinite error loop
+            if (image.dataset.fallback === "true") {
+                return;
+            }
+
+            image.dataset.fallback = "true";
+
+            image.src =
+                "https://via.placeholder.com/600x600?text=Church+Member";
+
+        });
+
+    });
 
 });
