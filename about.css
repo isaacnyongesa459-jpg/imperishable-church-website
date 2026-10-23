@@ -378,22 +378,19 @@ body {
 
 
 /* =====================================
-   GALLERY GRID
+   GALLERY GRID (Fixed for Mobile)
 ===================================== */
 
 .gallery-grid {
     width: 100% !important;
     max-width: 100% !important;
-
     min-width: 0 !important;
 
     display: grid !important;
-
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr)) !important;
+    /* Automatically builds a layout that responds smoothly without media queries */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
 
     gap: 25px;
-
     margin: 0 !important;
 }
 
@@ -562,7 +559,7 @@ body {
 
 
 /* =====================================
-   FOOTER
+   FOOTER (Restored & Finished)
 ===================================== */
 
 .footer {
@@ -579,339 +576,23 @@ body {
 .footer-content {
     width: 100% !important;
     max-width: 1200px !important;
-
-    margin: auto;
-
-    padding: 0 20px 40px;
-
-    display: grid !important;
-
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr)) !important;
-
-    gap: 30px;
-}
-
-.footer-section {
-    min-width: 0 !important;
-    max-width: 100% !important;
-}
-
-.footer-section h3 {
-    margin-bottom: 15px;
-}
-
-.footer-section p {
-    margin-bottom: 8px;
-
-    color: #d1d5db;
-
-    overflow-wrap: anywhere;
-}
-
-.footer-section i {
-    color: #e67e22;
-
-    margin-right: 7px;
-}
-
-.footer-section a {
-    color: #d1d5db;
-
-    text-decoration: none;
-}
-
-.social-links {
-    display: flex;
-
-    flex-wrap: wrap;
-
-    gap: 12px;
-}
-
-.social-links a {
-    width: 40px;
-    height: 40px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    background: rgba(255,255,255,.1);
-
-    border-radius: 50%;
+    
+    margin: 0 auto !important;
+    padding: 0 20px 40px !important;
+    
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: space-between !important;
+    gap: 30px !important;
 }
 
 .footer-bottom {
-    width: 100%;
-
-    padding: 18px 15px;
-
-    border-top: 1px solid rgba(255,255,255,.1);
-
-    text-align: center;
-}
-
-.footer-bottom p {
-    margin: 0;
-
-    color: #9ca3af;
-
-    font-size: 13px;
-}
-
-
-/* =====================================
-   TABLET
-===================================== */
-
-@media (max-width: 900px) {
-
-    .gallery-grid {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr)) !important;
-    }
-
-    .footer-content {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr)) !important;
-    }
-}
-
-
-/* =====================================
-   PHONE
-===================================== */
-
-@media (max-width: 600px) {
-
-    html,
-    body {
-        width: 100% !important;
-
-        max-width: 100% !important;
-
-        min-width: 0 !important;
-
-        overflow-x: hidden !important;
-    }
-
-
-    .container {
-        width: 100% !important;
-
-        max-width: 100% !important;
-
-        padding-left: 15px !important;
-        padding-right: 15px !important;
-    }
-
-
-    /* NAV */
-
-    .nav-container {
-        width: 100% !important;
-
-        padding: 8px 15px !important;
-
-        min-height: 62px;
-    }
-
-    .logo {
-        max-width: calc(100% - 50px) !important;
-
-        font-size: 14px;
-    }
-
-    .logo-img {
-        width: 38px !important;
-        height: 38px !important;
-
-        min-width: 38px !important;
-    }
-
-    .hamburger {
-        width: 40px !important;
-        height: 40px !important;
-
-        min-width: 40px !important;
-    }
-
-
-    /* MENU */
-
-    .dropdown-menu {
-        top: 62px;
-
-        left: 10px;
-
-        right: 10px;
-
-        width: auto !important;
-
-        max-width: none !important;
-    }
-
-
-    /* HEADER */
-
-    .page-header {
-        width: 100% !important;
-
-        padding: 45px 15px;
-    }
-
-    .page-header h1 {
-        font-size: 30px;
-    }
-
-    .page-header p {
-        font-size: 14px;
-    }
-
-
-    /* ABOUT */
-
-    .about-section {
-        width: 100% !important;
-
-        padding: 30px 0;
-    }
-
-    .about-text {
-        width: 100% !important;
-
-        max-width: 100% !important;
-
-        padding: 25px 18px;
-
-        border-radius: 12px;
-    }
-
-    .about-text h2 {
-        font-size: 22px;
-    }
-
-    .about-text p {
-        font-size: 15px;
-
-        line-height: 1.7;
-    }
-
-
-    /* GALLERY */
-
-    .gallery-section {
-        width: 100% !important;
-
-        padding: 35px 0;
-    }
-
-    .section-heading h2 {
-        font-size: 25px;
-    }
-
-    .section-heading p {
-        font-size: 14px;
-    }
-
-
-    /*
-       VERY IMPORTANT:
-       ONE COLUMN ON PHONE
-    */
-
-    .gallery-grid {
-        width: 100% !important;
-
-        max-width: 100% !important;
-
-        display: grid !important;
-
-        grid-template-columns: 1fr !important;
-
-        gap: 20px !important;
-    }
-
-
-    .gallery-card {
-        width: 100% !important;
-
-        max-width: 100% !important;
-
-        min-width: 0 !important;
-    }
-
-
-    .gallery-img {
-        width: 100% !important;
-
-        max-width: 100% !important;
-
-        height: auto !important;
-
-        aspect-ratio: 4 / 3;
-
-        object-fit: cover;
-    }
-
-
-    .gallery-caption {
-        padding: 18px 15px;
-    }
-
-    .gallery-caption h3 {
-        font-size: 19px;
-    }
-
-    .gallery-caption p {
-        font-size: 14px;
-    }
-
-
-    /* FOOTER */
-
-    .footer-content {
-        width: 100% !important;
-
-        grid-template-columns: 1fr !important;
-
-        padding: 0 20px 30px;
-
-        text-align: center;
-    }
-
-    .social-links {
-        justify-content: center;
-    }
-
-    .footer-bottom p {
-        font-size: 11px;
-    }
-}
-
-
-/* =====================================
-   SMALL PHONE
-===================================== */
-
-@media (max-width: 380px) {
-
-    .logo {
-        font-size: 12px;
-    }
-
-    .page-header h1 {
-        font-size: 26px;
-    }
-
-    .about-text {
-        padding: 20px 15px;
-    }
-
-    .section-heading h2 {
-        font-size: 22px;
-    }
+    width: 100% !important;
+    
+    text-align: center !important;
+    padding: 20px !important;
+    
+    border-top: 1px solid #374151 !important;
+    font-size: 14px !important;
+    color: #9ca3af !important;
 }
