@@ -5,6 +5,10 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    // ========================================
+    // GET ELEMENTS
+    // ========================================
+
     const hamburger = document.getElementById("hamburger");
     const dropdownMenu = document.getElementById("dropdownMenu");
     const contactForm = document.getElementById("contactForm");
@@ -16,35 +20,50 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (hamburger && dropdownMenu) {
 
-        hamburger.addEventListener("click", () => {
+        // Open / close menu
+        hamburger.addEventListener("click", (event) => {
 
-            dropdownMenu.classList.toggle("show");
+            // Prevent the document click listener
+            // from immediately closing the menu
+            event.stopPropagation();
 
             const isOpen =
-                dropdownMenu.classList.contains("show");
+                dropdownMenu.classList.toggle("show");
 
+            // Update accessibility state
             hamburger.setAttribute(
                 "aria-expanded",
-                isOpen
+                String(isOpen)
             );
 
-
+            // Change hamburger icon
             if (isOpen) {
 
                 hamburger.innerHTML =
                     '<i class="fas fa-times"></i>';
+
+                hamburger.setAttribute(
+                    "aria-label",
+                    "Close navigation menu"
+                );
 
             } else {
 
                 hamburger.innerHTML =
                     '<i class="fas fa-bars"></i>';
 
+                hamburger.setAttribute(
+                    "aria-label",
+                    "Open navigation menu"
+                );
             }
 
         });
 
 
-        // Close menu after selecting a page
+        // ========================================
+        // CLOSE MENU AFTER CLICKING A LINK
+        // ========================================
 
         const menuItems =
             document.querySelectorAll(".dropdown-item");
@@ -60,6 +79,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     "false"
                 );
 
+                hamburger.setAttribute(
+                    "aria-label",
+                    "Open navigation menu"
+                );
+
                 hamburger.innerHTML =
                     '<i class="fas fa-bars"></i>';
 
@@ -68,18 +92,23 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 
-        // Close menu when clicking outside
+        // ========================================
+        // CLOSE MENU WHEN CLICKING OUTSIDE
+        // ========================================
 
         document.addEventListener("click", (event) => {
 
-            const clickedMenu =
+            const clickedInsideMenu =
                 dropdownMenu.contains(event.target);
 
-            const clickedButton =
+            const clickedHamburger =
                 hamburger.contains(event.target);
 
 
-            if (!clickedMenu && !clickedButton) {
+            if (
+                !clickedInsideMenu &&
+                !clickedHamburger
+            ) {
 
                 dropdownMenu.classList.remove("show");
 
@@ -88,8 +117,46 @@ document.addEventListener("DOMContentLoaded", () => {
                     "false"
                 );
 
+                hamburger.setAttribute(
+                    "aria-label",
+                    "Open navigation menu"
+                );
+
                 hamburger.innerHTML =
                     '<i class="fas fa-bars"></i>';
+
+            }
+
+        });
+
+
+        // ========================================
+        // CLOSE MENU WITH ESCAPE KEY
+        // ========================================
+
+        document.addEventListener("keydown", (event) => {
+
+            if (
+                event.key === "Escape" &&
+                dropdownMenu.classList.contains("show")
+            ) {
+
+                dropdownMenu.classList.remove("show");
+
+                hamburger.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+                hamburger.setAttribute(
+                    "aria-label",
+                    "Open navigation menu"
+                );
+
+                hamburger.innerHTML =
+                    '<i class="fas fa-bars"></i>';
+
+                hamburger.focus();
 
             }
 
@@ -106,17 +173,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
         contactForm.addEventListener("submit", (event) => {
 
+            // Prevent page refresh
             event.preventDefault();
 
+
+            // Get form values
             const name =
                 document.getElementById("name").value.trim();
 
             const email =
                 document.getElementById("email").value.trim();
 
+            const subject =
+                document.getElementById("subject").value.trim();
+
             const message =
                 document.getElementById("message").value.trim();
 
+
+            // ========================================
+            // VALIDATION
+            // ========================================
 
             if (!name || !email || !message) {
 
@@ -125,15 +202,36 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
 
                 return;
-
             }
 
+
+            // ========================================
+            // BASIC EMAIL VALIDATION
+            // ========================================
+
+            const emailPattern =
+                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailPattern.test(email)) {
+
+                alert(
+                    "Please enter a valid email address."
+                );
+
+                return;
+            }
+
+
+            // ========================================
+            // MESSAGE RECEIVED
+            // ========================================
 
             alert(
                 `Thank you, ${name}! Your message has been received.`
             );
 
 
+            // Clear the form
             contactForm.reset();
 
         });
