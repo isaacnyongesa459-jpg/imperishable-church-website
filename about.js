@@ -1,120 +1,181 @@
-document.addEventListener("DOMContentLoaded", () => {
+// ========================================
+// IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
+// ABOUT PAGE JAVASCRIPT
+// ========================================
 
-    /* =====================================
-       HAMBURGER MENU
-    ===================================== */
+document.addEventListener("DOMContentLoaded", function () {
+
+    // ========================================
+    // GET NAVIGATION ELEMENTS
+    // ========================================
+
     const hamburger = document.getElementById("hamburger");
     const dropdownMenu = document.getElementById("dropdownMenu");
 
-    if (hamburger && dropdownMenu) {
-        hamburger.addEventListener("click", (event) => {
-            event.stopPropagation();
-            
-            dropdownMenu.classList.toggle("show");
-            
-            const icon = hamburger.querySelector("i");
-            const isOpen = dropdownMenu.classList.contains("show");
 
-            hamburger.setAttribute("aria-expanded", isOpen);
+    // ========================================
+    // CHECK ELEMENTS
+    // ========================================
 
-            if (icon) {
-                if (isOpen) {
-                    icon.classList.remove("fa-bars");
-                    icon.classList.add("fa-xmark");
-                } else {
-                    icon.classList.remove("fa-xmark");
-                    icon.classList.add("fa-bars");
-                }
-            }
-        });
+    if (!hamburger || !dropdownMenu) {
 
-        document.addEventListener("click", (event) => {
-            if (!dropdownMenu.contains(event.target) && !hamburger.contains(event.target)) {
-                closeMenu();
-            }
-        });
+        console.error(
+            "Navigation error: hamburger or dropdown menu was not found."
+        );
 
-        document.querySelectorAll(".dropdown-item").forEach(link => {
-            link.addEventListener("click", () => {
-                closeMenu();
-            });
-        });
-
-        function closeMenu() {
-            dropdownMenu.classList.remove("show");
-            hamburger.setAttribute("aria-expanded", "false");
-            
-            const icon = hamburger.querySelector("i");
-            if (icon) {
-                icon.classList.remove("fa-xmark");
-                icon.classList.add("fa-bars");
-            }
-        }
+        return;
     }
 
-    /* =====================================
-       GALLERY LIGHTBOX
-    ===================================== */
-    const cards = document.querySelectorAll(".gallery-card");
-    const modal = document.getElementById("lightboxModal");
-    const lightboxImg = document.getElementById("lightboxImg");
-    const caption = document.getElementById("lightboxCaption");
-    const closeButton = document.getElementById("closeLightbox");
 
-    // Guard clause: Only initialize lightbox code if all necessary DOM elements exist
-    if (cards.length > 0 && modal && lightboxImg && caption && closeButton) {
-        
-        cards.forEach(card => {
-            card.addEventListener("click", () => {
-                const image = card.querySelector(".gallery-img");
-                if (!image) return;
+    // ========================================
+    // HAMBURGER CLICK
+    // ========================================
 
-                const title = card.dataset.title || "";
-                const description = card.dataset.desc || "";
+    hamburger.addEventListener("click", function (event) {
 
-                lightboxImg.src = image.src;
-                lightboxImg.alt = image.alt;
-                caption.innerHTML = `<strong>${title}</strong><br>${description}`;
+        // Prevent document click from immediately
+        // closing the menu
+        event.stopPropagation();
 
-                modal.classList.add("show");
-                document.body.style.overflow = "hidden";
-            });
-        });
 
-        /* =====================================
-           CLOSE LIGHTBOX
-        ===================================== */
-        function closeLightbox() {
-            modal.classList.remove("show");
-            document.body.style.overflow = "";
-            lightboxImg.src = "";
-            caption.innerHTML = "";
+        // Open / close menu
+        dropdownMenu.classList.toggle("show");
+
+
+        // Check whether menu is open
+        const menuIsOpen =
+            dropdownMenu.classList.contains("show");
+
+
+        // ========================================
+        // CHANGE HAMBURGER ICON
+        // ========================================
+
+        const icon =
+            hamburger.querySelector("i");
+
+
+        if (menuIsOpen) {
+
+            icon.classList.remove("fa-bars");
+
+            icon.classList.add("fa-xmark");
+
+            hamburger.setAttribute(
+                "aria-expanded",
+                "true"
+            );
+
+            hamburger.setAttribute(
+                "aria-label",
+                "Close navigation menu"
+            );
+
+        } else {
+
+            icon.classList.remove("fa-xmark");
+
+            icon.classList.add("fa-bars");
+
+            hamburger.setAttribute(
+                "aria-expanded",
+                "false"
+            );
+
+            hamburger.setAttribute(
+                "aria-label",
+                "Open navigation menu"
+            );
         }
 
-        closeButton.addEventListener("click", closeLightbox);
+    });
 
-        modal.addEventListener("click", event => {
-            if (event.target === modal) {
-                closeLightbox();
-            }
+
+    // ========================================
+    // CLOSE MENU WHEN CLICKING OUTSIDE
+    // ========================================
+
+    document.addEventListener("click", function (event) {
+
+        const clickedInsideMenu =
+            dropdownMenu.contains(event.target);
+
+        const clickedHamburger =
+            hamburger.contains(event.target);
+
+
+        if (!clickedInsideMenu && !clickedHamburger) {
+
+            closeMenu();
+
+        }
+
+    });
+
+
+    // ========================================
+    // CLOSE MENU AFTER CLICKING A LINK
+    // ========================================
+
+    const menuLinks =
+        dropdownMenu.querySelectorAll(".dropdown-item");
+
+
+    menuLinks.forEach(function (link) {
+
+        link.addEventListener("click", function () {
+
+            closeMenu();
+
         });
 
-        document.addEventListener("keydown", event => {
-            if (event.key === "Escape") {
-                closeLightbox();
-                if (dropdownMenu) {
-                    dropdownMenu.classList.remove("show");
-                }
-            }
-        });
+    });
+
+
+    // ========================================
+    // CLOSE MENU FUNCTION
+    // ========================================
+
+    function closeMenu() {
+
+        dropdownMenu.classList.remove("show");
+
+
+        const icon =
+            hamburger.querySelector("i");
+
+
+        icon.classList.remove("fa-xmark");
+
+        icon.classList.add("fa-bars");
+
+
+        hamburger.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+
+        hamburger.setAttribute(
+            "aria-label",
+            "Open navigation menu"
+        );
+
     }
+
+
+    // ========================================
+    // ESCAPE KEY
+    // ========================================
+
+    document.addEventListener("keydown", function (event) {
+
+        if (event.key === "Escape") {
+
+            closeMenu();
+
+        }
+
+    });
+
 });
-
-/* =====================================
-   IMAGE ERROR HANDLER
-===================================== */
-function imageError(image) {
-    image.src = "https://via.placeholder.com/600x400?text=Image+Coming+Soon";
-    image.classList.add("error-img");
-    image.onerror = null; // Prevents infinite loops if placeholder fails
-}
