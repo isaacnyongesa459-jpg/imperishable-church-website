@@ -1,782 +1,695 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Imperishable Crown Bible Baptist Church | Leadership</title>
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-          rel="stylesheet">
+    <!-- Google Font -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
 
+    <!-- Leadership CSS -->
     <link rel="stylesheet" href="leadership.css">
 </head>
 
+
 <body>
 
-<!-- ================= NAVIGATION ================= -->
+    <!-- ========================================
+         NAVIGATION
+    ======================================== -->
 
-<nav class="navbar">
+    <nav class="navbar">
 
-    <div class="nav-container">
+        <div class="nav-container">
 
-        <a href="home.html" class="logo">
+            <!-- LOGO -->
 
-            <img src="images/church-logo.png"
-                 alt="Church Logo"
-                 class="logo-img"
-                 onerror="this.style.display='none'">
+            <a href="home.html" class="logo">
 
-            <span>Imperishable Crown</span>
+                <img
+                    src="images/church-logo.png"
+                    alt="Church Logo"
+                    class="logo-img"
+                >
 
-        </a>
+                <span>Imperishable Crown</span>
 
-        <button class="hamburger"
+            </a>
+
+
+            <!-- HAMBURGER -->
+
+            <button
+                class="hamburger"
                 id="hamburger"
                 type="button"
                 aria-label="Open navigation menu"
-                aria-expanded="false">
+                aria-expanded="false"
+            >
 
-            <i class="fas fa-bars"></i>
+                <i class="fas fa-bars"></i>
 
-        </button>
-
-    </div>
-
-</nav>
-
-
-<!-- ================= DROPDOWN MENU ================= -->
-
-<div class="dropdown-menu" id="dropdownMenu">
-
-    <div class="dropdown-content">
-
-        <a href="home.html" class="dropdown-item">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </a>
-
-        <a href="about.html" class="dropdown-item">
-            <i class="fas fa-church"></i>
-            <span>About Us</span>
-        </a>
-
-        <a href="services.html" class="dropdown-item">
-            <i class="fas fa-praying-hands"></i>
-            <span>Services</span>
-        </a>
-
-        <a href="leadership.html" class="dropdown-item active">
-            <i class="fas fa-users"></i>
-            <span>Leadership</span>
-        </a>
-
-        <a href="events.html" class="dropdown-item">
-            <i class="fas fa-calendar-alt"></i>
-            <span>Events</span>
-        </a>
-
-        <a href="donate.html" class="dropdown-item">
-            <i class="fas fa-hand-holding-heart"></i>
-            <span>Give</span>
-        </a>
-
-        <a href="contact.html" class="dropdown-item">
-            <i class="fas fa-envelope"></i>
-            <span>Contact</span>
-        </a>
-
-    </div>
-
-</div>
-
-
-<!-- ================= PAGE HEADER ================= -->
-
-<header class="page-header">
-
-    <div class="container">
-
-        <p class="eyebrow">
-            IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
-        </p>
-
-        <h1>
-            Church Leadership &amp; Members
-        </h1>
-
-        <p>
-            Meet our dedicated servants who lead and serve our church family.
-        </p>
-
-    </div>
-
-</header>
-
-
-<!-- ================= LEADERSHIP SECTION ================= -->
-
-<main>
-
-<section class="leadership-section">
-
-<div class="container">
-
-
-    <div class="section-title">
-
-        <h2>
-            Our Church Family
-        </h2>
-
-        <div class="title-line"></div>
-
-        <p>
-            Dedicated members who serve in various capacities
-            to build God's kingdom.
-        </p>
-
-    </div>
-
-
-    <!-- ================= FILTER BUTTONS ================= -->
-
-    <div class="filter-buttons">
-
-        <button class="filter-btn active"
-                data-filter="all"
-                type="button">
-
-            All Members
-
-        </button>
-
-
-        <button class="filter-btn"
-                data-filter="pastor"
-                type="button">
-
-            Pastoral Team
-
-        </button>
-
-
-        <button class="filter-btn"
-                data-filter="elder"
-                type="button">
-
-            Church Elders
-
-        </button>
-
-
-        <button class="filter-btn"
-                data-filter="deacon"
-                type="button">
-
-            Deacons
-
-        </button>
-
-
-        <button class="filter-btn"
-                data-filter="leader"
-                type="button">
-
-            Ministry Leaders
-
-        </button>
-
-    </div>
-
-
-    <!-- MEMBER COUNT -->
-
-    <div class="member-count" id="memberCount">
-
-        Showing <span>8</span> members
-
-    </div>
-
-
-    <!-- ================= MEMBERS ================= -->
-
-    <div class="leadership-grid" id="leadershipGrid">
-
-
-        <!-- MEMBER 1 -->
-
-        <article class="leader-card"
-
-                 data-category="pastor"
-
-                 data-name="Fred Wanyonyi"
-
-                 data-position="Senior Pastor & Founder"
-
-                 data-bio="Called to ministry in 2020, he leads the church with passion, vision and a commitment to God's Word."
-
-                 data-image="21.jpg">
-
-            <div class="leader-img-wrapper">
-
-                <img src="21.jpg"
-                     alt="Fred Wanyonyi"
-                     class="leader-img"
-                     onerror="this.src='https://via.placeholder.com/600x600?text=Pastor+Photo'">
-
-            </div>
-
-
-            <div class="leader-info">
-
-                <h3 class="leader-name">
-                    Fred Wanyonyi
-                </h3>
-
-                <p class="leader-position">
-                    Senior Pastor &amp; Founder
-                </p>
-
-                <p class="leader-bio">
-                    Called to ministry in 2020, leads with passion and vision.
-                </p>
-
-
-                <div class="social-icons">
-
-                    <a href="#" aria-label="Facebook">
-                        <i class="fab fa-facebook"></i>
-                    </a>
-
-                    <a href="#" aria-label="Twitter">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-
-                    <a href="#" aria-label="Email">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-
-                </div>
-
-            </div>
-
-        </article>
-
-
-
-        <!-- MEMBER 2 -->
-
-        <article class="leader-card"
-
-                 data-category="pastor"
-
-                 data-name="Pastor Sarah Wanjiku"
-
-                 data-position="Associate Pastor"
-
-                 data-bio="Heads women's ministry and discipleship programs, helping members grow in faith and service."
-
-                 data-image="22.jpg">
-
-            <div class="leader-img-wrapper">
-
-                <img src="22.jpg"
-                     alt="Pastor Sarah Wanjiku"
-                     class="leader-img"
-                     onerror="this.src='https://via.placeholder.com/600x600?text=Pastor+Photo'">
-
-            </div>
-
-
-            <div class="leader-info">
-
-                <h3 class="leader-name">
-                    Pastor Sarah Wanjiku
-                </h3>
-
-                <p class="leader-position">
-                    Associate Pastor
-                </p>
-
-                <p class="leader-bio">
-                    Heads women's ministry and discipleship programs.
-                </p>
-
-
-                <div class="social-icons">
-
-                    <a href="#">
-                        <i class="fab fa-facebook"></i>
-                    </a>
-
-                    <a href="#">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-
-                    <a href="#">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-
-                </div>
-
-            </div>
-
-        </article>
-
-
-
-        <!-- MEMBER 3 -->
-
-        <article class="leader-card"
-
-                 data-category="elder"
-
-                 data-name="Elder Peter Okoth"
-
-                 data-position="Church Elder"
-
-                 data-bio="Oversees church administration and finance while supporting the pastoral team."
-
-                 data-image="18.jpg">
-
-            <div class="leader-img-wrapper">
-
-                <img src="18.jpg"
-                     alt="Elder Peter Okoth"
-                     class="leader-img"
-                     onerror="this.src='https://via.placeholder.com/600x600?text=Elder+Photo'">
-
-            </div>
-
-
-            <div class="leader-info">
-
-                <h3 class="leader-name">
-                    Elder Peter Okoth
-                </h3>
-
-                <p class="leader-position">
-                    Church Elder
-                </p>
-
-                <p class="leader-bio">
-                    Oversees church administration and finance.
-                </p>
-
-
-                <div class="social-icons">
-
-                    <a href="#">
-                        <i class="fab fa-facebook"></i>
-                    </a>
-
-                    <a href="#">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-
-                    <a href="#">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-
-                </div>
-
-            </div>
-
-        </article>
-
-
-
-        <!-- MEMBER 4 -->
-
-        <article class="leader-card"
-
-                 data-category="elder"
-
-                 data-name="Elder Mary Atieno"
-
-                 data-position="Church Elder"
-
-                 data-bio="Leads prayer ministry and pastoral care, encouraging members through prayer and fellowship."
-
-                 data-image="17.jpg">
-
-            <div class="leader-img-wrapper">
-
-                <img src="17.jpg"
-                     alt="Elder Mary Atieno"
-                     class="leader-img"
-                     onerror="this.src='https://via.placeholder.com/600x600?text=Elder+Photo'">
-
-            </div>
-
-
-            <div class="leader-info">
-
-                <h3 class="leader-name">
-                    Elder Mary Atieno
-                </h3>
-
-                <p class="leader-position">
-                    Church Elder
-                </p>
-
-                <p class="leader-bio">
-                    Leads prayer ministry and pastoral care.
-                </p>
-
-
-                <div class="social-icons">
-
-                    <a href="#">
-                        <i class="fab fa-facebook"></i>
-                    </a>
-
-                    <a href="#">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-
-                    <a href="#">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-
-                </div>
-
-            </div>
-
-        </article>
-
-
-
-        <!-- MEMBER 5 -->
-
-        <article class="leader-card"
-
-                 data-category="deacon"
-
-                 data-name="Deacon James Omondi"
-
-                 data-position="Head Deacon"
-
-                 data-bio="Coordinates outreach and community service while supporting the practical ministry of the church."
-
-                 data-image="16.jpg">
-
-            <div class="leader-img-wrapper">
-
-                <img src="16.jpg"
-                     alt="Deacon James Omondi"
-                     class="leader-img"
-                     onerror="this.src='https://via.placeholder.com/600x600?text=Deacon+Photo'">
-
-            </div>
-
-
-            <div class="leader-info">
-
-                <h3 class="leader-name">
-                    Deacon James Omondi
-                </h3>
-
-                <p class="leader-position">
-                    Head Deacon
-                </p>
-
-                <p class="leader-bio">
-                    Coordinates outreach and community service.
-                </p>
-
-
-                <div class="social-icons">
-
-                    <a href="#">
-                        <i class="fab fa-facebook"></i>
-                    </a>
-
-                    <a href="#">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-
-                    <a href="#">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-
-                </div>
-
-            </div>
-
-        </article>
-
-
-
-        <!-- MEMBER 6 -->
-
-        <article class="leader-card"
-
-                 data-category="deacon"
-
-                 data-name="Deacon Lucy Wambui"
-
-                 data-position="Deaconess"
-
-                 data-bio="Heads hospitality and welcome ministry, helping visitors and members feel at home."
-
-                 data-image="15.jpg">
-
-            <div class="leader-img-wrapper">
-
-                <img src="15.jpg"
-                     alt="Deacon Lucy Wambui"
-                     class="leader-img"
-                     onerror="this.src='https://via.placeholder.com/600x600?text=Deacon+Photo'">
-
-            </div>
-
-
-            <div class="leader-info">
-
-                <h3 class="leader-name">
-                    Deacon Lucy Wambui
-                </h3>
-
-                <p class="leader-position">
-                    Deaconess
-                </p>
-
-                <p class="leader-bio">
-                    Heads hospitality and welcome ministry.
-                </p>
-
-
-                <div class="social-icons">
-
-                    <a href="#">
-                        <i class="fab fa-facebook"></i>
-                    </a>
-
-                    <a href="#">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-
-                    <a href="#">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-
-                </div>
-
-            </div>
-
-        </article>
-
-
-
-        <!-- MEMBER 7 -->
-
-        <article class="leader-card"
-
-                 data-category="leader"
-
-                 data-name="David Kipchoge"
-
-                 data-position="Youth Ministry Leader"
-
-                 data-bio="Passionate about empowering young people and helping them grow spiritually and practically."
-
-                 data-image="14.jpg">
-
-            <div class="leader-img-wrapper">
-
-                <img src="14.jpg"
-                     alt="David Kipchoge"
-                     class="leader-img"
-                     onerror="this.src='https://via.placeholder.com/600x600?text=Ministry+Leader'">
-
-            </div>
-
-
-            <div class="leader-info">
-
-                <h3 class="leader-name">
-                    David Kipchoge
-                </h3>
-
-                <p class="leader-position">
-                    Youth Ministry Leader
-                </p>
-
-                <p class="leader-bio">
-                    Passionate about empowering young people.
-                </p>
-
-
-                <div class="social-icons">
-
-                    <a href="#">
-                        <i class="fab fa-facebook"></i>
-                    </a>
-
-                    <a href="#">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-
-                    <a href="#">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-
-                </div>
-
-            </div>
-
-        </article>
-
-
-
-        <!-- MEMBER 8 -->
-
-        <article class="leader-card"
-
-                 data-category="leader"
-
-                 data-name="Grace Nyokabi"
-
-                 data-position="Children's Ministry Director"
-
-                 data-bio="Nurtures faith in the next generation through teaching, mentorship and children's ministry."
-
-                 data-image="13.jpg">
-
-            <div class="leader-img-wrapper">
-
-                <img src="13.jpg"
-                     alt="Grace Nyokabi"
-                     class="leader-img"
-                     onerror="this.src='https://via.placeholder.com/600x600?text=Ministry+Leader'">
-
-            </div>
-
-
-            <div class="leader-info">
-
-                <h3 class="leader-name">
-                    Grace Nyokabi
-                </h3>
-
-                <p class="leader-position">
-                    Children's Ministry Director
-                </p>
-
-                <p class="leader-bio">
-                    Nurturing faith in the next generation.
-                </p>
-
-
-                <div class="social-icons">
-
-                    <a href="#">
-                        <i class="fab fa-facebook"></i>
-                    </a>
-
-                    <a href="#">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-
-                    <a href="#">
-                        <i class="fas fa-envelope"></i>
-                    </a>
-
-                </div>
-
-            </div>
-
-        </article>
-
-
-    </div>
-
-</div>
-
-</section>
-
-</main>
-
-
-<!-- ================= MEMBER DETAILS MODAL ================= -->
-
-<div class="lightbox-modal"
-     id="lightboxModal"
-     aria-hidden="true">
-
-    <button class="close-lightbox"
-            id="closeLightbox"
-            type="button"
-            aria-label="Close">
-        &times;
-    </button>
-
-
-    <div class="lightbox-content">
-
-        <div class="lightbox-img-wrapper">
-
-            <img id="modalImage"
-                 class="lightbox-img"
-                 src=""
-                 alt="">
+            </button>
 
         </div>
 
-
-        <div class="lightbox-details">
-
-            <h2 id="modalName"></h2>
-
-            <p class="lightbox-position"
-               id="modalPosition"></p>
-
-            <p class="lightbox-bio"
-               id="modalBio"></p>
+    </nav>
 
 
-            <div class="lightbox-contact">
+    <!-- ========================================
+         DROPDOWN MENU
+    ======================================== -->
 
-                <p>
-                    <i class="fas fa-church"></i>
-                    Imperishable Crown Bible Baptist Church
-                </p>
+    <div class="dropdown-menu" id="dropdownMenu">
 
-                <p>
-                    <i class="fas fa-user"></i>
-                    Church Leadership &amp; Ministry
-                </p>
+        <div class="dropdown-content">
 
-            </div>
+            <a href="home.html" class="dropdown-item">
+
+                <i class="fas fa-home"></i>
+
+                <span>Home</span>
+
+            </a>
+
+
+            <a href="about.html" class="dropdown-item">
+
+                <i class="fas fa-church"></i>
+
+                <span>About Us</span>
+
+            </a>
+
+
+            <a href="services.html" class="dropdown-item">
+
+                <i class="fas fa-praying-hands"></i>
+
+                <span>Services</span>
+
+            </a>
+
+
+            <a
+                href="leadership.html"
+                class="dropdown-item active"
+            >
+
+                <i class="fas fa-users"></i>
+
+                <span>Leadership</span>
+
+            </a>
+
+
+            <a href="events.html" class="dropdown-item">
+
+                <i class="fas fa-calendar-alt"></i>
+
+                <span>Events</span>
+
+            </a>
+
+
+            <a href="donate.html" class="dropdown-item">
+
+                <i class="fas fa-hand-holding-heart"></i>
+
+                <span>Give</span>
+
+            </a>
+
+
+            <a href="contact.html" class="dropdown-item">
+
+                <i class="fas fa-envelope"></i>
+
+                <span>Contact</span>
+
+            </a>
 
         </div>
 
     </div>
 
-</div>
+
+    <!-- ========================================
+         PAGE HEADER
+    ======================================== -->
+
+    <header class="page-header">
+
+        <div class="container">
+
+            <p class="eyebrow">
+                IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
+            </p>
+
+            <h1>
+                Church Leadership &amp; Members
+            </h1>
+
+            <p>
+                Meet our dedicated servants who lead and serve
+                our church family.
+            </p>
+
+        </div>
+
+    </header>
 
 
-<!-- ================= FOOTER ================= -->
+    <!-- ========================================
+         MAIN CONTENT
+    ======================================== -->
 
-<footer class="footer">
+    <main>
 
-    <p>
-        &copy;
-        <span id="year"></span>
-        Imperishable Crown Bible Baptist Church.
-        All Rights Reserved.
-    </p>
+        <section class="leadership-section">
 
-</footer>
+            <div class="container">
 
 
-<script src="leadership.js"></script>
+                <!-- SECTION TITLE -->
 
-</body>
-</html>
+                <div class="section-title">
+
+                    <h2>
+                        Our Church Family
+                    </h2>
+
+                    <div class="title-line"></div>
+
+                    <p>
+                        Dedicated members who serve in various
+                        capacities to build God's kingdom.
+                    </p>
+
+                </div>
+
+
+                <!-- ========================================
+                     FILTER BUTTONS
+                ======================================== -->
+
+                <div class="filter-buttons">
+
+                    <button
+                        class="filter-btn active"
+                        data-filter="all"
+                        type="button"
+                    >
+                        All Members
+                    </button>
+
+
+                    <button
+                        class="filter-btn"
+                        data-filter="pastor"
+                        type="button"
+                    >
+                        Pastoral Team
+                    </button>
+
+
+                    <button
+                        class="filter-btn"
+                        data-filter="elder"
+                        type="button"
+                    >
+                        Church Elders
+                    </button>
+
+
+                    <button
+                        class="filter-btn"
+                        data-filter="deacon"
+                        type="button"
+                    >
+                        Deacons
+                    </button>
+
+
+                    <button
+                        class="filter-btn"
+                        data-filter="leader"
+                        type="button"
+                    >
+                        Ministry Leaders
+                    </button>
+
+                </div>
+
+
+                <!-- MEMBER COUNT -->
+
+                <div
+                    class="member-count"
+                    id="memberCount"
+                >
+                    Showing <span>8</span> members
+                </div>
+
+
+                <!-- ========================================
+                     LEADERSHIP GRID
+                ======================================== -->
+
+                <div
+                    class="leadership-grid"
+                    id="leadershipGrid"
+                >
+
+
+                    <!-- MEMBER 1 -->
+
+                    <article
+                        class="leader-card"
+                        data-category="pastor"
+                        data-name="Fred Wanyonyi"
+                        data-position="Senior Pastor & Founder"
+                        data-bio="Called to ministry in 2020, he leads the church with passion, vision and a commitment to God's Word."
+                        data-image="21.jpg"
+                    >
+
+                        <div class="leader-img-wrapper">
+
+                            <img
+                                src="21.jpg"
+                                alt="Fred Wanyonyi"
+                                class="leader-img"
+                            >
+
+                        </div>
+
+
+                        <div class="leader-info">
+
+                            <h3 class="leader-name">
+                                Fred Wanyonyi
+                            </h3>
+
+                            <p class="leader-position">
+                                Senior Pastor &amp; Founder
+                            </p>
+
+                            <p class="leader-bio">
+                                Called to ministry in 2020,
+                                leads with passion and vision.
+                            </p>
+
+
+                            <div class="social-icons">
+
+                                <a href="#" aria-label="Facebook">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+
+                                <a href="#" aria-label="Twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+
+                                <a href="#" aria-label="Email">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- MEMBER 2 -->
+
+                    <article
+                        class="leader-card"
+                        data-category="pastor"
+                        data-name="Pastor Sarah Wanjiku"
+                        data-position="Associate Pastor"
+                        data-bio="Heads women's ministry and discipleship programs, helping members grow in faith and service."
+                        data-image="22.jpg"
+                    >
+
+                        <div class="leader-img-wrapper">
+
+                            <img
+                                src="22.jpg"
+                                alt="Pastor Sarah Wanjiku"
+                                class="leader-img"
+                            >
+
+                        </div>
+
+
+                        <div class="leader-info">
+
+                            <h3 class="leader-name">
+                                Pastor Sarah Wanjiku
+                            </h3>
+
+                            <p class="leader-position">
+                                Associate Pastor
+                            </p>
+
+                            <p class="leader-bio">
+                                Heads women's ministry and
+                                discipleship programs.
+                            </p>
+
+
+                            <div class="social-icons">
+
+                                <a href="#" aria-label="Facebook">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+
+                                <a href="#" aria-label="Twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+
+                                <a href="#" aria-label="Email">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- MEMBER 3 -->
+
+                    <article
+                        class="leader-card"
+                        data-category="elder"
+                        data-name="Elder Peter Okoth"
+                        data-position="Church Elder"
+                        data-bio="Oversees church administration and finance while supporting the pastoral team."
+                        data-image="18.jpg"
+                    >
+
+                        <div class="leader-img-wrapper">
+
+                            <img
+                                src="18.jpg"
+                                alt="Elder Peter Okoth"
+                                class="leader-img"
+                            >
+
+                        </div>
+
+
+                        <div class="leader-info">
+
+                            <h3 class="leader-name">
+                                Elder Peter Okoth
+                            </h3>
+
+                            <p class="leader-position">
+                                Church Elder
+                            </p>
+
+                            <p class="leader-bio">
+                                Oversees church administration
+                                and finance.
+                            </p>
+
+
+                            <div class="social-icons">
+
+                                <a href="#" aria-label="Facebook">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+
+                                <a href="#" aria-label="Twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+
+                                <a href="#" aria-label="Email">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- MEMBER 4 -->
+
+                    <article
+                        class="leader-card"
+                        data-category="elder"
+                        data-name="Elder Mary Atieno"
+                        data-position="Church Elder"
+                        data-bio="Leads prayer ministry and pastoral care, encouraging members through prayer and fellowship."
+                        data-image="17.jpg"
+                    >
+
+                        <div class="leader-img-wrapper">
+
+                            <img
+                                src="17.jpg"
+                                alt="Elder Mary Atieno"
+                                class="leader-img"
+                            >
+
+                        </div>
+
+
+                        <div class="leader-info">
+
+                            <h3 class="leader-name">
+                                Elder Mary Atieno
+                            </h3>
+
+                            <p class="leader-position">
+                                Church Elder
+                            </p>
+
+                            <p class="leader-bio">
+                                Leads prayer ministry and
+                                pastoral care.
+                            </p>
+
+
+                            <div class="social-icons">
+
+                                <a href="#" aria-label="Facebook">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+
+                                <a href="#" aria-label="Twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+
+                                <a href="#" aria-label="Email">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- MEMBER 5 -->
+
+                    <article
+                        class="leader-card"
+                        data-category="deacon"
+                        data-name="Deacon James Omondi"
+                        data-position="Head Deacon"
+                        data-bio="Coordinates outreach and community service while supporting the practical ministry of the church."
+                        data-image="16.jpg"
+                    >
+
+                        <div class="leader-img-wrapper">
+
+                            <img
+                                src="16.jpg"
+                                alt="Deacon James Omondi"
+                                class="leader-img"
+                            >
+
+                        </div>
+
+
+                        <div class="leader-info">
+
+                            <h3 class="leader-name">
+                                Deacon James Omondi
+                            </h3>
+
+                            <p class="leader-position">
+                                Head Deacon
+                            </p>
+
+                            <p class="leader-bio">
+                                Coordinates outreach and
+                                community service.
+                            </p>
+
+
+                            <div class="social-icons">
+
+                                <a href="#" aria-label="Facebook">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+
+                                <a href="#" aria-label="Twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+
+                                <a href="#" aria-label="Email">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- MEMBER 6 -->
+
+                    <article
+                        class="leader-card"
+                        data-category="deacon"
+                        data-name="Deacon Lucy Wambui"
+                        data-position="Deaconess"
+                        data-bio="Heads hospitality and welcome ministry, helping visitors and members feel at home."
+                        data-image="15.jpg"
+                    >
+
+                        <div class="leader-img-wrapper">
+
+                            <img
+                                src="15.jpg"
+                                alt="Deacon Lucy Wambui"
+                                class="leader-img"
+                            >
+
+                        </div>
+
+
+                        <div class="leader-info">
+
+                            <h3 class="leader-name">
+                                Deacon Lucy Wambui
+                            </h3>
+
+                            <p class="leader-position">
+                                Deaconess
+                            </p>
+
+                            <p class="leader-bio">
+                                Heads hospitality and
+                                welcome ministry.
+                            </p>
+
+
+                            <div class="social-icons">
+
+                                <a href="#" aria-label="Facebook">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+
+                                <a href="#" aria-label="Twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+
+                                <a href="#" aria-label="Email">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- MEMBER 7 -->
+
+                    <article
+                        class="leader-card"
+                        data-category="leader"
+                        data-name="David Kipchoge"
+                        data-position="Youth Ministry Leader"
+                        data-bio="Passionate about empowering young people and helping them grow spiritually and practically."
+                        data-image="14.jpg"
+                    >
+
+                        <div class="leader-img-wrapper">
+
+                            <img
+                                src="14.jpg"
+                                alt="David Kipchoge"
+                                class="leader-img"
+                            >
+
+                        </div>
+
+
+                        <div class="leader-info">
+
+                            <h3 class="leader-name">
+                                David Kipchoge
+                            </h3>
+
+                            <p class="leader-position">
+                                Youth Ministry Leader
+                            </p>
+
+                            <p class="leader-bio">
+                                Passionate about empowering
+                                young people.
+                            </p>
+
+
+                            <div class="social-icons">
+
+                                <a href="#" aria-label="Facebook">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+
+                                <a href="#" aria-label="Twitter">
+                                    <i class="fab fa-twitter"></i>
+                                </a>
+
+                                <a href="#" aria-label="Email">
+                                    <i class="fas fa-envelope"></i>
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- MEMBER 8 -->
+
+                    <article
+                        class="leader-card"
+                        data-category="leader"
+       
