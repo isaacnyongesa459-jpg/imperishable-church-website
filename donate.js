@@ -5,6 +5,10 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    // ========================================
+    // ELEMENTS
+    // ========================================
+
     const hamburger =
         document.getElementById("hamburger");
 
@@ -14,6 +18,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const toast =
         document.getElementById("toastNotification");
 
+    const mainAmount =
+        document.getElementById("mainAmount");
+
+    const mpesaAmount =
+        document.getElementById("customMpesaAmount");
+
+    const mpesaPhone =
+        document.getElementById("mpesaPhoneNumber");
+
+    const mpesaBtn =
+        document.getElementById("mpesaBtn");
+
+    const paypalAmount =
+        document.getElementById("paypalAmount");
+
+    const paypalBtn =
+        document.getElementById("paypalBtn");
+
 
     // ========================================
     // HAMBURGER MENU
@@ -21,19 +43,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (hamburger && dropdownMenu) {
 
-        hamburger.addEventListener("click", () => {
+        hamburger.addEventListener("click", (event) => {
+
+            // Prevent document click from immediately
+            // closing the menu
+            event.stopPropagation();
 
             dropdownMenu.classList.toggle("show");
 
             const opened =
                 dropdownMenu.classList.contains("show");
 
+
+            // Update accessibility state
             hamburger.setAttribute(
                 "aria-expanded",
-                opened
+                opened ? "true" : "false"
             );
 
 
+            // Change hamburger icon
             hamburger.innerHTML = opened
                 ? '<i class="fas fa-times"></i>'
                 : '<i class="fas fa-bars"></i>';
@@ -41,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
 
+        // Close menu when clicking outside
         document.addEventListener("click", (event) => {
 
             if (
@@ -62,6 +92,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
         });
 
+
+        // Close menu after clicking a navigation link
+        const dropdownItems =
+            dropdownMenu.querySelectorAll(".dropdown-item");
+
+
+        dropdownItems.forEach((item) => {
+
+            item.addEventListener("click", () => {
+
+                dropdownMenu.classList.remove("show");
+
+                hamburger.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+                hamburger.innerHTML =
+                    '<i class="fas fa-bars"></i>';
+
+            });
+
+        });
+
     }
 
 
@@ -76,6 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
         toast.textContent = message;
 
         toast.classList.add("show");
+
 
         setTimeout(() => {
 
@@ -97,23 +152,33 @@ document.addEventListener("DOMContentLoaded", () => {
             const response =
                 await fetch("donation-config.json");
 
+
             if (!response.ok) {
+
                 throw new Error(
                     "Unable to load donation configuration."
                 );
+
             }
+
 
             const config =
                 await response.json();
 
 
-            // Display total contributions
+            // ========================================
+            // DISPLAY TOTAL CONTRIBUTIONS
+            // ========================================
 
-            if (config.totalContributions !== undefined) {
+            if (
+                mainAmount &&
+                config.totalContributions !== undefined
+            ) {
 
                 const amount =
-                    Number(config.totalContributions)
-                    .toLocaleString(
+                    Number(
+                        config.totalContributions
+                    ).toLocaleString(
                         "en-KE",
                         {
                             minimumFractionDigits: 2,
@@ -121,48 +186,35 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     );
 
-                document.getElementById("mainAmount")
-                    .textContent =
+
+                mainAmount.textContent =
                     `KES ${amount}`;
-
-            }
-
-
-            // Display bank information
-
-            if (config.bank) {
-
-                document.getElementById("bankName")
-                    .textContent =
-                    config.bank.bankName || "Not provided";
-
-                document.getElementById("accountName")
-                    .textContent =
-                    config.bank.accountName || "Not provided";
-
-                document.getElementById("accountNumber")
-                    .textContent =
-                    config.bank.accountNumber || "Not provided";
-
-                document.getElementById("bankBranch")
-                    .textContent =
-                    config.bank.branch || "Not provided";
 
             }
 
         } catch (error) {
 
-            console.error(error);
-
-            showToast(
-                "Donation information could not be loaded."
+            console.error(
+                "Configuration error:",
+                error
             );
+
+
+            // Don't make the whole donation page
+            // unusable if the config file fails.
+            if (mainAmount) {
+
+                mainAmount.textContent =
+                    "KES 0.00";
+
+            }
 
         }
 
     }
 
 
+    // Load configuration
     loadDonationConfig();
 
 
@@ -174,10 +226,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".amount-btn");
 
 
-    const mpesaAmount =
-        document.getElementById("customMpesaAmount");
-
-
     amountButtons.forEach((button) => {
 
         button.addEventListener("click", () => {
@@ -185,13 +233,24 @@ document.addEventListener("DOMContentLoaded", () => {
             const amount =
                 button.dataset.amount;
 
-            mpesaAmount.value = amount;
+
+            if (mpesaAmount) {
+
+                mpesaAmount.value = amount;
+
+            }
 
 
+            // Remove selected state
+            // from all buttons
             amountButtons.forEach((btn) => {
+
                 btn.classList.remove("selected");
+
             });
 
+
+            // Select clicked button
             button.classList.add("selected");
 
         });
@@ -200,345 +259,330 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     // ========================================
-    // M-PESA
+    // REMOVE SELECTED BUTTON
+    // WHEN CUSTOM AMOUNT IS TYPED
     // ========================================
 
-    const mpesaBtn =
-        document.getElementById("mpesaBtn");
+    if (mpesaAmount) {
 
+        mpesaAmount.addEventListener("input", () => {
+
+            amountButtons.forEach((button) => {
+
+                button.classList.remove("selected");
+
+            });
+
+        });
+
+    }
+
+
+    // ========================================
+    // M-PESA DONATION
+    // ========================================
 
     if (mpesaBtn) {
 
-        mpesaBtn.addEventListener("click", async () => {
+        mpesaBtn.addEventListener(
+            "click",
+            async () => {
 
-            const amount =
-                Number(mpesaAmount.value);
-
-            const phone =
-                document
-                    .getElementById("mpesaPhoneNumber")
-                    .value
-                    .trim();
-
-
-            if (!amount || amount < 10) {
-
-                showToast(
-                    "Please enter a valid donation amount."
-                );
-
-                return;
-
-            }
-
-
-            if (!phone) {
-
-                showToast(
-                    "Please enter your M-Pesa phone number."
-                );
-
-                return;
-
-            }
-
-
-            /*
-             * BACKEND INTEGRATION
-             *
-             * Later this request will go to:
-             *
-             * POST /api/donations/mpesa
-             *
-             * The Node.js backend will communicate
-             * with Safaricom Daraja.
-             */
-
-            try {
-
-                const response =
-                    await fetch("/api/donations/mpesa", {
-
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body: JSON.stringify({
-                            amount: amount,
-                            phone: phone,
-                            currency: "KES",
-                            purpose: "Church Donation"
-                        })
-
-                    });
-
-
-                const data =
-                    await response.json();
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        data.message ||
-                        "M-Pesa payment could not be started."
+                const amount =
+                    Number(
+                        mpesaAmount
+                            ? mpesaAmount.value
+                            : 0
                     );
+
+
+                const phone =
+                    mpesaPhone
+                        ? mpesaPhone.value.trim()
+                        : "";
+
+
+                // Validate amount
+                if (!amount || amount < 10) {
+
+                    showToast(
+                        "Please enter a valid donation amount of at least KES 10."
+                    );
+
+                    return;
 
                 }
 
 
-                showToast(
-                    data.message ||
-                    "Check your phone for the M-Pesa prompt."
-                );
+                // Validate phone
+                if (!phone) {
 
-
-            } catch (error) {
-
-                console.error(error);
-
-                showToast(
-                    "M-Pesa service is not connected yet."
-                );
-
-            }
-
-        });
-
-    }
-
-
-    // ========================================
-    // AIRTEL MONEY
-    // ========================================
-
-    const airtelBtn =
-        document.getElementById("airtelBtn");
-
-
-    if (airtelBtn) {
-
-        airtelBtn.addEventListener("click", async () => {
-
-            const amount =
-                Number(
-                    document.getElementById(
-                        "customAirtelAmount"
-                    ).value
-                );
-
-
-            const phone =
-                document.getElementById(
-                    "airtelPhoneNumber"
-                ).value.trim();
-
-
-            if (!amount || amount < 10) {
-
-                showToast(
-                    "Please enter a valid donation amount."
-                );
-
-                return;
-
-            }
-
-
-            if (!phone) {
-
-                showToast(
-                    "Please enter your Airtel phone number."
-                );
-
-                return;
-
-            }
-
-
-            try {
-
-                const response =
-                    await fetch(
-                        "/api/donations/airtel",
-                        {
-
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body: JSON.stringify({
-                                amount: amount,
-                                phone: phone,
-                                currency: "KES",
-                                purpose: "Church Donation"
-                            })
-
-                        }
+                    showToast(
+                        "Please enter your M-Pesa phone number."
                     );
 
-
-                const data =
-                    await response.json();
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        data.message ||
-                        "Airtel payment failed."
-                    );
+                    return;
 
                 }
 
 
-                showToast(
-                    data.message ||
-                    "Airtel Money payment initiated."
-                );
+                // Basic Kenyan phone validation
+                const cleanPhone =
+                    phone.replace(/\s+/g, "");
 
 
-            } catch (error) {
+                const validPhone =
+                    /^(?:2547\d{8}|07\d{8}|\+2547\d{8})$/
+                        .test(cleanPhone);
 
-                console.error(error);
 
-                showToast(
-                    "Airtel Money service is not connected yet."
-                );
+                if (!validPhone) {
+
+                    showToast(
+                        "Please enter a valid Kenyan M-Pesa phone number."
+                    );
+
+                    return;
+
+                }
+
+
+                // Disable button while processing
+                mpesaBtn.disabled = true;
+
+                mpesaBtn.innerHTML =
+                    '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+
+                try {
+
+                    /*
+                     * BACKEND INTEGRATION
+                     *
+                     * Your Node.js backend should handle:
+                     *
+                     * POST /api/donations/mpesa
+                     *
+                     * The backend communicates with
+                     * Safaricom Daraja.
+                     */
+
+                    const response =
+                        await fetch(
+                            "/api/donations/mpesa",
+                            {
+
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body: JSON.stringify({
+                                    amount: amount,
+                                    phone: cleanPhone,
+                                    currency: "KES",
+                                    purpose:
+                                        "Church Donation"
+                                })
+
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data.message ||
+                            "M-Pesa payment could not be started."
+                        );
+
+                    }
+
+
+                    showToast(
+                        data.message ||
+                        "Check your phone for the M-Pesa payment prompt."
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        "M-Pesa error:",
+                        error
+                    );
+
+
+                    showToast(
+                        error.message ||
+                        "M-Pesa service is not connected yet."
+                    );
+
+                } finally {
+
+                    // Restore button
+                    mpesaBtn.disabled = false;
+
+                    mpesaBtn.innerHTML =
+                        '<i class="fas fa-mobile-alt"></i> Donate via M-Pesa';
+
+                }
 
             }
-
-        });
-
-    }
-
-
-    // ========================================
-    // BANK PAYMENT
-    // ========================================
-
-    const bankBtn =
-        document.getElementById("bankBtn");
-
-
-    if (bankBtn) {
-
-        bankBtn.addEventListener("click", () => {
-
-            showToast(
-                "Bank payment integration will be connected to the backend."
-            );
-
-        });
+        );
 
     }
 
 
     // ========================================
-    // PAYPAL
+    // PAYPAL DONATION
     // ========================================
-
-    const paypalBtn =
-        document.getElementById("paypalBtn");
-
 
     if (paypalBtn) {
 
-        paypalBtn.addEventListener("click", async () => {
+        paypalBtn.addEventListener(
+            "click",
+            async () => {
 
-            const amount =
-                Number(
-                    document.getElementById(
-                        "paypalAmount"
-                    ).value
-                );
-
-
-            if (!amount || amount <= 0) {
-
-                showToast(
-                    "Please enter a valid PayPal amount."
-                );
-
-                return;
-
-            }
-
-
-            /*
-             * Later:
-             *
-             * POST /api/donations/paypal
-             *
-             * Backend creates the PayPal order.
-             */
-
-            try {
-
-                const response =
-                    await fetch(
-                        "/api/donations/paypal",
-                        {
-
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body: JSON.stringify({
-                                amount: amount,
-                                currency: "USD",
-                                purpose: "Church Donation"
-                            })
-
-                        }
+                const amount =
+                    Number(
+                        paypalAmount
+                            ? paypalAmount.value
+                            : 0
                     );
 
 
-                const data =
-                    await response.json();
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        data.message ||
-                        "PayPal payment could not be started."
-                    );
-
-                }
-
-
-                if (data.approvalUrl) {
-
-                    window.location.href =
-                        data.approvalUrl;
-
-                } else {
+                // Validate amount
+                if (!amount || amount <= 0) {
 
                     showToast(
-                        data.message ||
-                        "PayPal integration is not ready."
+                        "Please enter a valid PayPal donation amount."
                     );
+
+                    return;
 
                 }
 
 
-            } catch (error) {
+                // Disable button while processing
+                paypalBtn.disabled = true;
 
-                console.error(error);
+                paypalBtn.innerHTML =
+                    '<i class="fas fa-spinner fa-spin"></i> Processing...';
 
-                showToast(
-                    "PayPal service is not connected yet."
-                );
+
+                try {
+
+                    /*
+                     * BACKEND INTEGRATION
+                     *
+                     * Your Node.js backend should handle:
+                     *
+                     * POST /api/donations/paypal
+                     *
+                     * The backend creates the PayPal order
+                     * and returns the approval URL.
+                     */
+
+                    const response =
+                        await fetch(
+                            "/api/donations/paypal",
+                            {
+
+                                method: "POST",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body: JSON.stringify({
+                                    amount: amount,
+                                    currency: "USD",
+                                    purpose:
+                                        "Church Donation"
+                                })
+
+                            }
+                        );
+
+
+                    const data =
+                        await response.json();
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            data.message ||
+                            "PayPal payment could not be started."
+                        );
+
+                    }
+
+
+                    // Redirect donor to PayPal
+                    if (data.approvalUrl) {
+
+                        window.location.href =
+                            data.approvalUrl;
+
+                    } else {
+
+                        showToast(
+                            data.message ||
+                            "PayPal integration is not ready."
+                        );
+
+                    }
+
+
+                } catch (error) {
+
+                    console.error(
+                        "PayPal error:",
+                        error
+                    );
+
+
+                    showToast(
+                        error.message ||
+                        "PayPal service is not connected yet."
+                    );
+
+                } finally {
+
+                    // Restore button
+                    paypalBtn.disabled = false;
+
+                    paypalBtn.innerHTML =
+                        '<i class="fab fa-paypal"></i> Donate with PayPal';
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // ========================================
+    // PREVENT NEGATIVE AMOUNTS
+    // ========================================
+
+    if (mpesaAmount) {
+
+        mpesaAmount.addEventListener("input", () => {
+
+            if (Number(mpesaAmount.value) < 0) {
+
+                mpesaAmount.value = "";
 
             }
 
@@ -547,111 +591,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    // ========================================
-    // VENMO
-    // ========================================
+    if (paypalAmount) {
 
-    const venmoBtn =
-        document.getElementById("venmoBtn");
+        paypalAmount.addEventListener("input", () => {
 
+            if (Number(paypalAmount.value) < 0) {
 
-    if (venmoBtn) {
-
-        venmoBtn.addEventListener("click", async () => {
-
-            const amount =
-                Number(
-                    document.getElementById(
-                        "venmoAmount"
-                    ).value
-                );
-
-
-            if (!amount || amount <= 0) {
-
-                showToast(
-                    "Please enter a valid Venmo amount."
-                );
-
-                return;
-
-            }
-
-
-            /*
-             * Later:
-             *
-             * POST /api/donations/venmo
-             *
-             * The backend will handle the
-             * payment-provider integration.
-             */
-
-            try {
-
-                const response =
-                    await fetch(
-                        "/api/donations/venmo",
-                        {
-
-                            method: "POST",
-
-                            headers: {
-                                "Content-Type":
-                                    "application/json"
-                            },
-
-                            body: JSON.stringify({
-                                amount: amount,
-                                currency: "USD",
-                                purpose: "Church Donation"
-                            })
-
-                        }
-                    );
-
-
-                const data =
-                    await response.json();
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        data.message ||
-                        "Venmo payment could not be started."
-                    );
-
-                }
-
-
-                if (data.approvalUrl) {
-
-                    window.location.href =
-                        data.approvalUrl;
-
-                } else {
-
-                    showToast(
-                        data.message ||
-                        "Venmo integration is not ready."
-                    );
-
-                }
-
-
-            } catch (error) {
-
-                console.error(error);
-
-                showToast(
-                    "Venmo service is not connected yet."
-                );
+                paypalAmount.value = "";
 
             }
 
         });
 
     }
+
 
 });
