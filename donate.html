@@ -144,6 +144,7 @@
             <!-- Payment Methods -->
             <div class="payment-methods">
 
+
                 <!-- M-PESA -->
                 <div class="donation-card">
 
@@ -244,128 +245,6 @@
                 </div>
 
 
-                <!-- AIRTEL MONEY -->
-                <div class="donation-card">
-
-                    <div class="payment-icon airtel-icon">
-                        <i class="fas fa-mobile-screen-button"></i>
-                    </div>
-
-                    <h3>
-                        Airtel Money
-                    </h3>
-
-                    <p>
-                        Donate using Airtel Money
-                    </p>
-
-
-                    <input
-                        type="number"
-                        id="customAirtelAmount"
-                        class="custom-amount"
-                        placeholder="Amount (KES)"
-                        min="10"
-                        step="1"
-                    >
-
-
-                    <input
-                        type="tel"
-                        id="airtelPhoneNumber"
-                        class="phone-input"
-                        placeholder="Airtel phone number"
-                        inputmode="numeric"
-                        autocomplete="tel"
-                    >
-
-
-                    <button
-                        id="airtelBtn"
-                        class="pay-btn airtel-btn"
-                    >
-                        <i class="fas fa-mobile-alt"></i>
-                        Donate via Airtel
-                    </button>
-
-
-                    <div class="payment-instructions">
-
-                        <strong>
-                            <i class="fas fa-info-circle"></i>
-                            Airtel Money
-                        </strong>
-
-                        <p>
-                            Your payment will be processed
-                            through the Airtel Money API.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <!-- BANK -->
-                <div class="donation-card">
-
-                    <div class="payment-icon bank-icon">
-                        <i class="fas fa-building-columns"></i>
-                    </div>
-
-                    <h3>
-                        Bank Transfer
-                    </h3>
-
-                    <p>
-                        Make a direct bank contribution
-                    </p>
-
-
-                    <div class="bank-details">
-
-                        <p>
-                            <strong>Bank:</strong>
-                            <span id="bankName">
-                                Loading...
-                            </span>
-                        </p>
-
-                        <p>
-                            <strong>Account Name:</strong>
-                            <span id="accountName">
-                                Loading...
-                            </span>
-                        </p>
-
-                        <p>
-                            <strong>Account Number:</strong>
-                            <span id="accountNumber">
-                                Loading...
-                            </span>
-                        </p>
-
-                        <p>
-                            <strong>Branch:</strong>
-                            <span id="bankBranch">
-                                Loading...
-                            </span>
-                        </p>
-
-                    </div>
-
-
-                    <button
-                        id="bankBtn"
-                        class="pay-btn bank-btn"
-                    >
-                        <i class="fas fa-building-columns"></i>
-                        Continue with Bank
-                    </button>
-
-                </div>
-
-
                 <!-- PAYPAL -->
                 <div class="donation-card">
 
@@ -402,42 +281,6 @@
 
                 </div>
 
-
-                <!-- VENMO -->
-                <div class="donation-card">
-
-                    <div class="payment-icon venmo-icon">
-                        <i class="fas fa-wallet"></i>
-                    </div>
-
-                    <h3>
-                        Venmo
-                    </h3>
-
-                    <p>
-                        Donate through Venmo
-                    </p>
-
-
-                    <input
-                        type="number"
-                        id="venmoAmount"
-                        class="custom-amount"
-                        placeholder="Amount"
-                        min="1"
-                        step="0.01"
-                    >
-
-
-                    <button
-                        id="venmoBtn"
-                        class="pay-btn venmo-btn"
-                    >
-                        <i class="fas fa-wallet"></i>
-                        Donate with Venmo
-                    </button>
-
-                </div>
 
             </div>
 
