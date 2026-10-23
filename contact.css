@@ -4,7 +4,9 @@
 ======================================== */
 
 
-/* RESET */
+/* ========================================
+   RESET
+======================================== */
 
 * {
     margin: 0;
@@ -12,11 +14,9 @@
     box-sizing: border-box;
 }
 
-
 html {
     scroll-behavior: smooth;
 }
-
 
 body {
     font-family: 'Poppins', sans-serif;
@@ -34,7 +34,6 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-
     width: 100%;
 
     background: rgba(20, 20, 20, 0.95);
@@ -44,78 +43,78 @@ body {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
-
 .nav-container {
     max-width: 1200px;
-
     margin: auto;
-
     padding: 15px 25px;
 
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
 }
 
 
-/* LOGO */
+/* ========================================
+   LOGO
+======================================== */
 
 .logo {
     display: flex;
-
     align-items: center;
-
     gap: 10px;
 
     color: white;
 }
 
-
 .logo-img {
     width: 45px;
-
     height: 45px;
 
     object-fit: cover;
-
     border-radius: 50%;
 }
 
-
 .logo-name {
     font-size: 1rem;
-
     font-weight: 600;
 }
 
 
-/* HAMBURGER */
+/* ========================================
+   HAMBURGER
+======================================== */
 
 .hamburger {
     width: 45px;
-
     height: 45px;
 
     border: none;
-
     border-radius: 8px;
 
     background: transparent;
-
     color: white;
 
     font-size: 1.5rem;
 
     cursor: pointer;
 
-    transition: 0.3s;
-}
+    transition: background 0.3s ease,
+                transform 0.2s ease;
 
+    -webkit-tap-highlight-color: transparent;
+}
 
 .hamburger:hover {
     background: rgba(255, 255, 255, 0.1);
+}
+
+.hamburger:active {
+    transform: scale(0.95);
+}
+
+.hamburger:focus-visible {
+    outline: 2px solid #e67e22;
+    outline-offset: 2px;
 }
 
 
@@ -127,7 +126,6 @@ body {
     position: fixed;
 
     top: 75px;
-
     right: 20px;
 
     width: 250px;
@@ -136,72 +134,75 @@ body {
 
     border-radius: 12px;
 
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.25);
 
     z-index: 999;
 
     opacity: 0;
-
     visibility: hidden;
 
     transform: translateY(-10px);
 
-    transition: all 0.3s ease;
+    transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease,
+        transform 0.3s ease;
 }
 
+
+/* OPEN MENU */
 
 .dropdown-menu.show {
     opacity: 1;
-
     visibility: visible;
-
     transform: translateY(0);
 }
 
+
+/* Dropdown Content */
 
 .dropdown-content {
     padding: 10px;
 }
 
 
+/* Dropdown Items */
+
 .dropdown-item {
     display: flex;
-
     align-items: center;
-
     gap: 12px;
 
     padding: 13px 15px;
 
     color: #333;
-
     text-decoration: none;
 
     border-radius: 8px;
 
     font-weight: 500;
 
-    transition: 0.3s;
+    transition:
+        background 0.3s ease,
+        color 0.3s ease;
 }
-
 
 .dropdown-item i {
     width: 20px;
-
     text-align: center;
 }
 
-
 .dropdown-item:hover {
     background: #f1f1f1;
-
     color: #e67e22;
 }
 
 
+/* Active Page */
+
 .dropdown-item.active {
     background: #e67e22;
-
     color: white;
 }
 
@@ -216,9 +217,7 @@ body {
     padding: 140px 20px 70px;
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
     text-align: center;
@@ -233,21 +232,17 @@ body {
         url('11.jpg');
 
     background-size: cover;
-
     background-position: center;
+    background-repeat: no-repeat;
 }
-
 
 .page-header h1 {
     font-size: 3rem;
-
     margin-bottom: 10px;
 }
 
-
 .page-header p {
     font-size: 1.1rem;
-
     color: rgba(255, 255, 255, 0.9);
 }
 
@@ -260,10 +255,8 @@ body {
     padding: 80px 20px;
 }
 
-
 .container {
     max-width: 1100px;
-
     margin: auto;
 }
 
@@ -275,8 +268,7 @@ body {
 .contact-wrapper {
     display: grid;
 
-    grid-template-columns:
-        1fr 1.2fr;
+    grid-template-columns: 1fr 1.2fr;
 
     gap: 50px;
 
@@ -296,7 +288,6 @@ body {
     gap: 20px;
 }
 
-
 .info-card {
     padding: 25px;
 
@@ -304,14 +295,15 @@ body {
 
     border-radius: 12px;
 
+    border-left: 4px solid #e67e22;
+
     box-shadow:
         0 5px 20px rgba(0, 0, 0, 0.08);
 
-    border-left: 4px solid #e67e22;
-
-    transition: 0.3s;
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
 }
-
 
 .info-card:hover {
     transform: translateY(-5px);
@@ -319,7 +311,6 @@ body {
     box-shadow:
         0 10px 25px rgba(0, 0, 0, 0.12);
 }
-
 
 .info-card i {
     font-size: 1.8rem;
@@ -329,13 +320,11 @@ body {
     margin-bottom: 12px;
 }
 
-
 .info-card h3 {
     margin-bottom: 8px;
 
     font-size: 1.2rem;
 }
-
 
 .info-card p {
     color: #666;
@@ -359,7 +348,6 @@ body {
         0 5px 25px rgba(0, 0, 0, 0.08);
 }
 
-
 .contact-form h3 {
     font-size: 1.6rem;
 
@@ -369,10 +357,13 @@ body {
 }
 
 
+/* ========================================
+   FORM GROUP
+======================================== */
+
 .form-group {
     margin-bottom: 20px;
 }
-
 
 .form-group label {
     display: block;
@@ -383,7 +374,6 @@ body {
 
     color: #444;
 }
-
 
 .form-group input,
 .form-group textarea {
@@ -403,9 +393,10 @@ body {
 
     outline: none;
 
-    transition: 0.3s;
+    transition:
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
 }
-
 
 .form-group input:focus,
 .form-group textarea:focus {
@@ -414,7 +405,6 @@ body {
     box-shadow:
         0 0 0 3px rgba(230, 126, 34, 0.12);
 }
-
 
 .form-group textarea {
     resize: vertical;
@@ -431,7 +421,6 @@ body {
     display: inline-flex;
 
     align-items: center;
-
     justify-content: center;
 
     gap: 8px;
@@ -448,9 +437,12 @@ body {
 
     cursor: pointer;
 
-    transition: 0.3s;
+    transition:
+        background 0.3s ease,
+        border-color 0.3s ease,
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
 }
-
 
 .btn-primary {
     border: 2px solid #e67e22;
@@ -459,7 +451,6 @@ body {
 
     color: white;
 }
-
 
 .btn-primary:hover {
     background: #d35400;
@@ -470,6 +461,10 @@ body {
 
     box-shadow:
         0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
 }
 
 
@@ -484,7 +479,6 @@ body {
 
     padding-top: 60px;
 }
-
 
 .footer-content {
     max-width: 1100px;
@@ -501,13 +495,11 @@ body {
     gap: 40px;
 }
 
-
 .footer-section h3 {
     margin-bottom: 20px;
 
     font-size: 1.1rem;
 }
-
 
 .footer-section p {
     margin-bottom: 10px;
@@ -517,22 +509,19 @@ body {
     font-size: 0.9rem;
 }
 
-
 .footer-section p i {
     width: 22px;
 
     color: #e67e22;
 }
 
-
 .footer-section a {
     color: #ccc;
 
     text-decoration: none;
 
-    transition: 0.3s;
+    transition: color 0.3s ease;
 }
-
 
 .footer-section a:hover {
     color: #e67e22;
@@ -549,16 +538,13 @@ body {
     gap: 15px;
 }
 
-
 .social-links a {
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 
     width: 40px;
-
     height: 40px;
 
     border-radius: 50%;
@@ -569,9 +555,10 @@ body {
 
     text-decoration: none;
 
-    transition: 0.3s;
+    transition:
+        background 0.3s ease,
+        transform 0.3s ease;
 }
-
 
 .social-links a:hover {
     background: #e67e22;
@@ -603,17 +590,19 @@ body {
 
 @media (max-width: 768px) {
 
+    .nav-container {
+        padding: 13px 20px;
+    }
+
     .page-header {
         min-height: 280px;
 
         padding-top: 120px;
     }
 
-
     .page-header h1 {
         font-size: 2.2rem;
     }
-
 
     .contact-wrapper {
         grid-template-columns: 1fr;
@@ -621,13 +610,11 @@ body {
         gap: 35px;
     }
 
-
     .footer-content {
         grid-template-columns: 1fr;
 
         text-align: center;
     }
-
 
     .social-links {
         justify-content: center;
@@ -641,53 +628,102 @@ body {
 
 @media (max-width: 480px) {
 
+    .nav-container {
+        padding: 12px 15px;
+    }
+
+    .logo {
+        gap: 8px;
+    }
+
     .logo-name {
         font-size: 0.85rem;
     }
 
-
     .logo-img {
         width: 38px;
-
         height: 38px;
     }
 
+    .hamburger {
+        width: 42px;
+        height: 42px;
+        font-size: 1.35rem;
+    }
 
     .dropdown-menu {
-        left: 10px;
+        top: 68px;
 
+        left: 10px;
         right: 10px;
 
         width: auto;
     }
 
+    .dropdown-item {
+        padding: 12px 14px;
+    }
 
     .section {
         padding: 60px 15px;
     }
 
+    .page-header {
+        min-height: 250px;
+
+        padding: 110px 15px 50px;
+    }
 
     .page-header h1 {
         font-size: 1.8rem;
     }
 
-
     .page-header p {
         font-size: 0.95rem;
     }
-
 
     .contact-form {
         padding: 25px 20px;
     }
 
-
     .contact-form h3 {
         font-size: 1.35rem;
     }
 
-
     .btn {
         width: 100%;
+    }
+
+    .footer {
+        padding-top: 45px;
+    }
+}
+
+
+/* ========================================
+   VERY SMALL PHONES
+======================================== */
+
+@media (max-width: 360px) {
+
+    .logo-name {
+        font-size: 0.75rem;
+    }
+
+    .logo-img {
+        width: 35px;
+        height: 35px;
+    }
+
+    .dropdown-menu {
+        top: 65px;
+    }
+
+    .page-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .contact-form {
+        padding: 20px 15px;
     }
 }
