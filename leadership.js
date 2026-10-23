@@ -1,79 +1,51 @@
-// ========================================
-// IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
-// LEADERSHIP PAGE JAVASCRIPT
-// ========================================
-
+/* ========================================
+   IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
+   LEADERSHIP PAGE JAVASCRIPT
+======================================== */
 
 document.addEventListener("DOMContentLoaded", function () {
 
+    /* ========================================
+       HAMBURGER MENU
+    ======================================== */
 
-    // ========================================
-    // NAVIGATION
-    // ========================================
-
-    const hamburger =
-        document.getElementById("hamburger");
-
-    const dropdownMenu =
-        document.getElementById("dropdownMenu");
-
-
-    // Check that navigation exists
+    const hamburger = document.getElementById("hamburger");
+    const dropdownMenu = document.getElementById("dropdownMenu");
 
     if (hamburger && dropdownMenu) {
 
-
-        // ========================================
-        // OPEN / CLOSE MENU
-        // ========================================
-
         hamburger.addEventListener("click", function () {
 
-            dropdownMenu.classList.toggle("show");
-
-
-            const menuIsOpen =
-                dropdownMenu.classList.contains("show");
-
+            const isOpen =
+                dropdownMenu.classList.toggle("show");
 
             hamburger.setAttribute(
                 "aria-expanded",
-                menuIsOpen
+                isOpen
             );
 
+            if (isOpen) {
 
-            // Change hamburger icon
-
-            const icon =
-                hamburger.querySelector("i");
-
-
-            if (menuIsOpen) {
-
-                icon.classList.remove("fa-bars");
-
-                icon.classList.add("fa-xmark");
+                hamburger.innerHTML =
+                    '<i class="fas fa-times"></i>';
 
             } else {
 
-                icon.classList.remove("fa-xmark");
-
-                icon.classList.add("fa-bars");
-
+                hamburger.innerHTML =
+                    '<i class="fas fa-bars"></i>';
             }
 
         });
 
 
-        // ========================================
-        // CLOSE MENU AFTER CLICKING A LINK
-        // ========================================
+        /* ========================================
+           CLOSE MENU AFTER CLICKING A LINK
+        ======================================== */
 
-        const menuLinks =
-            document.querySelectorAll(".dropdown-item");
+        const navigationLinks =
+            dropdownMenu.querySelectorAll("a");
 
-
-        menuLinks.forEach(function (link) {
+        navigationLinks.forEach(function (link) {
 
             link.addEventListener("click", function () {
 
@@ -84,60 +56,76 @@ document.addEventListener("DOMContentLoaded", function () {
                     "false"
                 );
 
-
-                const icon =
-                    hamburger.querySelector("i");
-
-
-                icon.classList.remove("fa-xmark");
-
-                icon.classList.add("fa-bars");
+                hamburger.innerHTML =
+                    '<i class="fas fa-bars"></i>';
 
             });
 
         });
 
 
-        // ========================================
-        // CLOSE MENU WHEN CLICKING OUTSIDE
-        // ========================================
+        /* ========================================
+           CLOSE MENU WHEN CLICKING OUTSIDE
+        ======================================== */
 
-        document.addEventListener(
-            "click",
-            function (event) {
+        document.addEventListener("click", function (event) {
 
-                if (
-                    !dropdownMenu.contains(event.target) &&
-                    !hamburger.contains(event.target)
-                ) {
+            const clickedInsideMenu =
+                dropdownMenu.contains(event.target);
 
-                    dropdownMenu.classList.remove("show");
+            const clickedHamburger =
+                hamburger.contains(event.target);
 
-                    hamburger.setAttribute(
-                        "aria-expanded",
-                        "false"
-                    );
+            if (
+                !clickedInsideMenu &&
+                !clickedHamburger &&
+                dropdownMenu.classList.contains("show")
+            ) {
 
+                dropdownMenu.classList.remove("show");
 
-                    const icon =
-                        hamburger.querySelector("i");
+                hamburger.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
 
-
-                    icon.classList.remove("fa-xmark");
-
-                    icon.classList.add("fa-bars");
-
-                }
-
+                hamburger.innerHTML =
+                    '<i class="fas fa-bars"></i>';
             }
-        );
+
+        });
+
+
+        /* ========================================
+           CLOSE MENU WITH ESCAPE KEY
+        ======================================== */
+
+        document.addEventListener("keydown", function (event) {
+
+            if (
+                event.key === "Escape" &&
+                dropdownMenu.classList.contains("show")
+            ) {
+
+                dropdownMenu.classList.remove("show");
+
+                hamburger.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+                hamburger.innerHTML =
+                    '<i class="fas fa-bars"></i>';
+            }
+
+        });
 
     }
 
 
-    // ========================================
-    // MEMBER FILTERING
-    // ========================================
+    /* ========================================
+       LEADERSHIP FILTER
+    ======================================== */
 
     const filterButtons =
         document.querySelectorAll(".filter-btn");
@@ -151,323 +139,96 @@ document.addEventListener("DOMContentLoaded", function () {
 
     filterButtons.forEach(function (button) {
 
-        button.addEventListener(
-            "click",
-            function () {
+        button.addEventListener("click", function () {
 
+            const selectedFilter =
+                button.getAttribute("data-filter");
 
-                const selectedFilter =
-                    button.getAttribute("data-filter");
 
+            /* Remove active class */
+            filterButtons.forEach(function (btn) {
 
-                // Remove active state
+                btn.classList.remove("active");
 
-                filterButtons.forEach(
-                    function (btn) {
+            });
 
-                        btn.classList.remove("active");
 
-                    }
-                );
+            /* Add active class */
+            button.classList.add("active");
 
 
-                // Activate selected button
+            /* Count visible members */
+            let visibleMembers = 0;
 
-                button.classList.add("active");
 
+            /* Filter cards */
+            leaderCards.forEach(function (card) {
 
-                let visibleMembers = 0;
-
-
-                // Check every member
-
-                leaderCards.forEach(
-                    function (card) {
-
-
-                        const category =
-                            card.getAttribute(
-                                "data-category"
-                            );
-
-
-                        if (
-                            selectedFilter === "all" ||
-                            category === selectedFilter
-                        ) {
-
-                            card.classList.remove(
-                                "hidden"
-                            );
-
-                            visibleMembers++;
-
-                        } else {
-
-                            card.classList.add(
-                                "hidden"
-                            );
-
-                        }
-
-                    }
-                );
-
-
-                // Update member count
-
-                if (memberCount) {
-
-                    memberCount.innerHTML =
-                        `Showing <span>${visibleMembers}</span> members`;
-
-                }
-
-            }
-        );
-
-    });
-
-
-    // ========================================
-    // MEMBER DETAILS MODAL
-    // ========================================
-
-    const lightboxModal =
-        document.getElementById(
-            "lightboxModal"
-        );
-
-
-    const closeLightbox =
-        document.getElementById(
-            "closeLightbox"
-        );
-
-
-    const modalImage =
-        document.getElementById(
-            "modalImage"
-        );
-
-
-    const modalName =
-        document.getElementById(
-            "modalName"
-        );
-
-
-    const modalPosition =
-        document.getElementById(
-            "modalPosition"
-        );
-
-
-    const modalBio =
-        document.getElementById(
-            "modalBio"
-        );
-
-
-    // ========================================
-    // OPEN MEMBER MODAL
-    // ========================================
-
-    leaderCards.forEach(function (card) {
-
-        card.addEventListener(
-            "click",
-            function (event) {
-
-
-                // Don't open the modal if
-                // social media icon was clicked
-
-                if (
-                    event.target.closest(
-                        ".social-icons a"
-                    )
-                ) {
-
-                    return;
-
-                }
-
-
-                // Get member information
-
-                const name =
-                    card.getAttribute(
-                        "data-name"
-                    );
-
-
-                const position =
-                    card.getAttribute(
-                        "data-position"
-                    );
-
-
-                const bio =
-                    card.getAttribute(
-                        "data-bio"
-                    );
-
-
-                const image =
-                    card.getAttribute(
-                        "data-image"
-                    );
-
-
-                // Put information in modal
-
-                modalName.textContent =
-                    name;
-
-
-                modalPosition.textContent =
-                    position;
-
-
-                modalBio.textContent =
-                    bio;
-
-
-                modalImage.src =
-                    image;
-
-
-                modalImage.alt =
-                    name;
-
-
-                // Show modal
-
-                lightboxModal.classList.add(
-                    "show"
-                );
-
-
-                lightboxModal.setAttribute(
-                    "aria-hidden",
-                    "false"
-                );
-
-
-                // Stop page scrolling
-
-                document.body.style.overflow =
-                    "hidden";
-
-            }
-        );
-
-    });
-
-
-    // ========================================
-    // CLOSE MODAL FUNCTION
-    // ========================================
-
-    function closeModal() {
-
-        lightboxModal.classList.remove(
-            "show"
-        );
-
-
-        lightboxModal.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-
-
-        document.body.style.overflow =
-            "";
-
-    }
-
-
-    // ========================================
-    // CLOSE BUTTON
-    // ========================================
-
-    if (closeLightbox) {
-
-        closeLightbox.addEventListener(
-            "click",
-            closeModal
-        );
-
-    }
-
-
-    // ========================================
-    // CLICK OUTSIDE MODAL
-    // ========================================
-
-    if (lightboxModal) {
-
-        lightboxModal.addEventListener(
-            "click",
-            function (event) {
+                const category =
+                    card.getAttribute("data-category");
 
 
                 if (
-                    event.target ===
-                    lightboxModal
+                    selectedFilter === "all" ||
+                    category === selectedFilter
                 ) {
 
-                    closeModal();
+                    card.classList.remove("hidden");
+
+                    visibleMembers++;
+
+                } else {
+
+                    card.classList.add("hidden");
 
                 }
 
+            });
+
+
+            /* Update count */
+            if (memberCount) {
+
+                memberCount.innerHTML =
+                    `Showing <span>${visibleMembers}</span> members`;
+
             }
-        );
+
+        });
 
     }
 
 
-    // ========================================
-    // ESCAPE KEY
-    // ========================================
+    /* ========================================
+       CURRENT YEAR
+    ======================================== */
 
-    document.addEventListener(
-        "keydown",
-        function (event) {
+    const currentYear =
+        document.getElementById("currentYear");
 
+    if (currentYear) {
 
-            if (
-                event.key === "Escape" &&
-                lightboxModal &&
-                lightboxModal.classList.contains(
-                    "show"
-                )
-            ) {
-
-                closeModal();
-
-            }
-
-        }
-    );
-
-
-    // ========================================
-    // CURRENT YEAR
-    // ========================================
-
-    const year =
-        document.getElementById("year");
-
-
-    if (year) {
-
-        year.textContent =
+        currentYear.textContent =
             new Date().getFullYear();
 
     }
 
+
+    /* ========================================
+       PREVENT EMPTY # LINKS FROM JUMPING
+    ======================================== */
+
+    const emptyLinks =
+        document.querySelectorAll('a[href="#"]');
+
+    emptyLinks.forEach(function (link) {
+
+        link.addEventListener("click", function (event) {
+
+            event.preventDefault();
+
+        });
+
+    });
 
 });
