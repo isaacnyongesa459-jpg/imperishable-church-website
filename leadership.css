@@ -1,0 +1,807 @@
+/* ========================================
+   IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
+   LEADERSHIP PAGE CSS
+======================================== */
+
+/* ---------- RESET ---------- */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: #f7f8fc;
+    color: #222;
+    line-height: 1.6;
+}
+
+button,
+a {
+    font-family: inherit;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+/* ---------- CONTAINER ---------- */
+
+.container {
+    width: min(1120px, 92%);
+    margin: 0 auto;
+}
+
+
+/* ========================================
+   NAVIGATION
+======================================== */
+
+.navbar {
+    width: 100%;
+    background: #ffffff;
+    border-bottom: 1px solid #eeeeee;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.nav-container {
+    width: min(1120px, 92%);
+    min-height: 75px;
+    margin: 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+/* ---------- LOGO ---------- */
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    color: #162447;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.logo-img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+}
+
+
+/* ---------- HAMBURGER ---------- */
+
+.hamburger {
+    width: 48px;
+    height: 48px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #162447;
+    color: white;
+
+    font-size: 22px;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: 0.3s ease;
+}
+
+.hamburger:hover {
+    background: #243b6b;
+    transform: scale(1.04);
+}
+
+
+/* ========================================
+   DROPDOWN NAVIGATION
+======================================== */
+
+.dropdown-menu {
+    position: fixed;
+
+    top: 75px;
+    left: 0;
+
+    width: 100%;
+
+    background: rgba(255, 255, 255, 0.98);
+
+    border-bottom: 1px solid #eeeeee;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+
+    z-index: 999;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateY(-15px);
+
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease,
+        visibility 0.25s ease;
+}
+
+.dropdown-menu.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-content {
+    width: min(1120px, 92%);
+    margin: 0 auto;
+
+    padding: 18px 0;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 14px 16px;
+
+    color: #333;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    transition: 0.25s ease;
+}
+
+.dropdown-item i {
+    width: 20px;
+    text-align: center;
+    color: #162447;
+}
+
+.dropdown-item:hover {
+    background: #f0f3f9;
+    color: #162447;
+    transform: translateX(3px);
+}
+
+.dropdown-item.active {
+    background: #162447;
+    color: white;
+}
+
+.dropdown-item.active i {
+    color: white;
+}
+
+
+/* ========================================
+   PAGE HEADER
+======================================== */
+
+.page-header {
+    background:
+        linear-gradient(
+            rgba(22, 36, 71, 0.94),
+            rgba(22, 36, 71, 0.94)
+        );
+
+    color: white;
+
+    text-align: center;
+
+    padding: 90px 20px 85px;
+}
+
+.eyebrow {
+    font-size: 12px;
+    letter-spacing: 2px;
+    font-weight: 600;
+
+    margin-bottom: 14px;
+
+    opacity: 0.8;
+}
+
+.page-header h1 {
+    font-size: clamp(32px, 5vw, 52px);
+    line-height: 1.2;
+
+    margin-bottom: 18px;
+}
+
+.page-header p:last-child {
+    max-width: 650px;
+    margin: 0 auto;
+
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+
+/* ========================================
+   LEADERSHIP SECTION
+======================================== */
+
+.leadership-section {
+    padding: 85px 0;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 45px;
+}
+
+.section-title h2 {
+    color: #162447;
+    font-size: clamp(28px, 4vw, 40px);
+    margin-bottom: 14px;
+}
+
+.title-line {
+    width: 70px;
+    height: 4px;
+
+    margin: 0 auto 18px;
+
+    background: #162447;
+    border-radius: 10px;
+}
+
+.section-title p {
+    max-width: 650px;
+    margin: 0 auto;
+
+    color: #666;
+    font-size: 15px;
+}
+
+
+/* ========================================
+   FILTER BUTTONS
+======================================== */
+
+.filter-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin-bottom: 22px;
+}
+
+.filter-btn {
+    border: 1px solid #d9dce5;
+
+    background: white;
+    color: #444;
+
+    padding: 11px 18px;
+
+    border-radius: 30px;
+
+    cursor: pointer;
+
+    font-size: 13px;
+    font-weight: 500;
+
+    transition: 0.25s ease;
+}
+
+.filter-btn:hover {
+    border-color: #162447;
+    color: #162447;
+}
+
+.filter-btn.active {
+    background: #162447;
+    border-color: #162447;
+    color: white;
+}
+
+
+/* ========================================
+   MEMBER COUNT
+======================================== */
+
+.member-count {
+    text-align: center;
+
+    color: #777;
+
+    font-size: 14px;
+
+    margin-bottom: 35px;
+}
+
+.member-count span {
+    color: #162447;
+    font-weight: 700;
+}
+
+
+/* ========================================
+   LEADERSHIP GRID
+======================================== */
+
+.leadership-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 25px;
+}
+
+
+/* ========================================
+   LEADER CARD
+======================================== */
+
+.leader-card {
+    background: white;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.07);
+
+    border: 1px solid #eeeeee;
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+
+    cursor: pointer;
+}
+
+.leader-card:hover {
+    transform: translateY(-7px);
+
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+}
+
+
+/* ---------- IMAGE ---------- */
+
+.leader-img-wrapper {
+    width: 100%;
+    height: 260px;
+
+    overflow: hidden;
+
+    background: #e9ebf1;
+}
+
+.leader-img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+
+    transition: transform 0.4s ease;
+}
+
+.leader-card:hover .leader-img {
+    transform: scale(1.06);
+}
+
+
+/* ---------- INFORMATION ---------- */
+
+.leader-info {
+    padding: 22px 18px;
+    text-align: center;
+}
+
+.leader-name {
+    color: #162447;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    margin-bottom: 5px;
+}
+
+.leader-position {
+    color: #b58a25;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    margin-bottom: 10px;
+}
+
+.leader-bio {
+    color: #777;
+
+    font-size: 13px;
+
+    min-height: 42px;
+}
+
+
+/* ========================================
+   SOCIAL ICONS
+======================================== */
+
+.social-icons {
+    display: flex;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-top: 17px;
+}
+
+.social-icons a {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f0f2f6;
+
+    color: #162447;
+
+    font-size: 13px;
+
+    transition: 0.25s ease;
+}
+
+.social-icons a:hover {
+    background: #162447;
+    color: white;
+
+    transform: translateY(-3px);
+}
+
+
+/* ========================================
+   MODAL / LIGHTBOX
+======================================== */
+
+.lightbox-modal {
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(8, 15, 30, 0.88);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 25px;
+
+    z-index: 2000;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease;
+}
+
+.lightbox-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* ---------- CLOSE BUTTON ---------- */
+
+.close-lightbox {
+    position: absolute;
+
+    top: 25px;
+    right: 30px;
+
+    width: 45px;
+    height: 45px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: white;
+    color: #162447;
+
+    font-size: 30px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    z-index: 10;
+
+    transition: 0.25s ease;
+}
+
+.close-lightbox:hover {
+    background: #162447;
+    color: white;
+
+    transform: rotate(90deg);
+}
+
+
+/* ---------- MODAL CONTENT ---------- */
+
+.lightbox-content {
+    width: min(900px, 100%);
+
+    max-height: 90vh;
+
+    overflow: auto;
+
+    background: white;
+
+    border-radius: 16px;
+
+    display: grid;
+
+    grid-template-columns: 42% 58%;
+
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+
+    transform: translateY(20px) scale(0.97);
+
+    transition: transform 0.3s ease;
+}
+
+.lightbox-modal.show .lightbox-content {
+    transform: translateY(0) scale(1);
+}
+
+
+/* ---------- MODAL IMAGE ---------- */
+
+.lightbox-img-wrapper {
+    min-height: 450px;
+
+    background: #e9ebf1;
+}
+
+.lightbox-img {
+    width: 100%;
+    height: 100%;
+
+    min-height: 450px;
+
+    object-fit: cover;
+
+    display: block;
+}
+
+
+/* ---------- MODAL DETAILS ---------- */
+
+.lightbox-details {
+    padding: 50px 40px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.lightbox-details h2 {
+    color: #162447;
+
+    font-size: 30px;
+
+    line-height: 1.25;
+
+    margin-bottom: 8px;
+}
+
+.lightbox-position {
+    color: #b58a25;
+
+    font-weight: 600;
+
+    font-size: 15px;
+
+    margin-bottom: 22px;
+}
+
+.lightbox-bio {
+    color: #666;
+
+    font-size: 15px;
+
+    line-height: 1.8;
+
+    margin-bottom: 25px;
+}
+
+.lightbox-contact {
+    border-top: 1px solid #eeeeee;
+
+    padding-top: 20px;
+}
+
+.lightbox-contact p {
+    color: #555;
+
+    font-size: 13px;
+
+    margin-bottom: 10px;
+}
+
+.lightbox-contact i {
+    width: 25px;
+
+    color: #162447;
+}
+
+
+/* ========================================
+   FOOTER
+======================================== */
+
+.footer {
+    background: #111827;
+
+    color: #c9ced8;
+
+    text-align: center;
+
+    padding: 28px 20px;
+
+    font-size: 13px;
+}
+
+.footer p {
+    margin: 0;
+}
+
+
+/* ========================================
+   RESPONSIVE DESIGN
+======================================== */
+
+@media (max-width: 1000px) {
+
+    .leadership-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .dropdown-content {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+
+@media (max-width: 750px) {
+
+    .nav-container {
+        min-height: 68px;
+    }
+
+    .dropdown-menu {
+        top: 68px;
+    }
+
+    .dropdown-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .leadership-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .page-header {
+        padding: 70px 20px;
+    }
+
+    .lightbox-content {
+        grid-template-columns: 1fr;
+        max-height: 90vh;
+    }
+
+    .lightbox-img-wrapper,
+    .lightbox-img {
+        min-height: 300px;
+        height: 300px;
+    }
+
+    .lightbox-details {
+        padding: 30px 25px;
+    }
+
+    .lightbox-details h2 {
+        font-size: 25px;
+    }
+}
+
+
+@media (max-width: 520px) {
+
+    .logo {
+        font-size: 16px;
+    }
+
+    .logo-img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .hamburger {
+        width: 44px;
+        height: 44px;
+    }
+
+    .dropdown-content {
+        grid-template-columns: 1fr;
+    }
+
+    .leadership-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .leader-img-wrapper {
+        height: 300px;
+    }
+
+    .filter-buttons {
+        flex-direction: column;
+    }
+
+    .filter-btn {
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .close-lightbox {
+        top: 15px;
+        right: 15px;
+    }
+
+    .lightbox-modal {
+        padding: 15px;
+    }
+}
+
+
+/* ========================================
+   HIDDEN FILTERED CARDS
+======================================== */
+
+.leader-card.hidden {
+    display: none;
+}
