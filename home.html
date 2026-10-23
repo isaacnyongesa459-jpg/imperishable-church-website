@@ -10,12 +10,14 @@
     <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+        rel="stylesheet"
+    >
 
     <!-- Font Awesome -->
     <link
         rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
 
     <!-- Home Page CSS -->
     <link rel="stylesheet" href="home.css">
@@ -23,12 +25,17 @@
 
 <body>
 
-    <!-- Navigation Bar -->
+    <!-- ========================================
+         NAVIGATION BAR
+    ========================================= -->
+
     <nav class="navbar">
 
         <div class="nav-container">
 
-            <div class="logo">
+            <!-- Church Logo -->
+            <a href="home.html" class="logo">
+
                 <img
                     src="images/church-logo.png"
                     alt="Imperishable Crown Bible Baptist Church Logo"
@@ -38,14 +45,18 @@
                 <span class="logo-name">
                     Imperishable Crown
                 </span>
-            </div>
+
+            </a>
+
 
             <!-- Hamburger Button -->
             <button
+                type="button"
                 class="hamburger"
                 id="hamburger"
                 aria-label="Open navigation menu"
                 aria-expanded="false"
+                aria-controls="dropdownMenu"
             >
                 <i class="fas fa-bars"></i>
             </button>
@@ -55,44 +66,84 @@
     </nav>
 
 
-    <!-- Dropdown Menu -->
-    <div class="dropdown-menu" id="dropdownMenu">
+    <!-- ========================================
+         DROPDOWN MENU
+    ========================================= -->
+
+    <div
+        class="dropdown-menu"
+        id="dropdownMenu"
+    >
 
         <div class="dropdown-content">
 
-            <a href="home.html" class="dropdown-item active">
+            <!-- Home -->
+            <a
+                href="home.html"
+                class="dropdown-item active"
+            >
                 <i class="fas fa-home"></i>
-                Home
+                <span>Home</span>
             </a>
 
-            <a href="about.html" class="dropdown-item">
+
+            <!-- About -->
+            <a
+                href="about.html"
+                class="dropdown-item"
+            >
                 <i class="fas fa-church"></i>
-                About Us
+                <span>About Us</span>
             </a>
 
-            <a href="services.html" class="dropdown-item">
+
+            <!-- Services -->
+            <a
+                href="services.html"
+                class="dropdown-item"
+            >
                 <i class="fas fa-praying-hands"></i>
-                Services
+                <span>Services</span>
             </a>
 
-            <a href="leadership.html" class="dropdown-item">
+
+            <!-- Leadership -->
+            <a
+                href="leadership.html"
+                class="dropdown-item"
+            >
                 <i class="fas fa-users"></i>
-                Leadership
+                <span>Leadership</span>
             </a>
 
-            <a href="events.html" class="dropdown-item">
+
+            <!-- Events -->
+            <a
+                href="events.html"
+                class="dropdown-item"
+            >
                 <i class="fas fa-calendar-alt"></i>
-                Events
+                <span>Events</span>
             </a>
 
-            <a href="donate.html" class="dropdown-item">
+
+            <!-- Give -->
+            <a
+                href="donate.html"
+                class="dropdown-item"
+            >
                 <i class="fas fa-hand-holding-heart"></i>
-                Give
+                <span>Give</span>
             </a>
 
-            <a href="contact.html" class="dropdown-item">
+
+            <!-- Contact -->
+            <a
+                href="contact.html"
+                class="dropdown-item"
+            >
                 <i class="fas fa-envelope"></i>
-                Contact
+                <span>Contact</span>
             </a>
 
         </div>
@@ -100,7 +151,10 @@
     </div>
 
 
-    <!-- Hero Section -->
+    <!-- ========================================
+         HERO SECTION
+    ========================================= -->
+
     <section class="hero">
 
         <div class="hero-content">
@@ -114,13 +168,21 @@
                 Join us as we journey together in faith.
             </p>
 
+
+            <!-- Hero Buttons -->
             <div class="hero-buttons">
 
-                <a href="services.html" class="btn btn-primary">
+                <a
+                    href="services.html"
+                    class="btn btn-primary"
+                >
                     View Services
                 </a>
 
-                <a href="donate.html" class="btn btn-outline">
+                <a
+                    href="donate.html"
+                    class="btn btn-outline"
+                >
                     Give Online
                 </a>
 
@@ -131,7 +193,10 @@
     </section>
 
 
-    <!-- Mission Section -->
+    <!-- ========================================
+         MISSION SECTION
+    ========================================= -->
+
     <section class="section">
 
         <div class="container">
@@ -140,6 +205,8 @@
                 Our Mission
             </h2>
 
+
+            <!-- Mission Statement -->
             <div class="mission-box">
 
                 <p>
@@ -151,9 +218,13 @@
             </div>
 
 
-            <!-- Features -->
+            <!-- ========================================
+                 FEATURES
+            ========================================= -->
+
             <div class="features-grid">
 
+                <!-- Love God -->
                 <div class="feature-card">
 
                     <i class="fas fa-heart"></i>
@@ -169,6 +240,7 @@
                 </div>
 
 
+                <!-- Serve Others -->
                 <div class="feature-card">
 
                     <i class="fas fa-hands-helping"></i>
@@ -184,6 +256,7 @@
                 </div>
 
 
+                <!-- Share Faith -->
                 <div class="feature-card">
 
                     <i class="fas fa-globe"></i>
@@ -205,13 +278,17 @@
     </section>
 
 
-    <!-- Quick Information -->
+    <!-- ========================================
+         QUICK INFORMATION
+    ========================================= -->
+
     <section class="quick-info">
 
         <div class="container">
 
             <div class="info-grid">
 
+                <!-- Service Times -->
                 <div class="info-item">
 
                     <i class="fas fa-clock"></i>
@@ -221,12 +298,13 @@
                     </h4>
 
                     <p>
-                        8:00 AM & 10:30 AM
+                        8:00 AM &amp; 10:30 AM
                     </p>
 
                 </div>
 
 
+                <!-- Location -->
                 <div class="info-item">
 
                     <i class="fas fa-map-marker-alt"></i>
@@ -242,6 +320,7 @@
                 </div>
 
 
+                <!-- Contact -->
                 <div class="info-item">
 
                     <i class="fas fa-phone"></i>
@@ -263,12 +342,18 @@
     </section>
 
 
-    <!-- Footer -->
+    <!-- ========================================
+         FOOTER
+    ========================================= -->
+
     <footer class="footer">
 
         <div class="footer-content">
 
-            <!-- Church Information -->
+            <!-- ========================================
+                 CHURCH INFORMATION
+            ========================================= -->
+
             <div class="footer-section">
 
                 <h3>
@@ -293,7 +378,10 @@
             </div>
 
 
-            <!-- Quick Links -->
+            <!-- ========================================
+                 QUICK LINKS
+            ========================================= -->
+
             <div class="footer-section">
 
                 <h3>
@@ -318,10 +406,19 @@
                     </a>
                 </p>
 
+                <p>
+                    <a href="contact.html">
+                        Contact Us
+                    </a>
+                </p>
+
             </div>
 
 
-            <!-- Social Media -->
+            <!-- ========================================
+                 SOCIAL MEDIA
+            ========================================= -->
+
             <div class="footer-section">
 
                 <h3>
@@ -330,19 +427,31 @@
 
                 <div class="social-links">
 
-                    <a href="#" aria-label="Facebook">
+                    <a
+                        href="#"
+                        aria-label="Facebook"
+                    >
                         <i class="fab fa-facebook"></i>
                     </a>
 
-                    <a href="#" aria-label="YouTube">
+                    <a
+                        href="#"
+                        aria-label="YouTube"
+                    >
                         <i class="fab fa-youtube"></i>
                     </a>
 
-                    <a href="#" aria-label="Instagram">
+                    <a
+                        href="#"
+                        aria-label="Instagram"
+                    >
                         <i class="fab fa-instagram"></i>
                     </a>
 
-                    <a href="#" aria-label="Twitter">
+                    <a
+                        href="#"
+                        aria-label="Twitter"
+                    >
                         <i class="fab fa-twitter"></i>
                     </a>
 
@@ -353,7 +462,10 @@
         </div>
 
 
-        <!-- Copyright -->
+        <!-- ========================================
+             COPYRIGHT
+        ========================================= -->
+
         <div class="footer-bottom">
 
             <p>
@@ -366,8 +478,12 @@
     </footer>
 
 
-    <!-- Home Page JavaScript -->
+    <!-- ========================================
+         HOME PAGE JAVASCRIPT
+    ========================================= -->
+
     <script src="home.js"></script>
 
 </body>
+
 </html>
