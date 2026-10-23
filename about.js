@@ -6,21 +6,24 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     // ========================================
-    // GET NAVIGATION ELEMENTS
+    // SELECT ELEMENTS
     // ========================================
 
-    const hamburger = document.getElementById("hamburger");
-    const dropdownMenu = document.getElementById("dropdownMenu");
+    const hamburger =
+        document.getElementById("hamburger");
+
+    const dropdownMenu =
+        document.getElementById("dropdownMenu");
 
 
     // ========================================
-    // CHECK ELEMENTS
+    // CHECK IF ELEMENTS EXIST
     // ========================================
 
     if (!hamburger || !dropdownMenu) {
 
         console.error(
-            "Navigation error: hamburger or dropdown menu was not found."
+            "ERROR: Navigation elements not found."
         );
 
         return;
@@ -28,64 +31,68 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // ========================================
-    // HAMBURGER CLICK
+    // OPEN / CLOSE MENU
     // ========================================
 
     hamburger.addEventListener("click", function (event) {
 
-        // Prevent document click from immediately
-        // closing the menu
         event.stopPropagation();
 
-
-        // Open / close menu
         dropdownMenu.classList.toggle("show");
 
 
-        // Check whether menu is open
-        const menuIsOpen =
+        // Check menu status
+
+        const isOpen =
             dropdownMenu.classList.contains("show");
 
 
-        // ========================================
-        // CHANGE HAMBURGER ICON
-        // ========================================
+        // Get hamburger icon
 
         const icon =
             hamburger.querySelector("i");
 
 
-        if (menuIsOpen) {
+        if (isOpen) {
+
+            // Change bars to X
 
             icon.classList.remove("fa-bars");
 
             icon.classList.add("fa-xmark");
+
 
             hamburger.setAttribute(
                 "aria-expanded",
                 "true"
             );
 
+
             hamburger.setAttribute(
                 "aria-label",
-                "Close navigation menu"
+                "Close menu"
             );
 
         } else {
 
+            // Change X back to bars
+
             icon.classList.remove("fa-xmark");
 
             icon.classList.add("fa-bars");
+
 
             hamburger.setAttribute(
                 "aria-expanded",
                 "false"
             );
 
+
             hamburger.setAttribute(
                 "aria-label",
-                "Open navigation menu"
+                "Open menu"
             );
+
         }
 
     });
@@ -97,14 +104,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.addEventListener("click", function (event) {
 
-        const clickedInsideMenu =
-            dropdownMenu.contains(event.target);
-
-        const clickedHamburger =
-            hamburger.contains(event.target);
-
-
-        if (!clickedInsideMenu && !clickedHamburger) {
+        if (
+            !dropdownMenu.contains(event.target) &&
+            !hamburger.contains(event.target)
+        ) {
 
             closeMenu();
 
@@ -114,20 +117,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // ========================================
-    // CLOSE MENU AFTER CLICKING A LINK
+    // CLOSE MENU AFTER CLICKING LINK
     // ========================================
 
-    const menuLinks =
-        dropdownMenu.querySelectorAll(".dropdown-item");
+    const links =
+        dropdownMenu.querySelectorAll("a");
 
 
-    menuLinks.forEach(function (link) {
+    links.forEach(function (link) {
 
         link.addEventListener("click", function () {
 
             closeMenu();
 
         });
+
+    });
+
+
+    // ========================================
+    // CLOSE MENU WITH ESC KEY
+    // ========================================
+
+    document.addEventListener("keydown", function (event) {
+
+        if (event.key === "Escape") {
+
+            closeMenu();
+
+        }
 
     });
 
@@ -158,24 +176,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
         hamburger.setAttribute(
             "aria-label",
-            "Open navigation menu"
+            "Open menu"
         );
 
     }
-
-
-    // ========================================
-    // ESCAPE KEY
-    // ========================================
-
-    document.addEventListener("keydown", function (event) {
-
-        if (event.key === "Escape") {
-
-            closeMenu();
-
-        }
-
-    });
 
 });
