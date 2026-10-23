@@ -3,42 +3,61 @@
 // LEADERSHIP PAGE JAVASCRIPT
 // ========================================
 
+
 document.addEventListener("DOMContentLoaded", function () {
+
 
     // ========================================
     // NAVIGATION
     // ========================================
 
-    const hamburger = document.getElementById("hamburger");
-    const dropdownMenu = document.getElementById("dropdownMenu");
+    const hamburger =
+        document.getElementById("hamburger");
+
+    const dropdownMenu =
+        document.getElementById("dropdownMenu");
+
+
+    // Check that navigation exists
 
     if (hamburger && dropdownMenu) {
 
-        hamburger.addEventListener("click", function (event) {
 
-            event.stopPropagation();
+        // ========================================
+        // OPEN / CLOSE MENU
+        // ========================================
+
+        hamburger.addEventListener("click", function () {
 
             dropdownMenu.classList.toggle("show");
 
-            const isOpen =
+
+            const menuIsOpen =
                 dropdownMenu.classList.contains("show");
+
 
             hamburger.setAttribute(
                 "aria-expanded",
-                isOpen
+                menuIsOpen
             );
 
-            // Change icon
-            const icon = hamburger.querySelector("i");
 
-            if (isOpen) {
+            // Change hamburger icon
+
+            const icon =
+                hamburger.querySelector("i");
+
+
+            if (menuIsOpen) {
 
                 icon.classList.remove("fa-bars");
+
                 icon.classList.add("fa-xmark");
 
             } else {
 
                 icon.classList.remove("fa-xmark");
+
                 icon.classList.add("fa-bars");
 
             }
@@ -47,11 +66,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         // ========================================
-        // CLOSE MENU WHEN LINK IS CLICKED
+        // CLOSE MENU AFTER CLICKING A LINK
         // ========================================
 
         const menuLinks =
             document.querySelectorAll(".dropdown-item");
+
 
         menuLinks.forEach(function (link) {
 
@@ -64,9 +84,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     "false"
                 );
 
-                const icon = hamburger.querySelector("i");
+
+                const icon =
+                    hamburger.querySelector("i");
+
 
                 icon.classList.remove("fa-xmark");
+
                 icon.classList.add("fa-bars");
 
             });
@@ -78,34 +102,41 @@ document.addEventListener("DOMContentLoaded", function () {
         // CLOSE MENU WHEN CLICKING OUTSIDE
         // ========================================
 
-        document.addEventListener("click", function (event) {
+        document.addEventListener(
+            "click",
+            function (event) {
 
-            if (
-                !dropdownMenu.contains(event.target) &&
-                !hamburger.contains(event.target)
-            ) {
+                if (
+                    !dropdownMenu.contains(event.target) &&
+                    !hamburger.contains(event.target)
+                ) {
 
-                dropdownMenu.classList.remove("show");
+                    dropdownMenu.classList.remove("show");
 
-                hamburger.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
+                    hamburger.setAttribute(
+                        "aria-expanded",
+                        "false"
+                    );
 
-                const icon = hamburger.querySelector("i");
 
-                icon.classList.remove("fa-xmark");
-                icon.classList.add("fa-bars");
+                    const icon =
+                        hamburger.querySelector("i");
+
+
+                    icon.classList.remove("fa-xmark");
+
+                    icon.classList.add("fa-bars");
+
+                }
 
             }
-
-        });
+        );
 
     }
 
 
     // ========================================
-    // MEMBER FILTER
+    // MEMBER FILTERING
     // ========================================
 
     const filterButtons =
@@ -120,58 +151,80 @@ document.addEventListener("DOMContentLoaded", function () {
 
     filterButtons.forEach(function (button) {
 
-        button.addEventListener("click", function () {
-
-            const filter =
-                button.getAttribute("data-filter");
-
-            // Remove active from all buttons
-            filterButtons.forEach(function (btn) {
-
-                btn.classList.remove("active");
-
-            });
-
-            // Activate selected button
-            button.classList.add("active");
+        button.addEventListener(
+            "click",
+            function () {
 
 
-            let visibleCount = 0;
+                const selectedFilter =
+                    button.getAttribute("data-filter");
 
 
-            leaderCards.forEach(function (card) {
+                // Remove active state
 
-                const category =
-                    card.getAttribute("data-category");
+                filterButtons.forEach(
+                    function (btn) {
+
+                        btn.classList.remove("active");
+
+                    }
+                );
 
 
-                if (
-                    filter === "all" ||
-                    category === filter
-                ) {
+                // Activate selected button
 
-                    card.classList.remove("hidden");
+                button.classList.add("active");
 
-                    visibleCount++;
 
-                } else {
+                let visibleMembers = 0;
 
-                    card.classList.add("hidden");
+
+                // Check every member
+
+                leaderCards.forEach(
+                    function (card) {
+
+
+                        const category =
+                            card.getAttribute(
+                                "data-category"
+                            );
+
+
+                        if (
+                            selectedFilter === "all" ||
+                            category === selectedFilter
+                        ) {
+
+                            card.classList.remove(
+                                "hidden"
+                            );
+
+                            visibleMembers++;
+
+                        } else {
+
+                            card.classList.add(
+                                "hidden"
+                            );
+
+                        }
+
+                    }
+                );
+
+
+                // Update member count
+
+                if (memberCount) {
+
+                    memberCount.innerHTML =
+                        `Showing <span>${visibleMembers}</span> members`;
 
                 }
 
-            });
-
-
-            // Update count
-            if (memberCount) {
-
-                memberCount.innerHTML =
-                    `Showing <span>${visibleCount}</span> members`;
-
             }
-
-        });
+        );
 
     });
 
@@ -181,89 +234,164 @@ document.addEventListener("DOMContentLoaded", function () {
     // ========================================
 
     const lightboxModal =
-        document.getElementById("lightboxModal");
+        document.getElementById(
+            "lightboxModal"
+        );
+
 
     const closeLightbox =
-        document.getElementById("closeLightbox");
+        document.getElementById(
+            "closeLightbox"
+        );
+
 
     const modalImage =
-        document.getElementById("modalImage");
+        document.getElementById(
+            "modalImage"
+        );
+
 
     const modalName =
-        document.getElementById("modalName");
+        document.getElementById(
+            "modalName"
+        );
+
 
     const modalPosition =
-        document.getElementById("modalPosition");
+        document.getElementById(
+            "modalPosition"
+        );
+
 
     const modalBio =
-        document.getElementById("modalBio");
+        document.getElementById(
+            "modalBio"
+        );
 
+
+    // ========================================
+    // OPEN MEMBER MODAL
+    // ========================================
 
     leaderCards.forEach(function (card) {
 
-        card.addEventListener("click", function (event) {
+        card.addEventListener(
+            "click",
+            function (event) {
 
-            // Don't open modal when clicking social links
-            if (event.target.closest(".social-icons a")) {
-                return;
+
+                // Don't open the modal if
+                // social media icon was clicked
+
+                if (
+                    event.target.closest(
+                        ".social-icons a"
+                    )
+                ) {
+
+                    return;
+
+                }
+
+
+                // Get member information
+
+                const name =
+                    card.getAttribute(
+                        "data-name"
+                    );
+
+
+                const position =
+                    card.getAttribute(
+                        "data-position"
+                    );
+
+
+                const bio =
+                    card.getAttribute(
+                        "data-bio"
+                    );
+
+
+                const image =
+                    card.getAttribute(
+                        "data-image"
+                    );
+
+
+                // Put information in modal
+
+                modalName.textContent =
+                    name;
+
+
+                modalPosition.textContent =
+                    position;
+
+
+                modalBio.textContent =
+                    bio;
+
+
+                modalImage.src =
+                    image;
+
+
+                modalImage.alt =
+                    name;
+
+
+                // Show modal
+
+                lightboxModal.classList.add(
+                    "show"
+                );
+
+
+                lightboxModal.setAttribute(
+                    "aria-hidden",
+                    "false"
+                );
+
+
+                // Stop page scrolling
+
+                document.body.style.overflow =
+                    "hidden";
+
             }
-
-
-            const name =
-                card.getAttribute("data-name");
-
-            const position =
-                card.getAttribute("data-position");
-
-            const bio =
-                card.getAttribute("data-bio");
-
-            const image =
-                card.getAttribute("data-image");
-
-
-            modalName.textContent = name;
-
-            modalPosition.textContent = position;
-
-            modalBio.textContent = bio;
-
-            modalImage.src = image;
-
-            modalImage.alt = name;
-
-
-            lightboxModal.classList.add("show");
-
-            lightboxModal.setAttribute(
-                "aria-hidden",
-                "false"
-            );
-
-            document.body.style.overflow = "hidden";
-
-        });
+        );
 
     });
 
 
     // ========================================
-    // CLOSE MODAL
+    // CLOSE MODAL FUNCTION
     // ========================================
 
     function closeModal() {
 
-        lightboxModal.classList.remove("show");
+        lightboxModal.classList.remove(
+            "show"
+        );
+
 
         lightboxModal.setAttribute(
             "aria-hidden",
             "true"
         );
 
-        document.body.style.overflow = "";
+
+        document.body.style.overflow =
+            "";
 
     }
 
+
+    // ========================================
+    // CLOSE BUTTON
+    // ========================================
 
     if (closeLightbox) {
 
@@ -276,7 +404,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // ========================================
-    // CLOSE MODAL BY CLICKING BACKGROUND
+    // CLICK OUTSIDE MODAL
     // ========================================
 
     if (lightboxModal) {
@@ -285,7 +413,11 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             function (event) {
 
-                if (event.target === lightboxModal) {
+
+                if (
+                    event.target ===
+                    lightboxModal
+                ) {
 
                     closeModal();
 
@@ -305,10 +437,13 @@ document.addEventListener("DOMContentLoaded", function () {
         "keydown",
         function (event) {
 
+
             if (
                 event.key === "Escape" &&
                 lightboxModal &&
-                lightboxModal.classList.contains("show")
+                lightboxModal.classList.contains(
+                    "show"
+                )
             ) {
 
                 closeModal();
@@ -326,11 +461,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const year =
         document.getElementById("year");
 
+
     if (year) {
 
         year.textContent =
             new Date().getFullYear();
 
     }
+
 
 });
