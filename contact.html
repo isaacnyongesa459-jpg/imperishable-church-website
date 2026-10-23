@@ -10,12 +10,14 @@
     <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+        rel="stylesheet"
+    >
 
     <!-- Font Awesome -->
     <link
         rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
 
     <!-- Contact Page CSS -->
     <link rel="stylesheet" href="contact.css">
@@ -23,11 +25,12 @@
 
 <body>
 
-    <!-- Navigation -->
+    <!-- ==================== NAVIGATION ==================== -->
     <nav class="navbar">
 
         <div class="nav-container">
 
+            <!-- Logo -->
             <div class="logo">
 
                 <img
@@ -42,13 +45,14 @@
 
             </div>
 
-
-            <!-- Hamburger -->
+            <!-- Hamburger Menu -->
             <button
                 class="hamburger"
                 id="hamburger"
+                type="button"
                 aria-label="Open navigation menu"
                 aria-expanded="false"
+                aria-controls="dropdownMenu"
             >
                 <i class="fas fa-bars"></i>
             </button>
@@ -58,44 +62,44 @@
     </nav>
 
 
-    <!-- Dropdown Menu -->
+    <!-- ==================== DROPDOWN MENU ==================== -->
     <div class="dropdown-menu" id="dropdownMenu">
 
         <div class="dropdown-content">
 
             <a href="home.html" class="dropdown-item">
                 <i class="fas fa-home"></i>
-                Home
+                <span>Home</span>
             </a>
 
             <a href="about.html" class="dropdown-item">
                 <i class="fas fa-church"></i>
-                About Us
+                <span>About Us</span>
             </a>
 
             <a href="services.html" class="dropdown-item">
                 <i class="fas fa-praying-hands"></i>
-                Services
+                <span>Services</span>
             </a>
 
             <a href="leadership.html" class="dropdown-item">
                 <i class="fas fa-users"></i>
-                Leadership
+                <span>Leadership</span>
             </a>
 
             <a href="events.html" class="dropdown-item">
                 <i class="fas fa-calendar-alt"></i>
-                Events
+                <span>Events</span>
             </a>
 
             <a href="donate.html" class="dropdown-item">
                 <i class="fas fa-hand-holding-heart"></i>
-                Give
+                <span>Give</span>
             </a>
 
             <a href="contact.html" class="dropdown-item active">
                 <i class="fas fa-envelope"></i>
-                Contact
+                <span>Contact</span>
             </a>
 
         </div>
@@ -103,14 +107,12 @@
     </div>
 
 
-    <!-- Page Header -->
+    <!-- ==================== PAGE HEADER ==================== -->
     <section class="page-header">
 
         <div class="container">
 
-            <h1>
-                Contact Us
-            </h1>
+            <h1>Contact Us</h1>
 
             <p>
                 We'd love to hear from you
@@ -121,7 +123,7 @@
     </section>
 
 
-    <!-- Contact Section -->
+    <!-- ==================== CONTACT SECTION ==================== -->
     <section class="section">
 
         <div class="container">
@@ -131,13 +133,12 @@
                 <!-- Contact Information -->
                 <div class="contact-info">
 
+                    <!-- Address -->
                     <div class="info-card">
 
                         <i class="fas fa-map-marker-alt"></i>
 
-                        <h3>
-                            Visit Us
-                        </h3>
+                        <h3>Visit Us</h3>
 
                         <p>
                             191 Maramu Avenue<br>
@@ -147,13 +148,12 @@
                     </div>
 
 
+                    <!-- Phone -->
                     <div class="info-card">
 
                         <i class="fas fa-phone"></i>
 
-                        <h3>
-                            Call Us
-                        </h3>
+                        <h3>Call Us</h3>
 
                         <p>
                             +254 723 542 142<br>
@@ -163,13 +163,12 @@
                     </div>
 
 
+                    <!-- Email -->
                     <div class="info-card">
 
                         <i class="fas fa-envelope"></i>
 
-                        <h3>
-                            Email Us
-                        </h3>
+                        <h3>Email Us</h3>
 
                         <p>
                             fredwanyonyi2001@gmail.com<br>
@@ -179,13 +178,12 @@
                     </div>
 
 
+                    <!-- Office Hours -->
                     <div class="info-card">
 
                         <i class="fas fa-clock"></i>
 
-                        <h3>
-                            Office Hours
-                        </h3>
+                        <h3>Office Hours</h3>
 
                         <p>
                             Mon-Fri: 9:00 AM - 5:00 PM<br>
@@ -197,14 +195,13 @@
                 </div>
 
 
-                <!-- Contact Form -->
+                <!-- ==================== CONTACT FORM ==================== -->
                 <form class="contact-form" id="contactForm">
 
-                    <h3>
-                        Send us a message
-                    </h3>
+                    <h3>Send us a message</h3>
 
 
+                    <!-- Name -->
                     <div class="form-group">
 
                         <label for="name">
@@ -216,12 +213,14 @@
                             id="name"
                             name="name"
                             placeholder="Your Name"
+                            autocomplete="name"
                             required
                         >
 
                     </div>
 
 
+                    <!-- Email -->
                     <div class="form-group">
 
                         <label for="email">
@@ -233,12 +232,14 @@
                             id="email"
                             name="email"
                             placeholder="Your Email"
+                            autocomplete="email"
                             required
                         >
 
                     </div>
 
 
+                    <!-- Subject -->
                     <div class="form-group">
 
                         <label for="subject">
@@ -255,6 +256,7 @@
                     </div>
 
 
+                    <!-- Message -->
                     <div class="form-group">
 
                         <label for="message">
@@ -272,12 +274,13 @@
                     </div>
 
 
+                    <!-- Submit Button -->
                     <button
                         type="submit"
                         class="btn btn-primary"
                     >
                         <i class="fas fa-paper-plane"></i>
-                        Send Message
+                        <span>Send Message</span>
                     </button>
 
                 </form>
@@ -289,7 +292,7 @@
     </section>
 
 
-    <!-- Footer -->
+    <!-- ==================== FOOTER ==================== -->
     <footer class="footer">
 
         <div class="footer-content">
@@ -322,9 +325,7 @@
             <!-- Quick Links -->
             <div class="footer-section">
 
-                <h3>
-                    Quick Links
-                </h3>
+                <h3>Quick Links</h3>
 
                 <p>
                     <a href="services.html">
@@ -350,25 +351,35 @@
             <!-- Social Media -->
             <div class="footer-section">
 
-                <h3>
-                    Follow Us
-                </h3>
+                <h3>Follow Us</h3>
 
                 <div class="social-links">
 
-                    <a href="#" aria-label="Facebook">
+                    <a
+                        href="#"
+                        aria-label="Facebook"
+                    >
                         <i class="fab fa-facebook"></i>
                     </a>
 
-                    <a href="#" aria-label="YouTube">
+                    <a
+                        href="#"
+                        aria-label="YouTube"
+                    >
                         <i class="fab fa-youtube"></i>
                     </a>
 
-                    <a href="#" aria-label="Instagram">
+                    <a
+                        href="#"
+                        aria-label="Instagram"
+                    >
                         <i class="fab fa-instagram"></i>
                     </a>
 
-                    <a href="#" aria-label="Twitter">
+                    <a
+                        href="#"
+                        aria-label="Twitter"
+                    >
                         <i class="fab fa-twitter"></i>
                     </a>
 
@@ -392,8 +403,9 @@
     </footer>
 
 
-    <!-- Contact Page JavaScript -->
+    <!-- ==================== JAVASCRIPT ==================== -->
     <script src="contact.js"></script>
 
 </body>
+
 </html>
