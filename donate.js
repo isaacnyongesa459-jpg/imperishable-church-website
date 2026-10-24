@@ -1,609 +1,394 @@
-// ========================================
-// IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
-// DONATION PAGE JAVASCRIPT
-// ========================================
+
+/* ========================================
+   IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
+   DONATION PAGE JAVASCRIPT
+======================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
+    // ========================================
+    // BACKEND CONFIGURATION
+    // Replace this placeholder after deploying
+    // the backend to Render.
+    // ========================================
+
+    const API_BASE_URL = "https://YOUR-RENDER-SERVICE.onrender.com";
 
     // ========================================
-    // ELEMENTS
+    // PAGE ELEMENTS
     // ========================================
 
-    const hamburger =
-        document.getElementById("hamburger");
-
-    const dropdownMenu =
-        document.getElementById("dropdownMenu");
-
-    const toast =
-        document.getElementById("toastNotification");
-
-    const mainAmount =
-        document.getElementById("mainAmount");
-
-    const mpesaAmount =
-        document.getElementById("customMpesaAmount");
-
-    const mpesaPhone =
-        document.getElementById("mpesaPhoneNumber");
-
-    const mpesaBtn =
-        document.getElementById("mpesaBtn");
-
-    const paypalAmount =
-        document.getElementById("paypalAmount");
-
-    const paypalBtn =
-        document.getElementById("paypalBtn");
-
+    const hamburger = document.getElementById("hamburger");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    const toast = document.getElementById("toastNotification");
+    const mainAmount = document.getElementById("mainAmount");
+    const mpesaAmount = document.getElementById("customMpesaAmount");
+    const mpesaPhone = document.getElementById("mpesaPhoneNumber");
+    const mpesaBtn = document.getElementById("mpesaBtn");
+    const paypalAmount = document.getElementById("paypalAmount");
+    const paypalBtn = document.getElementById("paypalBtn");
 
     // ========================================
-    // HAMBURGER MENU
+    // NAVIGATION MENU
     // ========================================
+
+    function closeMenu() {
+        if (!hamburger || !dropdownMenu) return;
+
+        dropdownMenu.classList.remove("show");
+        hamburger.setAttribute("aria-expanded", "false");
+        hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+    }
 
     if (hamburger && dropdownMenu) {
+        hamburger.setAttribute("aria-expanded", "false");
 
         hamburger.addEventListener("click", (event) => {
-
-            // Prevent document click from immediately
-            // closing the menu
             event.stopPropagation();
 
             dropdownMenu.classList.toggle("show");
 
-            const opened =
-                dropdownMenu.classList.contains("show");
+            const opened = dropdownMenu.classList.contains("show");
 
-
-            // Update accessibility state
             hamburger.setAttribute(
                 "aria-expanded",
                 opened ? "true" : "false"
             );
 
-
-            // Change hamburger icon
             hamburger.innerHTML = opened
                 ? '<i class="fas fa-times"></i>'
                 : '<i class="fas fa-bars"></i>';
-
         });
 
-
-        // Close menu when clicking outside
         document.addEventListener("click", (event) => {
-
             if (
                 !dropdownMenu.contains(event.target) &&
                 !hamburger.contains(event.target)
             ) {
-
-                dropdownMenu.classList.remove("show");
-
-                hamburger.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-
-                hamburger.innerHTML =
-                    '<i class="fas fa-bars"></i>';
-
+                closeMenu();
             }
-
         });
 
-
-        // Close menu after clicking a navigation link
-        const dropdownItems =
-            dropdownMenu.querySelectorAll(".dropdown-item");
-
-
-        dropdownItems.forEach((item) => {
-
-            item.addEventListener("click", () => {
-
-                dropdownMenu.classList.remove("show");
-
-                hamburger.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-
-                hamburger.innerHTML =
-                    '<i class="fas fa-bars"></i>';
-
+        dropdownMenu
+            .querySelectorAll(".dropdown-item")
+            .forEach((item) => {
+                item.addEventListener("click", closeMenu);
             });
-
-        });
-
     }
 
+    // ========================================
+    // TOAST NOTIFICATIONS
+    // ========================================
 
-    // ========================================
-    // TOAST MESSAGE
-    // ========================================
+    let toastTimer;
 
     function showToast(message) {
-
-        if (!toast) return;
-
-        toast.textContent = message;
-
-        toast.classList.add("show");
-
-
-        setTimeout(() => {
-
-            toast.classList.remove("show");
-
-        }, 4000);
-
-    }
-
-
-    // ========================================
-    // LOAD DONATION CONFIGURATION
-    // ========================================
-
-    async function loadDonationConfig() {
-
-        try {
-
-            const response =
-                await fetch("donation-config.json");
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    "Unable to load donation configuration."
-                );
-
-            }
-
-
-            const config =
-                await response.json();
-
-
-            // ========================================
-            // DISPLAY TOTAL CONTRIBUTIONS
-            // ========================================
-
-            if (
-                mainAmount &&
-                config.totalContributions !== undefined
-            ) {
-
-                const amount =
-                    Number(
-                        config.totalContributions
-                    ).toLocaleString(
-                        "en-KE",
-                        {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                        }
-                    );
-
-
-                mainAmount.textContent =
-                    `KES ${amount}`;
-
-            }
-
-        } catch (error) {
-
-            console.error(
-                "Configuration error:",
-                error
-            );
-
-
-            // Don't make the whole donation page
-            // unusable if the config file fails.
-            if (mainAmount) {
-
-                mainAmount.textContent =
-                    "KES 0.00";
-
-            }
-
+        if (!toast) {
+            alert(message);
+            return;
         }
 
+        toast.textContent = message;
+        toast.classList.add("show");
+
+        clearTimeout(toastTimer);
+
+        toastTimer = setTimeout(() => {
+            toast.classList.remove("show");
+        }, 5000);
     }
 
-
-    // Load configuration
-    loadDonationConfig();
-
-
     // ========================================
-    // M-PESA AMOUNT BUTTONS
+    // SAFE JSON RESPONSE HANDLING
     // ========================================
 
-    const amountButtons =
-        document.querySelectorAll(".amount-btn");
+    async function readResponse(response) {
+        let data;
 
+        try {
+            data = await response.json();
+        } catch {
+            throw new Error(
+                "The server returned an unreadable response. Please try again."
+            );
+        }
 
-    amountButtons.forEach((button) => {
+        if (!response.ok) {
+            throw new Error(
+                data.error ||
+                data.message ||
+                "The request failed. Please try again."
+            );
+        }
 
-        button.addEventListener("click", () => {
+        return data;
+    }
 
-            const amount =
-                button.dataset.amount;
+    // ========================================
+    // LOAD TOTAL CONTRIBUTIONS
+    // ========================================
 
+    async function loadDonationTotal() {
+        if (!mainAmount) return;
 
-            if (mpesaAmount) {
+        try {
+            const response = await fetch(
+                `${API_BASE_URL}/api/donations/total`
+            );
 
-                mpesaAmount.value = amount;
+            const data = await readResponse(response);
 
+            const total = Number(data.total);
+
+            if (!Number.isFinite(total)) {
+                throw new Error("Invalid donation total.");
             }
 
+            mainAmount.textContent = `KES ${total.toLocaleString(
+                "en-KE",
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            )}`;
+        } catch (error) {
+            console.error("Donation total error:", error);
 
-            // Remove selected state
-            // from all buttons
-            amountButtons.forEach((btn) => {
-
-                btn.classList.remove("selected");
-
-            });
-
-
-            // Select clicked button
-            button.classList.add("selected");
-
-        });
-
-    });
-
-
-    // ========================================
-    // REMOVE SELECTED BUTTON
-    // WHEN CUSTOM AMOUNT IS TYPED
-    // ========================================
-
-    if (mpesaAmount) {
-
-        mpesaAmount.addEventListener("input", () => {
-
-            amountButtons.forEach((button) => {
-
-                button.classList.remove("selected");
-
-            });
-
-        });
-
+            // Keep the existing displayed value if the
+            // backend is temporarily unavailable.
+        }
     }
 
+    loadDonationTotal();
+
+    // ========================================
+    // PRESET M-PESA AMOUNTS
+    // ========================================
+
+    const amountButtons = document.querySelectorAll(".amount-btn");
+
+    amountButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            if (mpesaAmount) {
+                mpesaAmount.value = button.dataset.amount || "";
+            }
+
+            amountButtons.forEach((item) => {
+                item.classList.remove("selected");
+            });
+
+            button.classList.add("selected");
+        });
+    });
+
+    if (mpesaAmount) {
+        mpesaAmount.addEventListener("input", () => {
+            amountButtons.forEach((button) => {
+                button.classList.remove("selected");
+            });
+
+            if (Number(mpesaAmount.value) < 0) {
+                mpesaAmount.value = "";
+            }
+        });
+    }
+
+    // ========================================
+    // M-PESA PHONE NUMBER NORMALIZATION
+    // ========================================
+
+    function normalizeKenyanPhone(value) {
+        let phone = value.replace(/[\s()-]/g, "");
+
+        if (phone.startsWith("+")) {
+            phone = phone.slice(1);
+        }
+
+        if (phone.startsWith("0")) {
+            phone = "254" + phone.slice(1);
+        } else if (
+            phone.startsWith("7") ||
+            phone.startsWith("1")
+        ) {
+            phone = "254" + phone;
+        }
+
+        if (!/^254[17]\d{8}$/.test(phone)) {
+            throw new Error(
+                "Enter a valid Kenyan mobile number, such as 0712345678."
+            );
+        }
+
+        return phone;
+    }
+
+    // ========================================
+    // CHECK M-PESA PAYMENT STATUS
+    // ========================================
+
+    async function checkPaymentStatus(checkoutRequestId) {
+        const maxAttempts = 12;
+
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            await new Promise((resolve) => setTimeout(resolve, 5000));
+
+            try {
+                const response = await fetch(
+                    `${API_BASE_URL}/api/donations/status/${encodeURIComponent(
+                        checkoutRequestId
+                    )}`
+                );
+
+                const data = await readResponse(response);
+
+                if (data.status === "completed") {
+                    const receipt = data.mpesa_receipt_number
+                        ? ` Receipt: ${data.mpesa_receipt_number}.`
+                        : "";
+
+                    showToast(
+                        `Donation confirmed successfully!${receipt}`
+                    );
+
+                    await loadDonationTotal();
+                    return;
+                }
+
+                if (data.status === "failed") {
+                    showToast(
+                        data.result_desc ||
+                        "The M-PESA payment was not completed."
+                    );
+                    return;
+                }
+            } catch (error) {
+                console.error("Payment status check error:", error);
+            }
+        }
+
+        showToast(
+            "Your payment is still awaiting confirmation. Please check your M-PESA messages before trying again."
+        );
+    }
 
     // ========================================
     // M-PESA DONATION
     // ========================================
 
     if (mpesaBtn) {
+        mpesaBtn.addEventListener("click", async () => {
+            const amount = Number(
+                mpesaAmount ? mpesaAmount.value : 0
+            );
 
-        mpesaBtn.addEventListener(
-            "click",
-            async () => {
+            const rawPhone = mpesaPhone
+                ? mpesaPhone.value.trim()
+                : "";
 
-                const amount =
-                    Number(
-                        mpesaAmount
-                            ? mpesaAmount.value
-                            : 0
+            if (
+                !Number.isSafeInteger(amount) ||
+                amount < 10 ||
+                amount > 250000
+            ) {
+                showToast(
+                    "Enter a whole-number donation between KES 10 and KES 250,000."
+                );
+                return;
+            }
+
+            let phone;
+
+            try {
+                phone = normalizeKenyanPhone(rawPhone);
+            } catch (error) {
+                showToast(error.message);
+                return;
+            }
+
+            const originalButton = mpesaBtn.innerHTML;
+
+            mpesaBtn.disabled = true;
+            mpesaBtn.innerHTML =
+                '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+            try {
+                if (
+                    API_BASE_URL.includes("YOUR-RENDER-SERVICE")
+                ) {
+                    throw new Error(
+                        "The backend URL has not been configured yet."
                     );
-
-
-                const phone =
-                    mpesaPhone
-                        ? mpesaPhone.value.trim()
-                        : "";
-
-
-                // Validate amount
-                if (!amount || amount < 10) {
-
-                    showToast(
-                        "Please enter a valid donation amount of at least KES 10."
-                    );
-
-                    return;
-
                 }
 
-
-                // Validate phone
-                if (!phone) {
-
-                    showToast(
-                        "Please enter your M-Pesa phone number."
-                    );
-
-                    return;
-
-                }
-
-
-                // Basic Kenyan phone validation
-                const cleanPhone =
-                    phone.replace(/\s+/g, "");
-
-
-                const validPhone =
-                    /^(?:2547\d{8}|07\d{8}|\+2547\d{8})$/
-                        .test(cleanPhone);
-
-
-                if (!validPhone) {
-
-                    showToast(
-                        "Please enter a valid Kenyan M-Pesa phone number."
-                    );
-
-                    return;
-
-                }
-
-
-                // Disable button while processing
-                mpesaBtn.disabled = true;
-
-                mpesaBtn.innerHTML =
-                    '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
-
-                try {
-
-                    /*
-                     * BACKEND INTEGRATION
-                     *
-                     * Your Node.js backend should handle:
-                     *
-                     * POST /api/donations/mpesa
-                     *
-                     * The backend communicates with
-                     * Safaricom Daraja.
-                     */
-
-                    const response =
-                        await fetch(
-                            "/api/donations/mpesa",
-                            {
-
-                                method: "POST",
-
-                                headers: {
-                                    "Content-Type":
-                                        "application/json"
-                                },
-
-                                body: JSON.stringify({
-                                    amount: amount,
-                                    phone: cleanPhone,
-                                    currency: "KES",
-                                    purpose:
-                                        "Church Donation"
-                                })
-
-                            }
-                        );
-
-
-                    const data =
-                        await response.json();
-
-
-                    if (!response.ok) {
-
-                        throw new Error(
-                            data.message ||
-                            "M-Pesa payment could not be started."
-                        );
-
+                const response = await fetch(
+                    `${API_BASE_URL}/api/donations/mpesa`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            amount,
+                            phone,
+                            currency: "KES",
+                            purpose: "Church Donation"
+                        })
                     }
+                );
 
+                const data = await readResponse(response);
 
+                if (!data.checkoutRequestId) {
                     showToast(
                         data.message ||
-                        "Check your phone for the M-Pesa payment prompt."
+                        "The request was sent, but a payment reference was not returned. Check your phone and payment status."
                     );
-
-
-                } catch (error) {
-
-                    console.error(
-                        "M-Pesa error:",
-                        error
-                    );
-
-
-                    showToast(
-                        error.message ||
-                        "M-Pesa service is not connected yet."
-                    );
-
-                } finally {
-
-                    // Restore button
-                    mpesaBtn.disabled = false;
-
-                    mpesaBtn.innerHTML =
-                        '<i class="fas fa-mobile-alt"></i> Donate via M-Pesa';
-
+                    return;
                 }
 
-            }
-        );
+                showToast(
+                    data.message ||
+                    "Payment request sent. Check your phone for the M-PESA prompt."
+                );
 
+                // Do not report success until the backend
+                // confirms the payment through its callback.
+                await checkPaymentStatus(data.checkoutRequestId);
+            } catch (error) {
+                console.error("M-PESA error:", error);
+
+                showToast(
+                    error.message ||
+                    "Unable to start M-PESA payment. Please try again."
+                );
+            } finally {
+                mpesaBtn.disabled = false;
+                mpesaBtn.innerHTML = originalButton;
+            }
+        });
     }
 
-
     // ========================================
-    // PAYPAL DONATION
+    // PAYPAL SECTION
+    // Backend integration is not yet implemented.
     // ========================================
 
     if (paypalBtn) {
-
-        paypalBtn.addEventListener(
-            "click",
-            async () => {
-
-                const amount =
-                    Number(
-                        paypalAmount
-                            ? paypalAmount.value
-                            : 0
-                    );
-
-
-                // Validate amount
-                if (!amount || amount <= 0) {
-
-                    showToast(
-                        "Please enter a valid PayPal donation amount."
-                    );
-
-                    return;
-
-                }
-
-
-                // Disable button while processing
-                paypalBtn.disabled = true;
-
-                paypalBtn.innerHTML =
-                    '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
-
-                try {
-
-                    /*
-                     * BACKEND INTEGRATION
-                     *
-                     * Your Node.js backend should handle:
-                     *
-                     * POST /api/donations/paypal
-                     *
-                     * The backend creates the PayPal order
-                     * and returns the approval URL.
-                     */
-
-                    const response =
-                        await fetch(
-                            "/api/donations/paypal",
-                            {
-
-                                method: "POST",
-
-                                headers: {
-                                    "Content-Type":
-                                        "application/json"
-                                },
-
-                                body: JSON.stringify({
-                                    amount: amount,
-                                    currency: "USD",
-                                    purpose:
-                                        "Church Donation"
-                                })
-
-                            }
-                        );
-
-
-                    const data =
-                        await response.json();
-
-
-                    if (!response.ok) {
-
-                        throw new Error(
-                            data.message ||
-                            "PayPal payment could not be started."
-                        );
-
-                    }
-
-
-                    // Redirect donor to PayPal
-                    if (data.approvalUrl) {
-
-                        window.location.href =
-                            data.approvalUrl;
-
-                    } else {
-
-                        showToast(
-                            data.message ||
-                            "PayPal integration is not ready."
-                        );
-
-                    }
-
-
-                } catch (error) {
-
-                    console.error(
-                        "PayPal error:",
-                        error
-                    );
-
-
-                    showToast(
-                        error.message ||
-                        "PayPal service is not connected yet."
-                    );
-
-                } finally {
-
-                    // Restore button
-                    paypalBtn.disabled = false;
-
-                    paypalBtn.innerHTML =
-                        '<i class="fab fa-paypal"></i> Donate with PayPal';
-
-                }
-
-            }
-        );
-
-    }
-
-
-    // ========================================
-    // PREVENT NEGATIVE AMOUNTS
-    // ========================================
-
-    if (mpesaAmount) {
-
-        mpesaAmount.addEventListener("input", () => {
-
-            if (Number(mpesaAmount.value) < 0) {
-
-                mpesaAmount.value = "";
-
-            }
-
+        paypalBtn.addEventListener("click", () => {
+            showToast(
+                "PayPal payments are not connected yet. Please use M-PESA while this feature is being configured."
+            );
         });
-
     }
 
+    // ========================================
+    // PREVENT NEGATIVE PAYPAL AMOUNTS
+    // ========================================
 
     if (paypalAmount) {
-
         paypalAmount.addEventListener("input", () => {
-
             if (Number(paypalAmount.value) < 0) {
-
                 paypalAmount.value = "";
-
             }
-
         });
-
     }
-
-
 });
