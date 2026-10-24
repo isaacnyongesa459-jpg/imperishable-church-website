@@ -5,13 +5,18 @@
 ======================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
+    "use strict";
+
     // ========================================
     // BACKEND CONFIGURATION
-    // Replace this placeholder after deploying
-    // the backend to Render.
+    // Replace this placeholder after deployment.
+    // Never put Daraja secrets in frontend code.
     // ========================================
 
     const API_BASE_URL = "https://YOUR-RENDER-SERVICE.onrender.com";
+
+    const backendConfigured =
+        !API_BASE_URL.includes("YOUR-RENDER-SERVICE");
 
     // ========================================
     // PAGE ELEMENTS
@@ -27,6 +32,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const paypalAmount = document.getElementById("paypalAmount");
     const paypalBtn = document.getElementById("paypalBtn");
 
+    const amountButtons = document.querySelectorAll(
+        '.amount-btn[data-method="mpesa"]'
+    );
+
     // ========================================
     // NAVIGATION MENU
     // ========================================
@@ -36,7 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         dropdownMenu.classList.remove("show");
         hamburger.setAttribute("aria-expanded", "false");
-        hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+        hamburger.setAttribute("aria-label", "Open navigation menu");
+        hamburger.innerHTML =
+            '<i class="fas fa-bars" aria-hidden="true"></i>';
     }
 
     if (hamburger && dropdownMenu) {
@@ -45,20 +56,24 @@ document.addEventListener("DOMContentLoaded", () => {
         hamburger.addEventListener("click", (event) => {
             event.stopPropagation();
 
-            dropdownMenu.classList.toggle("show");
-
-            const opened = dropdownMenu.classList.contains("show");
+            const isOpen = dropdownMenu.classList.toggle("show");
 
             hamburger.setAttribute(
                 "aria-expanded",
-                opened ? "true" : "false"
+                String(isOpen)
             );
 
-            hamburger.innerHTML = opened
-                ? '<i class="fas fa-times"></i>'
-                : '<i class="fas fa-bars"></i>';
+            hamburger.setAttribute(
+                "aria-label",
+                isOpen ? "Close navigation menu" : "Open navigation menu"
+            );
+
+            hamburger.innerHTML = isOpen
+                ? '<i class="fas fa-times" aria-hidden="true"></i>'
+                : '<i class="fas fa-bars" aria-hidden="true"></i>';
         });
 
+        // Close when the user taps outside the menu.
         document.addEventListener("click", (event) => {
             if (
                 !dropdownMenu.contains(event.target) &&
@@ -68,11 +83,21 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        dropdownMenu
-            .querySelectorAll(".dropdown-item")
-            .forEach((item) => {
-                item.addEventListener("click", closeMenu);
-            });
+        // The updated HTML uses normal links, not .dropdown-item.
+        dropdownMenu.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", closeMenu);
+        });
+
+        // Close the menu using the Escape key.
+        document.addEventListener("keydown", (event) => {
+            if (
+                event.key === "Escape" &&
+                dropdownMenu.classList.contains("show")
+            ) {
+                closeMenu();
+                hamburger.focus();
+            }
+        });
     }
 
     // ========================================
@@ -94,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         toastTimer = setTimeout(() => {
             toast.classList.remove("show");
-        }, 5000);
+        }, 6000);
     }
 
     // ========================================
@@ -124,11 +149,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // LOAD TOTAL CONTRIBUTIONS
+    // FORMAT KENYAN SHILLINGS
+    // ========================================
+
+    function formatKES(amount) {
+        return Number(amount).toLocaleString("en-KE", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    // ========================================
+    // LOAD CONFIRMED DONATION TOTAL
     // ========================================
 
     async function loadDonationTotal() {
-        if (!mainAmount) return;
+        if (!mainAmount || !backendConfigured) return;
 
         try {
             const response = await fetch(
@@ -136,25 +172,16 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
             const data = await readResponse(response);
-
             const total = Number(data.total);
 
-            if (!Number.isFinite(total)) {
-                throw new Error("Invalid donation total.");
+            if (!Number.isFinite(total) || total < 0) {
+                throw new Error("The server returned an invalid donation total.");
             }
 
-            mainAmount.textContent = `KES ${total.toLocaleString(
-                "en-KE",
-                {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                }
-            )}`;
+            mainAmount.textContent = `KES ${formatKES(total)}`;
         } catch (error) {
             console.error("Donation total error:", error);
-
-            // Keep the existing displayed value if the
-            // backend is temporarily unavailable.
+            // Keep the existing display if the backend is unavailable.
         }
     }
 
@@ -164,27 +191,36 @@ document.addEventListener("DOMContentLoaded", () => {
     // PRESET M-PESA AMOUNTS
     // ========================================
 
-    const amountButtons = document.querySelectorAll(".amount-btn");
+    function clearSelectedAmounts() {
+        amountButtons.forEach((button) => {
+            button.classList.remove("selected");
+            button.setAttribute("aria-pressed", "false");
+        });
+    }
 
     amountButtons.forEach((button) => {
         button.addEventListener("click", () => {
-            if (mpesaAmount) {
-                mpesaAmount.value = button.dataset.amount || "";
+            if (!mpesaAmount) return;
+
+            const amount = Number(button.dataset.amount);
+
+            if (!Number.isSafeInteger(amount) || amount <= 0) {
+                showToast("This preset donation amount is invalid.");
+                return;
             }
 
-            amountButtons.forEach((item) => {
-                item.classList.remove("selected");
-            });
+            mpesaAmount.value = String(amount);
+            clearSelectedAmounts();
 
             button.classList.add("selected");
+            button.setAttribute("aria-pressed", "true");
         });
     });
 
     if (mpesaAmount) {
         mpesaAmount.addEventListener("input", () => {
-            amountButtons.forEach((button) => {
-                button.classList.remove("selected");
-            });
+            // Clear the preset highlight when a custom amount is entered.
+            clearSelectedAmounts();
 
             if (Number(mpesaAmount.value) < 0) {
                 mpesaAmount.value = "";
@@ -193,11 +229,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // M-PESA PHONE NUMBER NORMALIZATION
+    // VALIDATE AND NORMALIZE KENYAN PHONE
     // ========================================
 
     function normalizeKenyanPhone(value) {
-        let phone = value.replace(/[\s()-]/g, "");
+        let phone = value.trim().replace(/[\s()-]/g, "");
 
         if (phone.startsWith("+")) {
             phone = phone.slice(1);
@@ -222,14 +258,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // CHECK M-PESA PAYMENT STATUS
+    // CHECK PAYMENT STATUS
     // ========================================
+
+    function wait(milliseconds) {
+        return new Promise((resolve) => {
+            setTimeout(resolve, milliseconds);
+        });
+    }
 
     async function checkPaymentStatus(checkoutRequestId) {
         const maxAttempts = 12;
+        const delayBetweenChecks = 5000;
 
         for (let attempt = 0; attempt < maxAttempts; attempt++) {
-            await new Promise((resolve) => setTimeout(resolve, 5000));
+            await wait(delayBetweenChecks);
 
             try {
                 const response = await fetch(
@@ -241,12 +284,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 const data = await readResponse(response);
 
                 if (data.status === "completed") {
-                    const receipt = data.mpesa_receipt_number
-                        ? ` Receipt: ${data.mpesa_receipt_number}.`
-                        : "";
+                    const receipt =
+                        data.mpesa_receipt_number ||
+                        data.receipt ||
+                        data.mpesaReceiptNumber;
 
                     showToast(
-                        `Donation confirmed successfully!${receipt}`
+                        "Donation confirmed successfully!" +
+                        (receipt ? ` M-PESA receipt: ${receipt}.` : "")
                     );
 
                     await loadDonationTotal();
@@ -256,17 +301,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (data.status === "failed") {
                     showToast(
                         data.result_desc ||
-                        "The M-PESA payment was not completed."
+                        data.resultDesc ||
+                        "The M-PESA payment was not completed. Check your phone and try again if appropriate."
                     );
                     return;
                 }
+
+                // "pending" means we keep checking.
             } catch (error) {
                 console.error("Payment status check error:", error);
+                // A temporary network error does not prove the payment failed.
             }
         }
 
         showToast(
-            "Your payment is still awaiting confirmation. Please check your M-PESA messages before trying again."
+            "Confirmation is taking longer than expected. Check your M-PESA messages and donation status before attempting another payment."
         );
     }
 
@@ -276,12 +325,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (mpesaBtn) {
         mpesaBtn.addEventListener("click", async () => {
+            if (!backendConfigured) {
+                showToast(
+                    "The donation backend has not been configured yet. Finish setting up the backend before testing payments."
+                );
+                return;
+            }
+
             const amount = Number(
                 mpesaAmount ? mpesaAmount.value : 0
             );
 
             const rawPhone = mpesaPhone
-                ? mpesaPhone.value.trim()
+                ? mpesaPhone.value
                 : "";
 
             if (
@@ -292,6 +348,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 showToast(
                     "Enter a whole-number donation between KES 10 and KES 250,000."
                 );
+
+                if (mpesaAmount) mpesaAmount.focus();
                 return;
             }
 
@@ -301,6 +359,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 phone = normalizeKenyanPhone(rawPhone);
             } catch (error) {
                 showToast(error.message);
+
+                if (mpesaPhone) mpesaPhone.focus();
                 return;
             }
 
@@ -308,17 +368,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             mpesaBtn.disabled = true;
             mpesaBtn.innerHTML =
-                '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Processing...';
 
             try {
-                if (
-                    API_BASE_URL.includes("YOUR-RENDER-SERVICE")
-                ) {
-                    throw new Error(
-                        "The backend URL has not been configured yet."
-                    );
-                }
-
                 const response = await fetch(
                     `${API_BASE_URL}/api/donations/mpesa`,
                     {
@@ -327,8 +379,8 @@ document.addEventListener("DOMContentLoaded", () => {
                             "Content-Type": "application/json"
                         },
                         body: JSON.stringify({
-                            amount,
-                            phone,
+                            amount: amount,
+                            phone: phone,
                             currency: "KES",
                             purpose: "Church Donation"
                         })
@@ -338,27 +390,25 @@ document.addEventListener("DOMContentLoaded", () => {
                 const data = await readResponse(response);
 
                 if (!data.checkoutRequestId) {
-                    showToast(
+                    throw new Error(
                         data.message ||
-                        "The request was sent, but a payment reference was not returned. Check your phone and payment status."
+                        "The server did not return a payment reference. Check your payment status before trying again."
                     );
-                    return;
                 }
 
                 showToast(
                     data.message ||
-                    "Payment request sent. Check your phone for the M-PESA prompt."
+                    "Payment request accepted. Check your phone for the M-PESA prompt."
                 );
 
-                // Do not report success until the backend
-                // confirms the payment through its callback.
+                // Only the backend's recorded status can confirm payment.
                 await checkPaymentStatus(data.checkoutRequestId);
             } catch (error) {
-                console.error("M-PESA error:", error);
+                console.error("M-PESA request error:", error);
 
                 showToast(
                     error.message ||
-                    "Unable to start M-PESA payment. Please try again."
+                    "Unable to start the M-PESA request. Check your connection and payment status."
                 );
             } finally {
                 mpesaBtn.disabled = false;
@@ -368,12 +418,29 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // PAYPAL SECTION
-    // Backend integration is not yet implemented.
+    // PAYPAL
+    // This feature is not connected to a payment
+    // provider yet. Do not claim to process payments.
     // ========================================
 
     if (paypalBtn) {
         paypalBtn.addEventListener("click", () => {
+            const amount = Number(
+                paypalAmount ? paypalAmount.value : 0
+            );
+
+            if (
+                paypalAmount &&
+                paypalAmount.value.trim() !== "" &&
+                (!Number.isSafeInteger(amount) || amount <= 0)
+            ) {
+                showToast(
+                    "Enter a valid whole-number donation amount."
+                );
+                paypalAmount.focus();
+                return;
+            }
+
             showToast(
                 "PayPal payments are not connected yet. Please use M-PESA while this feature is being configured."
             );
