@@ -1,9 +1,10 @@
-// ========================================
-// IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
-// CONTACT PAGE JAVASCRIPT
-// ========================================
+/* ========================================
+   IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
+   CONTACT PAGE JAVASCRIPT
+======================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
+    "use strict";
 
     // ========================================
     // GET ELEMENTS
@@ -18,150 +19,66 @@ document.addEventListener("DOMContentLoaded", () => {
     // HAMBURGER MENU
     // ========================================
 
+    function closeMenu() {
+        if (!hamburger || !dropdownMenu) return;
+
+        dropdownMenu.classList.remove("show");
+        hamburger.setAttribute("aria-expanded", "false");
+        hamburger.setAttribute("aria-label", "Open navigation menu");
+        hamburger.innerHTML = '<i class="fas fa-bars" aria-hidden="true"></i>';
+    }
+
     if (hamburger && dropdownMenu) {
+        hamburger.setAttribute("aria-expanded", "false");
 
-        // Open / close menu
         hamburger.addEventListener("click", (event) => {
-
-            // Prevent the document click listener
-            // from immediately closing the menu
             event.stopPropagation();
 
-            const isOpen =
-                dropdownMenu.classList.toggle("show");
+            const isOpen = dropdownMenu.classList.toggle("show");
 
-            // Update accessibility state
             hamburger.setAttribute(
                 "aria-expanded",
                 String(isOpen)
             );
 
-            // Change hamburger icon
-            if (isOpen) {
+            hamburger.setAttribute(
+                "aria-label",
+                isOpen ? "Close navigation menu" : "Open navigation menu"
+            );
 
-                hamburger.innerHTML =
-                    '<i class="fas fa-times"></i>';
-
-                hamburger.setAttribute(
-                    "aria-label",
-                    "Close navigation menu"
-                );
-
-            } else {
-
-                hamburger.innerHTML =
-                    '<i class="fas fa-bars"></i>';
-
-                hamburger.setAttribute(
-                    "aria-label",
-                    "Open navigation menu"
-                );
-            }
-
+            hamburger.innerHTML = isOpen
+                ? '<i class="fas fa-times" aria-hidden="true"></i>'
+                : '<i class="fas fa-bars" aria-hidden="true"></i>';
         });
-
-
-        // ========================================
-        // CLOSE MENU AFTER CLICKING A LINK
-        // ========================================
-
-        const menuItems =
-            document.querySelectorAll(".dropdown-item");
-
-        menuItems.forEach((item) => {
-
-            item.addEventListener("click", () => {
-
-                dropdownMenu.classList.remove("show");
-
-                hamburger.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-
-                hamburger.setAttribute(
-                    "aria-label",
-                    "Open navigation menu"
-                );
-
-                hamburger.innerHTML =
-                    '<i class="fas fa-bars"></i>';
-
-            });
-
-        });
-
-
-        // ========================================
-        // CLOSE MENU WHEN CLICKING OUTSIDE
-        // ========================================
 
         document.addEventListener("click", (event) => {
-
-            const clickedInsideMenu =
-                dropdownMenu.contains(event.target);
-
-            const clickedHamburger =
-                hamburger.contains(event.target);
-
-
             if (
-                !clickedInsideMenu &&
-                !clickedHamburger
+                !dropdownMenu.contains(event.target) &&
+                !hamburger.contains(event.target)
             ) {
-
-                dropdownMenu.classList.remove("show");
-
-                hamburger.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-
-                hamburger.setAttribute(
-                    "aria-label",
-                    "Open navigation menu"
-                );
-
-                hamburger.innerHTML =
-                    '<i class="fas fa-bars"></i>';
-
+                closeMenu();
             }
-
         });
 
-
-        // ========================================
-        // CLOSE MENU WITH ESCAPE KEY
-        // ========================================
+        dropdownMenu.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", closeMenu);
+        });
 
         document.addEventListener("keydown", (event) => {
-
             if (
                 event.key === "Escape" &&
                 dropdownMenu.classList.contains("show")
             ) {
-
-                dropdownMenu.classList.remove("show");
-
-                hamburger.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-
-                hamburger.setAttribute(
-                    "aria-label",
-                    "Open navigation menu"
-                );
-
-                hamburger.innerHTML =
-                    '<i class="fas fa-bars"></i>';
-
+                closeMenu();
                 hamburger.focus();
-
             }
-
         });
 
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 1000) {
+                closeMenu();
+            }
+        });
     }
 
 
@@ -170,72 +87,32 @@ document.addEventListener("DOMContentLoaded", () => {
     // ========================================
 
     if (contactForm) {
-
         contactForm.addEventListener("submit", (event) => {
-
-            // Prevent page refresh
             event.preventDefault();
 
-
-            // Get form values
-            const name =
-                document.getElementById("name").value.trim();
-
-            const email =
-                document.getElementById("email").value.trim();
-
-            const subject =
-                document.getElementById("subject").value.trim();
-
-            const message =
-                document.getElementById("message").value.trim();
-
-
-            // ========================================
-            // VALIDATION
-            // ========================================
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const subject = document.getElementById("subject").value.trim();
+            const message = document.getElementById("message").value.trim();
 
             if (!name || !email || !message) {
-
-                alert(
-                    "Please fill in all required fields."
-                );
-
+                alert("Please fill in all required fields.");
                 return;
             }
 
-
-            // ========================================
-            // BASIC EMAIL VALIDATION
-            // ========================================
-
-            const emailPattern =
-                /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
             if (!emailPattern.test(email)) {
-
-                alert(
-                    "Please enter a valid email address."
-                );
-
+                alert("Please enter a valid email address.");
                 return;
             }
-
-
-            // ========================================
-            // MESSAGE RECEIVED
-            // ========================================
 
             alert(
                 `Thank you, ${name}! Your message has been received.`
             );
 
-
-            // Clear the form
             contactForm.reset();
-
         });
-
     }
 
 });
