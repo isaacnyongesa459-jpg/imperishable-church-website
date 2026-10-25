@@ -1,4 +1,3 @@
-
 /* ========================================
    IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
    DONATION PAGE JAVASCRIPT
@@ -9,8 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ========================================
     // BACKEND CONFIGURATION
-    // Replace this placeholder after deployment.
-    // Never put Daraja secrets in frontend code.
     // ========================================
 
     const API_BASE_URL = "https://imperishable-church-mpesa-backend-fa2a.onrender.com";
@@ -73,7 +70,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 : '<i class="fas fa-bars" aria-hidden="true"></i>';
         });
 
-        // Close when the user taps outside the menu.
         document.addEventListener("click", (event) => {
             if (
                 !dropdownMenu.contains(event.target) &&
@@ -83,12 +79,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // The updated HTML uses normal links, not .dropdown-item.
         dropdownMenu.querySelectorAll("a").forEach((link) => {
             link.addEventListener("click", closeMenu);
         });
 
-        // Close the menu using the Escape key.
         document.addEventListener("keydown", (event) => {
             if (
                 event.key === "Escape" &&
@@ -96,6 +90,12 @@ document.addEventListener("DOMContentLoaded", () => {
             ) {
                 closeMenu();
                 hamburger.focus();
+            }
+        });
+
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 768) {
+                closeMenu();
             }
         });
     }
@@ -181,7 +181,6 @@ document.addEventListener("DOMContentLoaded", () => {
             mainAmount.textContent = `KES ${formatKES(total)}`;
         } catch (error) {
             console.error("Donation total error:", error);
-            // Keep the existing display if the backend is unavailable.
         }
     }
 
@@ -219,7 +218,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (mpesaAmount) {
         mpesaAmount.addEventListener("input", () => {
-            // Clear the preset highlight when a custom amount is entered.
             clearSelectedAmounts();
 
             if (Number(mpesaAmount.value) < 0) {
@@ -306,11 +304,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     );
                     return;
                 }
-
-                // "pending" means we keep checking.
             } catch (error) {
                 console.error("Payment status check error:", error);
-                // A temporary network error does not prove the payment failed.
             }
         }
 
@@ -401,7 +396,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Payment request accepted. Check your phone for the M-PESA prompt."
                 );
 
-                // Only the backend's recorded status can confirm payment.
                 await checkPaymentStatus(data.checkoutRequestId);
             } catch (error) {
                 console.error("M-PESA request error:", error);
@@ -419,8 +413,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ========================================
     // PAYPAL
-    // This feature is not connected to a payment
-    // provider yet. Do not claim to process payments.
     // ========================================
 
     if (paypalBtn) {
@@ -446,10 +438,6 @@ document.addEventListener("DOMContentLoaded", () => {
             );
         });
     }
-
-    // ========================================
-    // PREVENT NEGATIVE PAYPAL AMOUNTS
-    // ========================================
 
     if (paypalAmount) {
         paypalAmount.addEventListener("input", () => {
