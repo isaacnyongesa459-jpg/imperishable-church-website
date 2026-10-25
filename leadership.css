@@ -1,6 +1,6 @@
 /* ========================================
    IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
-   LEADERSHIP PAGE STYLES
+   LEADERSHIP PAGE CSS
 ======================================== */
 
 
@@ -14,19 +14,9 @@
     box-sizing: border-box;
 }
 
-
-/* ========================================
-   ROOT
-======================================== */
-
 html {
     scroll-behavior: smooth;
 }
-
-
-/* ========================================
-   BODY
-======================================== */
 
 body {
     font-family: "Poppins", sans-serif;
@@ -37,7 +27,7 @@ body {
 
 
 /* ========================================
-   GENERAL
+   GLOBAL
 ======================================== */
 
 a {
@@ -56,21 +46,28 @@ button {
 
 
 /* ========================================
-   NAVBAR
+   NAVIGATION
 ======================================== */
 
 .navbar {
     position: sticky;
     top: 0;
     z-index: 1000;
+
+    width: 100%;
+
     background: #ffffff;
+
     border-bottom: 1px solid #e8e8e8;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.06);
+
+    box-shadow:
+        0 2px 15px rgba(0, 0, 0, 0.07);
 }
 
 .nav-container {
     width: min(1200px, 92%);
-    height: 78px;
+    height: 75px;
+
     margin: auto;
 
     display: flex;
@@ -86,28 +83,32 @@ button {
 .logo {
     display: flex;
     align-items: center;
+
     gap: 12px;
+
+    color: #162447;
 
     font-size: 19px;
     font-weight: 700;
-    color: #172554;
 }
 
 .logo-img {
     width: 48px;
     height: 48px;
+
     object-fit: contain;
 }
 
 
 /* ========================================
-   DESKTOP NAV
+   DESKTOP NAVIGATION
 ======================================== */
 
 .desktop-nav {
     display: flex;
     align-items: center;
-    gap: 6px;
+
+    gap: 5px;
 }
 
 .desktop-nav a {
@@ -115,24 +116,31 @@ button {
 
     border-radius: 7px;
 
+    color: #333;
+
     font-size: 14px;
     font-weight: 500;
 
-    color: #333;
-
     transition:
         background 0.25s ease,
-        color 0.25s ease;
+        color 0.25s ease,
+        transform 0.2s ease;
 }
 
 .desktop-nav a:hover {
-    background: #eef2ff;
-    color: #1d4ed8;
+    background: #f4ead0;
+    color: #9b751d;
 }
 
 .desktop-nav a.active {
-    background: #1d4ed8;
-    color: #ffffff;
+    background: #b58a25;
+    color: #162447;
+    font-weight: 600;
+}
+
+.desktop-nav a.active:hover {
+    background: #d1a63a;
+    color: #162447;
 }
 
 
@@ -143,24 +151,36 @@ button {
 .hamburger {
     display: none;
 
-    width: 45px;
-    height: 45px;
+    width: 46px;
+    height: 46px;
 
     border: none;
+
     border-radius: 8px;
 
-    background: #1d4ed8;
-    color: white;
+    background: #b58a25;
+    color: #162447;
 
-    font-size: 20px;
+    font-size: 21px;
 
     cursor: pointer;
 
-    transition: 0.25s ease;
+    transition:
+        background 0.25s ease,
+        transform 0.2s ease;
 }
 
 .hamburger:hover {
-    background: #163fae;
+    background: #d1a63a;
+}
+
+.hamburger:active {
+    transform: scale(0.94);
+}
+
+.hamburger:focus-visible {
+    outline: 3px solid rgba(181, 138, 37, 0.35);
+    outline-offset: 3px;
 }
 
 
@@ -170,27 +190,41 @@ button {
 
 .dropdown-menu {
     position: fixed;
-    top: 78px;
+
+    top: 75px;
     left: 0;
 
     width: 100%;
 
-    background: white;
+    background: #ffffff;
 
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.14);
 
     z-index: 999;
 
-    display: none;
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateY(-12px);
+
+    transition:
+        opacity 0.25s ease,
+        visibility 0.25s ease,
+        transform 0.25s ease;
 }
 
 .dropdown-menu.show {
-    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
 .dropdown-content {
     width: min(600px, 92%);
+
     margin: auto;
+
     padding: 15px 0;
 }
 
@@ -200,7 +234,9 @@ button {
 
     gap: 15px;
 
-    padding: 15px 18px;
+    width: 100%;
+
+    padding: 14px 18px;
 
     margin-bottom: 5px;
 
@@ -211,22 +247,38 @@ button {
     font-size: 15px;
     font-weight: 500;
 
-    transition: 0.25s ease;
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.2s ease;
 }
 
 .dropdown-item i {
     width: 22px;
+
     text-align: center;
+
+    color: #b58a25;
 }
 
 .dropdown-item:hover {
-    background: #eef2ff;
-    color: #1d4ed8;
+    background: #f4ead0;
+
+    color: #162447;
+
+    transform: translateX(4px);
 }
 
 .dropdown-item.active {
-    background: #1d4ed8;
-    color: white;
+    background: #b58a25;
+
+    color: #162447;
+
+    font-weight: 600;
+}
+
+.dropdown-item.active i {
+    color: #162447;
 }
 
 
@@ -235,32 +287,36 @@ button {
 ======================================== */
 
 .page-header {
-    padding: 90px 20px;
+    padding: 95px 20px;
 
     text-align: center;
 
+    color: #ffffff;
+
     background:
         linear-gradient(
-            rgba(17, 34, 68, 0.92),
-            rgba(17, 34, 68, 0.92)
+            rgba(17, 24, 39, 0.90),
+            rgba(22, 36, 71, 0.92)
         ),
         url("21.jpg");
 
     background-size: cover;
+
     background-position: center;
 
-    color: white;
+    background-repeat: no-repeat;
 }
 
 .eyebrow {
     margin-bottom: 12px;
 
+    color: #d1a63a;
+
     font-size: 12px;
+
     font-weight: 600;
 
     letter-spacing: 2px;
-
-    opacity: 0.85;
 }
 
 .page-header h1 {
@@ -268,16 +324,19 @@ button {
 
     font-size: clamp(30px, 5vw, 48px);
 
-    font-weight: 700;
+    line-height: 1.15;
+
+    font-weight: 800;
 }
 
 .page-header p:last-child {
     max-width: 700px;
+
     margin: auto;
 
-    font-size: 16px;
+    color: rgba(255, 255, 255, 0.88);
 
-    opacity: 0.9;
+    font-size: 16px;
 }
 
 
@@ -286,7 +345,7 @@ button {
 ======================================== */
 
 .leadership-section {
-    padding: 80px 0;
+    padding: 85px 0;
 }
 
 
@@ -295,19 +354,33 @@ button {
 ======================================== */
 
 .section-title {
-    text-align: center;
-
     max-width: 750px;
 
     margin: 0 auto 45px;
+
+    text-align: center;
+}
+
+.section-kicker {
+    margin-bottom: 8px;
+
+    color: #b58a25;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.8px;
 }
 
 .section-title h2 {
+    margin-bottom: 15px;
+
+    color: #162447;
+
     font-size: 34px;
 
-    color: #172554;
-
-    margin-bottom: 15px;
+    font-weight: 700;
 }
 
 .title-line {
@@ -316,13 +389,14 @@ button {
 
     margin: 0 auto 18px;
 
-    background: #1d4ed8;
+    background: #b58a25;
 
     border-radius: 10px;
 }
 
-.section-title p {
+.section-title p:last-child {
     color: #666;
+
     font-size: 15px;
 }
 
@@ -351,28 +425,39 @@ button {
 
     border-radius: 30px;
 
-    background: white;
+    background: #ffffff;
 
     color: #444;
 
     font-size: 13px;
+
     font-weight: 500;
 
     cursor: pointer;
 
-    transition: 0.25s ease;
+    transition:
+        background 0.25s ease,
+        border-color 0.25s ease,
+        color 0.25s ease,
+        transform 0.2s ease;
 }
 
 .filter-btn:hover {
-    border-color: #1d4ed8;
-    color: #1d4ed8;
+    border-color: #b58a25;
+
+    color: #9b751d;
+
+    transform: translateY(-2px);
 }
 
 .filter-btn.active {
-    background: #1d4ed8;
-    border-color: #1d4ed8;
+    background: #b58a25;
 
-    color: white;
+    border-color: #b58a25;
+
+    color: #162447;
+
+    font-weight: 600;
 }
 
 
@@ -381,9 +466,9 @@ button {
 ======================================== */
 
 .member-count {
-    text-align: center;
-
     margin-bottom: 35px;
+
+    text-align: center;
 
     color: #777;
 
@@ -391,7 +476,8 @@ button {
 }
 
 .member-count span {
-    color: #1d4ed8;
+    color: #b58a25;
+
     font-weight: 700;
 }
 
@@ -417,9 +503,9 @@ button {
 .leader-card {
     overflow: hidden;
 
-    background: white;
+    background: #ffffff;
 
-    border: 1px solid #e8e8e8;
+    border: 1px solid #e7e7e7;
 
     border-radius: 14px;
 
@@ -453,14 +539,15 @@ button {
 }
 
 .leader-img {
+    display: block;
+
     width: 100%;
     height: 100%;
 
     object-fit: cover;
 
-    display: block;
-
-    transition: transform 0.4s ease;
+    transition:
+        transform 0.4s ease;
 }
 
 .leader-card:hover .leader-img {
@@ -476,81 +563,71 @@ button {
     padding: 22px;
 }
 
+.leader-tag {
+    display: inline-block;
+
+    margin-bottom: 9px;
+
+    padding: 4px 9px;
+
+    border-radius: 20px;
+
+    background: #f4ead0;
+
+    color: #9b751d;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+
+    text-transform: uppercase;
+}
+
 .leader-name {
-    color: #172554;
+    margin-bottom: 5px;
+
+    color: #162447;
 
     font-size: 18px;
 
-    margin-bottom: 5px;
+    font-weight: 700;
 }
 
 .leader-position {
-    color: #1d4ed8;
+    margin-bottom: 12px;
+
+    color: #b58a25;
 
     font-size: 13px;
 
     font-weight: 600;
-
-    margin-bottom: 12px;
 }
 
 .leader-bio {
+    min-height: 70px;
+
     color: #666;
 
     font-size: 13px;
 
     line-height: 1.7;
-
-    min-height: 65px;
 }
 
 
 /* ========================================
-   SOCIAL ICONS
+   NO RESULTS
 ======================================== */
 
-.social-icons {
-    display: flex;
+.no-results {
+    padding: 40px 20px;
 
-    gap: 8px;
+    text-align: center;
 
-    margin-top: 18px;
-}
+    color: #777;
 
-.social-icons a {
-    width: 35px;
-    height: 35px;
-
-    display: flex;
-
-    align-items: center;
-    justify-content: center;
-
-    border-radius: 50%;
-
-    background: #eef2ff;
-
-    color: #1d4ed8;
-
-    font-size: 14px;
-
-    transition: 0.25s ease;
-}
-
-.social-icons a:hover {
-    background: #1d4ed8;
-    color: white;
-
-    transform: translateY(-2px);
-}
-
-
-/* ========================================
-   FILTER HIDDEN STATE
-======================================== */
-
-.leader-card.hidden {
-    display: none;
+    font-size: 15px;
 }
 
 
@@ -559,11 +636,11 @@ button {
 ======================================== */
 
 .footer {
-    background: #101827;
+    margin-top: 30px;
+
+    background: #101820;
 
     color: #d6d9e0;
-
-    margin-top: 30px;
 }
 
 .footer-container {
@@ -594,6 +671,10 @@ button {
     gap: 12px;
 
     margin-bottom: 18px;
+
+    color: #ffffff;
+
+    font-weight: 700;
 }
 
 .footer-logo img {
@@ -603,9 +684,7 @@ button {
     object-fit: contain;
 }
 
-.footer-logo h3 {
-    color: white;
-
+.footer-logo span {
     font-size: 18px;
 }
 
@@ -623,11 +702,11 @@ button {
 ======================================== */
 
 .footer-column h3 {
-    color: white;
+    margin-bottom: 20px;
+
+    color: #ffffff;
 
     font-size: 16px;
-
-    margin-bottom: 20px;
 }
 
 
@@ -635,20 +714,22 @@ button {
    FOOTER LINKS
 ======================================== */
 
-.footer-column > a {
+.footer-column > a:not(.footer-logo) {
     display: block;
+
+    margin-bottom: 11px;
 
     color: #aeb5c2;
 
     font-size: 13px;
 
-    margin-bottom: 11px;
-
-    transition: 0.25s ease;
+    transition:
+        color 0.25s ease,
+        transform 0.25s ease;
 }
 
-.footer-column > a:hover {
-    color: white;
+.footer-column > a:not(.footer-logo):hover {
+    color: #d1a63a;
 
     transform: translateX(4px);
 }
@@ -667,7 +748,7 @@ button {
 
     margin-right: 7px;
 
-    color: #60a5fa;
+    color: #b58a25;
 }
 
 
@@ -696,15 +777,20 @@ button {
 
     background: #1d293b;
 
-    color: white;
+    color: #ffffff;
 
     font-size: 14px;
 
-    transition: 0.25s ease;
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.25s ease;
 }
 
 .footer-socials a:hover {
-    background: #1d4ed8;
+    background: #b58a25;
+
+    color: #162447;
 
     transform: translateY(-3px);
 }
@@ -715,11 +801,11 @@ button {
 ======================================== */
 
 .footer-bottom {
-    border-top: 1px solid #273244;
+    padding: 20px;
 
     text-align: center;
 
-    padding: 20px;
+    border-top: 1px solid #273244;
 
     color: #8e98a8;
 
@@ -762,7 +848,7 @@ button {
 @media (max-width: 768px) {
 
     .nav-container {
-        height: 70px;
+        height: 68px;
     }
 
     .desktop-nav {
@@ -770,11 +856,14 @@ button {
     }
 
     .hamburger {
-        display: block;
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
     }
 
     .dropdown-menu {
-        top: 70px;
+        top: 68px;
     }
 
     .logo {
@@ -787,7 +876,11 @@ button {
     }
 
     .page-header {
-        padding: 70px 18px;
+        padding: 75px 18px;
+    }
+
+    .page-header h1 {
+        font-size: 32px;
     }
 
     .leadership-section {
@@ -824,6 +917,11 @@ button {
         font-size: 14px;
     }
 
+    .logo-img {
+        width: 39px;
+        height: 39px;
+    }
+
     .filter-buttons {
         flex-direction: column;
     }
@@ -838,4 +936,29 @@ button {
         height: 280px;
     }
 
+    .page-header {
+        padding: 65px 15px;
+    }
+
+    .page-header h1 {
+        font-size: 28px;
+    }
+}
+
+
+/* ========================================
+   ACCESSIBILITY
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+
+        transition-duration: 0.01ms !important;
+
+        animation-duration: 0.01ms !important;
+    }
 }
