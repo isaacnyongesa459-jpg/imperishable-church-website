@@ -1,13 +1,14 @@
-const express = require("express");
-process.on('uncaughtException', (err) => {
-  console.error('CRASH ERROR (Uncaught Exception):', err);
-  process.exit(1);
-});
-process.on('unhandledRejection', (reason) => {
-  console.error('CRASH ERROR (Unhandled Rejection):', reason);
+process.on("uncaughtException", (err) => {
+  console.error("CRASH ERROR (Uncaught Exception):", err);
   process.exit(1);
 });
 
+process.on("unhandledRejection", (reason) => {
+  console.error("CRASH ERROR (Unhandled Rejection):", reason);
+  process.exit(1);
+});
+
+const express = require("express");
 const { Pool } = require("pg");
 
 const app = express();
@@ -109,98 +110,102 @@ app.use((req, res, next) => {
 // ========================================
 
 async function initializeDatabase() {
-  // M-Pesa donations
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS donations (
-      id BIGSERIAL PRIMARY KEY,
-      checkout_request_id TEXT UNIQUE NOT NULL,
-      merchant_request_id TEXT,
-      phone TEXT NOT NULL,
-      amount INTEGER NOT NULL,
-      status TEXT NOT NULL DEFAULT 'pending',
-      mpesa_receipt_number TEXT,
-      result_desc TEXT,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    );
-  `);
+  try {
+    // M-Pesa donations
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS donations (
+        id BIGSERIAL PRIMARY KEY,
+        checkout_request_id TEXT UNIQUE NOT NULL,
+        merchant_request_id TEXT,
+        phone TEXT NOT NULL,
+        amount INTEGER NOT NULL,
+        status TEXT NOT NULL DEFAULT 'pending',
+        mpesa_receipt_number TEXT,
+        result_desc TEXT,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+    `);
+    // About page and other church information
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS church_content (
+        content_key VARCHAR(100) PRIMARY KEY,
+        title VARCHAR(200) NOT NULL,
+        body TEXT NOT NULL DEFAULT '',
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+    `);
 
-  // About page and other church information
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS church_content (
-      content_key VARCHAR(100) PRIMARY KEY,
-      title VARCHAR(200) NOT NULL,
-      body TEXT NOT NULL DEFAULT '',
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    );
-  `);
+    // Announcements
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS announcements (
+        id BIGSERIAL PRIMARY KEY,
+        title VARCHAR(200) NOT NULL,
+        body TEXT NOT NULL,
+        published BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+    `);
 
-  // Announcements
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS announcements (
-      id BIGSERIAL PRIMARY KEY,
-      title VARCHAR(200) NOT NULL,
-      body TEXT NOT NULL,
-      published BOOLEAN NOT NULL DEFAULT FALSE,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    );
-  `);
+    // Church leadership
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS leaders (
+        id BIGSERIAL PRIMARY KEY,
+        name VARCHAR(150) NOT NULL,
+        title VARCHAR(150) NOT NULL,
+        biography TEXT NOT NULL DEFAULT '',
+        photo_url TEXT NOT NULL DEFAULT '',
+        display_order INTEGER NOT NULL DEFAULT 0,
+        published BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+    `);
 
-  // Church leadership
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS leaders (
-      id BIGSERIAL PRIMARY KEY,
-      name VARCHAR(150) NOT NULL,
-      title VARCHAR(150) NOT NULL,
-      biography TEXT NOT NULL DEFAULT '',
-      photo_url TEXT NOT NULL DEFAULT '',
-      display_order INTEGER NOT NULL DEFAULT 0,
-      published BOOLEAN NOT NULL DEFAULT FALSE,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    );
-  `);
+    // Regular church services
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS services (
+        id BIGSERIAL PRIMARY KEY,
+        title VARCHAR(150) NOT NULL,
+        description TEXT NOT NULL DEFAULT '',
+        day_of_week VARCHAR(20) NOT NULL,
+        start_time VARCHAR(20) NOT NULL,
+        location VARCHAR(200) NOT NULL DEFAULT '',
+        published BOOLEAN NOT NULL DEFAULT FALSE,
+        display_order INTEGER NOT NULL DEFAULT 0
+      );
+    `);
 
-  // Regular church services
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS services (
-      id BIGSERIAL PRIMARY KEY,
-      title VARCHAR(150) NOT NULL,
-      description TEXT NOT NULL DEFAULT '',
-      day_of_week VARCHAR(20) NOT NULL,
-      start_time VARCHAR(20) NOT NULL,
-      location VARCHAR(200) NOT NULL DEFAULT '',
-      published BOOLEAN NOT NULL DEFAULT FALSE,
-      display_order INTEGER NOT NULL DEFAULT 0
-    );
-  `);
+    // Church events
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS events (
+        id BIGSERIAL PRIMARY KEY,
+        title VARCHAR(200) NOT NULL,
+        description TEXT NOT NULL DEFAULT '',
+        event_date TIMESTAMPTZ NOT NULL,
+        location VARCHAR(200) NOT NULL DEFAULT '',
+        image_url TEXT NOT NULL DEFAULT '',
+        published BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+    `);
 
-  // Church events
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS events (
-      id BIGSERIAL PRIMARY KEY,
-      title VARCHAR(200) NOT NULL,
-      description TEXT NOT NULL DEFAULT '',
-      event_date TIMESTAMPTZ NOT NULL,
-      location VARCHAR(200) NOT NULL DEFAULT '',
-      image_url TEXT NOT NULL DEFAULT '',
-      published BOOLEAN NOT NULL DEFAULT FALSE,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    );
-  `);
+    // Contact messages and prayer requests
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS contact_messages (
+        id BIGSERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        email VARCHAR(254) NOT NULL,
+        subject VARCHAR(200) NOT NULL,
+        message TEXT NOT NULL,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+    `);
 
-  // Contact messages and prayer requests
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS contact_messages (
-      id BIGSERIAL PRIMARY KEY,
-      name VARCHAR(100) NOT NULL,
-      email VARCHAR(254) NOT NULL,
-      subject VARCHAR(200) NOT NULL,
-      message TEXT NOT NULL,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    );
-  `);
-
-  console.log("All church website database tables are ready.");
+    console.log("All church website database tables are ready.");
+  } catch (error) {
+    console.error("Database initialization error:", error.message);
+    throw error;
+  }
 }
 
 // ========================================
@@ -454,7 +459,6 @@ app.post("/api/donations/mpesa", async (req, res) => {
     });
   }
 });
-
 // ========================================
 // M-PESA CALLBACK
 // ========================================
@@ -679,7 +683,6 @@ app.get("/api/services", async (req, res) => {
     });
   }
 });
-
 // ========================================
 // UPCOMING EVENTS
 // ========================================
@@ -835,7 +838,9 @@ async function startServer() {
       console.log(`M-PESA environment: ${MPESA_ENV}`);
     });
   } catch (error) {
-    console.error("Failed to start server:", error);
+    console.error("Failed to start server:", error.message);
     process.exit(1);
   }
 }
+
+startServer();
