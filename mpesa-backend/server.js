@@ -1,4 +1,3 @@
-
 const express = require("express");
 const { Pool } = require("pg");
 
@@ -98,7 +97,6 @@ app.use((req, res, next) => {
 
 // ========================================
 // DATABASE INITIALIZATION
-// All table creation belongs inside this function.
 // ========================================
 
 async function initializeDatabase() {
@@ -765,7 +763,6 @@ app.post("/api/contact", async (req, res) => {
 
     const message = String(req.body?.message || "").trim();
 
-    // Optional hidden honeypot field.
     const website = String(req.body?.website || "").trim();
 
     if (website) {
@@ -828,4 +825,8 @@ async function startServer() {
 
       console.log(`M-PESA environment: ${MPESA_ENV}`);
     });
-  } cat
+  } catch (error) {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  }
+}
