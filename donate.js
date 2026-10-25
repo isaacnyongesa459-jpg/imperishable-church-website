@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Never put Daraja secrets in frontend code.
     // ========================================
 
-    const API_BASE_URL = "https://YOUR-RENDER-SERVICE.onrender.com";
+    const API_BASE_URL = "https://imperishable-church-mpesa-backend-fa2a.onrender.com";
 
     const backendConfigured =
         !API_BASE_URL.includes("YOUR-RENDER-SERVICE");
