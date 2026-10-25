@@ -1,7 +1,7 @@
-// ========================================
-// IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
-// EVENTS PAGE JAVASCRIPT
-// ========================================
+/* ========================================
+   IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
+   EVENTS PAGE JAVASCRIPT
+======================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
 
