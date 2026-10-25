@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,7 +26,7 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
     >
 
-    <!-- Existing donation page stylesheet -->
+    <!-- Donation page stylesheet -->
     <link rel="stylesheet" href="donate.css">
 </head>
 
@@ -37,7 +36,7 @@
     <header class="header">
         <nav class="navbar" aria-label="Main navigation">
 
-            <a href="index.html" class="logo">
+            <a href="home.html" class="logo">
                 <span class="logo-icon">
                     <i class="fas fa-church" aria-hidden="true"></i>
                 </span>
@@ -47,6 +46,17 @@
                     <small>Bible Baptist Church</small>
                 </span>
             </a>
+
+            <!-- DESKTOP NAVIGATION -->
+            <div class="desktop-nav">
+                <a href="home.html">Home</a>
+                <a href="about.html">About Us</a>
+                <a href="services.html">Services</a>
+                <a href="leadership.html">Leadership</a>
+                <a href="events.html">Events</a>
+                <a href="donate.html" class="active" aria-current="page">Give</a>
+                <a href="contact.html">Contact</a>
+            </div>
 
             <button
                 type="button"
@@ -60,13 +70,36 @@
             </button>
 
             <div class="dropdown-menu" id="dropdownMenu">
-                <a href="index.html">Home</a>
-                <a href="about.html">About Us</a>
-                <a href="services.html">Services</a>
-                <a href="leadership.html">Leadership</a>
-                <a href="events.html">Events</a>
-                <a href="donate.html" aria-current="page">Donate</a>
-                <a href="contact.html">Contact</a>
+                <div class="dropdown-content">
+                    <a href="home.html" class="dropdown-item">
+                        <i class="fas fa-home"></i>
+                        <span>Home</span>
+                    </a>
+                    <a href="about.html" class="dropdown-item">
+                        <i class="fas fa-church"></i>
+                        <span>About Us</span>
+                    </a>
+                    <a href="services.html" class="dropdown-item">
+                        <i class="fas fa-praying-hands"></i>
+                        <span>Services</span>
+                    </a>
+                    <a href="leadership.html" class="dropdown-item">
+                        <i class="fas fa-users"></i>
+                        <span>Leadership</span>
+                    </a>
+                    <a href="events.html" class="dropdown-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Events</span>
+                    </a>
+                    <a href="donate.html" class="dropdown-item active" aria-current="page">
+                        <i class="fas fa-hand-holding-heart"></i>
+                        <span>Give</span>
+                    </a>
+                    <a href="contact.html" class="dropdown-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>Contact</span>
+                    </a>
+                </div>
             </div>
 
         </nav>
@@ -93,38 +126,35 @@
             </div>
         </section>
 
-        <!-- ================= DONATION TOTAL 
+        <!-- ================= DONATION TOTAL ================= -->
+        <section class="donation-summary" aria-labelledby="donation-total-heading">
+            <div class="container">
+                <div class="total-card">
+                    <i class="fas fa-hand-holding-heart" aria-hidden="true"></i>
 
+                    <h2 id="donation-total-heading">
+                        Total Confirmed Donations
+                    </h2>
 
-<!-- Donation Total -->
-<section class="donation-summary" aria-labelledby="donation-total-heading">
-    <div class="container">
-        <div class="total-card">
-            <i class="fas fa-hand-holding-heart" aria-hidden="true"></i>
+                    <div class="main-amount" id="mainAmount" aria-live="polite">
+                        KES 92,547.00
+                    </div>
 
-            <h2 id="donation-total-heading">
-                Total Confirmed Donations
-            </h2>
+                    <div class="main-amount" id="usdAmount" aria-live="polite">
+                        $661.05
+                    </div>
 
-            <div class="main-amount" id="mainAmount" aria-live="polite">
-                KES 92,547.00
+                    <p class="exchange-rate">
+                        Exchange rate: $1 = KSh 140
+                    </p>
+
+                    <p>
+                        This amount reflects donations recorded as completed
+                        by the donation system.
+                    </p>
+                </div>
             </div>
-
-            <div class="main-amount" id="usdAmount" aria-live="polite">
-                $661.05
-            </div>
-
-            <p class="exchange-rate">
-                Exchange rate: $1 = KSh 140
-            </p>
-
-            <p>
-                This amount reflects donations recorded as completed
-                by the donation system.
-            </p>
-        </div>
-    </div>
-</section>
+        </section>
 
         <!-- ================= DONATION FORM ================= -->
         <section
@@ -135,8 +165,9 @@
             <div class="container">
 
                 <div class="section-heading">
+                    <span class="section-kicker">SECURE GIVING</span>
                     <h2 id="donation-heading">Make a Donation</h2>
-
+                    <div class="title-line"></div>
                     <p>
                         Choose your donation amount and payment method below.
                     </p>
@@ -359,7 +390,7 @@
                 <div class="footer-links">
                     <h3>Quick Links</h3>
 
-                    <a href="index.html">Home</a>
+                    <a href="home.html">Home</a>
                     <a href="about.html">About Us</a>
                     <a href="services.html">Services</a>
                     <a href="events.html">Events</a>
