@@ -27,8 +27,6 @@ const {
   DATABASE_URL
 } = process.env;
 
-// Required environment variables.
-// The callback URL is checked separately before making a payment.
 const requiredEnv = [
   "MPESA_SHORTCODE",
   "MPESA_CONSUMER_KEY",
@@ -59,7 +57,7 @@ const mpesaBaseUrl =
     : "https://sandbox.safaricom.co.ke";
 
 // ========================================
-// DATABASE
+// DATABASE CONNECTION
 // ========================================
 
 const pool = new Pool({
@@ -100,9 +98,11 @@ app.use((req, res, next) => {
 
 // ========================================
 // DATABASE INITIALIZATION
+// All table creation belongs inside this function.
 // ========================================
 
 async function initializeDatabase() {
+  // M-Pesa donations
   await pool.query(`
     CREATE TABLE IF NOT EXISTS donations (
       id BIGSERIAL PRIMARY KEY,
@@ -117,9 +117,8 @@ async function initializeDatabase() {
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
   `);
-}
 
-  // Church information: one public record per content key.
+  // About page and other church information
   await pool.query(`
     CREATE TABLE IF NOT EXISTS church_content (
       content_key VARCHAR(100) PRIMARY KEY,
@@ -129,7 +128,7 @@ async function initializeDatabase() {
     );
   `);
 
-  // Announcements displayed on the website.
+  // Announcements
   await pool.query(`
     CREATE TABLE IF NOT EXISTS announcements (
       id BIGSERIAL PRIMARY KEY,
@@ -140,7 +139,7 @@ async function initializeDatabase() {
     );
   `);
 
-  // Pastors and church leadership.
+  // Church leadership
   await pool.query(`
     CREATE TABLE IF NOT EXISTS leaders (
       id BIGSERIAL PRIMARY KEY,
@@ -154,7 +153,7 @@ async function initializeDatabase() {
     );
   `);
 
-  // Regular church services.
+  // Regular church services
   await pool.query(`
     CREATE TABLE IF NOT EXISTS services (
       id BIGSERIAL PRIMARY KEY,
@@ -168,7 +167,7 @@ async function initializeDatabase() {
     );
   `);
 
-  // Special church events.
+  // Church events
   await pool.query(`
     CREATE TABLE IF NOT EXISTS events (
       id BIGSERIAL PRIMARY KEY,
@@ -182,7 +181,7 @@ async function initializeDatabase() {
     );
   `);
 
-  // Contact messages and prayer requests.
+  // Contact messages and prayer requests
   await pool.query(`
     CREATE TABLE IF NOT EXISTS contact_messages (
       id BIGSERIAL PRIMARY KEY,
@@ -194,8 +193,8 @@ async function initializeDatabase() {
     );
   `);
 
-  console.log("Church website tables are ready.");
-
+  console.log("All church website database tables are ready.");
+}
 
 // ========================================
 // HELPER FUNCTIONS
@@ -251,7 +250,7 @@ function getTimestamp() {
 function getCallbackUrl() {
   if (!MPESA_CALLBACK_BASE_URL) {
     throw new Error(
-      "M-PESA callback URL is not configured. Please contact the website administrator."
+      "M-PESA callback URL is not configured."
     );
   }
 
@@ -304,7 +303,7 @@ async function getAccessToken() {
     );
 
     throw new Error(
-      "Could not authenticate with Safaricom. Check your sandbox API credentials."
+      "Could not authenticate with Safaricom. Check your API credentials."
     );
   }
 
@@ -312,13 +311,13 @@ async function getAccessToken() {
 }
 
 // ========================================
-// HOME AND HEALTH ROUTES
+// HOME AND HEALTH
 // ========================================
 
 app.get("/", (req, res) => {
   res.json({
     message:
-      "Imperishable Crown Church M-PESA backend is running."
+      "Imperishable Crown Church backend is running."
   });
 });
 
@@ -331,7 +330,7 @@ app.get("/api/health", async (req, res) => {
       database: "connected"
     });
   } catch (error) {
-    console.error("Database health check failed:", error.message);
+    console.error("Health check failed:", error.message);
 
     res.status(503).json({
       status: "error",
@@ -341,14 +340,12 @@ app.get("/api/health", async (req, res) => {
 });
 
 // ========================================
-// INITIATE M-PESA STK PUSH
+// M-PESA STK PUSH
 // ========================================
 
 app.post("/api/donations/mpesa", async (req, res) => {
   try {
-    // Check callback configuration before contacting Safaricom.
     const callbackUrl = getCallbackUrl();
-
     const phone = normalizePhone(req.body?.phone);
     const amount = Number(req.body?.amount);
 
@@ -412,7 +409,7 @@ app.post("/api/donations/mpesa", async (req, res) => {
         error:
           result.CustomerMessage ||
           result.errorMessage ||
-          "Safaricom could not start the payment. Check your sandbox settings and try again."
+          "Safaricom could not start the payment. Check your settings and try again."
       });
     }
 
@@ -439,14 +436,11 @@ app.post("/api/donations/mpesa", async (req, res) => {
       success: true,
       message:
         result.CustomerMessage ||
-        "Payment request initiated. Follow the instructions from Safaricom if a payment prompt is available.",
+        "Payment request initiated. Follow the Safaricom instructions.",
       checkoutRequestId: result.CheckoutRequestID
     });
   } catch (error) {
-    console.error(
-      "Donation request error:",
-      error.message
-    );
+    console.error("Donation request error:", error.message);
 
     return res.status(400).json({
       error: error.message || "Could not start the donation."
@@ -455,13 +449,12 @@ app.post("/api/donations/mpesa", async (req, res) => {
 });
 
 // ========================================
-// SAFARICOM PAYMENT CALLBACK
+// M-PESA CALLBACK
 // ========================================
 
 app.post("/api/mpesa/callback", async (req, res) => {
   const callback = req.body?.Body?.stkCallback;
 
-  // Reject malformed callback requests.
   if (!callback?.CheckoutRequestID) {
     return res.status(400).json({
       ResultCode: 1,
@@ -471,7 +464,6 @@ app.post("/api/mpesa/callback", async (req, res) => {
 
   try {
     const success = Number(callback.ResultCode) === 0;
-
     const items = callback.CallbackMetadata?.Item || [];
 
     const metadata = Object.fromEntries(
@@ -520,7 +512,7 @@ app.post("/api/mpesa/callback", async (req, res) => {
 });
 
 // ========================================
-// CHECK DONATION STATUS
+// DONATION STATUS
 // ========================================
 
 app.get(
@@ -534,7 +526,7 @@ app.get(
         [req.params.checkoutRequestId]
       );
 
-      if (!result.rowCount) {
+      if (result.rowCount === 0) {
         return res.status(404).json({
           error: "Donation record not found."
         });
@@ -542,10 +534,7 @@ app.get(
 
       return res.json(result.rows[0]);
     } catch (error) {
-      console.error(
-        "Donation status lookup failed:",
-        error.message
-      );
+      console.error("Donation status error:", error.message);
 
       return res.status(500).json({
         error: "Could not check payment status."
@@ -555,7 +544,7 @@ app.get(
 );
 
 // ========================================
-// TOTAL COMPLETED DONATIONS
+// COMPLETED DONATION TOTAL
 // ========================================
 
 app.get("/api/donations/total", async (req, res) => {
@@ -570,10 +559,7 @@ app.get("/api/donations/total", async (req, res) => {
       total: Number(result.rows[0].total)
     });
   } catch (error) {
-    console.error(
-      "Donation total lookup failed:",
-      error.message
-    );
+    console.error("Donation total error:", error.message);
 
     return res.status(500).json({
       error: "Could not load donation total."
@@ -581,15 +567,14 @@ app.get("/api/donations/total", async (req, res) => {
   }
 });
 
-/* ========================================
-   CHURCH WEBSITE CONTENT API
-======================================== */
+// ========================================
+// ABOUT PAGE
+// ========================================
 
-// About page content.
 app.get("/api/about", async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT content_key, title, body
+      `SELECT title, body
        FROM church_content
        WHERE content_key = 'about'`
     );
@@ -601,19 +586,20 @@ app.get("/api/about", async (req, res) => {
       });
     }
 
-    return res.json({
-      title: result.rows[0].title,
-      body: result.rows[0].body
-    });
+    return res.json(result.rows[0]);
   } catch (error) {
     console.error("About API error:", error.message);
+
     return res.status(500).json({
       error: "Unable to load church information."
     });
   }
 });
 
-// Public announcements.
+// ========================================
+// ANNOUNCEMENTS
+// ========================================
+
 app.get("/api/announcements", async (req, res) => {
   try {
     const result = await pool.query(
@@ -624,16 +610,22 @@ app.get("/api/announcements", async (req, res) => {
        LIMIT 20`
     );
 
-    return res.json({ announcements: result.rows });
+    return res.json({
+      announcements: result.rows
+    });
   } catch (error) {
     console.error("Announcements API error:", error.message);
+
     return res.status(500).json({
       error: "Unable to load announcements."
     });
   }
 });
 
-// Church leadership.
+// ========================================
+// CHURCH LEADERS
+// ========================================
+
 app.get("/api/leaders", async (req, res) => {
   try {
     const result = await pool.query(
@@ -643,16 +635,22 @@ app.get("/api/leaders", async (req, res) => {
        ORDER BY display_order ASC, id ASC`
     );
 
-    return res.json({ leaders: result.rows });
+    return res.json({
+      leaders: result.rows
+    });
   } catch (error) {
     console.error("Leaders API error:", error.message);
+
     return res.status(500).json({
       error: "Unable to load church leadership."
     });
   }
 });
 
-// Regular services.
+// ========================================
+// CHURCH SERVICES
+// ========================================
+
 app.get("/api/services", async (req, res) => {
   try {
     const result = await pool.query(
@@ -663,16 +661,22 @@ app.get("/api/services", async (req, res) => {
        ORDER BY display_order ASC, id ASC`
     );
 
-    return res.json({ services: result.rows });
+    return res.json({
+      services: result.rows
+    });
   } catch (error) {
     console.error("Services API error:", error.message);
+
     return res.status(500).json({
       error: "Unable to load service schedules."
     });
   }
 });
 
-// Upcoming events.
+// ========================================
+// UPCOMING EVENTS
+// ========================================
+
 app.get("/api/events", async (req, res) => {
   try {
     const result = await pool.query(
@@ -685,16 +689,22 @@ app.get("/api/events", async (req, res) => {
        LIMIT 50`
     );
 
-    return res.json({ events: result.rows });
+    return res.json({
+      events: result.rows
+    });
   } catch (error) {
     console.error("Events API error:", error.message);
+
     return res.status(500).json({
       error: "Unable to load church events."
     });
   }
 });
 
-// Home page summary.
+// ========================================
+// HOME PAGE CONTENT
+// ========================================
+
 app.get("/api/home", async (req, res) => {
   try {
     const [announcements, events, services] =
@@ -732,27 +742,33 @@ app.get("/api/home", async (req, res) => {
     });
   } catch (error) {
     console.error("Home API error:", error.message);
+
     return res.status(500).json({
       error: "Unable to load home page content."
     });
   }
 });
 
-// Contact form and prayer requests.
+// ========================================
+// CONTACT FORM / PRAYER REQUESTS
+// ========================================
+
 app.post("/api/contact", async (req, res) => {
   try {
     const name = String(req.body?.name || "").trim();
+
     const email = String(req.body?.email || "")
       .trim()
       .toLowerCase();
+
     const subject = String(req.body?.subject || "").trim();
+
     const message = String(req.body?.message || "").trim();
 
-    // Hidden honeypot field: legitimate forms leave it empty.
+    // Optional hidden honeypot field.
     const website = String(req.body?.website || "").trim();
 
     if (website) {
-      // Avoid revealing the spam filter's reason.
       return res.status(200).json({
         success: true,
         message: "Your message has been received."
@@ -784,41 +800,32 @@ app.post("/api/contact", async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "Your message has been received. Thank you for contacting us."
+      message:
+        "Your message has been received. Thank you for contacting us."
     });
   } catch (error) {
     console.error("Contact API error:", error.message);
+
     return res.status(500).json({
-      error: "Unable to submit your message. Please try again later."
+      error:
+        "Unable to submit your message. Please try again later."
     });
   }
 });
-
 
 // ========================================
 // START SERVER
 // ========================================
 
 async function startServer() {
-  await initializeDatabase();
+  try {
+    await initializeDatabase();
 
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(
-      `Church donation backend listening on port ${PORT}`
-    );
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(
+        `Church backend listening on port ${PORT}`
+      );
 
-    console.log(`M-PESA environment: ${MPESA_ENV}`);
-    console.log(
-      `M-PESA callback configured: ${Boolean(MPESA_CALLBACK_BASE_URL)}`
-    );
-  });
-}
-
-startServer().catch((error) => {
-  console.error(
-    "Could not start backend:",
-    error.message
-  );
-
-  process.exit(1);
-});
+      console.log(`M-PESA environment: ${MPESA_ENV}`);
+    });
+  } cat
