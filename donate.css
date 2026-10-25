@@ -1,7 +1,6 @@
-
 /* ========================================
    IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
-   DONATION PAGE STYLES
+   DONATION PAGE CSS (Leadership & Events Theme)
 ======================================== */
 
 /* ========== RESET ========== */
@@ -19,8 +18,8 @@ html {
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: #f7f8fa;
-    color: #333;
+    background: #f8f9fc;
+    color: #222;
     line-height: 1.7;
     min-height: 100vh;
 }
@@ -36,6 +35,7 @@ button {
 
 a {
     color: inherit;
+    text-decoration: none;
 }
 
 img {
@@ -60,16 +60,17 @@ section {
     left: 0;
     width: 100%;
     z-index: 1000;
-    background: rgba(20, 20, 20, 0.97);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.18);
+    background: #ffffff;
+    border-bottom: 1px solid #e8e8e8;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.07);
 }
 
 .navbar {
     position: relative;
     width: min(1200px, 100%);
-    min-height: 76px;
+    min-height: 75px;
     margin: 0 auto;
-    padding: 12px 25px;
+    padding: 0 25px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -79,10 +80,10 @@ section {
 .logo {
     display: flex;
     align-items: center;
-    gap: 11px;
-    color: #fff;
-    text-decoration: none;
+    gap: 12px;
+    color: #162447;
     font-weight: 700;
+    font-size: 19px;
     min-width: 0;
 }
 
@@ -91,11 +92,11 @@ section {
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    width: 43px;
-    height: 43px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
-    background: rgba(76, 175, 80, 0.14);
-    color: #66d16a;
+    background: #f4ead0;
+    color: #9b751d;
     font-size: 1.4rem;
 }
 
@@ -104,39 +105,72 @@ section {
     flex-direction: column;
     line-height: 1.35;
     font-size: 0.98rem;
+    color: #162447;
 }
 
 .logo-text small {
-    color: #ccc;
+    color: #666;
     font-size: 0.73rem;
     font-weight: 400;
+}
+
+/* ========== DESKTOP NAVIGATION ========== */
+
+.desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.desktop-nav a {
+    padding: 10px 14px;
+    border-radius: 7px;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease;
+}
+
+.desktop-nav a:hover {
+    background: #f4ead0;
+    color: #9b751d;
+}
+
+.desktop-nav a.active {
+    background: #b58a25;
+    color: #162447;
+    font-weight: 600;
+}
+
+.desktop-nav a.active:hover {
+    background: #d1a63a;
+    color: #162447;
 }
 
 /* ========== HAMBURGER BUTTON ========== */
 
 .hamburger {
-    width: 45px;
-    height: 45px;
+    display: none;
+    width: 46px;
+    height: 46px;
     flex-shrink: 0;
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: none;
     border-radius: 8px;
-    background: transparent;
-    color: #fff;
-    font-size: 1.4rem;
+    background: #b58a25;
+    color: #162447;
+    font-size: 21px;
     cursor: pointer;
-    display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s ease, transform 0.2s ease;
+    transition: background 0.25s ease, transform 0.2s ease;
 }
 
-.hamburger:hover,
-.hamburger:focus-visible {
-    background: rgba(255, 255, 255, 0.12);
+.hamburger:hover {
+    background: #d1a63a;
 }
 
 .hamburger:active {
-    transform: scale(0.96);
+    transform: scale(0.94);
 }
 
 .hamburger:focus-visible,
@@ -144,34 +178,25 @@ section {
 button:focus-visible,
 input:focus-visible,
 a:focus-visible {
-    outline: 3px solid #ffbd59;
+    outline: 3px solid rgba(181, 138, 37, 0.35);
     outline-offset: 3px;
 }
 
 /* ========== DROPDOWN NAVIGATION ========== */
 
 .dropdown-menu {
-    position: absolute;
-    top: calc(100% - 1px);
-    right: 25px;
-    width: 270px;
-    max-height: calc(100vh - 100px);
-    overflow-y: auto;
-    padding: 10px;
-    background: #fff;
-    border-radius: 0 0 12px 12px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-    z-index: 1001;
-
+    position: fixed;
+    top: 75px;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.14);
+    z-index: 999;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
-    transform: translateY(-8px);
-
-    transition:
-        opacity 0.2s ease,
-        transform 0.2s ease,
-        visibility 0.2s ease;
+    transform: translateY(-12px);
+    transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.2s ease;
 }
 
 .dropdown-menu.show {
@@ -181,28 +206,46 @@ a:focus-visible {
     transform: translateY(0);
 }
 
-.dropdown-menu a {
-    display: block;
-    padding: 12px 15px;
-    margin-bottom: 3px;
-    border-radius: 7px;
+.dropdown-content {
+    width: min(600px, 92%);
+    margin: auto;
+    padding: 15px 0;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    padding: 14px 18px;
+    margin-bottom: 5px;
+    border-radius: 8px;
     color: #333;
-    text-decoration: none;
-    font-size: 0.93rem;
+    font-size: 15px;
     font-weight: 500;
-    transition: background 0.2s ease, color 0.2s ease;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease;
 }
 
-.dropdown-menu a:hover,
-.dropdown-menu a:focus-visible {
-    background: #edf7ed;
-    color: #27852c;
+.dropdown-item i {
+    width: 22px;
+    text-align: center;
+    color: #b58a25;
 }
 
-.dropdown-menu a[aria-current="page"] {
-    background: #e8f5e9;
-    color: #27852c;
-    font-weight: 700;
+.dropdown-item:hover {
+    background: #f4ead0;
+    color: #162447;
+    transform: translateX(4px);
+}
+
+.dropdown-item.active {
+    background: #b58a25;
+    color: #162447;
+    font-weight: 600;
+}
+
+.dropdown-item.active i {
+    color: #162447;
 }
 
 /* ========== DONATION HERO ========== */
@@ -216,10 +259,13 @@ a:focus-visible {
     color: #fff;
     background:
         linear-gradient(
-            135deg,
-            rgba(13, 42, 25, 0.94),
-            rgba(20, 20, 20, 0.86)
-        );
+            rgba(17, 24, 39, 0.90),
+            rgba(22, 36, 71, 0.92)
+        ),
+        url("images/church-background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .donation-hero .container {
@@ -228,24 +274,24 @@ a:focus-visible {
 
 .section-subtitle {
     margin-bottom: 12px;
-    color: #8be28e;
-    font-size: 0.82rem;
-    font-weight: 700;
+    color: #d1a63a;
+    font-size: 12px;
+    font-weight: 600;
     letter-spacing: 2px;
 }
 
 .donation-hero h1 {
-    margin-bottom: 18px;
-    font-size: clamp(2.1rem, 5vw, 3.5rem);
-    line-height: 1.2;
+    margin-bottom: 15px;
+    font-size: clamp(30px, 5vw, 48px);
+    line-height: 1.15;
     font-weight: 800;
 }
 
 .donation-hero p:not(.section-subtitle) {
-    max-width: 680px;
-    margin: 0 auto 25px;
-    color: #e5e5e5;
-    font-size: 1rem;
+    max-width: 700px;
+    margin: auto;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 16px;
 }
 
 .donate-btn {
@@ -253,19 +299,19 @@ a:focus-visible {
     min-height: 50px;
     padding: 13px 20px;
     border: none;
-    border-radius: 9px;
+    border-radius: 30px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    background: #3b9d43;
-    color: #fff;
+    background: #b58a25;
+    color: #162447;
     text-align: center;
     text-decoration: none;
-    font-weight: 700;
+    font-weight: 600;
     cursor: pointer;
     transition:
-        background 0.2s ease,
+        background 0.25s ease,
         transform 0.2s ease,
         box-shadow 0.2s ease;
 }
@@ -273,10 +319,11 @@ a:focus-visible {
 .donation-hero .donate-btn {
     width: auto;
     min-width: 160px;
+    margin-top: 25px;
 }
 
 .donate-btn:hover:not(:disabled) {
-    background: #2d8535;
+    background: #d1a63a;
     transform: translateY(-2px);
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
 }
@@ -301,21 +348,21 @@ a:focus-visible {
 .total-card {
     padding: 35px 25px;
     text-align: center;
-    background: #fff;
-    border: 1px solid #edf0ed;
-    border-radius: 16px;
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.06);
+    background: #ffffff;
+    border: 1px solid #e7e7e7;
+    border-radius: 14px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
 }
 
 .total-card > i {
     margin-bottom: 12px;
-    color: #3b9d43;
+    color: #b58a25;
     font-size: 2.2rem;
 }
 
 .total-card h2 {
     margin-bottom: 12px;
-    color: #333;
+    color: #162447;
     font-size: 1.15rem;
     font-weight: 600;
 }
@@ -323,7 +370,7 @@ a:focus-visible {
 .main-amount {
     overflow-wrap: anywhere;
     margin-bottom: 8px;
-    color: #2e9439;
+    color: #162447;
     font-size: clamp(1.8rem, 5vw, 2.8rem);
     font-weight: 800;
     line-height: 1.3;
@@ -332,7 +379,7 @@ a:focus-visible {
 .total-card p {
     max-width: 650px;
     margin: 0 auto;
-    color: #777;
+    color: #666;
     font-size: 0.85rem;
 }
 
@@ -343,20 +390,39 @@ a:focus-visible {
 }
 
 .section-heading {
-    margin-bottom: 35px;
+    max-width: 750px;
+    margin: 0 auto 35px;
     text-align: center;
 }
 
+.section-kicker {
+    display: block;
+    margin-bottom: 8px;
+    color: #b58a25;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+}
+
 .section-heading h2 {
-    margin-bottom: 10px;
-    color: #222;
-    font-size: clamp(1.7rem, 4vw, 2.3rem);
-    line-height: 1.3;
+    margin-bottom: 15px;
+    color: #162447;
+    font-size: 34px;
+    font-weight: 700;
+}
+
+.title-line {
+    width: 60px;
+    height: 4px;
+    margin: 0 auto 18px;
+    background: #b58a25;
+    border-radius: 10px;
 }
 
 .section-heading p {
-    color: #777;
-    font-size: 0.95rem;
+    color: #666;
+    font-size: 15px;
 }
 
 .donation-container {
@@ -371,15 +437,16 @@ a:focus-visible {
 .donation-card {
     min-width: 0;
     padding: 32px;
-    background: #fff;
-    border: 1px solid #edf0ed;
-    border-radius: 16px;
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.06);
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    background: #ffffff;
+    border: 1px solid #e7e7e7;
+    border-radius: 14px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .donation-card:hover {
-    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
 }
 
 .payment-heading {
@@ -398,8 +465,8 @@ a:focus-visible {
     align-items: center;
     justify-content: center;
     border-radius: 14px;
-    background: #e8f5e9;
-    color: #318a39;
+    background: #f4ead0;
+    color: #9b751d;
     font-size: 1.8rem;
 }
 
@@ -410,13 +477,14 @@ a:focus-visible {
 
 .payment-heading h3 {
     margin-bottom: 4px;
-    color: #222;
+    color: #162447;
     font-size: 1.15rem;
     line-height: 1.4;
+    font-weight: 700;
 }
 
 .payment-heading p {
-    color: #777;
+    color: #666;
     font-size: 0.82rem;
 }
 
@@ -430,7 +498,7 @@ a:focus-visible {
 
 .amount-fieldset legend {
     margin-bottom: 12px;
-    color: #333;
+    color: #162447;
     font-size: 0.9rem;
     font-weight: 600;
 }
@@ -444,24 +512,27 @@ a:focus-visible {
 .amount-btn {
     min-height: 46px;
     padding: 10px;
-    border: 2px solid #3b9d43;
-    border-radius: 8px;
-    background: #fff;
-    color: #2d8735;
-    font-weight: 600;
+    border: 1px solid #d5d9e2;
+    border-radius: 30px;
+    background: #ffffff;
+    color: #444;
+    font-weight: 500;
+    font-size: 13px;
     cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease;
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease, transform 0.2s ease;
 }
 
 .amount-btn:hover,
 .amount-btn.selected,
 .amount-btn[aria-pressed="true"] {
-    background: #3b9d43;
-    color: #fff;
+    background: #b58a25;
+    border-color: #b58a25;
+    color: #162447;
+    font-weight: 600;
 }
 
 .amount-btn:focus-visible {
-    outline: 3px solid #ffbd59;
+    outline: 3px solid rgba(181, 138, 37, 0.35);
     outline-offset: 2px;
 }
 
@@ -475,7 +546,7 @@ a:focus-visible {
 .form-group label {
     display: block;
     margin-bottom: 8px;
-    color: #333;
+    color: #162447;
     font-size: 0.9rem;
     font-weight: 600;
 }
@@ -485,7 +556,7 @@ a:focus-visible {
     width: 100%;
     min-height: 48px;
     padding: 12px 14px;
-    border: 1px solid #d7dcd7;
+    border: 1px solid #d5d9e2;
     border-radius: 8px;
     outline: none;
     background: #fff;
@@ -499,8 +570,8 @@ a:focus-visible {
 }
 
 .form-group input:focus {
-    border-color: #3b9d43;
-    box-shadow: 0 0 0 3px rgba(59, 157, 67, 0.13);
+    border-color: #b58a25;
+    box-shadow: 0 0 0 3px rgba(181, 138, 37, 0.2);
 }
 
 .form-group input:invalid:not(:placeholder-shown) {
@@ -510,21 +581,23 @@ a:focus-visible {
 .form-group small {
     display: block;
     margin-top: 6px;
-    color: #777;
+    color: #666;
     font-size: 0.78rem;
     line-height: 1.5;
 }
 
 .mpesa-btn {
-    background: #318b39;
+    background: #b58a25;
+    color: #162447;
 }
 
 .mpesa-btn:hover:not(:disabled) {
-    background: #26732d;
+    background: #d1a63a;
 }
 
 .paypal-btn {
     background: #003087;
+    color: #fff;
 }
 
 .paypal-btn:hover:not(:disabled) {
@@ -535,18 +608,19 @@ a:focus-visible {
     margin-top: 18px;
     padding: 13px 14px;
     border-radius: 8px;
-    background: #f3f6f3;
-    color: #626962;
+    background: #f4ead0;
+    color: #9b751d;
     font-size: 0.8rem;
     line-height: 1.65;
     text-align: left;
+    font-weight: 500;
 }
 
 /* ========== GIVING MESSAGE ========== */
 
 .giving-message {
-    padding: 55px 20px;
-    background: #edf5ed;
+    padding: 65px 20px;
+    background: #f4ead0;
     text-align: center;
 }
 
@@ -556,49 +630,52 @@ a:focus-visible {
 
 .giving-message > .container > i {
     margin-bottom: 15px;
-    color: #378d3e;
+    color: #9b751d;
     font-size: 2rem;
 }
 
 .giving-message blockquote {
     margin-bottom: 8px;
-    color: #253a27;
+    color: #162447;
     font-size: clamp(1.25rem, 3vw, 1.8rem);
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .giving-message p {
     margin-top: 8px;
-    color: #626962;
+    color: #666;
     font-size: 0.92rem;
 }
 
 /* ========== FOOTER ========== */
 
 .footer {
-    padding-top: 50px;
-    background: #181818;
-    color: #fff;
+    margin-top: 30px;
+    background: #101820;
+    color: #d6d9e0;
 }
 
 .footer-content {
+    width: min(1150px, 92%);
+    margin: auto;
+    padding: 65px 0 45px;
     display: grid;
-    grid-template-columns: 1.4fr 0.8fr 1fr;
-    gap: 35px;
-    padding-bottom: 35px;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 45px;
 }
 
 .footer-content h3 {
-    margin-bottom: 15px;
-    color: #fff;
-    font-size: 1.02rem;
+    margin-bottom: 20px;
+    color: #ffffff;
+    font-size: 16px;
 }
 
 .footer-about p,
 .footer-contact p {
     margin-bottom: 12px;
-    color: #ccc;
-    font-size: 0.86rem;
+    color: #aeb5c2;
+    font-size: 13px;
+    line-height: 1.8;
     overflow-wrap: anywhere;
 }
 
@@ -609,29 +686,30 @@ a:focus-visible {
 }
 
 .footer-contact p i {
-    margin-top: 5px;
-    color: #66c96b;
+    margin-top: 3px;
+    color: #b58a25;
 }
 
 .footer-links a {
     display: block;
     width: fit-content;
-    margin-bottom: 8px;
-    color: #ccc;
+    margin-bottom: 11px;
+    color: #aeb5c2;
     text-decoration: none;
-    font-size: 0.88rem;
-    transition: color 0.2s ease;
+    font-size: 13px;
+    transition: color 0.25s ease, transform 0.25s ease;
 }
 
 .footer-links a:hover {
-    color: #78dc7c;
+    color: #d1a63a;
+    transform: translateX(4px);
 }
 
 .footer-bottom {
     padding: 20px;
-    border-top: 1px solid #333;
-    color: #aaa;
-    font-size: 0.8rem;
+    border-top: 1px solid #273244;
+    color: #8e98a8;
+    font-size: 12px;
     text-align: center;
 }
 
@@ -646,7 +724,7 @@ a:focus-visible {
     max-width: min(380px, calc(100vw - 30px));
     padding: 14px 18px;
     border-radius: 9px;
-    background: #222;
+    background: #162447;
     color: #fff;
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
     font-size: 0.88rem;
@@ -658,9 +736,9 @@ a:focus-visible {
     transform: translateY(12px);
 
     transition:
-        opacity 0.2s ease,
-        transform 0.2s ease,
-        visibility 0.2s ease;
+        opacity 0.25s ease,
+        transform 0.25s ease,
+        visibility 0.25s ease;
 }
 
 .toast-notification.show {
@@ -672,7 +750,16 @@ a:focus-visible {
 
 /* ========== TABLET ========== */
 
-@media (max-width: 850px) {
+@media (max-width: 1000px) {
+    .desktop-nav {
+        gap: 2px;
+    }
+
+    .desktop-nav a {
+        padding: 9px 10px;
+        font-size: 13px;
+    }
+
     .donation-container {
         grid-template-columns: 1fr;
         max-width: 620px;
@@ -690,9 +777,9 @@ a:focus-visible {
 
 /* ========== MOBILE ========== */
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     html {
-        scroll-padding-top: 75px;
+        scroll-padding-top: 68px;
     }
 
     .container {
@@ -701,17 +788,22 @@ a:focus-visible {
 
     .navbar {
         min-height: 68px;
-        padding: 10px 15px;
+        padding: 0 15px;
         gap: 10px;
     }
 
+    .desktop-nav {
+        display: none;
+    }
+
     .logo {
+        font-size: 16px;
         gap: 8px;
     }
 
     .logo-icon {
-        width: 37px;
-        height: 37px;
+        width: 42px;
+        height: 42px;
         font-size: 1.15rem;
     }
 
@@ -724,36 +816,38 @@ a:focus-visible {
     }
 
     .hamburger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 42px;
         height: 42px;
         font-size: 1.25rem;
     }
 
     .dropdown-menu {
-        position: absolute;
-        top: 100%;
-        left: 10px;
-        right: 10px;
-        width: auto;
-        max-height: calc(100dvh - 85px);
-        border-radius: 0 0 10px 10px;
+        top: 68px;
+        right: 0;
+        left: 0;
+        width: 100%;
+        max-height: calc(100dvh - 68px);
+        border-radius: 0;
     }
 
     .donation-hero {
         min-height: 350px;
-        padding: 115px 10px 55px;
+        padding: 105px 15px 55px;
     }
 
     .donation-hero h1 {
-        font-size: 2rem;
+        font-size: 32px;
     }
 
     .donation-hero p:not(.section-subtitle) {
-        font-size: 0.9rem;
+        font-size: 14px;
     }
 
     .section-subtitle {
-        font-size: 0.72rem;
+        font-size: 11px;
         letter-spacing: 1.5px;
     }
 
@@ -775,6 +869,10 @@ a:focus-visible {
 
     .section-heading {
         margin-bottom: 25px;
+    }
+
+    .section-heading h2 {
+        font-size: 28px;
     }
 
     .donation-card {
@@ -813,18 +911,10 @@ a:focus-visible {
         padding: 40px 15px;
     }
 
-    .footer {
-        padding-top: 35px;
-    }
-
     .footer-content {
         grid-template-columns: 1fr;
-        gap: 25px;
-        padding-bottom: 25px;
-    }
-
-    .footer-about {
-        grid-column: auto;
+        gap: 35px;
+        text-align: left;
     }
 
     .footer-bottom {
