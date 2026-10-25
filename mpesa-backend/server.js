@@ -119,6 +119,84 @@ async function initializeDatabase() {
   `);
 }
 
+  // Church information: one public record per content key.
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS church_content (
+      content_key VARCHAR(100) PRIMARY KEY,
+      title VARCHAR(200) NOT NULL,
+      body TEXT NOT NULL DEFAULT '',
+      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
+
+  // Announcements displayed on the website.
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS announcements (
+      id BIGSERIAL PRIMARY KEY,
+      title VARCHAR(200) NOT NULL,
+      body TEXT NOT NULL,
+      published BOOLEAN NOT NULL DEFAULT FALSE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
+
+  // Pastors and church leadership.
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS leaders (
+      id BIGSERIAL PRIMARY KEY,
+      name VARCHAR(150) NOT NULL,
+      title VARCHAR(150) NOT NULL,
+      biography TEXT NOT NULL DEFAULT '',
+      photo_url TEXT NOT NULL DEFAULT '',
+      display_order INTEGER NOT NULL DEFAULT 0,
+      published BOOLEAN NOT NULL DEFAULT FALSE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
+
+  // Regular church services.
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS services (
+      id BIGSERIAL PRIMARY KEY,
+      title VARCHAR(150) NOT NULL,
+      description TEXT NOT NULL DEFAULT '',
+      day_of_week VARCHAR(20) NOT NULL,
+      start_time VARCHAR(20) NOT NULL,
+      location VARCHAR(200) NOT NULL DEFAULT '',
+      published BOOLEAN NOT NULL DEFAULT FALSE,
+      display_order INTEGER NOT NULL DEFAULT 0
+    );
+  `);
+
+  // Special church events.
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS events (
+      id BIGSERIAL PRIMARY KEY,
+      title VARCHAR(200) NOT NULL,
+      description TEXT NOT NULL DEFAULT '',
+      event_date TIMESTAMPTZ NOT NULL,
+      location VARCHAR(200) NOT NULL DEFAULT '',
+      image_url TEXT NOT NULL DEFAULT '',
+      published BOOLEAN NOT NULL DEFAULT FALSE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
+
+  // Contact messages and prayer requests.
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS contact_messages (
+      id BIGSERIAL PRIMARY KEY,
+      name VARCHAR(100) NOT NULL,
+      email VARCHAR(254) NOT NULL,
+      subject VARCHAR(200) NOT NULL,
+      message TEXT NOT NULL,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+  `);
+
+  console.log("Church website tables are ready.");
+
+
 // ========================================
 // HELPER FUNCTIONS
 // ========================================
@@ -502,6 +580,220 @@ app.get("/api/donations/total", async (req, res) => {
     });
   }
 });
+
+/* ========================================
+   CHURCH WEBSITE CONTENT API
+======================================== */
+
+// About page content.
+app.get("/api/about", async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT content_key, title, body
+       FROM church_content
+       WHERE content_key = 'about'`
+    );
+
+    if (result.rowCount === 0) {
+      return res.json({
+        title: "About Our Church",
+        body: ""
+      });
+    }
+
+    return res.json({
+      title: result.rows[0].title,
+      body: result.rows[0].body
+    });
+  } catch (error) {
+    console.error("About API error:", error.message);
+    return res.status(500).json({
+      error: "Unable to load church information."
+    });
+  }
+});
+
+// Public announcements.
+app.get("/api/announcements", async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, title, body, created_at
+       FROM announcements
+       WHERE published = TRUE
+       ORDER BY created_at DESC
+       LIMIT 20`
+    );
+
+    return res.json({ announcements: result.rows });
+  } catch (error) {
+    console.error("Announcements API error:", error.message);
+    return res.status(500).json({
+      error: "Unable to load announcements."
+    });
+  }
+});
+
+// Church leadership.
+app.get("/api/leaders", async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, name, title, biography, photo_url
+       FROM leaders
+       WHERE published = TRUE
+       ORDER BY display_order ASC, id ASC`
+    );
+
+    return res.json({ leaders: result.rows });
+  } catch (error) {
+    console.error("Leaders API error:", error.message);
+    return res.status(500).json({
+      error: "Unable to load church leadership."
+    });
+  }
+});
+
+// Regular services.
+app.get("/api/services", async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, title, description, day_of_week,
+              start_time, location
+       FROM services
+       WHERE published = TRUE
+       ORDER BY display_order ASC, id ASC`
+    );
+
+    return res.json({ services: result.rows });
+  } catch (error) {
+    console.error("Services API error:", error.message);
+    return res.status(500).json({
+      error: "Unable to load service schedules."
+    });
+  }
+});
+
+// Upcoming events.
+app.get("/api/events", async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, title, description, event_date,
+              location, image_url
+       FROM events
+       WHERE published = TRUE
+         AND event_date >= NOW()
+       ORDER BY event_date ASC
+       LIMIT 50`
+    );
+
+    return res.json({ events: result.rows });
+  } catch (error) {
+    console.error("Events API error:", error.message);
+    return res.status(500).json({
+      error: "Unable to load church events."
+    });
+  }
+});
+
+// Home page summary.
+app.get("/api/home", async (req, res) => {
+  try {
+    const [announcements, events, services] =
+      await Promise.all([
+        pool.query(
+          `SELECT id, title, body, created_at
+           FROM announcements
+           WHERE published = TRUE
+           ORDER BY created_at DESC
+           LIMIT 3`
+        ),
+        pool.query(
+          `SELECT id, title, description, event_date,
+                  location, image_url
+           FROM events
+           WHERE published = TRUE
+             AND event_date >= NOW()
+           ORDER BY event_date ASC
+           LIMIT 3`
+        ),
+        pool.query(
+          `SELECT id, title, description, day_of_week,
+                  start_time, location
+           FROM services
+           WHERE published = TRUE
+           ORDER BY display_order ASC, id ASC
+           LIMIT 10`
+        )
+      ]);
+
+    return res.json({
+      announcements: announcements.rows,
+      events: events.rows,
+      services: services.rows
+    });
+  } catch (error) {
+    console.error("Home API error:", error.message);
+    return res.status(500).json({
+      error: "Unable to load home page content."
+    });
+  }
+});
+
+// Contact form and prayer requests.
+app.post("/api/contact", async (req, res) => {
+  try {
+    const name = String(req.body?.name || "").trim();
+    const email = String(req.body?.email || "")
+      .trim()
+      .toLowerCase();
+    const subject = String(req.body?.subject || "").trim();
+    const message = String(req.body?.message || "").trim();
+
+    // Hidden honeypot field: legitimate forms leave it empty.
+    const website = String(req.body?.website || "").trim();
+
+    if (website) {
+      // Avoid revealing the spam filter's reason.
+      return res.status(200).json({
+        success: true,
+        message: "Your message has been received."
+      });
+    }
+
+    if (
+      name.length < 2 ||
+      name.length > 100 ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+      email.length > 254 ||
+      subject.length < 2 ||
+      subject.length > 200 ||
+      message.length < 5 ||
+      message.length > 5000
+    ) {
+      return res.status(400).json({
+        error:
+          "Please provide a valid name, email, subject and message."
+      });
+    }
+
+    await pool.query(
+      `INSERT INTO contact_messages
+         (name, email, subject, message)
+       VALUES ($1, $2, $3, $4)`,
+      [name, email, subject, message]
+    );
+
+    return res.status(201).json({
+      success: true,
+      message: "Your message has been received. Thank you for contacting us."
+    });
+  } catch (error) {
+    console.error("Contact API error:", error.message);
+    return res.status(500).json({
+      error: "Unable to submit your message. Please try again later."
+    });
+  }
+});
+
 
 // ========================================
 // START SERVER
