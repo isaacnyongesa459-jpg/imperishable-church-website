@@ -1,4 +1,13 @@
 const express = require("express");
+process.on('uncaughtException', (err) => {
+  console.error('CRASH ERROR (Uncaught Exception):', err);
+  process.exit(1);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error('CRASH ERROR (Unhandled Rejection):', reason);
+  process.exit(1);
+});
+
 const { Pool } = require("pg");
 
 const app = express();
