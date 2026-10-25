@@ -3,16 +3,34 @@ const express = require("express");
 const { Pool } = require("pg");
 
 const app = express();
+
 app.use(express.json({ limit: "100kb" }));
 
+// ========================================
+// CONFIGURATION
+// ========================================
+
 const PORT = process.env.PORT || 3000;
+
 const FRONTEND_ORIGIN =
   "https://isaacnyongesa459-jpg.github.io";
 
+const {
+  MPESA_ENV = "sandbox",
+  MPESA_SHORTCODE,
+  MPESA_TRANSACTION_TYPE = "CustomerPayBillOnline",
+  MPESA_CONSUMER_KEY,
+  MPESA_CONSUMER_SECRET,
+  MPESA_PASSKEY,
+  MPESA_ACCOUNT_REFERENCE = "ChurchDon",
+  MPESA_CALLBACK_BASE_URL,
+  DATABASE_URL
+} = process.env;
+
+// Required environment variables.
+// The callback URL is checked separately before making a payment.
 const requiredEnv = [
-  "MPESA_ENV",
   "MPESA_SHORTCODE",
-  "MPESA_TRANSACTION_TYPE",
   "MPESA_CONSUMER_KEY",
   "MPESA_CONSUMER_SECRET",
   "MPESA_PASSKEY",
@@ -23,24 +41,13 @@ const missingEnv = requiredEnv.filter(
   (key) => !process.env[key]
 );
 
-if (missingEnv.length) {
+if (missingEnv.length > 0) {
   console.error(
     "Missing required environment variables:",
     missingEnv.join(", ")
   );
   process.exit(1);
 }
-
-const {
-  MPESA_ENV,
-  MPESA_SHORTCODE,
-  MPESA_TRANSACTION_TYPE,
-  MPESA_CONSUMER_KEY,
-  MPESA_CONSUMER_SECRET,
-  MPESA_PASSKEY,
-  MPESA_ACCOUNT_REFERENCE = "ChurchDon",
-  DATABASE_URL
-} = process.env;
 
 if (!["sandbox", "live"].includes(MPESA_ENV)) {
   throw new Error("MPESA_ENV must be sandbox or live.");
@@ -51,17 +58,34 @@ const mpesaBaseUrl =
     ? "https://api.safaricom.co.ke"
     : "https://sandbox.safaricom.co.ke";
 
+// ========================================
+// DATABASE
+// ========================================
+
 const pool = new Pool({
   connectionString: DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
 
+pool.on("error", (error) => {
+  console.error("Unexpected database error:", error.message);
+});
+
+// ========================================
+// CORS
+// ========================================
+
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", FRONTEND_ORIGIN);
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    FRONTEND_ORIGIN
+  );
+
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, OPTIONS"
   );
+
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Content-Type"
@@ -73,6 +97,10 @@ app.use((req, res, next) => {
 
   next();
 });
+
+// ========================================
+// DATABASE INITIALIZATION
+// ========================================
 
 async function initializeDatabase() {
   await pool.query(`
@@ -91,12 +119,19 @@ async function initializeDatabase() {
   `);
 }
 
+// ========================================
+// HELPER FUNCTIONS
+// ========================================
+
 function normalizePhone(value) {
   let phone = String(value || "").replace(/\D/g, "");
 
   if (phone.startsWith("0")) {
     phone = "254" + phone.slice(1);
-  } else if (phone.startsWith("7") || phone.startsWith("1")) {
+  } else if (
+    phone.startsWith("7") ||
+    phone.startsWith("1")
+  ) {
     phone = "254" + phone;
   }
 
@@ -135,6 +170,39 @@ function getTimestamp() {
   );
 }
 
+function getCallbackUrl() {
+  if (!MPESA_CALLBACK_BASE_URL) {
+    throw new Error(
+      "M-PESA callback URL is not configured. Please contact the website administrator."
+    );
+  }
+
+  let parsedUrl;
+
+  try {
+    parsedUrl = new URL(MPESA_CALLBACK_BASE_URL);
+  } catch {
+    throw new Error(
+      "The configured M-PESA callback URL is invalid."
+    );
+  }
+
+  if (
+    parsedUrl.protocol !== "https:" ||
+    parsedUrl.pathname !== "/" ||
+    parsedUrl.search ||
+    parsedUrl.hash ||
+    parsedUrl.username ||
+    parsedUrl.password
+  ) {
+    throw new Error(
+      "The callback base URL must be an HTTPS base URL without a path."
+    );
+  }
+
+  return `${parsedUrl.origin}/api/mpesa/callback`;
+}
+
 async function getAccessToken() {
   const credentials = Buffer.from(
     `${MPESA_CONSUMER_KEY}:${MPESA_CONSUMER_SECRET}`
@@ -152,24 +220,41 @@ async function getAccessToken() {
   const data = await response.json();
 
   if (!response.ok || !data.access_token) {
-    console.error("M-PESA OAuth request failed:", data);
-    throw new Error("Could not authenticate with M-PESA.");
+    console.error(
+      "M-PESA OAuth authentication failed:",
+      data.errorCode || "Unknown error"
+    );
+
+    throw new Error(
+      "Could not authenticate with Safaricom. Check your sandbox API credentials."
+    );
   }
 
   return data.access_token;
 }
 
+// ========================================
+// HOME AND HEALTH ROUTES
+// ========================================
+
 app.get("/", (req, res) => {
   res.json({
-    message: "Imperishable Crown Church M-PESA backend is running."
+    message:
+      "Imperishable Crown Church M-PESA backend is running."
   });
 });
 
 app.get("/api/health", async (req, res) => {
   try {
     await pool.query("SELECT 1");
-    res.json({ status: "ok", database: "connected" });
+
+    res.json({
+      status: "ok",
+      database: "connected"
+    });
   } catch (error) {
+    console.error("Database health check failed:", error.message);
+
     res.status(503).json({
       status: "error",
       message: "Database connection failed."
@@ -177,10 +262,17 @@ app.get("/api/health", async (req, res) => {
   }
 });
 
+// ========================================
+// INITIATE M-PESA STK PUSH
+// ========================================
+
 app.post("/api/donations/mpesa", async (req, res) => {
   try {
-    const phone = normalizePhone(req.body.phone);
-    const amount = Number(req.body.amount);
+    // Check callback configuration before contacting Safaricom.
+    const callbackUrl = getCallbackUrl();
+
+    const phone = normalizePhone(req.body?.phone);
+    const amount = Number(req.body?.amount);
 
     if (
       !Number.isSafeInteger(amount) ||
@@ -188,7 +280,8 @@ app.post("/api/donations/mpesa", async (req, res) => {
       amount > 250000
     ) {
       return res.status(400).json({
-        error: "Enter a whole-number donation amount between KSh 1 and KSh 250,000."
+        error:
+          "Enter a whole-number donation amount between KSh 1 and KSh 250,000."
       });
     }
 
@@ -217,8 +310,7 @@ app.post("/api/donations/mpesa", async (req, res) => {
           PartyA: phone,
           PartyB: MPESA_SHORTCODE,
           PhoneNumber: phone,
-          CallBackURL:
-            `${MPESA_CALLBACK_BASE_URL.replace(/\/$/, "")}/api/mpesa/callback`,
+          CallBackURL: callbackUrl,
           AccountReference: MPESA_ACCOUNT_REFERENCE,
           TransactionDesc: "Church donation"
         })
@@ -232,17 +324,29 @@ app.post("/api/donations/mpesa", async (req, res) => {
       result.ResponseCode !== "0" ||
       !result.CheckoutRequestID
     ) {
-      console.error("M-PESA STK request failed:", result);
+      console.error(
+        "M-PESA STK request failed:",
+        result.errorCode || result.ResponseCode || "Unknown error",
+        result.errorMessage || ""
+      );
+
       return res.status(502).json({
         error:
           result.CustomerMessage ||
-          "M-PESA could not start the payment. Please try again."
+          result.errorMessage ||
+          "Safaricom could not start the payment. Check your sandbox settings and try again."
       });
     }
 
     await pool.query(
       `INSERT INTO donations
-       (checkout_request_id, merchant_request_id, phone, amount, status)
+        (
+          checkout_request_id,
+          merchant_request_id,
+          phone,
+          amount,
+          status
+        )
        VALUES ($1, $2, $3, $4, 'pending')
        ON CONFLICT (checkout_request_id) DO NOTHING`,
       [
@@ -253,45 +357,54 @@ app.post("/api/donations/mpesa", async (req, res) => {
       ]
     );
 
-    res.json({
+    return res.json({
       success: true,
       message:
         result.CustomerMessage ||
-        "Payment prompt requested. Check your phone and enter your M-PESA PIN if you wish to proceed.",
+        "Payment request initiated. Follow the instructions from Safaricom if a payment prompt is available.",
       checkoutRequestId: result.CheckoutRequestID
     });
   } catch (error) {
-    console.error("Donation request error:", error.message);
+    console.error(
+      "Donation request error:",
+      error.message
+    );
 
-    res.status(400).json({
+    return res.status(400).json({
       error: error.message || "Could not start the donation."
     });
   }
 });
 
+// ========================================
+// SAFARICOM PAYMENT CALLBACK
+// ========================================
+
 app.post("/api/mpesa/callback", async (req, res) => {
-  // Acknowledge Safaricom's callback request.
-  res.json({ ResultCode: 0, ResultDesc: "Accepted" });
+  const callback = req.body?.Body?.stkCallback;
+
+  // Reject malformed callback requests.
+  if (!callback?.CheckoutRequestID) {
+    return res.status(400).json({
+      ResultCode: 1,
+      ResultDesc: "Invalid callback data."
+    });
+  }
 
   try {
-    const callback = req.body?.Body?.stkCallback;
-
-    if (!callback?.CheckoutRequestID) {
-      console.error("Received an invalid M-PESA callback.");
-      return;
-    }
-
     const success = Number(callback.ResultCode) === 0;
+
     const items = callback.CallbackMetadata?.Item || [];
 
     const metadata = Object.fromEntries(
       items.map((item) => [item.Name, item.Value])
     );
 
-    await pool.query(
+    const update = await pool.query(
       `UPDATE donations
        SET status = $1,
-           mpesa_receipt_number = COALESCE($2, mpesa_receipt_number),
+           mpesa_receipt_number =
+             COALESCE($2, mpesa_receipt_number),
            result_desc = $3,
            updated_at = NOW()
        WHERE checkout_request_id = $4`,
@@ -304,10 +417,33 @@ app.post("/api/mpesa/callback", async (req, res) => {
         callback.CheckoutRequestID
       ]
     );
+
+    if (update.rowCount === 0) {
+      console.error(
+        "Callback received for an unknown checkout request."
+      );
+    }
+
+    return res.json({
+      ResultCode: 0,
+      ResultDesc: "Accepted"
+    });
   } catch (error) {
-    console.error("M-PESA callback processing error:", error.message);
+    console.error(
+      "M-PESA callback processing failed:",
+      error.message
+    );
+
+    return res.status(500).json({
+      ResultCode: 1,
+      ResultDesc: "Callback processing failed."
+    });
   }
 });
+
+// ========================================
+// CHECK DONATION STATUS
+// ========================================
 
 app.get(
   "/api/donations/status/:checkoutRequestId",
@@ -326,15 +462,23 @@ app.get(
         });
       }
 
-      res.json(result.rows[0]);
+      return res.json(result.rows[0]);
     } catch (error) {
-      console.error("Status lookup error:", error.message);
-      res.status(500).json({
+      console.error(
+        "Donation status lookup failed:",
+        error.message
+      );
+
+      return res.status(500).json({
         error: "Could not check payment status."
       });
     }
   }
 );
+
+// ========================================
+// TOTAL COMPLETED DONATIONS
+// ========================================
 
 app.get("/api/donations/total", async (req, res) => {
   try {
@@ -344,26 +488,45 @@ app.get("/api/donations/total", async (req, res) => {
        WHERE status = 'completed'`
     );
 
-    res.json({
+    return res.json({
       total: Number(result.rows[0].total)
     });
   } catch (error) {
-    console.error("Donation total error:", error.message);
-    res.status(500).json({
+    console.error(
+      "Donation total lookup failed:",
+      error.message
+    );
+
+    return res.status(500).json({
       error: "Could not load donation total."
     });
   }
 });
 
+// ========================================
+// START SERVER
+// ========================================
+
 async function startServer() {
   await initializeDatabase();
 
   app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Church donation backend listening on port ${PORT}`);
+    console.log(
+      `Church donation backend listening on port ${PORT}`
+    );
+
+    console.log(`M-PESA environment: ${MPESA_ENV}`);
+    console.log(
+      `M-PESA callback configured: ${Boolean(MPESA_CALLBACK_BASE_URL)}`
+    );
   });
 }
 
 startServer().catch((error) => {
-  console.error("Could not start backend:", error.message);
+  console.error(
+    "Could not start backend:",
+    error.message
+  );
+
   process.exit(1);
 });
