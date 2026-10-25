@@ -5,127 +5,85 @@
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    /* ========================================
-       HAMBURGER MENU
-    ======================================== */
-
+    // Get navigation elements
     const hamburger = document.getElementById("hamburger");
     const dropdownMenu = document.getElementById("dropdownMenu");
 
+    // Open and close the mobile navigation
+    function closeMenu() {
+        if (!hamburger || !dropdownMenu) return;
+
+        dropdownMenu.classList.remove("show");
+        hamburger.setAttribute("aria-expanded", "false");
+        hamburger.setAttribute("aria-label", "Open navigation menu");
+
+        hamburger.innerHTML = '<i class="fas fa-bars" aria-hidden="true"></i>';
+    }
+
+    function openMenu() {
+        if (!hamburger || !dropdownMenu) return;
+
+        dropdownMenu.classList.add("show");
+        hamburger.setAttribute("aria-expanded", "true");
+        hamburger.setAttribute("aria-label", "Close navigation menu");
+
+        hamburger.innerHTML = '<i class="fas fa-times" aria-hidden="true"></i>';
+    }
+
     if (hamburger && dropdownMenu) {
 
-        hamburger.addEventListener("click", function () {
+        hamburger.addEventListener("click", function (event) {
+            event.preventDefault();
+            event.stopPropagation();
 
             const isOpen =
-                dropdownMenu.classList.toggle("show");
-
-            hamburger.setAttribute(
-                "aria-expanded",
-                isOpen
-            );
+                dropdownMenu.classList.contains("show");
 
             if (isOpen) {
-
-                hamburger.innerHTML =
-                    '<i class="fas fa-times"></i>';
-
+                closeMenu();
             } else {
-
-                hamburger.innerHTML =
-                    '<i class="fas fa-bars"></i>';
+                openMenu();
             }
-
         });
 
+        // Close the menu when a navigation link is clicked
+        const menuLinks = dropdownMenu.querySelectorAll("a");
 
-        /* ========================================
-           CLOSE MENU AFTER CLICKING A LINK
-        ======================================== */
-
-        const navigationLinks =
-            dropdownMenu.querySelectorAll("a");
-
-        navigationLinks.forEach(function (link) {
-
+        menuLinks.forEach(function (link) {
             link.addEventListener("click", function () {
-
-                dropdownMenu.classList.remove("show");
-
-                hamburger.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-
-                hamburger.innerHTML =
-                    '<i class="fas fa-bars"></i>';
-
+                closeMenu();
             });
-
         });
 
-
-        /* ========================================
-           CLOSE MENU WHEN CLICKING OUTSIDE
-        ======================================== */
-
+        // Close the menu when clicking outside it
         document.addEventListener("click", function (event) {
+            const clickedMenu = dropdownMenu.contains(event.target);
+            const clickedButton = hamburger.contains(event.target);
 
-            const clickedInsideMenu =
-                dropdownMenu.contains(event.target);
-
-            const clickedHamburger =
-                hamburger.contains(event.target);
-
-            if (
-                !clickedInsideMenu &&
-                !clickedHamburger &&
-                dropdownMenu.classList.contains("show")
-            ) {
-
-                dropdownMenu.classList.remove("show");
-
-                hamburger.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-
-                hamburger.innerHTML =
-                    '<i class="fas fa-bars"></i>';
+            if (!clickedMenu && !clickedButton) {
+                closeMenu();
             }
-
         });
 
-
-        /* ========================================
-           CLOSE MENU WITH ESCAPE KEY
-        ======================================== */
-
+        // Close the menu with the Escape key
         document.addEventListener("keydown", function (event) {
-
-            if (
-                event.key === "Escape" &&
-                dropdownMenu.classList.contains("show")
-            ) {
-
-                dropdownMenu.classList.remove("show");
-
-                hamburger.setAttribute(
-                    "aria-expanded",
-                    "false"
-                );
-
-                hamburger.innerHTML =
-                    '<i class="fas fa-bars"></i>';
+            if (event.key === "Escape") {
+                closeMenu();
             }
-
         });
 
+        // Close the mobile menu when switching to desktop width
+        window.addEventListener("resize", function () {
+            if (window.innerWidth > 768) {
+                closeMenu();
+            }
+        });
     }
 
 
-    /* ========================================
-       LEADERSHIP FILTER
-    ======================================== */
+    // ========================================
+    // LEADERSHIP CATEGORY FILTERS
+    // ========================================
 
     const filterButtons =
         document.querySelectorAll(".filter-btn");
@@ -136,99 +94,66 @@ document.addEventListener("DOMContentLoaded", function () {
     const memberCount =
         document.getElementById("memberCount");
 
+    const noResults =
+        document.getElementById("noResults");
+
+    function filterMembers(selectedFilter) {
+        let visibleMembers = 0;
+
+        leaderCards.forEach(function (card) {
+            const category = card.getAttribute("data-category");
+
+            const shouldShow =
+                selectedFilter === "all" ||
+                category === selectedFilter;
+
+            card.classList.toggle("hidden", !shouldShow);
+
+            if (shouldShow) {
+                visibleMembers++;
+            }
+        });
+
+        // Update selected filter button
+        filterButtons.forEach(function (button) {
+            const isActive =
+                button.getAttribute("data-filter") === selectedFilter;
+
+            button.classList.toggle("active", isActive);
+            button.setAttribute("aria-pressed", String(isActive));
+        });
+
+        // Update visible member count
+        if (memberCount) {
+            memberCount.innerHTML =
+                'Showing <span>' + visibleMembers + '</span> members';
+        }
+
+        // Show a message if no cards match
+        if (noResults) {
+            noResults.hidden = visibleMembers !== 0;
+        }
+    }
 
     filterButtons.forEach(function (button) {
-
         button.addEventListener("click", function () {
-
             const selectedFilter =
                 button.getAttribute("data-filter");
 
-
-            /* Remove active class */
-            filterButtons.forEach(function (btn) {
-
-                btn.classList.remove("active");
-
-            });
-
-
-            /* Add active class */
-            button.classList.add("active");
-
-
-            /* Count visible members */
-            let visibleMembers = 0;
-
-
-            /* Filter cards */
-            leaderCards.forEach(function (card) {
-
-                const category =
-                    card.getAttribute("data-category");
-
-
-                if (
-                    selectedFilter === "all" ||
-                    category === selectedFilter
-                ) {
-
-                    card.classList.remove("hidden");
-
-                    visibleMembers++;
-
-                } else {
-
-                    card.classList.add("hidden");
-
-                }
-
-            });
-
-
-            /* Update count */
-            if (memberCount) {
-
-                memberCount.innerHTML =
-                    `Showing <span>${visibleMembers}</span> members`;
-
-            }
-
+            filterMembers(selectedFilter);
         });
+    });
 
-    }
 
-
-    /* ========================================
-       CURRENT YEAR
-    ======================================== */
+    // ========================================
+    // AUTOMATIC COPYRIGHT YEAR
+    // ========================================
 
     const currentYear =
         document.getElementById("currentYear");
 
     if (currentYear) {
-
-        currentYear.textContent =
-            new Date().getFullYear();
-
+        currentYear.textContent = new Date().getFullYear();
     }
-
-
-    /* ========================================
-       PREVENT EMPTY # LINKS FROM JUMPING
-    ======================================== */
-
-    const emptyLinks =
-        document.querySelectorAll('a[href="#"]');
-
-    emptyLinks.forEach(function (link) {
-
-        link.addEventListener("click", function (event) {
-
-            event.preventDefault();
-
-        });
-
-    });
 
 });
