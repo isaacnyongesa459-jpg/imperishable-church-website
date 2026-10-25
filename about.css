@@ -1,5 +1,6 @@
 /* ========================================
-   RESET
+   IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
+   ABOUT PAGE CSS (Leadership & Events Theme)
 ======================================== */
 
 * {
@@ -8,30 +9,30 @@
     box-sizing: border-box;
 }
 
-
-body {
-    font-family: "Poppins", sans-serif;
-    color: #333;
-    background: #fff;
-    line-height: 1.7;
-}
-
-
 html {
     scroll-behavior: smooth;
 }
 
-
-/* ========================================
-   CONTAINER
-======================================== */
-
-.container {
-    width: 90%;
-    max-width: 1150px;
-    margin: auto;
+body {
+    font-family: "Poppins", sans-serif;
+    background: #f8f9fc;
+    color: #222;
+    line-height: 1.6;
 }
 
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    font-family: inherit;
+}
+
+.container {
+    width: min(1150px, 92%);
+    margin: auto;
+}
 
 /* ========================================
    NAVBAR
@@ -40,32 +41,21 @@ html {
 .navbar {
     position: sticky;
     top: 0;
-
+    z-index: 1000;
     width: 100%;
-
-    background: #fff;
-
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-
-    z-index: 5000;
+    background: #ffffff;
+    border-bottom: 1px solid #e8e8e8;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.07);
 }
-
 
 .nav-container {
-    width: 90%;
-    max-width: 1150px;
-
-    height: 70px;
-
+    width: min(1200px, 92%);
+    height: 75px;
     margin: auto;
-
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
 }
-
 
 /* ========================================
    LOGO
@@ -73,531 +63,452 @@ html {
 
 .logo {
     display: flex;
-
     align-items: center;
-
-    gap: 10px;
-
-    text-decoration: none;
-
-    color: #222;
-
-    font-size: 17px;
-
+    gap: 12px;
+    color: #162447;
+    font-size: 19px;
     font-weight: 700;
 }
 
-
 .logo-img {
-    width: 45px;
-
-    height: 45px;
-
+    width: 48px;
+    height: 48px;
     object-fit: contain;
 }
 
+/* ========================================
+   DESKTOP NAVIGATION
+======================================== */
+
+.desktop-nav {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.desktop-nav a {
+    padding: 10px 14px;
+    border-radius: 7px;
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease;
+}
+
+.desktop-nav a:hover {
+    background: #f4ead0;
+    color: #9b751d;
+}
+
+.desktop-nav a.active {
+    background: #b58a25;
+    color: #162447;
+    font-weight: 600;
+}
+
+.desktop-nav a.active:hover {
+    background: #d1a63a;
+    color: #162447;
+}
 
 /* ========================================
    HAMBURGER
 ======================================== */
 
 .hamburger {
-    width: 48px;
-
-    height: 48px;
-
+    display: none;
+    width: 46px;
+    height: 46px;
     border: none;
-
-    outline: none;
-
-    background: transparent;
-
-    color: #222;
-
-    font-size: 25px;
-
-    cursor: pointer;
-
     border-radius: 8px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    z-index: 6000;
+    background: #b58a25;
+    color: #162447;
+    font-size: 21px;
+    cursor: pointer;
+    transition: background 0.25s ease, transform 0.2s ease;
 }
-
 
 .hamburger:hover {
-    background: #f0f0f0;
+    background: #d1a63a;
 }
 
+.hamburger:active {
+    transform: scale(0.94);
+}
+
+.hamburger:focus-visible {
+    outline: 3px solid rgba(181, 138, 37, 0.35);
+    outline-offset: 3px;
+}
 
 /* ========================================
    DROPDOWN MENU
 ======================================== */
 
 .dropdown-menu {
-
     position: fixed;
-
-    top: 80px;
-
-    right: 5%;
-
-    width: 250px;
-
-    background: white;
-
-    border-radius: 12px;
-
-    padding: 8px 0;
-
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
-
-    z-index: 5500;
-
-    /* IMPORTANT */
-
-    display: none;
+    top: 75px;
+    left: 0;
+    width: 100%;
+    background: #ffffff;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.14);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-12px);
+    transition: opacity 0.25s ease, visibility 0.25s ease, transform 0.25s ease;
 }
-
-
-/* ========================================
-   SHOW MENU
-======================================== */
 
 .dropdown-menu.show {
-
-    display: block;
-
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
-
-/* ========================================
-   MENU LINKS
-======================================== */
+.dropdown-content {
+    width: min(600px, 92%);
+    margin: auto;
+    padding: 15px 0;
+}
 
 .dropdown-item {
-
     display: flex;
-
     align-items: center;
-
     gap: 15px;
-
-    padding: 15px 20px;
-
+    width: 100%;
+    padding: 14px 18px;
+    margin-bottom: 5px;
+    border-radius: 8px;
     color: #333;
-
-    text-decoration: none;
-
     font-size: 15px;
-
     font-weight: 500;
-
-    transition: 0.2s ease;
-
+    transition: background 0.25s ease, color 0.25s ease, transform 0.2s ease;
 }
-
 
 .dropdown-item i {
-
-    width: 20px;
-
+    width: 22px;
     text-align: center;
-
+    color: #b58a25;
 }
-
 
 .dropdown-item:hover {
-
-    background: #f2f2f2;
-
-    padding-left: 25px;
-
+    background: #f4ead0;
+    color: #162447;
+    transform: translateX(4px);
 }
-
-
-/* ACTIVE */
 
 .dropdown-item.active {
-
-    background: #eeeeee;
-
-    font-weight: 700;
-
+    background: #b58a25;
+    color: #162447;
+    font-weight: 600;
 }
 
+.dropdown-item.active i {
+    color: #162447;
+}
 
 /* ========================================
    PAGE HEADER
 ======================================== */
 
 .page-header {
-
-    padding: 90px 0;
-
+    padding: 95px 20px;
     text-align: center;
-
+    color: #ffffff;
     background:
         linear-gradient(
-            rgba(0, 0, 0, 0.55),
-            rgba(0, 0, 0, 0.55)
+            rgba(17, 24, 39, 0.90),
+            rgba(22, 36, 71, 0.92)
         ),
         url("images/church-background.jpg");
-
     background-size: cover;
-
     background-position: center;
-
+    background-repeat: no-repeat;
 }
-
 
 .page-header h1 {
-
-    color: white;
-
-    font-size: 42px;
-
-    margin-bottom: 10px;
-
+    margin-bottom: 15px;
+    font-size: clamp(30px, 5vw, 48px);
+    line-height: 1.15;
+    font-weight: 800;
 }
-
 
 .page-header p {
-
-    color: white;
-
-    font-size: 17px;
-
+    max-width: 700px;
+    margin: auto;
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 16px;
 }
-
 
 /* ========================================
    ABOUT
 ======================================== */
 
 .about-section {
-
-    padding: 80px 0;
-
+    padding: 85px 0;
 }
-
 
 .about-text {
-
     max-width: 900px;
-
     margin: auto;
-
+    background: #ffffff;
+    padding: 45px;
+    border-radius: 14px;
+    border: 1px solid #e7e7e7;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
 }
-
 
 .about-text h2 {
-
     margin-top: 35px;
-
     margin-bottom: 12px;
-
-    font-size: 27px;
-
-    color: #222;
-
+    font-size: 26px;
+    color: #162447;
+    font-weight: 700;
 }
-
 
 .about-text h2:first-child {
-
     margin-top: 0;
-
 }
-
 
 .about-text p {
-
     margin-bottom: 18px;
-
-    color: #555;
-
-    font-size: 16px;
-
+    color: #666;
+    font-size: 15px;
+    line-height: 1.8;
 }
-
 
 .motto {
-
+    color: #b58a25;
     font-weight: 600;
-
     font-style: italic;
-
 }
-
 
 .beliefs-list {
-
-    padding-left: 25px;
-
+    padding-left: 22px;
 }
-
 
 .beliefs-list li {
-
-    margin-bottom: 15px;
-
-    color: #555;
-
+    margin-bottom: 12px;
+    color: #666;
+    font-size: 15px;
+    line-height: 1.7;
 }
 
+.beliefs-list strong {
+    color: #162447;
+}
 
 /* ========================================
    GALLERY
 ======================================== */
 
 .gallery-section {
-
-    padding: 80px 0;
-
-    background: #f7f7f7;
-
+    padding: 85px 0;
 }
-
 
 .section-heading {
-
+    max-width: 750px;
+    margin: 0 auto 45px;
     text-align: center;
-
-    margin-bottom: 45px;
-
 }
-
 
 .section-heading h2 {
-
-    font-size: 32px;
-
-    color: #222;
-
+    margin-bottom: 15px;
+    color: #162447;
+    font-size: 34px;
+    font-weight: 700;
 }
-
 
 .section-heading p {
-
     color: #666;
-
+    font-size: 15px;
 }
-
 
 /* ========================================
    GALLERY GRID
 ======================================== */
 
 .gallery-grid {
-
     display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 25px;
-
 }
-
 
 .gallery-card {
-
-    background: white;
-
+    background: #ffffff;
     overflow: hidden;
-
-    border-radius: 12px;
-
-    box-shadow:
-        0 5px 20px rgba(0, 0, 0, 0.08);
-
+    border-radius: 14px;
+    border: 1px solid #e7e7e7;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
+.gallery-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+}
 
 .gallery-img {
-
     width: 100%;
-
     height: 240px;
-
     object-fit: cover;
-
     display: block;
-
+    transition: transform 0.4s ease;
 }
 
+.gallery-card:hover .gallery-img {
+    transform: scale(1.05);
+}
 
 .gallery-caption {
-
-    padding: 20px;
-
+    padding: 22px;
 }
-
 
 .gallery-caption h3 {
-
     font-size: 18px;
-
-    margin-bottom: 7px;
-
+    margin-bottom: 6px;
+    color: #162447;
+    font-weight: 700;
 }
-
 
 .gallery-caption p {
-
-    font-size: 14px;
-
+    font-size: 13px;
     color: #666;
-
+    line-height: 1.7;
 }
-
 
 /* ========================================
    FOOTER
 ======================================== */
 
 .footer {
-
-    background: #222;
-
-    color: white;
-
+    margin-top: 30px;
+    background: #101820;
+    color: #d6d9e0;
     text-align: center;
-
-    padding: 30px 15px;
-
 }
 
+.footer-bottom {
+    padding: 20px;
+    border-top: 1px solid #273244;
+}
 
 .footer p {
-
-    font-size: 13px;
-
+    margin: 0;
+    color: #8e98a8;
+    font-size: 12px;
 }
-
 
 /* ========================================
    TABLET
 ======================================== */
 
-@media (max-width: 900px) {
-
-    .gallery-grid {
-
-        grid-template-columns:
-            repeat(2, 1fr);
-
+@media (max-width: 1000px) {
+    .desktop-nav {
+        gap: 2px;
     }
 
+    .desktop-nav a {
+        padding: 9px 10px;
+        font-size: 13px;
+    }
+
+    .gallery-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
 
-
 /* ========================================
-   PHONE
+   MOBILE
 ======================================== */
 
-@media (max-width: 600px) {
-
+@media (max-width: 768px) {
     .nav-container {
-
-        width: 92%;
-
+        height: 68px;
     }
 
-
-    .logo {
-
-        font-size: 15px;
-
+    .desktop-nav {
+        display: none;
     }
 
-
-    .logo-img {
-
-        width: 40px;
-
-        height: 40px;
-
+    .hamburger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
-
 
     .dropdown-menu {
-
-        top: 75px;
-
-        right: 4%;
-
-        width: 92%;
-
+        top: 68px;
     }
 
+    .logo {
+        font-size: 16px;
+    }
+
+    .logo-img {
+        width: 42px;
+        height: 42px;
+    }
 
     .page-header {
-
-        padding: 70px 0;
-
+        padding: 75px 18px;
     }
-
 
     .page-header h1 {
-
         font-size: 32px;
-
     }
 
-
-    .page-header p {
-
-        font-size: 15px;
-
-    }
-
-
-    .about-section {
-
-        padding: 55px 0;
-
-    }
-
-
-    .about-text h2 {
-
-        font-size: 24px;
-
-    }
-
-
-    .about-text p {
-
-        font-size: 15px;
-
-    }
-
-
+    .about-section,
     .gallery-section {
-
-        padding: 55px 0;
-
+        padding: 60px 0;
     }
 
+    .about-text {
+        padding: 25px;
+    }
 
     .section-heading h2 {
-
-        font-size: 26px;
-
+        font-size: 28px;
     }
-
 
     .gallery-grid {
-
         grid-template-columns: 1fr;
+    }
+}
 
+/* ========================================
+   SMALL MOBILE
+======================================== */
+
+@media (max-width: 450px) {
+    .logo span {
+        font-size: 14px;
     }
 
+    .logo-img {
+        width: 39px;
+        height: 39px;
+    }
+
+    .page-header {
+        padding: 65px 15px;
+    }
+
+    .page-header h1 {
+        font-size: 28px;
+    }
+}
+
+/* ========================================
+   ACCESSIBILITY
+======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
 }
