@@ -36,8 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
             event.preventDefault();
             event.stopPropagation();
 
-            const isOpen =
-                dropdownMenu.classList.contains("show");
+            const isOpen = dropdownMenu.classList.contains("show");
 
             if (isOpen) {
                 closeMenu();
@@ -85,17 +84,10 @@ document.addEventListener("DOMContentLoaded", function () {
     // LEADERSHIP CATEGORY FILTERS
     // ========================================
 
-    const filterButtons =
-        document.querySelectorAll(".filter-btn");
-
-    const leaderCards =
-        document.querySelectorAll(".leader-card");
-
-    const memberCount =
-        document.getElementById("memberCount");
-
-    const noResults =
-        document.getElementById("noResults");
+    const filterButtons = document.querySelectorAll(".filter-btn");
+    const leaderCards = document.querySelectorAll(".leader-card");
+    const memberCount = document.getElementById("memberCount");
+    const noResults = document.getElementById("noResults");
 
     function filterMembers(selectedFilter) {
         let visibleMembers = 0;
@@ -137,9 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     filterButtons.forEach(function (button) {
         button.addEventListener("click", function () {
-            const selectedFilter =
-                button.getAttribute("data-filter");
-
+            const selectedFilter = button.getAttribute("data-filter");
             filterMembers(selectedFilter);
         });
     });
@@ -149,8 +139,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // AUTOMATIC COPYRIGHT YEAR
     // ========================================
 
-    const currentYear =
-        document.getElementById("currentYear");
+    const currentYear = document.getElementById("currentYear");
 
     if (currentYear) {
         currentYear.textContent = new Date().getFullYear();
