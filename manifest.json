@@ -1,0 +1,27 @@
+
+{
+  "id": "./",
+  "name": "Imperishable Crown Bible Baptist Church",
+  "short_name": "Imperishable Crown",
+  "description": "Church services, events, ministry information and donations.",
+  "start_url": "./home.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#091a30",
+  "theme_color": "#091a30",
+  "icons": [
+    {
+      "src": "./images/app-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./images/app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
