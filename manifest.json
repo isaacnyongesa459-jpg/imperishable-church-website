@@ -4,7 +4,7 @@
   "name": "Imperishable Crown Bible Baptist Church",
   "short_name": "Imperishable Crown",
   "description": "Church services, events, ministry information and donations.",
-  "start_url": "./home.html",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
