@@ -1,0 +1,62 @@
+
+const CACHE_NAME = "imperishable-church-v1";
+
+const FILES_TO_CACHE = [
+  "./",
+  "./home.html",
+  "./manifest.json"
+];
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(FILES_TO_CACHE))
+      .then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) =>
+      Promise.all(
+        cacheNames
+          .filter((name) => name !== CACHE_NAME)
+          .map((name) => caches.delete(name))
+      )
+    ).then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener("fetch", (event) => {
+  const request = event.request;
+  const url = new URL(request.url);
+
+  // Only handle same-origin GET requests.
+  if (
+    request.method !== "GET" ||
+    url.origin !== self.location.origin
+  ) {
+    return;
+  }
+
+  // Never cache payment or API requests.
+  if (
+    url.pathname.includes("/api/") ||
+    url.pathname.includes("/stkpush") ||
+    url.pathname.includes("/callback")
+  ) {
+    return;
+  }
+
+  // Use the network first for normal page requests.
+  if (request.mode === "navigate") {
+    event.respondWith(
+      fetch(request).catch(async () => {
+        return (await caches.match("./home.html")) ||
+          new Response("You are offline. Please reconnect to the internet.", {
+            headers: { "Content-Type": "text/plain" }
+          });
+      })
+    );
+  }
+});
