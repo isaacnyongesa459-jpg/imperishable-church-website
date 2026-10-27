@@ -1,43 +1,25 @@
 
-const CACHE_NAME = "imperishable-church-v2";
-
-const FILES_TO_CACHE = [
-  "./",
-  "./home.html",
-  "./about.html",
-  "./services.html",
-  "./leadership.html",
-  "./events.html",
-  "./contact.html",
-  "./donate.html",
-  "./manifest.json",
-  "./pwa.js",
-  "./styles.css",
-  "./home.css",
-  "./about.css",
-  "./services.css",
-  "./leadership.css",
-  "./contact.css",
-  "./donate.css",
-  "./church-logo.png"
-];
+const CACHE_NAME = "imperishable-church-v3";
+const HOME_PAGE = "./home.html";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
-      .then((cache) => cache.addAll(FILES_TO_CACHE))
+      .then((cache) => cache.add(HOME_PAGE))
       .then(() => self.skipWaiting())
   );
 });
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) =>
+    caches.keys().then((keys) =>
       Promise.all(
-        cacheNames
-          .filter((name) => name.startsWith("imperishable-church-") &&
-                            name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
+        keys
+          .filter((key) =>
+            key.startsWith("imperishable-church-") &&
+            key !== CACHE_NAME
+          )
+          .map((key) => caches.delete(key))
       )
     ).then(() => self.clients.claim())
   );
@@ -47,6 +29,7 @@ self.addEventListener("fetch", (event) => {
   const request = event.request;
   const url = new URL(request.url);
 
+  // Only handle same-origin GET requests.
   if (
     request.method !== "GET" ||
     url.origin !== self.location.origin
@@ -54,27 +37,38 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Never cache payment/API requests.
+  // Never cache API or payment-related requests.
   if (
-    url.pathname.includes("/api/") ||
-    url.pathname.includes("/stkpush") ||
-    url.pathname.includes("/callback")
+    /\/api(?:\/|$)/i.test(url.pathname) ||
+    /stkpush|callback|payment/i.test(url.pathname)
   ) {
     return;
   }
 
+  // Network first for pages; cached homepage as offline fallback.
   if (request.mode === "navigate") {
     event.respondWith(
-      fetch(request)
-        .then((response) => response)
-        .catch(async () => {
-          return (await caches.match(request)) ||
-            (await caches.match("./home.html")) ||
-            new Response(
-              "You are offline. Please reconnect to the internet.",
-              { headers: { "Content-Type": "text/plain" } }
-            );
-        })
+      fetch(request).catch(async () => {
+        const cachedPage = await caches.match(request);
+
+        if (cachedPage) {
+          return cachedPage;
+        }
+
+        const cachedHome = await caches.match(HOME_PAGE);
+
+        if (cachedHome) {
+          return cachedHome;
+        }
+
+        return new Response(
+          "You are offline. Please reconnect to the internet.",
+          {
+            status: 503,
+            headers: { "Content-Type": "text/plain; charset=utf-8" }
+          }
+        );
+      })
     );
   }
 });
