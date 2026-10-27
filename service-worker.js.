@@ -1,6 +1,6 @@
 
-const CACHE_NAME = "imperishable-church-v3";
-const HOME_PAGE = "./home.html";
+const CACHE_NAME = "imperishable-church-v4";
+const HOME_PAGE = "./index.html";
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -29,7 +29,6 @@ self.addEventListener("fetch", (event) => {
   const request = event.request;
   const url = new URL(request.url);
 
-  // Only handle same-origin GET requests.
   if (
     request.method !== "GET" ||
     url.origin !== self.location.origin
@@ -37,7 +36,7 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Never cache API or payment-related requests.
+  // Do not intercept payment or API requests.
   if (
     /\/api(?:\/|$)/i.test(url.pathname) ||
     /stkpush|callback|payment/i.test(url.pathname)
@@ -45,28 +44,21 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Network first for pages; cached homepage as offline fallback.
   if (request.mode === "navigate") {
     event.respondWith(
       fetch(request).catch(async () => {
-        const cachedPage = await caches.match(request);
-
-        if (cachedPage) {
-          return cachedPage;
-        }
-
-        const cachedHome = await caches.match(HOME_PAGE);
-
-        if (cachedHome) {
-          return cachedHome;
-        }
-
-        return new Response(
-          "You are offline. Please reconnect to the internet.",
-          {
-            status: 503,
-            headers: { "Content-Type": "text/plain; charset=utf-8" }
-          }
+        return (
+          await caches.match(request) ||
+          await caches.match(HOME_PAGE) ||
+          new Response(
+            "You are offline. Please reconnect to the internet.",
+            {
+              status: 503,
+              headers: {
+                "Content-Type": "text/plain; charset=utf-8"
+              }
+            }
+          )
         );
       })
     );
