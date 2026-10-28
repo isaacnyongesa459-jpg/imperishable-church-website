@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Church Admin Dashboard</title>
 
   <style>
@@ -54,11 +53,6 @@
       margin-top: 0;
     }
 
-    .status {
-      margin-bottom: 20px;
-      color: #555;
-    }
-
     .stats {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -71,6 +65,7 @@
       padding: 20px;
       border-radius: 12px;
       box-shadow: 0 3px 12px #0000000d;
+      margin-top: 25px;
     }
 
     .card h2 {
@@ -95,8 +90,7 @@
       min-width: 700px;
     }
 
-    th,
-    td {
+    th, td {
       padding: 13px 10px;
       text-align: left;
       border-bottom: 1px solid #ddd;
@@ -106,26 +100,9 @@
       background: #f0f4f1;
     }
 
-    .completed {
-      color: #147a3d;
-      font-weight: bold;
-    }
-
-    .pending {
-      color: #b06b00;
-      font-weight: bold;
-    }
-
-    .failed {
-      color: #b42318;
-      font-weight: bold;
-    }
-
-    .empty {
-      text-align: center;
-      padding: 30px;
-      color: #777;
-    }
+    .completed { color: #147a3d; font-weight: bold; }
+    .pending { color: #b06b00; font-weight: bold; }
+    .failed { color: #b42318; font-weight: bold; }
 
     .error {
       color: #b42318;
@@ -134,342 +111,43 @@
       border-radius: 8px;
     }
 
-    .loading {
-      color: #555;
+    .loading { color: #555; }
+
+    input[type="text"],
+    input[type="url"],
+    input[type="datetime-local"],
+    textarea {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
     }
 
-    @media (max-width: 600px) {
-      main {
-        padding: 20px 12px 35px;
-      }
+    button[type="submit"],
+    button[type="button"]:not(#logoutButton) {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      background: #174b35;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-      header {
-        padding: 16px;
-      }
-
-      .amount {
-        font-size: 24px;
-      }
+    button[type="button"]:not(#logoutButton):hover {
+      background: #113827;
     }
   </style>
 </head>
-
-<!-- CONTACT MESSAGES & PRAYER REQUESTS -->
-<section id="contactMessagesSection"
-         style="padding:20px;margin:20px 0;background:#fff;
-                color:#222;border-radius:12px;">
-  <h2>Contact Messages & Prayer Requests</h2>
-
-  <button id="loadContactMessages"
-          type="button"
-          style="padding:10px 16px;cursor:pointer;">
-    Load Messages
-  </button>
-
-  <p id="contactMessagesStatus" role="status">
-    Tap "Load Messages" to view submissions.
-  </p>
-
-  <div id="contactMessagesList"></div>
-</section>
-
-<script>
-(() => {
-  const API =
-    "https://imperishable-church-mpesa-backend-fa2a.onrender.com";
-
-  const button = document.getElementById("loadContactMessages");
-  const status = document.getElementById("contactMessagesStatus");
-  const list = document.getElementById("contactMessagesList");
-
-  button.addEventListener("click", async () => {
-    button.disabled = true;
-    status.textContent = "Loading messages...";
-    list.replaceChildren();
-
-    try {
-      const response = await fetch(
-        `${API}/api/admin/contact-messages`,
-        {
-          method: "GET",
-          credentials: "include"
-        }
-      );
-
-      const data = await response.json();
-
-      if (response.status === 401 || response.status === 403) {
-        status.textContent =
-          "Your admin session may have expired. Log in again.";
-        return;
-      }
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || "Could not load messages.");
-      }
-
-      if (!Array.isArray(data.messages) || data.messages.length === 0) {
-        status.textContent = "No contact messages found.";
-        return;
-      }
-
-      data.messages.forEach((message) => {
-        const card = document.createElement("article");
-        card.style.cssText =
-          "padding:14px;margin-top:12px;border:1px solid #ddd;" +
-          "border-radius:8px;overflow-wrap:anywhere;";
-
-        const title = document.createElement("h3");
-        title.textContent = message.subject || "Contact message";
-
-        const sender = document.createElement("p");
-        sender.textContent =
-          `From: ${message.name || "Unknown"} (${message.email || "No email"})`;
-
-        const body = document.createElement("p");
-        body.style.whiteSpace = "pre-wrap";
-        body.textContent = message.message || "";
-
-        card.append(title, sender, body);
-        list.appendChild(card);
-      });
-
-      status.textContent =
-        `Loaded ${data.messages.length} message(s).`;
-    } catch (error) {
-      status.textContent =
-        error.message || "Unable to load messages. Try again.";
-    } finally {
-      button.disabled = false;
-    }
-  });
-})();
-</script>
-</body>
-</html>
-
-<!-- CONTACT MESSAGES ADMIN SECTION -->
-<section id="contactMessagesSection"
-         style="margin:20px;padding:20px;background:#fff;color:#222;border-radius:12px;">
-  <h2>Contact Messages & Prayer Requests</h2>
-
-  <button id="loadContactMessages" type="button">
-    Load Messages
-  </button>
-
-  <p id="contactMessagesStatus" role="status">
-    Tap Load Messages to view submissions.
-  </p>
-
-  <div id="contactMessagesList"></div>
-</section>
-
-<script>
-(() => {
-  const API =
-    "https://imperishable-church-mpesa-backend-fa2a.onrender.com";
-
-  const button = document.getElementById("loadContactMessages");
-  const status = document.getElementById("contactMessagesStatus");
-  const list = document.getElementById("contactMessagesList");
-
-  button.addEventListener("click", async () => {
-    button.disabled = true;
-    status.textContent = "Loading messages...";
-    list.replaceChildren();
-
-    try {
-      const response = await fetch(
-        `${API}/api/admin/contact-messages`,
-        {
-          credentials: "include"
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(
-          data.message || `Request failed (${response.status})`
-        );
-      }
-
-      if (!data.messages || data.messages.length === 0) {
-        status.textContent = "No messages found yet.";
-        return;
-      }
-
-      data.messages.forEach((message) => {
-        const card = document.createElement("article");
-        card.style.cssText =
-          "padding:12px;margin:12px 0;border:1px solid #ddd;border-radius:8px;overflow-wrap:anywhere;";
-
-        const heading = document.createElement("h3");
-        heading.textContent = message.subject || "Contact message";
-
-        const sender = document.createElement("p");
-        sender.textContent =
-          `From: ${message.name || "Unknown"} (${message.email || "No email"})`;
-
-        const content = document.createElement("p");
-        content.style.whiteSpace = "pre-wrap";
-        content.textContent = message.message || "";
-
-        card.append(heading, sender, content);
-        list.appendChild(card);
-      });
-
-      status.textContent = `Loaded ${data.messages.length} message(s).`;
-    } catch (error) {
-      status.textContent =
-        error.message || "Unable to load messages.";
-    } finally {
-      button.disabled = false;
-    }
-  });
-})();
-</script>
-</body>
-</html>
-
 <body>
 
   <header>
     <strong>Imperishable Crown Bible Baptist Church</strong>
-
-    <button id="logoutButton" type="button">
-      Log Out
-    </button>
+    <button id="logoutButton" type="button">Log Out</button>
   </header>
-
-<section class="card" style="margin-top: 25px;">
-  <h2>Church Announcements</h2>
-  <p>Create and manage announcements for your church.</p>
-
-  <form id="announcementForm">
-    <input type="hidden" id="announcementId">
-
-    <label for="announcementTitle">Title</label>
-    <input
-      id="announcementTitle"
-      type="text"
-      maxlength="200"
-      required
-      placeholder="Announcement title"
-      style="display:block;width:100%;padding:12px;margin:8px 0 15px;"
-    >
-
-    <label for="announcementBody">Announcement</label>
-    <textarea
-      id="announcementBody"
-      required
-      rows="4"
-      placeholder="Write your announcement..."
-      style="display:block;width:100%;padding:12px;margin:8px 0 15px;"
-    ></textarea>
-
-    <label style="display:block;margin:12px 0;">
-      <input id="announcementPublished" type="checkbox">
-      Publish announcement
-    </label>
-
-    <button type="submit" id="saveAnnouncement">
-      Save Announcement
-    </button>
-
-    <button type="button" id="cancelAnnouncement" hidden>
-      Cancel Edit
-    </button>
-  </form>
-
-  <p id="announcementMessage" role="status"></p>
-
-  <div id="announcementList">
-    Loading announcements...
-  </div>
-</section>
-
-<!-- =====================================
-     EVENTS MANAGEMENT
-====================================== -->
-<section class="card" style="margin-top:25px;">
-  <h2>Church Events Management</h2>
-  <p>Create and manage upcoming church events.</p>
-
-  <form id="eventForm">
-    <input type="hidden" id="eventId">
-
-    <label for="eventTitle">Event title</label>
-    <input
-      id="eventTitle"
-      type="text"
-      maxlength="200"
-      required
-      placeholder="e.g. Sunday Worship Service"
-      style="display:block;width:100%;padding:12px;margin:8px 0 15px;"
-    >
-
-    <label for="eventDescription">Description</label>
-    <textarea
-      id="eventDescription"
-      rows="4"
-      maxlength="5000"
-      required
-      placeholder="Describe the event..."
-      style="display:block;width:100%;padding:12px;margin:8px 0 15px;"
-    ></textarea>
-
-    <label for="eventDate">Date and time</label>
-    <input
-      id="eventDate"
-      type="datetime-local"
-      required
-      style="display:block;width:100%;padding:12px;margin:8px 0 15px;"
-    >
-
-    <label for="eventLocation">Location</label>
-    <input
-      id="eventLocation"
-      type="text"
-      maxlength="300"
-      placeholder="Church venue or location"
-      style="display:block;width:100%;padding:12px;margin:8px 0 15px;"
-    >
-
-    <label for="eventImage">Image URL (optional)</label>
-    <input
-      id="eventImage"
-      type="url"
-      maxlength="2000"
-      placeholder="https://example.com/event-image.jpg"
-      style="display:block;width:100%;padding:12px;margin:8px 0 15px;"
-    >
-
-    <label style="display:block;margin:12px 0;">
-      <input id="eventPublished" type="checkbox">
-      Publish event on the public website
-    </label>
-
-    <button id="saveEventButton" type="submit">
-      Save Event
-    </button>
-
-    <button id="cancelEventButton" type="button" hidden>
-      Cancel Edit
-    </button>
-  </form>
-
-  <p id="eventMessage" role="status"></p>
-
-  <hr style="margin:20px 0;">
-
-  <h3>Existing Events</h3>
-  <div id="eventList">Loading events...</div>
-</section>
-
-
   <main>
-
     <h1>Administrator Dashboard</h1>
 
     <p id="status" class="loading">
@@ -477,33 +155,84 @@
     </p>
 
     <section class="stats">
-
-      <div class="card">
+      <div class="card" style="margin-top:0;">
         <h2>Completed Donations</h2>
-        <div id="totalDonations" class="amount">
-          KSh 0
-        </div>
+        <div id="totalDonations" class="amount">KSh 0</div>
       </div>
 
-      <div class="card">
+      <div class="card" style="margin-top:0;">
         <h2>Total Records</h2>
-        <div id="totalRecords" class="amount">
-          0
-        </div>
+        <div id="totalRecords" class="amount">0</div>
       </div>
+    </section>
+    <section class="card">
+      <h2>Church Announcements</h2>
+      <p>Create and manage announcements for your church.</p>
 
+      <form id="announcementForm">
+        <input type="hidden" id="announcementId">
+
+        <label for="announcementTitle">Title</label>
+        <input id="announcementTitle" type="text" maxlength="200" required placeholder="Announcement title">
+
+        <label for="announcementBody">Announcement</label>
+        <textarea id="announcementBody" required rows="4" placeholder="Write your announcement..."></textarea>
+
+        <label style="display:block;margin:12px 0;">
+          <input id="announcementPublished" type="checkbox">
+          Publish announcement
+        </label>
+
+        <button type="submit" id="saveAnnouncement">Save Announcement</button>
+        <button type="button" id="cancelAnnouncement" hidden>Cancel Edit</button>
+      </form>
+
+      <p id="announcementMessage" role="status"></p>
+      <div id="announcementList">Loading announcements...</div>
+    </section>
+
+    <section class="card">
+      <h2>Church Events Management</h2>
+      <p>Create and manage upcoming church events.</p>
+
+      <form id="eventForm">
+        <input type="hidden" id="eventId">
+
+        <label for="eventTitle">Event title</label>
+        <input id="eventTitle" type="text" maxlength="200" required placeholder="e.g. Sunday Worship Service">
+
+        <label for="eventDescription">Description</label>
+        <textarea id="eventDescription" rows="4" maxlength="5000" required placeholder="Describe the event..."></textarea>
+
+        <label for="eventDate">Date and time</label>
+        <input id="eventDate" type="datetime-local" required>
+
+        <label for="eventLocation">Location</label>
+        <input id="eventLocation" type="text" maxlength="300" placeholder="Church venue or location">
+
+        <label for="eventImage">Image URL (optional)</label>
+        <input id="eventImage" type="url" maxlength="2000" placeholder="https://example.com/event-image.jpg">
+
+        <label style="display:block;margin:12px 0;">
+          <input id="eventPublished" type="checkbox">
+          Publish event on the public website
+        </label>
+
+        <button id="saveEventButton" type="submit">Save Event</button>
+        <button id="cancelEventButton" type="button" hidden>Cancel Edit</button>
+      </form>
+
+      <p id="eventMessage" role="status"></p>
+      <hr style="margin:20px 0;">
+      <h3>Existing Events</h3>
+      <div id="eventList">Loading events...</div>
     </section>
 
     <section class="card table-card">
-
       <h2>Recent Donations</h2>
-
-      <div id="donationMessage">
-        Loading donation records...
-      </div>
+      <div id="donationMessage">Loading donation records...</div>
 
       <table id="donationTable" hidden>
-
         <thead>
           <tr>
             <th>Date</th>
@@ -513,162 +242,23 @@
             <th>M-Pesa Receipt</th>
           </tr>
         </thead>
-
         <tbody id="donationBody"></tbody>
-
       </table>
-
     </section>
+    <section class="card">
+      <h2>Contact Messages & Prayer Requests</h2>
+      <p>View submissions sent through the website contact form.</p>
 
+      <button id="loadContactMessages" type="button">Load Messages</button>
+      <p id="contactMessagesStatus" role="status">Tap "Load Messages" to view submissions.</p>
+      <div id="contactMessagesList"></div>
+    </section>
   </main>
 
   <script>
-
-    const API =
-      "https://imperishable-church-mpesa-backend-fa2a.onrender.com";
-
-    const statusElement =
-      document.getElementById("status");
-
-    const totalDonations =
-      document.getElementById("totalDonations");
-
-    const totalRecords =
-      document.getElementById("totalRecords");
-
-    const donationMessage =
-      document.getElementById("donationMessage");
-
-    const donationTable =
-      document.getElementById("donationTable");
-
-    const donationBody =
-      document.getElementById("donationBody");
-
-    const logoutButton =
-      document.getElementById("logoutButton");
-
-
-    async function loadDashboard() {
-
-      try {
-
-        // Verify administrator session first.
-        const sessionResponse =
-          await fetch(`${API}/api/admin/me`, {
-            credentials: "include",
-            cache: "no-store"
-          });
-
-        if (!sessionResponse.ok) {
-          window.location.replace("admin.html");
-          return;
-        }
-
-        const session =
-          await sessionResponse.json();
-
-        if (!session.success) {
-          window.location.replace("admin.html");
-          return;
-        }
-
-        statusElement.textContent =
-          `Logged in as ${session.username}`;
-
-        // Load real donation records.
-        const donationResponse =
-          await fetch(`${API}/api/admin/donations`, {
-            credentials: "include",
-            cache: "no-store"
-          });
-
-        const data =
-          await donationResponse.json();
-
-        if (
-          !donationResponse.ok ||
-          !data.success
-        ) {
-          throw new Error(
-            data.message ||
-            "Could not load donation records."
-          );
-        }
-
-        totalDonations.textContent =
-          `KSh ${Number(data.total).toLocaleString()}`;
-
-        totalRecords.textContent =
-          data.donations.length;
-
-        donationBody.innerHTML = "";
-
-        if (!data.donations.length) {
-
-          donationMessage.textContent =
-            "No donation records yet.";
-
-          return;
-        }
-
-        donationMessage.textContent = "";
-
-        donationTable.hidden = false;
-
-        data.donations.forEach((donation) => {
-
-          const row =
-            document.createElement("tr");
-
-          const date =
-            new Date(
-              donation.created_at
-            ).toLocaleString("en-KE");
-
-          const status =
-            String(donation.status || "")
-              .toLowerCase();
-
-          row.innerHTML = `
-            <td>${escapeHTML(date)}</td>
-            <td>${escapeHTML(donation.phone)}</td>
-            <td>KSh ${Number(donation.amount).toLocaleString()}</td>
-            <td class="${escapeHTML(status)}">
-              ${escapeHTML(status)}
-            </td>
-            <td>
-              ${escapeHTML(
-                donation.mpesa_receipt_number || "—"
-              )}
-            </td>
-          `;
-
-          donationBody.appendChild(row);
-
-        });
-
-      } catch (error) {
-
-        console.error(
-          "Dashboard error:",
-          error
-        );
-
-        donationMessage.innerHTML = `
-          <div class="error">
-            ${escapeHTML(
-              error.message ||
-              "Could not load the dashboard."
-            )}
-          </div>
-        `;
-      }
-    }
-
+    const API = "https://imperishable-church-mpesa-backend-fa2a.onrender.com";
 
     function escapeHTML(value) {
-
       return String(value ?? "")
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
@@ -677,461 +267,249 @@
         .replaceAll("'", "&#039;");
     }
 
-
-    logoutButton.addEventListener(
-      "click",
-      async () => {
-
-        logoutButton.disabled = true;
-
-        try {
-
-          await fetch(
-            `${API}/api/admin/logout`,
-            {
-              method: "POST",
-              credentials: "include"
-            }
-          );
-
-        } finally {
-
-          window.location.replace(
-            "admin.html"
-          );
-        }
-      }
-    );
-
-
-    loadDashboard();
-
-const announcementForm =
-  document.getElementById("announcementForm");
-
-const announcementId =
-  document.getElementById("announcementId");
-
-const announcementTitle =
-  document.getElementById("announcementTitle");
-
-const announcementBody =
-  document.getElementById("announcementBody");
-
-const announcementPublished =
-  document.getElementById("announcementPublished");
-
-const announcementMessage =
-  document.getElementById("announcementMessage");
-
-const announcementList =
-  document.getElementById("announcementList");
-
-const cancelAnnouncement =
-  document.getElementById("cancelAnnouncement");
-
-
-async function loadAnnouncements() {
-  announcementList.textContent = "Loading announcements...";
-
-  try {
-    const response = await fetch(
-      `${API}/api/admin/announcements`,
-      {
-        credentials: "include",
-        cache: "no-store"
-      }
-    );
-
-    if (response.status === 401) {
-      window.location.replace("admin.html");
-      return;
-    }
-
-    const data = await response.json();
-
-    if (!response.ok || !data.success) {
-      throw new Error(
-        data.message || "Could not load announcements."
-      );
-    }
-
-    announcementList.replaceChildren();
-
-    if (!data.announcements.length) {
-      announcementList.textContent = "No announcements yet.";
-      return;
-    }
-
-    data.announcements.forEach((item) => {
-      const card = document.createElement("div");
-      card.style.cssText =
-        "border:1px solid #ddd;border-radius:8px;padding:15px;margin-top:12px;";
-
-      const title = document.createElement("h3");
-      title.textContent = item.title;
-
-      const body = document.createElement("p");
-      body.textContent = item.body;
-
-      const status = document.createElement("p");
-      status.textContent = item.published
-        ? "Published"
-        : "Unpublished";
-
-      const edit = document.createElement("button");
-      edit.type = "button";
-      edit.textContent = "Edit";
-      edit.style.marginRight = "8px";
-
-      edit.addEventListener("click", () => {
-        announcementId.value = item.id;
-        announcementTitle.value = item.title;
-        announcementBody.value = item.body;
-        announcementPublished.checked = item.published;
-        announcementMessage.textContent = "Editing announcement.";
-        cancelAnnouncement.hidden = false;
-        document.getElementById("saveAnnouncement").textContent =
-          "Update Announcement";
-
-        announcementForm.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
+    // Logout handling
+    const logoutButton = document.getElementById("logoutButton");
+    logoutButton.addEventListener("click", async () => {
+      logoutButton.disabled = true;
+      try {
+        await fetch(`${API}/api/admin/logout`, {
+          method: "POST",
+          credentials: "include"
         });
-      });
+      } finally {
+        window.location.replace("admin.html");
+      }
+    });
+    // Load Dashboard & Donations
+    const statusElement = document.getElementById("status");
+    const totalDonations = document.getElementById("totalDonations");
+    const totalRecords = document.getElementById("totalRecords");
+    const donationMessage = document.getElementById("donationMessage");
+    const donationTable = document.getElementById("donationTable");
+    const donationBody = document.getElementById("donationBody");
 
-      const remove = document.createElement("button");
-      remove.type = "button";
-      remove.textContent = "Delete";
+    async function loadDashboard() {
+      try {
+        const sessionResponse = await fetch(`${API}/api/admin/me`, {
+          credentials: "include",
+          cache: "no-store"
+        });
 
-      remove.addEventListener("click", async () => {
-        if (!confirm(`Delete "${item.title}" permanently?`)) {
+        if (!sessionResponse.ok) {
+          window.location.replace("admin.html");
           return;
         }
 
-        try {
-          const result = await fetch(
-            `${API}/api/admin/announcements/${encodeURIComponent(item.id)}`,
-            {
-              method: "DELETE",
-              credentials: "include"
-            }
-          );
-
-          const resultData = await result.json();
-
-          if (!result.ok || !resultData.success) {
-            throw new Error(
-              resultData.message || "Delete failed."
-            );
-          }
-
-          announcementMessage.textContent =
-            "Announcement deleted.";
-
-          await loadAnnouncements();
-        } catch (error) {
-          announcementMessage.textContent = error.message;
+        const session = await sessionResponse.json();
+        if (!session.success) {
+          window.location.replace("admin.html");
+          return;
         }
-      });
 
-      card.append(title, body, status, edit, remove);
-      announcementList.appendChild(card);
-    });
-  } catch (error) {
-    announcementList.textContent = error.message;
-  }
-}
+        statusElement.textContent = `Logged in as ${session.username}`;
 
-
-announcementForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-
-  const id = announcementId.value;
-
-  const payload = {
-    title: announcementTitle.value.trim(),
-    body: announcementBody.value.trim(),
-    published: announcementPublished.checked
-  };
-
-  const saveButton = document.getElementById("saveAnnouncement");
-  saveButton.disabled = true;
-  announcementMessage.textContent = "Saving...";
-
-  try {
-    const response = await fetch(
-      id
-        ? `${API}/api/admin/announcements/${encodeURIComponent(id)}`
-        : `${API}/api/admin/announcements`,
-      {
-        method: id ? "PUT" : "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok || !data.success) {
-      throw new Error(data.message || "Could not save announcement.");
-    }
-
-    announcementMessage.textContent =
-      payload.published
-        ? "Announcement saved and marked as published."
-        : "Announcement saved as unpublished.";
-
-    resetAnnouncementForm();
-    await loadAnnouncements();
-  } catch (error) {
-    announcementMessage.textContent = error.message;
-  } finally {
-    saveButton.disabled = false;
-  }
-});
-
-
-function resetAnnouncementForm() {
-  announcementForm.reset();
-  announcementId.value = "";
-  cancelAnnouncement.hidden = true;
-  document.getElementById("saveAnnouncement").textContent =
-    "Save Announcement";
-}
-
-
-cancelAnnouncement.addEventListener("click", () => {
-  resetAnnouncementForm();
-  announcementMessage.textContent = "";
-});
-
-
-loadAnnouncements();
-
-const eventForm = document.getElementById("eventForm");
-const eventIdInput = document.getElementById("eventId");
-const eventTitleInput = document.getElementById("eventTitle");
-const eventDescriptionInput = document.getElementById("eventDescription");
-const eventDateInput = document.getElementById("eventDate");
-const eventLocationInput = document.getElementById("eventLocation");
-const eventImageInput = document.getElementById("eventImage");
-const eventPublishedInput = document.getElementById("eventPublished");
-const eventMessage = document.getElementById("eventMessage");
-const eventList = document.getElementById("eventList");
-const saveEventButton = document.getElementById("saveEventButton");
-const cancelEventButton = document.getElementById("cancelEventButton");
-
-function eventEscape(value) {
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
-
-function eventDateForInput(value) {
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) return "";
-
-  const localDate = new Date(
-    date.getTime() - date.getTimezoneOffset() * 60000
-  );
-
-  return localDate.toISOString().slice(0, 16);
-}
-
-function resetEventForm() {
-  eventForm.reset();
-  eventIdInput.value = "";
-  cancelEventButton.hidden = true;
-  saveEventButton.textContent = "Save Event";
-}
-
-async function loadEvents() {
-  eventList.textContent = "Loading events...";
-
-  try {
-    const response = await fetch(`${API}/api/admin/events`, {
-      credentials: "include",
-      cache: "no-store"
-    });
-
-    if (response.status === 401) {
-      window.location.replace("admin.html");
-      return;
-    }
-
-    const data = await response.json();
-
-    if (!response.ok || !data.success) {
-      throw new Error(data.message || "Could not load events.");
-    }
-
-    eventList.replaceChildren();
-
-    if (!data.events.length) {
-      eventList.textContent = "No events have been created yet.";
-      return;
-    }
-
-    data.events.forEach((item) => {
-      const card = document.createElement("article");
-
-      card.style.cssText =
-        "border:1px solid #ddd;border-radius:8px;padding:15px;margin:12px 0;";
-
-      const title = document.createElement("h3");
-      title.textContent = item.title;
-
-      const description = document.createElement("p");
-      description.textContent = item.description;
-
-      const date = document.createElement("p");
-      date.textContent =
-        "Date: " + new Date(item.event_date).toLocaleString();
-
-      const location = document.createElement("p");
-      location.textContent = "Location: " + (item.location || "Not specified");
-
-      const status = document.createElement("p");
-      status.textContent = item.published ? "Published" : "Unpublished";
-
-      const editButton = document.createElement("button");
-      editButton.type = "button";
-      editButton.textContent = "Edit";
-      editButton.style.marginRight = "8px";
-
-      editButton.addEventListener("click", () => {
-        eventIdInput.value = item.id;
-        eventTitleInput.value = item.title || "";
-        eventDescriptionInput.value = item.description || "";
-        eventDateInput.value = eventDateForInput(item.event_date);
-        eventLocationInput.value = item.location || "";
-        eventImageInput.value = item.image_url || "";
-        eventPublishedInput.checked = item.published === true;
-
-        saveEventButton.textContent = "Update Event";
-        cancelEventButton.hidden = false;
-        eventMessage.textContent = "Editing event.";
-
-        eventForm.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
+        const donationResponse = await fetch(`${API}/api/admin/donations`, {
+          credentials: "include",
+          cache: "no-store"
         });
-      });
 
-      const deleteButton = document.createElement("button");
-      deleteButton.type = "button";
-      deleteButton.textContent = "Delete";
-
-      deleteButton.addEventListener("click", async () => {
-        if (!confirm(`Permanently delete "${item.title}"?`)) return;
-
-        deleteButton.disabled = true;
-
-        try {
-          const deleteResponse = await fetch(
-            `${API}/api/admin/events/${encodeURIComponent(item.id)}`,
-            {
-              method: "DELETE",
-              credentials: "include"
-            }
-          );
-
-          const deleteData = await deleteResponse.json();
-
-          if (!deleteResponse.ok || !deleteData.success) {
-            throw new Error(deleteData.message || "Could not delete event.");
-          }
-
-          eventMessage.textContent = "Event deleted.";
-          await loadEvents();
-        } catch (error) {
-          eventMessage.textContent = error.message;
-          deleteButton.disabled = false;
+        const data = await donationResponse.json();
+        if (!donationResponse.ok || !data.success) {
+          throw new Error(data.message || "Could not load donation records.");
         }
-      });
 
-      card.append(title, description, date, location, status, editButton, deleteButton);
-      eventList.appendChild(card);
-    });
-  } catch (error) {
-    eventList.textContent = error.message;
-  }
-}
+        totalDonations.textContent = `KSh ${Number(data.total).toLocaleString()}`;
+        totalRecords.textContent = data.donations.length;
+        donationBody.innerHTML = "";
 
-eventForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
+        if (!data.donations.length) {
+          donationMessage.textContent = "No donation records yet.";
+          return;
+        }
 
-  const id = eventIdInput.value;
-  const selectedDate = new Date(eventDateInput.value);
+        donationMessage.textContent = "";
+        donationTable.hidden = false;
 
-  if (Number.isNaN(selectedDate.getTime())) {
-    eventMessage.textContent = "Please choose a valid event date and time.";
-    return;
-  }
+        data.donations.forEach((donation) => {
+          const row = document.createElement("tr");
+          const date = new Date(donation.created_at).toLocaleString("en-KE");
+          const status = String(donation.status || "").toLowerCase();
 
-  const payload = {
-    title: eventTitleInput.value.trim(),
-    description: eventDescriptionInput.value.trim(),
-    event_date: selectedDate.toISOString(),
-    location: eventLocationInput.value.trim(),
-    image_url: eventImageInput.value.trim(),
-    published: eventPublishedInput.checked
-  };
-
-  saveEventButton.disabled = true;
-  eventMessage.textContent = "Saving event...";
-
-  try {
-    const response = await fetch(
-      id
-        ? `${API}/api/admin/events/${encodeURIComponent(id)}`
-        : `${API}/api/admin/events`,
-      {
-        method: id ? "PUT" : "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
+          row.innerHTML = `
+            <td>${escapeHTML(date)}</td>
+            <td>${escapeHTML(donation.phone)}</td>
+            <td>KSh ${Number(donation.amount).toLocaleString()}</td>
+            <td class="${escapeHTML(status)}">${escapeHTML(status)}</td>
+            <td>${escapeHTML(donation.mpesa_receipt_number || "—")}</td>
+          `;
+          donationBody.appendChild(row);
+        });
+      } catch (error) {
+        donationMessage.innerHTML = `<div class="error">${escapeHTML(error.message || "Could not load the dashboard.")}</div>`;
       }
-    );
-
-    const data = await response.json();
-
-    if (!response.ok || !data.success) {
-      throw new Error(data.message || "Could not save event.");
     }
 
-    eventMessage.textContent = payload.published
-      ? "Event saved and marked as published."
-      : "Event saved as unpublished.";
+    // Announcements Logic
+    const announcementForm = document.getElementById("announcementForm");
+    const announcementId = document.getElementById("announcementId");
+    const announcementTitle = document.getElementById("announcementTitle");
+    const announcementBody = document.getElementById("announcementBody");
+    const announcementPublished = document.getElementById("announcementPublished");
+    const announcementMessage = document.getElementById("announcementMessage");
+    const announcementList = document.getElementById("announcementList");
+    const cancelAnnouncement = document.getElementById("cancelAnnouncement");
 
-    resetEventForm();
-    await loadEvents();
-  } catch (error) {
-    eventMessage.textContent = error.message;
-  } finally {
-    saveEventButton.disabled = false;
-  }
-});
+    async function loadAnnouncements() {
+      announcementList.textContent = "Loading announcements...";
+      try {
+        const response = await fetch(`${API}/api/admin/announcements`, { credentials: "include", cache: "no-store" });
+        if (response.status === 401) { window.location.replace("admin.html"); return; }
+        const data = await response.json();
+        if (!response.ok || !data.success) throw new Error(data.message || "Could not load announcements.");
 
-cancelEventButton.addEventListener("click", () => {
-  resetEventForm();
-  eventMessage.textContent = "";
-});
+        announcementList.replaceChildren();
+        if (!data.announcements.length) {
+          announcementList.textContent = "No announcements yet.";
+          return;
+        }
 
-loadEvents();
+        data.announcements.forEach((item) => {
+          const card = document.createElement("div");
+          card.style.cssText = "border:1px solid #ddd;border-radius:8px;padding:15px;margin-top:12px;";
+          card.innerHTML = `
+            <h3>${escapeHTML(item.title)}</h3>
+            <p>${escapeHTML(item.body)}</p>
+            <p><strong>Status:</strong> ${item.published ? "Published" : "Unpublished"}</p>
+          `;
 
+          const edit = document.createElement("button");
+          edit.type = "button";
+          edit.textContent = "Edit";
+          edit.style.marginRight = "8px";
+          edit.addEventListener("click", () => {
+            announcementId.value = item.id;
+            announcementTitle.value = item.title;
+            announcementBody.value = item.body;
+            announcementPublished.checked = item.published;
+            announcementMessage.textContent = "Editing announcement.";
+            cancelAnnouncement.hidden = false;
+            document.getElementById("saveAnnouncement").textContent = "Update Announcement";
+            announcementForm.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
 
+          const remove = document.createElement("button");
+          remove.type = "button";
+          remove.textContent = "Delete";
+          remove.addEventListener("click", async () => {
+            if (!confirm(`Delete "${item.title}" permanently?`)) return;
+            try {
+              const res = await fetch(`${API}/api/admin/announcements/${encodeURIComponent(item.id)}`, { method: "DELETE", credentials: "include" });
+              const resData = await res.json();
+              if (!res.ok || !resData.success) throw new Error(resData.message || "Delete failed.");
+              announcementMessage.textContent = "Announcement deleted.";
+              await loadAnnouncements();
+            } catch (err) {
+              announcementMessage.textContent = err.message;
+            }
+          });
+
+          card.append(edit, remove);
+          announcementList.appendChild(card);
+        });
+      } catch (error) {
+        announcementList.textContent = error.message;
+      }
+    }
+
+    announcementForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const id = announcementId.value;
+      const payload = {
+        title: announcementTitle.value.trim(),
+        body: announcementBody.value.trim(),
+        published: announcementPublished.checked
+      };
+
+      const saveBtn = document.getElementById("saveAnnouncement");
+      saveBtn.disabled = true;
+      announcementMessage.textContent = "Saving...";
+
+      try {
+        const res = await fetch(id ? `${API}/api/admin/announcements/${encodeURIComponent(id)}` : `${API}/api/admin/announcements`, {
+          method: id ? "PUT" : "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok || !data.success) throw new Error(data.message || "Could not save announcement.");
+
+        announcementMessage.textContent = "Announcement saved successfully.";
+        announcementForm.reset();
+        announcementId.value = "";
+        cancelAnnouncement.hidden = true;
+        saveBtn.textContent = "Save Announcement";
+        await loadAnnouncements();
+      } catch (err) {
+        announcementMessage.textContent = err.message;
+      } finally {
+        saveBtn.disabled = false;
+      }
+    });
+
+    cancelAnnouncement.addEventListener("click", () => {
+      announcementForm.reset();
+      announcementId.value = "";
+      cancelAnnouncement.hidden = true;
+      document.getElementById("saveAnnouncement").textContent = "Save Announcement";
+      announcementMessage.textContent = "";
+    });
+
+    // Contact Messages Logic
+    const loadContactBtn = document.getElementById("loadContactMessages");
+    const contactStatus = document.getElementById("contactMessagesStatus");
+    const contactList = document.getElementById("contactMessagesList");
+
+    loadContactBtn.addEventListener("click", async () => {
+      loadContactBtn.disabled = true;
+      contactStatus.textContent = "Loading messages...";
+      contactList.replaceChildren();
+
+      try {
+        const response = await fetch(`${API}/api/admin/contact-messages`, { credentials: "include" });
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+          throw new Error(data.message || `Request failed (${response.status})`);
+        }
+
+        if (!data.messages || data.messages.length === 0) {
+          contactStatus.textContent = "No messages found yet.";
+          return;
+        }
+
+        data.messages.forEach((msg) => {
+          const card = document.createElement("article");
+          card.style.cssText = "padding:12px;margin:12px 0;border:1px solid #ddd;border-radius:8px;background:#fafafa;";
+          card.innerHTML = `
+            <h3>${escapeHTML(msg.subject || "Contact message")}</h3>
+            <p><strong>From:</strong> ${escapeHTML(msg.name || "Unknown")} (${escapeHTML(msg.email || "No email")})</p>
+            <p style="white-space:pre-wrap;">${escapeHTML(msg.message || "")}</p>
+          `;
+          contactList.appendChild(card);
+        });
+
+        contactStatus.textContent = `Loaded ${data.messages.length} message(s).`;
+      } catch (error) {
+        contactStatus.textContent = error.message || "Unable to load messages.";
+      } finally {
+        loadContactBtn.disabled = false;
+      }
+    });
+
+    // Initialize Dashboard Loads
+    loadDashboard();
+    loadAnnouncements();
   </script>
-
 </body>
 </html>
