@@ -801,6 +801,213 @@ app.get("/api/announcements", async (req, res) => {
     });
   }
 });
+// ========================================
+// ADMIN ANNOUNCEMENTS
+// ========================================
+
+// Get all announcements for the administrator
+app.get(
+  "/api/admin/announcements",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const result = await pool.query(
+        `SELECT id, title, body, published, created_at
+         FROM announcements
+         ORDER BY created_at DESC
+         LIMIT 100`
+      );
+
+      return res.json({
+        success: true,
+        announcements: result.rows
+      });
+    } catch (error) {
+      console.error(
+        "Admin announcements error:",
+        error.message
+      );
+
+      return res.status(500).json({
+        success: false,
+        message: "Could not load announcements."
+      });
+    }
+  }
+);
+
+// Create an announcement
+app.post(
+  "/api/admin/announcements",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const title = String(
+        req.body?.title || ""
+      ).trim();
+
+      const body = String(
+        req.body?.body || ""
+      ).trim();
+
+      const published =
+        req.body?.published === true;
+
+      if (
+        title.length < 2 ||
+        title.length > 200 ||
+        body.length < 2
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Please provide a valid title and announcement."
+        });
+      }
+
+      const result = await pool.query(
+        `INSERT INTO announcements
+          (title, body, published)
+         VALUES ($1, $2, $3)
+         RETURNING id, title, body, published, created_at`,
+        [title, body, published]
+      );
+
+      return res.status(201).json({
+        success: true,
+        announcement: result.rows[0]
+      });
+    } catch (error) {
+      console.error(
+        "Create announcement error:",
+        error.message
+      );
+
+      return res.status(500).json({
+        success: false,
+        message: "Could not create announcement."
+      });
+    }
+  }
+);
+
+// Update an announcement
+app.put(
+  "/api/admin/announcements/:id",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+
+      const title = String(
+        req.body?.title || ""
+      ).trim();
+
+      const body = String(
+        req.body?.body || ""
+      ).trim();
+
+      const published =
+        req.body?.published === true;
+
+      if (
+        !Number.isInteger(id) ||
+        id < 1 ||
+        title.length < 2 ||
+        title.length > 200 ||
+        body.length < 2
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Please provide valid announcement details."
+        });
+      }
+
+      const result = await pool.query(
+        `UPDATE announcements
+         SET title = $1,
+             body = $2,
+             published = $3
+         WHERE id = $4
+         RETURNING id, title, body, published, created_at`,
+        [title, body, published, id]
+      );
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Announcement not found."
+        });
+      }
+
+      return res.json({
+        success: true,
+        announcement: result.rows[0]
+      });
+    } catch (error) {
+      console.error(
+        "Update announcement error:",
+        error.message
+      );
+
+      return res.status(500).json({
+        success: false,
+        message: "Could not update announcement."
+      });
+    }
+  }
+);
+
+// Delete an announcement
+app.delete(
+  "/api/admin/announcements/:id",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+
+      if (!Number.isInteger(id) || id < 1) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid announcement ID."
+        });
+      }
+
+      const result = await pool.query(
+        `DELETE FROM announcements
+         WHERE id = $1
+         RETURNING id`,
+        [id]
+      );
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Announcement not found."
+        });
+      }
+
+      return res.json({
+        success: true,
+        message: "Announcement deleted successfully."
+      });
+    } catch (error) {
+      console.error(
+        "Delete announcement error:",
+        error.message
+      );
+
+      return res.status(500).json({
+        success: false,
+        message: "Could not delete announcement."
+      });
+    }
+  }
+);
 
 // ========================================
 // CHURCH LEADERS
