@@ -37,10 +37,13 @@
         <nav class="navbar" aria-label="Main navigation">
 
             <a href="home.html" class="logo">
-                <span class="logo-icon">
-                    <i class="fas fa-church" aria-hidden="true"></i>
-                </span>
-
+               <span class="logo-icon">
+    <img
+        src="images/file_00000000975082088f440ded4bccbf30.png"
+        alt="Imperishable Crown Church logo"
+        class="church-logo"
+    >
+</span>
                 <span class="logo-text">
                     Imperishable Crown
                     <small>Outreach Baptist Church</small>
@@ -137,17 +140,29 @@
                     </h2>
 
                     <div class="main-amount" id="mainAmount" aria-live="polite">
-                        KES 92,547.00
+                        KES 00.00
                     </div>
 
                     <div class="main-amount" id="usdAmount" aria-live="polite">
                         $0.00
                     </div>
 
-                    <p class="exchange-rate">
-                        Exchange rate: $1 = KSh 130.78
-                    </p>
+                    <p class="exchange-rate" id="exchangeRate">
+    Loading USD/KES exchange rate...
+</p>
 
+<p id="exchangeRateUpdated" class="exchange-rate">
+    Fetching latest available rate...
+</p>
+
+<p class="exchange-attribution">
+    Exchange rates by
+    <a href="https://www.exchangerate-api.com"
+       target="_blank"
+       rel="noopener noreferrer">
+        ExchangeRate-API
+    </a>
+</p>
                     <p>
                         This amount reflects donations recorded as completed
                         by the donation system.
