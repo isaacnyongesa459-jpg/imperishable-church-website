@@ -164,6 +164,53 @@
     </button>
   </header>
 
+<section class="card" style="margin-top: 25px;">
+  <h2>Church Announcements</h2>
+  <p>Create and manage announcements for your church.</p>
+
+  <form id="announcementForm">
+    <input type="hidden" id="announcementId">
+
+    <label for="announcementTitle">Title</label>
+    <input
+      id="announcementTitle"
+      type="text"
+      maxlength="200"
+      required
+      placeholder="Announcement title"
+      style="display:block;width:100%;padding:12px;margin:8px 0 15px;"
+    >
+
+    <label for="announcementBody">Announcement</label>
+    <textarea
+      id="announcementBody"
+      required
+      rows="4"
+      placeholder="Write your announcement..."
+      style="display:block;width:100%;padding:12px;margin:8px 0 15px;"
+    ></textarea>
+
+    <label style="display:block;margin:12px 0;">
+      <input id="announcementPublished" type="checkbox">
+      Publish announcement
+    </label>
+
+    <button type="submit" id="saveAnnouncement">
+      Save Announcement
+    </button>
+
+    <button type="button" id="cancelAnnouncement" hidden>
+      Cancel Edit
+    </button>
+  </form>
+
+  <p id="announcementMessage" role="status"></p>
+
+  <div id="announcementList">
+    Loading announcements...
+  </div>
+</section>
+
   <main>
 
     <h1>Administrator Dashboard</h1>
