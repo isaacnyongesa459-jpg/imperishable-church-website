@@ -1,66 +1,110 @@
-
-const CACHE_NAME = "imperishable-church-v4";
+const CACHE_NAME = "imperishable-church-v5";
 const HOME_PAGE = "./index.html";
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => cache.add(HOME_PAGE))
-      .then(() => self.skipWaiting())
-  );
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then((cache) => {
+                return cache.addAll([
+                    "./index.html",
+                    "./styles.css",
+                    "./script.js",
+                    "./manifest.json",
+                    "./app-icon-192.png",
+                    "./file_00000000975082088f440ded4bccbf30.png"
+                ]);
+            })
+            .then(() => self.skipWaiting())
+    );
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys
-          .filter((key) =>
-            key.startsWith("imperishable-church-") &&
-            key !== CACHE_NAME
-          )
-          .map((key) => caches.delete(key))
-      )
-    ).then(() => self.clients.claim())
-  );
+    event.waitUntil(
+        caches.keys().then((keys) => {
+            return Promise.all(
+                keys
+                    .filter((key) =>
+                        key.startsWith("imperishable-church-") &&
+                        key !== CACHE_NAME
+                    )
+                    .map((key) => caches.delete(key))
+            );
+        }).then(() => self.clients.claim())
+    );
 });
 
 self.addEventListener("fetch", (event) => {
-  const request = event.request;
-  const url = new URL(request.url);
 
-  if (
-    request.method !== "GET" ||
-    url.origin !== self.location.origin
-  ) {
-    return;
-  }
+    const request = event.request;
+    const url = new URL(request.url);
 
-  // Do not intercept payment or API requests.
-  if (
-    /\/api(?:\/|$)/i.test(url.pathname) ||
-    /stkpush|callback|payment/i.test(url.pathname)
-  ) {
-    return;
-  }
+    // Only handle GET requests from this website
+    if (
+        request.method !== "GET" ||
+        url.origin !== self.location.origin
+    ) {
+        return;
+    }
 
-  if (request.mode === "navigate") {
-    event.respondWith(
-      fetch(request).catch(async () => {
-        return (
-          await caches.match(request) ||
-          await caches.match(HOME_PAGE) ||
-          new Response(
-            "You are offline. Please reconnect to the internet.",
-            {
-              status: 503,
-              headers: {
-                "Content-Type": "text/plain; charset=utf-8"
-              }
-            }
-          )
+    // Never interfere with your Render/API/M-PESA requests
+    if (
+        /\/api(?:\/|$)/i.test(url.pathname) ||
+        /stkpush|callback|payment/i.test(url.pathname)
+    ) {
+        return;
+    }
+
+    // Navigation requests
+    if (request.mode === "navigate") {
+
+        event.respondWith(
+            fetch(request)
+                .then((response) => {
+
+                    // Save successful pages for later offline use
+                    const responseClone = response.clone();
+
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(request, responseClone);
+                    });
+
+                    return response;
+                })
+                .catch(() => {
+
+                    return caches.match(request)
+                        .then((cachedPage) => {
+
+                            if (cachedPage) {
+                                return cachedPage;
+                            }
+
+                            return caches.match(HOME_PAGE);
+                        });
+                })
         );
-      })
+
+        return;
+    }
+
+    // For CSS, JS, images, etc.
+    event.respondWith(
+        caches.match(request).then((cachedResponse) => {
+
+            if (cachedResponse) {
+                return cachedResponse;
+            }
+
+            return fetch(request).then((response) => {
+
+                const responseClone = response.clone();
+
+                caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(request, responseClone);
+                });
+
+                return response;
+            });
+        })
     );
-  }
 });
