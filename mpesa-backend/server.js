@@ -1087,6 +1087,223 @@ app.get("/api/events", async (req, res) => {
   }
 });
 
+ // ========================================
+ // ADMIN EVENTS
+ // ========================================
+
+// Get all events for the admin dashboard
+app.get(
+  "/api/admin/events",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const result = await pool.query(
+        `SELECT id, title, description, event_date,
+                location, image_url, published
+         FROM events
+         ORDER BY event_date DESC
+         LIMIT 100`
+      );
+
+      return res.json({
+        success: true,
+        events: result.rows
+      });
+    } catch (error) {
+      console.error("Admin events error:", error.message);
+
+      return res.status(500).json({
+        success: false,
+        message: "Could not load events."
+      });
+    }
+  }
+);
+
+// Create an event
+app.post(
+  "/api/admin/events",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const title = String(req.body?.title || "").trim();
+      const description = String(req.body?.description || "").trim();
+      const location = String(req.body?.location || "").trim();
+      const imageUrl = String(req.body?.image_url || "").trim();
+      const eventDate = req.body?.event_date;
+      const published = req.body?.published === true;
+
+      if (
+        title.length < 2 ||
+        title.length > 200 ||
+        description.length < 2 ||
+        description.length > 5000 ||
+        location.length > 300 ||
+        imageUrl.length > 2000 ||
+        !eventDate ||
+        !Number.isFinite(Date.parse(eventDate))
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Please provide a valid title, description, date, and event details."
+        });
+      }
+
+      const result = await pool.query(
+        `INSERT INTO events
+          (title, description, event_date, location, image_url, published)
+         VALUES ($1, $2, $3, $4, $5, $6)
+         RETURNING id, title, description, event_date,
+                   location, image_url, published`,
+        [
+          title,
+          description,
+          new Date(eventDate).toISOString(),
+          location || null,
+          imageUrl || null,
+          published
+        ]
+      );
+
+      return res.status(201).json({
+        success: true,
+        event: result.rows[0]
+      });
+    } catch (error) {
+      console.error("Create event error:", error.message);
+
+      return res.status(500).json({
+        success: false,
+        message: "Could not create event."
+      });
+    }
+  }
+);
+
+// Update an event
+app.put(
+  "/api/admin/events/:id",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+      const title = String(req.body?.title || "").trim();
+      const description = String(req.body?.description || "").trim();
+      const location = String(req.body?.location || "").trim();
+      const imageUrl = String(req.body?.image_url || "").trim();
+      const eventDate = req.body?.event_date;
+      const published = req.body?.published === true;
+
+      if (
+        !Number.isInteger(id) ||
+        id < 1 ||
+        title.length < 2 ||
+        title.length > 200 ||
+        description.length < 2 ||
+        description.length > 5000 ||
+        location.length > 300 ||
+        imageUrl.length > 2000 ||
+        !eventDate ||
+        !Number.isFinite(Date.parse(eventDate))
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Please provide valid event details."
+        });
+      }
+
+      const result = await pool.query(
+        `UPDATE events
+         SET title = $1,
+             description = $2,
+             event_date = $3,
+             location = $4,
+             image_url = $5,
+             published = $6
+         WHERE id = $7
+         RETURNING id, title, description, event_date,
+                   location, image_url, published`,
+        [
+          title,
+          description,
+          new Date(eventDate).toISOString(),
+          location || null,
+          imageUrl || null,
+          published,
+          id
+        ]
+      );
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Event not found."
+        });
+      }
+
+      return res.json({
+        success: true,
+        event: result.rows[0]
+      });
+    } catch (error) {
+      console.error("Update event error:", error.message);
+
+      return res.status(500).json({
+        success: false,
+        message: "Could not update event."
+      });
+    }
+  }
+);
+
+// Delete an event
+app.delete(
+  "/api/admin/events/:id",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+
+      if (!Number.isInteger(id) || id < 1) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid event ID."
+        });
+      }
+
+      const result = await pool.query(
+        `DELETE FROM events
+         WHERE id = $1
+         RETURNING id`,
+        [id]
+      );
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Event not found."
+        });
+      }
+
+      return res.json({
+        success: true,
+        message: "Event deleted successfully."
+      });
+    } catch (error) {
+      console.error("Delete event error:", error.message);
+
+      return res.status(500).json({
+        success: false,
+        message: "Could not delete event."
+      });
+    }
+  }
+);
+
+
 // ========================================
 // HOME PAGE CONTENT
 // ========================================
