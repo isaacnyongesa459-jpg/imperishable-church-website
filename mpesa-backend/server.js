@@ -1515,12 +1515,52 @@ app.post(
       path: "/"
     });
 
-    return res.json({
-      success: true,
-      message: "Logged out successfully."
-    });
+    
+  return res.json({
+    success: true,
+    username: session.username
+  });
+});
+
+// ========================================
+// ADMIN: CONTACT MESSAGES
+// ========================================
+
+app.get(
+  "/api/admin/contact-messages",
+  requireAdmin,
+  async (req, res) => {
+    res.setHeader("Cache-Control", "no-store");
+
+    try {
+      const result = await pool.query(
+        `SELECT *
+         FROM contact_messages
+    
+       LIMIT 200`
+      );
+
+      return res.json({
+        success: true,
+        messages: result.rows
+      });
+    } catch (error) {
+      console.error(
+        "Admin contact messages error:",
+        error.message
+      );
+
+      return res.status(500).json({
+        success: false,
+        message: "Unable to load contact messages."
+      });
+    }
   }
 );
+
+app.post(
+  "/api/admin/logout",
+
 
 /* ========================================
    ADMIN: CONTACT MESSAGES & PRAYER REQUESTS
