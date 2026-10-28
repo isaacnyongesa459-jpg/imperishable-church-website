@@ -1,4 +1,4 @@
-const CACHE_NAME = "imperishable-church-v5";
+const CACHE_NAME = "imperishable-church-v6";
 const HOME_PAGE = "./index.html";
 
 self.addEventListener("install", (event) => {
