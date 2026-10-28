@@ -154,6 +154,100 @@
   </style>
 </head>
 
+<!-- CONTACT MESSAGES & PRAYER REQUESTS -->
+<section id="contactMessagesSection"
+         style="padding:20px;margin:20px 0;background:#fff;
+                color:#222;border-radius:12px;">
+  <h2>Contact Messages & Prayer Requests</h2>
+
+  <button id="loadContactMessages"
+          type="button"
+          style="padding:10px 16px;cursor:pointer;">
+    Load Messages
+  </button>
+
+  <p id="contactMessagesStatus" role="status">
+    Tap "Load Messages" to view submissions.
+  </p>
+
+  <div id="contactMessagesList"></div>
+</section>
+
+<script>
+(() => {
+  const API =
+    "https://imperishable-church-mpesa-backend-fa2a.onrender.com";
+
+  const button = document.getElementById("loadContactMessages");
+  const status = document.getElementById("contactMessagesStatus");
+  const list = document.getElementById("contactMessagesList");
+
+  button.addEventListener("click", async () => {
+    button.disabled = true;
+    status.textContent = "Loading messages...";
+    list.replaceChildren();
+
+    try {
+      const response = await fetch(
+        `${API}/api/admin/contact-messages`,
+        {
+          method: "GET",
+          credentials: "include"
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.status === 401 || response.status === 403) {
+        status.textContent =
+          "Your admin session may have expired. Log in again.";
+        return;
+      }
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || "Could not load messages.");
+      }
+
+      if (!Array.isArray(data.messages) || data.messages.length === 0) {
+        status.textContent = "No contact messages found.";
+        return;
+      }
+
+      data.messages.forEach((message) => {
+        const card = document.createElement("article");
+        card.style.cssText =
+          "padding:14px;margin-top:12px;border:1px solid #ddd;" +
+          "border-radius:8px;overflow-wrap:anywhere;";
+
+        const title = document.createElement("h3");
+        title.textContent = message.subject || "Contact message";
+
+        const sender = document.createElement("p");
+        sender.textContent =
+          `From: ${message.name || "Unknown"} (${message.email || "No email"})`;
+
+        const body = document.createElement("p");
+        body.style.whiteSpace = "pre-wrap";
+        body.textContent = message.message || "";
+
+        card.append(title, sender, body);
+        list.appendChild(card);
+      });
+
+      status.textContent =
+        `Loaded ${data.messages.length} message(s).`;
+    } catch (error) {
+      status.textContent =
+        error.message || "Unable to load messages. Try again.";
+    } finally {
+      button.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>
+
 <body>
 
   <header>
