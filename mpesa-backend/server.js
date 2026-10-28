@@ -183,6 +183,11 @@ const mpesaBaseUrl =
 // DATABASE CONNECTION
 // ========================================
 
+
+/* ========================================
+   DATABASE CONNECTION
+======================================== */
+
 const pool = new Pool({
   connectionString: DATABASE_URL,
   ssl: { rejectUnauthorized: false }
@@ -190,6 +195,49 @@ const pool = new Pool({
 
 pool.on("error", (error) => {
   console.error("Unexpected database error:", error.message);
+});
+
+// ========================================
+// CHURCH PHOTO GALLERY DATABASE
+// ========================================
+
+
+
+pool.query(`
+  CREATE TABLE IF NOT EXISTS church_gallery (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    description TEXT DEFAULT '',
+    image_url TEXT NOT NULL,
+    published BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )
+`)
+.then(() => {
+  console.log("Church gallery table is ready.");
+})
+.catch((error) => {
+  console.error("Church gallery table setup failed:", error.message);
+});
+
+pool.query(`
+  CREATE TABLE IF NOT EXISTS church_gallery (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    description TEXT DEFAULT '',
+    image_url TEXT NOT NULL,
+    published BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+  )
+`)
+.then(() => {
+  console.log("Church gallery table is ready.");
+})
+.catch((error) => {
+  console.error(
+    "Church gallery table setup failed:",
+    error.message
+  );
 });
 
 // ========================================
