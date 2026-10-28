@@ -13,6 +13,122 @@ const { Pool } = require("pg");
 const crypto = require("crypto");
 const app = express();
 
+const ADMIN_COOKIE_NAME = "__Host-admin_session";
+const ADMIN_SESSION_HOURS = 8;
+const ADMIN_FRONTEND_ORIGIN =
+  "https://isaacnyongesa459-jpg.github.io";
+
+const adminLoginAttempts = new Map();
+
+function safeStringEqual(a, b) {
+  if (typeof a !== "string" || typeof b !== "string") {
+    return false;
+  }
+
+  const aBuffer = Buffer.from(a);
+  const bBuffer = Buffer.from(b);
+
+  return (
+    aBuffer.length === bBuffer.length &&
+    crypto.timingSafeEqual(aBuffer, bBuffer)
+  );
+}
+
+function signAdminPayload(payload) {
+  const encoded = Buffer.from(
+    JSON.stringify(payload)
+  ).toString("base64url");
+
+  const signature = crypto
+    .createHmac("sha256", process.env.ADMIN_SESSION_SECRET)
+    .update(encoded)
+    .digest("base64url");
+
+  return `${encoded}.${signature}`;
+}
+
+function verifyAdminToken(token) {
+  try {
+    if (typeof token !== "string") return null;
+
+    const parts = token.split(".");
+    if (parts.length !== 2) return null;
+
+    const [encoded, signature] = parts;
+
+    const expectedSignature = crypto
+      .createHmac("sha256", process.env.ADMIN_SESSION_SECRET)
+      .update(encoded)
+      .digest("base64url");
+
+    if (!safeStringEqual(signature, expectedSignature)) {
+      return null;
+    }
+
+    const payload = JSON.parse(
+      Buffer.from(encoded, "base64url").toString("utf8")
+    );
+
+    if (
+      payload.username !== process.env.ADMIN_USERNAME ||
+      !Number.isFinite(payload.exp) ||
+      payload.exp <= Date.now()
+    ) {
+      return null;
+    }
+
+    return payload;
+  } catch {
+    return null;
+  }
+}
+
+function getAdminToken(req) {
+  const cookieHeader = req.headers.cookie || "";
+
+  for (const part of cookieHeader.split(";")) {
+    const separator = part.indexOf("=");
+    if (separator < 0) continue;
+
+    const name = part.slice(0, separator).trim();
+
+    if (name === ADMIN_COOKIE_NAME) {
+      return part.slice(separator + 1).trim();
+    }
+  }
+
+  return null;
+}
+
+function requireAdmin(req, res, next) {
+  const token = getAdminToken(req);
+  const session = verifyAdminToken(token);
+
+  if (!session) {
+    return res.status(401).json({
+      success: false,
+      message: "Administrator login required."
+    });
+  }
+
+  req.admin = { username: session.username };
+  next();
+}
+
+function requireAdminOrigin(req, res, next) {
+  if (
+    req.get("origin") !== ADMIN_FRONTEND_ORIGIN
+  ) {
+    return res.status(403).json({
+      success: false,
+      message: "Origin not allowed."
+    });
+  }
+
+  next();
+}
+
+
 app.use(express.json({ limit: "100kb" }));
 
 // ========================================
@@ -827,7 +943,114 @@ app.post("/api/contact", async (req, res) => {
   }
 });
 
-// ========================================
+
+app.post(
+  "/api/admin/login",
+  requireAdminOrigin,
+  (req, res) => {
+    res.setHeader("Cache-Control", "no-store");
+
+    const username = req.body?.username;
+    const password = req.body?.password;
+
+    const now = Date.now();
+    const key = req.ip || "unknown";
+    let attempt = adminLoginAttempts.get(key);
+
+    if (!attempt || now - attempt.startedAt > 15 * 60 * 1000) {
+      attempt = { count: 0, startedAt: now };
+    }
+
+    if (attempt.count >= 5) {
+      adminLoginAttempts.set(key, attempt);
+
+      return res.status(429).json({
+        success: false,
+        message: "Too many login attempts. Try again later."
+      });
+    }
+
+    const validCredentials =
+      typeof process.env.ADMIN_USERNAME === "string" &&
+      process.env.ADMIN_USERNAME.length > 0 &&
+      typeof process.env.ADMIN_PASSWORD === "string" &&
+      process.env.ADMIN_PASSWORD.length > 0 &&
+      typeof process.env.ADMIN_SESSION_SECRET === "string" &&
+      process.env.ADMIN_SESSION_SECRET.length >= 32 &&
+      safeStringEqual(username, process.env.ADMIN_USERNAME) &&
+      safeStringEqual(password, process.env.ADMIN_PASSWORD);
+
+    if (!validCredentials) {
+      attempt.count += 1;
+      adminLoginAttempts.set(key, attempt);
+
+      return res.status(401).json({
+        success: false,
+        message: "Invalid username or password."
+      });
+    }
+
+    adminLoginAttempts.delete(key);
+
+    const token = signAdminPayload({
+      username: process.env.ADMIN_USERNAME,
+      exp: Date.now() + ADMIN_SESSION_HOURS * 60 * 60 * 1000
+    });
+
+    res.cookie(ADMIN_COOKIE_NAME, token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      path: "/",
+      maxAge: ADMIN_SESSION_HOURS * 60 * 60 * 1000
+    });
+
+    return res.json({
+      success: true,
+      message: "Login successful."
+    });
+  }
+);
+
+app.get("/api/admin/me", (req, res) => {
+  res.setHeader("Cache-Control", "no-store");
+
+  const session = verifyAdminToken(getAdminToken(req));
+
+  if (!session) {
+    return res.status(401).json({
+      success: false,
+      message: "Not logged in."
+    });
+  }
+
+  return res.json({
+    success: true,
+    username: session.username
+  });
+});
+
+app.post(
+  "/api/admin/logout",
+  requireAdminOrigin,
+  (req, res) => {
+    res.setHeader("Cache-Control", "no-store");
+
+    res.clearCookie(ADMIN_COOKIE_NAME, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+      path: "/"
+    });
+
+    return res.json({
+      success: true,
+      message: "Logged out successfully."
+    });
+  }
+);
+
+// =====================================
 // START SERVER
 // ========================================
 
