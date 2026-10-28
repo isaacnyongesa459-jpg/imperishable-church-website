@@ -5,8 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Church Admin Login</title>
+
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     body {
       margin: 0;
@@ -29,8 +32,15 @@
       box-shadow: 0 12px 35px #0005;
     }
 
-    h1 { margin-top: 0; color: #174b35; }
-    p { line-height: 1.5; color: #555; }
+    h1 {
+      margin-top: 0;
+      color: #174b35;
+    }
+
+    p {
+      line-height: 1.5;
+      color: #555;
+    }
 
     label {
       display: block;
@@ -60,39 +70,62 @@
       cursor: pointer;
     }
 
-    button:disabled { opacity: 0.6; }
+    button:disabled {
+      opacity: 0.6;
+      cursor: wait;
+    }
 
     #message {
       margin-top: 16px;
       overflow-wrap: anywhere;
     }
 
-    .back { display: block; margin-top: 20px; }
+    .back {
+      display: block;
+      margin-top: 20px;
+    }
   </style>
 </head>
+
 <body>
   <main class="login-card">
     <h1>Administrator Login</h1>
+
     <p>Imperishable Crown Bible Baptist Church</p>
 
     <form id="loginForm">
       <label for="username">Username</label>
-      <input id="username" name="username"
-        autocomplete="username" required>
+      <input
+        id="username"
+        name="username"
+        autocomplete="username"
+        required
+      >
 
       <label for="password">Password</label>
-      <input id="password" name="password" type="password"
-        autocomplete="current-password" required>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        autocomplete="current-password"
+        required
+      >
 
-      <button id="loginButton" type="submit">Log In</button>
+      <button id="loginButton" type="submit">
+        Log In
+      </button>
     </form>
 
     <p id="message" role="status" aria-live="polite"></p>
-    <a class="back" href="index.html">Back to church website</a>
+
+    <a class="back" href="index.html">
+      Back to church website
+    </a>
   </main>
 
   <script>
-    const API = "https://imperishable-church-mpesa-backend-fa2a.onrender.com";
+    const API =
+      "https://imperishable-church-mpesa-backend-fa2a.onrender.com";
 
     const form = document.getElementById("loginForm");
     const button = document.getElementById("loginButton");
@@ -100,6 +133,7 @@
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
+
       button.disabled = true;
       message.textContent = "Signing in...";
 
@@ -107,7 +141,9 @@
         const response = await fetch(`${API}/api/admin/login`, {
           method: "POST",
           credentials: "include",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json"
+          },
           body: JSON.stringify({
             username: form.username.value.trim(),
             password: form.password.value
@@ -117,7 +153,9 @@
         const result = await response.json();
 
         if (!response.ok || !result.success) {
-          throw new Error(result.message || "Login failed.");
+          throw new Error(
+            result.message || "Login failed."
+          );
         }
 
         const check = await fetch(`${API}/api/admin/me`, {
@@ -127,15 +165,24 @@
 
         if (!check.ok) {
           throw new Error(
-            "Login responded successfully, but the session could not be verified. Check browser cookie restrictions and backend CORS settings."
+            "Login succeeded, but the session could not be verified. Check browser cookie restrictions and backend CORS settings."
           );
         }
 
-        message.textContent = "Login successful. Your session is verified.";
-        // The protected dashboard will be added next.
+        const session = await check.json();
+
+        if (!session.success) {
+          throw new Error("Your administrator session could not be verified.");
+        }
+
+        message.textContent =
+          "Login successful. Opening dashboard...";
+
+        window.location.href = "admin-dashboard.html";
+
       } catch (error) {
-        message.textContent = error.message ||
-          "Could not connect. Please try again.";
+        message.textContent =
+          error.message || "Could not connect. Please try again.";
       } finally {
         button.disabled = false;
       }
