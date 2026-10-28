@@ -1072,6 +1072,286 @@ app.post(
   }
 );
 
+/* ========================================
+   CHURCH PHOTO GALLERY API
+======================================== */
+
+// PUBLIC: Show published photos on the website
+app.get("/api/gallery", async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT id, title, description, image_url, created_at
+      FROM church_gallery
+      WHERE published = TRUE
+      ORDER BY created_at DESC
+      LIMIT 200
+    `);
+
+    return res.json({
+      success: true,
+      photos: result.rows
+    });
+  } catch (error) {
+    console.error("Public gallery error:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Unable to load gallery."
+    });
+  }
+});
+
+// ADMIN: View all photos, including unpublished ones
+app.get(
+  "/api/admin/gallery",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const result = await pool.query(`
+        SELECT id, title, description, image_url, published, created_at
+        FROM church_gallery
+        ORDER BY created_at DESC
+        LIMIT 200
+      `);
+
+      return res.json({
+        success: true,
+        photos: result.rows
+      });
+    } catch (error) {
+      console.error("Admin gallery error:", error.message);
+      return res.status(500).json({
+        success: false,
+        message: "Unable to load gallery photos."
+      });
+    }
+  }
+);
+
+// ADMIN: Add a photo
+app.post(
+  "/api/admin/gallery",
+  requireAdminOrigin,
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const title = String(req.body?.title || "").trim();
+      const description = String(req.body?.description || "").trim();
+      const imageUrl = String(req.body?.image_url || "").trim();
+
+      let parsedUrl;
+
+      try {
+        parsedUrl = new URL(imageUrl);
+      } catch {
+        return res.status(400).json({
+          success: false,
+          message: "Enter a valid image URL."
+        });
+      }
+
+      if (
+        title.length < 1 ||
+        title.length > 200 ||
+        description.length > 2000 ||
+        !["https:", "http:"].includes(parsedUrl.protocol) ||
+        imageUrl.length > 2000
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Check the title, description, and image URL."
+        });
+      }
+
+      const result = await pool.query(
+        `INSERT INTO church_gallery
+           (title, description, image_url)
+         VALUES ($1, $2, $3)
+         RETURNING id, title, description, image_url, published, created_at`,
+        [title, description, imageUrl]
+      );
+
+      return res.status(201).json({
+        success: true,
+        photo: result.rows[0]
+      });
+    } catch (error) {
+      console.error("Add gallery photo error:", error.message);
+      return res.status(500).json({
+        success: false,
+        message: "Unable to add photo."
+      });
+    }
+  }
+);
+
+// ADMIN: Edit a photo
+app.patch(
+  "/api/admin/gallery/:id",
+  requireAdminOrigin,
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+
+      if (!Number.isSafeInteger(id) || id < 1) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid photo ID."
+        });
+      }
+
+      const title = String(req.body?.title || "").trim();
+      const description = String(req.body?.description || "").trim();
+      const imageUrl = String(req.body?.image_url || "").trim();
+
+      let parsedUrl;
+
+      try {
+        parsedUrl = new URL(imageUrl);
+      } catch {
+        return res.status(400).json({
+          success: false,
+          message: "Enter a valid image URL."
+        });
+      }
+
+      if (
+        title.length < 1 ||
+        title.length > 200 ||
+        description.length > 2000 ||
+        imageUrl.length > 2000 ||
+        !["https:", "http:"].includes(parsedUrl.protocol)
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Check the title, description, and image URL."
+        });
+      }
+
+      const result = await pool.query(
+        `UPDATE church_gallery
+         SET title = $1, description = $2, image_url = $3
+         WHERE id = $4
+         RETURNING id, title, description, image_url, published, created_at`,
+        [title, description, imageUrl, id]
+      );
+
+      if (!result.rows.length) {
+        return res.status(404).json({
+          success: false,
+          message: "Photo not found."
+        });
+      }
+
+      return res.json({
+        success: true,
+        photo: result.rows[0]
+      });
+    } catch (error) {
+      console.error("Edit gallery photo error:", error.message);
+      return res.status(500).json({
+        success: false,
+        message: "Unable to edit photo."
+      });
+    }
+  }
+);
+
+// ADMIN: Publish or unpublish a photo
+app.patch(
+  "/api/admin/gallery/:id/publish",
+  requireAdminOrigin,
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+      const published = req.body?.published;
+
+      if (
+        !Number.isSafeInteger(id) ||
+        id < 1 ||
+        typeof published !== "boolean"
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Provide a valid photo ID and publish status."
+        });
+      }
+
+      const result = await pool.query(
+        `UPDATE church_gallery
+         SET published = $1
+         WHERE id = $2
+         RETURNING id, title, published`,
+        [published, id]
+      );
+
+      if (!result.rows.length) {
+        return res.status(404).json({
+          success: false,
+          message: "Photo not found."
+        });
+      }
+
+      return res.json({
+        success: true,
+        photo: result.rows[0]
+      });
+    } catch (error) {
+      console.error("Publish gallery photo error:", error.message);
+      return res.status(500).json({
+        success: false,
+        message: "Unable to update photo status."
+      });
+    }
+  }
+);
+
+// ADMIN: Delete a photo
+app.delete(
+  "/api/admin/gallery/:id",
+  requireAdminOrigin,
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+
+      if (!Number.isSafeInteger(id) || id < 1) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid photo ID."
+        });
+      }
+
+      const result = await pool.query(
+        `DELETE FROM church_gallery
+         WHERE id = $1
+         RETURNING id`,
+        [id]
+      );
+
+      if (!result.rows.length) {
+        return res.status(404).json({
+          success: false,
+          message: "Photo not found."
+        });
+      }
+
+      return res.json({
+        success: true,
+        message: "Photo deleted."
+      });
+    } catch (error) {
+      console.error("Delete gallery photo error:", error.message);
+      return res.status(500).json({
+        success: false,
+        message: "Unable to delete photo."
+      });
+    }
+  }
+);
+
+
 // ========================================
 // ADMIN DONATIONS
 // ========================================
