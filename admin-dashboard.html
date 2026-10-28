@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Church Admin Dashboard</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f6f4;
+      color: #20342a;
+    }
+    header {
+      background: #174b35;
+      color: white;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    main { padding: 24px; max-width: 900px; margin: auto; }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 16px 0;
+      box-shadow: 0 3px 12px #0000000d;
+    }
+    button {
+      border: 0;
+      border-radius: 7px;
+      padding: 12px 16px;
+      cursor: pointer;
+      background: #176640;
+      color: white;
+      font-weight: bold;
+    }
+    #status { overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+  <header>
+    <strong>Imperishable Crown Bible Baptist Church</strong>
+    <button id="logoutButton">Log Out</button>
+  </header>
+
+  <main>
+    <h1>Administrator Dashboard</h1>
+    <p id="status">Verifying your administrator session...</p>
+
+    <section class="card">
+      <h2>Donations</h2>
+      <p>Your donation-management section will be connected to the backend next.</p>
+    </section>
+
+    <section class="card">
+      <h2>Website Management</h2>
+      <p>We will add tools for managing church website content and messages.</p>
+    </section>
+  </main>
+
+  <script>
+    const API =
+      "https://imperishable-church-mpesa-backend-fa2a.onrender.com";
+
+    async function checkSession() {
+      try {
+        const response = await fetch(`${API}/api/admin/me`, {
+          credentials: "include",
+          cache: "no-store"
+        });
+
+        if (!response.ok) {
+          window.location.replace("admin.html");
+          return;
+        }
+
+        const result = await response.json();
+        document.getElementById("status").textContent =
+          `Logged in as ${result.username}. Session verified.`;
+      } catch {
+        document.getElementById("status").textContent =
+          "Could not verify your session. Check your internet connection.";
+      }
+    }
+
+    document.getElementById("logoutButton").addEventListener("click", async () => {
+      try {
+        const response = await fetch(`${API}/api/admin/logout`, {
+          method: "POST",
+          credentials: "include"
+        });
+
+        if (!response.ok) {
+          throw new Error("Logout failed.");
+        }
+
+        window.location.replace("admin.html");
+      } catch {
+        document.getElementById("status").textContent =
+          "Could not log out. Please check your connection and try again.";
+      }
+    });
+
+    checkSession();
+  </script>
+</body>
+</html>
