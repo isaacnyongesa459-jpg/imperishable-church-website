@@ -698,6 +698,54 @@ app.get("/api/donations/total", async (req, res) => {
     });
   }
 });
+// ========================================
+// ADMIN DONATIONS
+// ========================================
+
+app.get(
+  "/api/admin/donations",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const result = await pool.query(
+        `SELECT
+           id,
+           phone,
+           amount,
+           status,
+           mpesa_receipt_number,
+           result_desc,
+           created_at,
+           updated_at
+         FROM donations
+         ORDER BY created_at DESC
+         LIMIT 100`
+      );
+
+      const totalResult = await pool.query(
+        `SELECT COALESCE(SUM(amount), 0) AS total
+         FROM donations
+         WHERE status = 'completed'`
+      );
+
+      return res.json({
+        success: true,
+        total: Number(totalResult.rows[0].total),
+        donations: result.rows
+      });
+    } catch (error) {
+      console.error(
+        "Admin donations error:",
+        error.message
+      );
+
+      return res.status(500).json({
+        success: false,
+        message: "Could not load donation records."
+      });
+    }
+  }
+);
 
 // ========================================
 // ABOUT PAGE
