@@ -665,3 +665,38 @@ button {
         width: 100%;
     }
 }
+
+.church-location {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.church-location h2 {
+  margin-bottom: 12px;
+}
+
+.map-container {
+  max-width: 1000px;
+  margin: 24px auto;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.map-container iframe {
+  display: block;
+  max-width: 100%;
+}
+
+.directions-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  background: #174a35;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.directions-btn:hover {
+  opacity: 0.85;
+}
