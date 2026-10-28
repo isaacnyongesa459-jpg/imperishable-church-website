@@ -1,113 +1,408 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Church Admin Dashboard</title>
+
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       background: #f3f6f4;
       color: #20342a;
     }
+
     header {
       background: #174b35;
       color: white;
-      padding: 20px;
+      padding: 18px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 15px;
       flex-wrap: wrap;
     }
-    main { padding: 24px; max-width: 900px; margin: auto; }
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      margin: 16px 0;
-      box-shadow: 0 3px 12px #0000000d;
+
+    header strong {
+      font-size: 17px;
     }
-    button {
+
+    #logoutButton {
       border: 0;
       border-radius: 7px;
-      padding: 12px 16px;
+      padding: 10px 15px;
+      background: #fff;
+      color: #174b35;
+      font-weight: bold;
       cursor: pointer;
-      background: #176640;
-      color: white;
+    }
+
+    main {
+      width: 100%;
+      max-width: 1100px;
+      margin: auto;
+      padding: 25px 18px 40px;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    .status {
+      margin-bottom: 20px;
+      color: #555;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 3px 12px #0000000d;
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 16px;
+      color: #666;
+    }
+
+    .amount {
+      font-size: 28px;
+      font-weight: bold;
+      color: #176640;
+    }
+
+    .table-card {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    th,
+    td {
+      padding: 13px 10px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background: #f0f4f1;
+    }
+
+    .completed {
+      color: #147a3d;
       font-weight: bold;
     }
-    #status { overflow-wrap: anywhere; }
+
+    .pending {
+      color: #b06b00;
+      font-weight: bold;
+    }
+
+    .failed {
+      color: #b42318;
+      font-weight: bold;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 30px;
+      color: #777;
+    }
+
+    .error {
+      color: #b42318;
+      background: #fff0ef;
+      padding: 14px;
+      border-radius: 8px;
+    }
+
+    .loading {
+      color: #555;
+    }
+
+    @media (max-width: 600px) {
+      main {
+        padding: 20px 12px 35px;
+      }
+
+      header {
+        padding: 16px;
+      }
+
+      .amount {
+        font-size: 24px;
+      }
+    }
   </style>
 </head>
+
 <body>
+
   <header>
     <strong>Imperishable Crown Bible Baptist Church</strong>
-    <button id="logoutButton">Log Out</button>
+
+    <button id="logoutButton" type="button">
+      Log Out
+    </button>
   </header>
 
   <main>
+
     <h1>Administrator Dashboard</h1>
-    <p id="status">Verifying your administrator session...</p>
 
-    <section class="card">
-      <h2>Donations</h2>
-      <p>Your donation-management section will be connected to the backend next.</p>
+    <p id="status" class="loading">
+      Verifying administrator session...
+    </p>
+
+    <section class="stats">
+
+      <div class="card">
+        <h2>Completed Donations</h2>
+        <div id="totalDonations" class="amount">
+          KSh 0
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Total Records</h2>
+        <div id="totalRecords" class="amount">
+          0
+        </div>
+      </div>
+
     </section>
 
-    <section class="card">
-      <h2>Website Management</h2>
-      <p>We will add tools for managing church website content and messages.</p>
+    <section class="card table-card">
+
+      <h2>Recent Donations</h2>
+
+      <div id="donationMessage">
+        Loading donation records...
+      </div>
+
+      <table id="donationTable" hidden>
+
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Phone</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>M-Pesa Receipt</th>
+          </tr>
+        </thead>
+
+        <tbody id="donationBody"></tbody>
+
+      </table>
+
     </section>
+
   </main>
 
   <script>
+
     const API =
       "https://imperishable-church-mpesa-backend-fa2a.onrender.com";
 
-    async function checkSession() {
-      try {
-        const response = await fetch(`${API}/api/admin/me`, {
-          credentials: "include",
-          cache: "no-store"
-        });
+    const statusElement =
+      document.getElementById("status");
 
-        if (!response.ok) {
+    const totalDonations =
+      document.getElementById("totalDonations");
+
+    const totalRecords =
+      document.getElementById("totalRecords");
+
+    const donationMessage =
+      document.getElementById("donationMessage");
+
+    const donationTable =
+      document.getElementById("donationTable");
+
+    const donationBody =
+      document.getElementById("donationBody");
+
+    const logoutButton =
+      document.getElementById("logoutButton");
+
+
+    async function loadDashboard() {
+
+      try {
+
+        // Verify administrator session first.
+        const sessionResponse =
+          await fetch(`${API}/api/admin/me`, {
+            credentials: "include",
+            cache: "no-store"
+          });
+
+        if (!sessionResponse.ok) {
           window.location.replace("admin.html");
           return;
         }
 
-        const result = await response.json();
-        document.getElementById("status").textContent =
-          `Logged in as ${result.username}. Session verified.`;
-      } catch {
-        document.getElementById("status").textContent =
-          "Could not verify your session. Check your internet connection.";
+        const session =
+          await sessionResponse.json();
+
+        if (!session.success) {
+          window.location.replace("admin.html");
+          return;
+        }
+
+        statusElement.textContent =
+          `Logged in as ${session.username}`;
+
+        // Load real donation records.
+        const donationResponse =
+          await fetch(`${API}/api/admin/donations`, {
+            credentials: "include",
+            cache: "no-store"
+          });
+
+        const data =
+          await donationResponse.json();
+
+        if (
+          !donationResponse.ok ||
+          !data.success
+        ) {
+          throw new Error(
+            data.message ||
+            "Could not load donation records."
+          );
+        }
+
+        totalDonations.textContent =
+          `KSh ${Number(data.total).toLocaleString()}`;
+
+        totalRecords.textContent =
+          data.donations.length;
+
+        donationBody.innerHTML = "";
+
+        if (!data.donations.length) {
+
+          donationMessage.textContent =
+            "No donation records yet.";
+
+          return;
+        }
+
+        donationMessage.textContent = "";
+
+        donationTable.hidden = false;
+
+        data.donations.forEach((donation) => {
+
+          const row =
+            document.createElement("tr");
+
+          const date =
+            new Date(
+              donation.created_at
+            ).toLocaleString("en-KE");
+
+          const status =
+            String(donation.status || "")
+              .toLowerCase();
+
+          row.innerHTML = `
+            <td>${escapeHTML(date)}</td>
+            <td>${escapeHTML(donation.phone)}</td>
+            <td>KSh ${Number(donation.amount).toLocaleString()}</td>
+            <td class="${escapeHTML(status)}">
+              ${escapeHTML(status)}
+            </td>
+            <td>
+              ${escapeHTML(
+                donation.mpesa_receipt_number || "—"
+              )}
+            </td>
+          `;
+
+          donationBody.appendChild(row);
+
+        });
+
+      } catch (error) {
+
+        console.error(
+          "Dashboard error:",
+          error
+        );
+
+        donationMessage.innerHTML = `
+          <div class="error">
+            ${escapeHTML(
+              error.message ||
+              "Could not load the dashboard."
+            )}
+          </div>
+        `;
       }
     }
 
-    document.getElementById("logoutButton").addEventListener("click", async () => {
-      try {
-        const response = await fetch(`${API}/api/admin/logout`, {
-          method: "POST",
-          credentials: "include"
-        });
 
-        if (!response.ok) {
-          throw new Error("Logout failed.");
+    function escapeHTML(value) {
+
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+
+    logoutButton.addEventListener(
+      "click",
+      async () => {
+
+        logoutButton.disabled = true;
+
+        try {
+
+          await fetch(
+            `${API}/api/admin/logout`,
+            {
+              method: "POST",
+              credentials: "include"
+            }
+          );
+
+        } finally {
+
+          window.location.replace(
+            "admin.html"
+          );
         }
-
-        window.location.replace("admin.html");
-      } catch {
-        document.getElementById("status").textContent =
-          "Could not log out. Please check your connection and try again.";
       }
-    });
+    );
 
-    checkSession();
+
+    loadDashboard();
+
   </script>
+
 </body>
 </html>
