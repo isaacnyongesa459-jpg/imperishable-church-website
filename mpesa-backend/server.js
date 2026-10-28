@@ -128,9 +128,7 @@ function requireAdminOrigin(req, res, next) {
   next();
 }
 
-
 app.use(express.json({ limit: "100kb" }));
-
 // ========================================
 // CONFIGURATION
 // ========================================
@@ -206,18 +204,17 @@ app.use((req, res, next) => {
 
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST,PUT,DELETE, OPTIONS"
+    "GET, POST, PUT, DELETE, OPTIONS"
   );
 
   res.setHeader(
     "Access-Control-Allow-Headers",
     "Content-Type"
   );
-res.setHeader(
-  "Access-Control-Allow-Credentials",
-  "true"
-);
-
+  res.setHeader(
+    "Access-Control-Allow-Credentials",
+    "true"
+  );
 
   if (req.method === "OPTIONS") {
     return res.sendStatus(204);
@@ -225,14 +222,12 @@ res.setHeader(
 
   next();
 });
-
 // ========================================
 // DATABASE INITIALIZATION
 // ========================================
 
 async function initializeDatabase() {
   try {
-    // M-Pesa donations
     await pool.query(`
       CREATE TABLE IF NOT EXISTS donations (
         id BIGSERIAL PRIMARY KEY,
@@ -247,7 +242,7 @@ async function initializeDatabase() {
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       );
     `);
-    // About page and other church information
+
     await pool.query(`
       CREATE TABLE IF NOT EXISTS church_content (
         content_key VARCHAR(100) PRIMARY KEY,
@@ -257,7 +252,6 @@ async function initializeDatabase() {
       );
     `);
 
-    // Announcements
     await pool.query(`
       CREATE TABLE IF NOT EXISTS announcements (
         id BIGSERIAL PRIMARY KEY,
@@ -268,7 +262,6 @@ async function initializeDatabase() {
       );
     `);
 
-    // Church leadership
     await pool.query(`
       CREATE TABLE IF NOT EXISTS leaders (
         id BIGSERIAL PRIMARY KEY,
@@ -282,7 +275,6 @@ async function initializeDatabase() {
       );
     `);
 
-    // Regular church services
     await pool.query(`
       CREATE TABLE IF NOT EXISTS services (
         id BIGSERIAL PRIMARY KEY,
@@ -296,7 +288,6 @@ async function initializeDatabase() {
       );
     `);
 
-    // Church events
     await pool.query(`
       CREATE TABLE IF NOT EXISTS events (
         id BIGSERIAL PRIMARY KEY,
@@ -310,7 +301,6 @@ async function initializeDatabase() {
       );
     `);
 
-    // Contact messages and prayer requests
     await pool.query(`
       CREATE TABLE IF NOT EXISTS contact_messages (
         id BIGSERIAL PRIMARY KEY,
@@ -382,19 +372,14 @@ function getTimestamp() {
 
 function getCallbackUrl() {
   if (!MPESA_CALLBACK_BASE_URL) {
-    throw new Error(
-      "M-PESA callback URL is not configured."
-    );
+    throw new Error("M-PESA callback URL is not configured.");
   }
 
   let parsedUrl;
-
   try {
     parsedUrl = new URL(MPESA_CALLBACK_BASE_URL);
   } catch {
-    throw new Error(
-      "The configured M-PESA callback URL is invalid."
-    );
+    throw new Error("The configured M-PESA callback URL is invalid.");
   }
 
   if (
@@ -442,15 +427,13 @@ async function getAccessToken() {
 
   return data.access_token;
 }
-
 // ========================================
 // HOME AND HEALTH
 // ========================================
 
 app.get("/", (req, res) => {
   res.json({
-    message:
-      "Imperishable Crown Church backend is running."
+    message: "Imperishable Crown Church backend is running."
   });
 });
 
@@ -580,6 +563,7 @@ app.post("/api/donations/mpesa", async (req, res) => {
     });
   }
 });
+
 // ========================================
 // M-PESA CALLBACK
 // ========================================
@@ -644,7 +628,7 @@ app.post("/api/mpesa/callback", async (req, res) => {
 });
 
 // ========================================
-// DONATION STATUS
+// DONATION STATUS & TOTAL
 // ========================================
 
 app.get(
@@ -675,10 +659,6 @@ app.get(
   }
 );
 
-// ========================================
-// COMPLETED DONATION TOTAL
-// ========================================
-
 app.get("/api/donations/total", async (req, res) => {
   try {
     const result = await pool.query(
@@ -698,55 +678,6 @@ app.get("/api/donations/total", async (req, res) => {
     });
   }
 });
-// ========================================
-// ADMIN DONATIONS
-// ========================================
-
-app.get(
-  "/api/admin/donations",
-  requireAdmin,
-  async (req, res) => {
-    try {
-      const result = await pool.query(
-        `SELECT
-           id,
-           phone,
-           amount,
-           status,
-           mpesa_receipt_number,
-           result_desc,
-           created_at,
-           updated_at
-         FROM donations
-         ORDER BY created_at DESC
-         LIMIT 100`
-      );
-
-      const totalResult = await pool.query(
-        `SELECT COALESCE(SUM(amount), 0) AS total
-         FROM donations
-         WHERE status = 'completed'`
-      );
-
-      return res.json({
-        success: true,
-        total: Number(totalResult.rows[0].total),
-        donations: result.rows
-      });
-    } catch (error) {
-      console.error(
-        "Admin donations error:",
-        error.message
-      );
-
-      return res.status(500).json({
-        success: false,
-        message: "Could not load donation records."
-      });
-    }
-  }
-);
-
 // ========================================
 // ABOUT PAGE
 // ========================================
@@ -801,216 +732,9 @@ app.get("/api/announcements", async (req, res) => {
     });
   }
 });
-// ========================================
-// ADMIN ANNOUNCEMENTS
-// ========================================
-
-// Get all announcements for the administrator
-app.get(
-  "/api/admin/announcements",
-  requireAdmin,
-  async (req, res) => {
-    try {
-      const result = await pool.query(
-        `SELECT id, title, body, published, created_at
-         FROM announcements
-         ORDER BY created_at DESC
-         LIMIT 100`
-      );
-
-      return res.json({
-        success: true,
-        announcements: result.rows
-      });
-    } catch (error) {
-      console.error(
-        "Admin announcements error:",
-        error.message
-      );
-
-      return res.status(500).json({
-        success: false,
-        message: "Could not load announcements."
-      });
-    }
-  }
-);
-
-// Create an announcement
-app.post(
-  "/api/admin/announcements",
-  requireAdmin,
-  requireAdminOrigin,
-  async (req, res) => {
-    try {
-      const title = String(
-        req.body?.title || ""
-      ).trim();
-
-      const body = String(
-        req.body?.body || ""
-      ).trim();
-
-      const published =
-        req.body?.published === true;
-
-      if (
-        title.length < 2 ||
-        title.length > 200 ||
-        body.length < 2
-      ) {
-        return res.status(400).json({
-          success: false,
-          message:
-            "Please provide a valid title and announcement."
-        });
-      }
-
-      const result = await pool.query(
-        `INSERT INTO announcements
-          (title, body, published)
-         VALUES ($1, $2, $3)
-         RETURNING id, title, body, published, created_at`,
-        [title, body, published]
-      );
-
-      return res.status(201).json({
-        success: true,
-        announcement: result.rows[0]
-      });
-    } catch (error) {
-      console.error(
-        "Create announcement error:",
-        error.message
-      );
-
-      return res.status(500).json({
-        success: false,
-        message: "Could not create announcement."
-      });
-    }
-  }
-);
-
-// Update an announcement
-app.put(
-  "/api/admin/announcements/:id",
-  requireAdmin,
-  requireAdminOrigin,
-  async (req, res) => {
-    try {
-      const id = Number(req.params.id);
-
-      const title = String(
-        req.body?.title || ""
-      ).trim();
-
-      const body = String(
-        req.body?.body || ""
-      ).trim();
-
-      const published =
-        req.body?.published === true;
-
-      if (
-        !Number.isInteger(id) ||
-        id < 1 ||
-        title.length < 2 ||
-        title.length > 200 ||
-        body.length < 2
-      ) {
-        return res.status(400).json({
-          success: false,
-          message:
-            "Please provide valid announcement details."
-        });
-      }
-
-      const result = await pool.query(
-        `UPDATE announcements
-         SET title = $1,
-             body = $2,
-             published = $3
-         WHERE id = $4
-         RETURNING id, title, body, published, created_at`,
-        [title, body, published, id]
-      );
-
-      if (result.rowCount === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "Announcement not found."
-        });
-      }
-
-      return res.json({
-        success: true,
-        announcement: result.rows[0]
-      });
-    } catch (error) {
-      console.error(
-        "Update announcement error:",
-        error.message
-      );
-
-      return res.status(500).json({
-        success: false,
-        message: "Could not update announcement."
-      });
-    }
-  }
-);
-
-// Delete an announcement
-app.delete(
-  "/api/admin/announcements/:id",
-  requireAdmin,
-  requireAdminOrigin,
-  async (req, res) => {
-    try {
-      const id = Number(req.params.id);
-
-      if (!Number.isInteger(id) || id < 1) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid announcement ID."
-        });
-      }
-
-      const result = await pool.query(
-        `DELETE FROM announcements
-         WHERE id = $1
-         RETURNING id`,
-        [id]
-      );
-
-      if (result.rowCount === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "Announcement not found."
-        });
-      }
-
-      return res.json({
-        success: true,
-        message: "Announcement deleted successfully."
-      });
-    } catch (error) {
-      console.error(
-        "Delete announcement error:",
-        error.message
-      );
-
-      return res.status(500).json({
-        success: false,
-        message: "Could not delete announcement."
-      });
-    }
-  }
-);
 
 // ========================================
-// CHURCH LEADERS
+// CHURCH LEADERS & SERVICES
 // ========================================
 
 app.get("/api/leaders", async (req, res) => {
@@ -1034,10 +758,6 @@ app.get("/api/leaders", async (req, res) => {
   }
 });
 
-// ========================================
-// CHURCH SERVICES
-// ========================================
-
 app.get("/api/services", async (req, res) => {
   try {
     const result = await pool.query(
@@ -1059,6 +779,7 @@ app.get("/api/services", async (req, res) => {
     });
   }
 });
+
 // ========================================
 // UPCOMING EVENTS
 // ========================================
@@ -1086,223 +807,6 @@ app.get("/api/events", async (req, res) => {
     });
   }
 });
-
- // ========================================
- // ADMIN EVENTS
- // ========================================
-
-// Get all events for the admin dashboard
-app.get(
-  "/api/admin/events",
-  requireAdmin,
-  async (req, res) => {
-    try {
-      const result = await pool.query(
-        `SELECT id, title, description, event_date,
-                location, image_url, published
-         FROM events
-         ORDER BY event_date DESC
-         LIMIT 100`
-      );
-
-      return res.json({
-        success: true,
-        events: result.rows
-      });
-    } catch (error) {
-      console.error("Admin events error:", error.message);
-
-      return res.status(500).json({
-        success: false,
-        message: "Could not load events."
-      });
-    }
-  }
-);
-
-// Create an event
-app.post(
-  "/api/admin/events",
-  requireAdmin,
-  requireAdminOrigin,
-  async (req, res) => {
-    try {
-      const title = String(req.body?.title || "").trim();
-      const description = String(req.body?.description || "").trim();
-      const location = String(req.body?.location || "").trim();
-      const imageUrl = String(req.body?.image_url || "").trim();
-      const eventDate = req.body?.event_date;
-      const published = req.body?.published === true;
-
-      if (
-        title.length < 2 ||
-        title.length > 200 ||
-        description.length < 2 ||
-        description.length > 5000 ||
-        location.length > 300 ||
-        imageUrl.length > 2000 ||
-        !eventDate ||
-        !Number.isFinite(Date.parse(eventDate))
-      ) {
-        return res.status(400).json({
-          success: false,
-          message: "Please provide a valid title, description, date, and event details."
-        });
-      }
-
-      const result = await pool.query(
-        `INSERT INTO events
-          (title, description, event_date, location, image_url, published)
-         VALUES ($1, $2, $3, $4, $5, $6)
-         RETURNING id, title, description, event_date,
-                   location, image_url, published`,
-        [
-          title,
-          description,
-          new Date(eventDate).toISOString(),
-          location || null,
-          imageUrl || null,
-          published
-        ]
-      );
-
-      return res.status(201).json({
-        success: true,
-        event: result.rows[0]
-      });
-    } catch (error) {
-      console.error("Create event error:", error.message);
-
-      return res.status(500).json({
-        success: false,
-        message: "Could not create event."
-      });
-    }
-  }
-);
-
-// Update an event
-app.put(
-  "/api/admin/events/:id",
-  requireAdmin,
-  requireAdminOrigin,
-  async (req, res) => {
-    try {
-      const id = Number(req.params.id);
-      const title = String(req.body?.title || "").trim();
-      const description = String(req.body?.description || "").trim();
-      const location = String(req.body?.location || "").trim();
-      const imageUrl = String(req.body?.image_url || "").trim();
-      const eventDate = req.body?.event_date;
-      const published = req.body?.published === true;
-
-      if (
-        !Number.isInteger(id) ||
-        id < 1 ||
-        title.length < 2 ||
-        title.length > 200 ||
-        description.length < 2 ||
-        description.length > 5000 ||
-        location.length > 300 ||
-        imageUrl.length > 2000 ||
-        !eventDate ||
-        !Number.isFinite(Date.parse(eventDate))
-      ) {
-        return res.status(400).json({
-          success: false,
-          message: "Please provide valid event details."
-        });
-      }
-
-      const result = await pool.query(
-        `UPDATE events
-         SET title = $1,
-             description = $2,
-             event_date = $3,
-             location = $4,
-             image_url = $5,
-             published = $6
-         WHERE id = $7
-         RETURNING id, title, description, event_date,
-                   location, image_url, published`,
-        [
-          title,
-          description,
-          new Date(eventDate).toISOString(),
-          location || null,
-          imageUrl || null,
-          published,
-          id
-        ]
-      );
-
-      if (result.rowCount === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "Event not found."
-        });
-      }
-
-      return res.json({
-        success: true,
-        event: result.rows[0]
-      });
-    } catch (error) {
-      console.error("Update event error:", error.message);
-
-      return res.status(500).json({
-        success: false,
-        message: "Could not update event."
-      });
-    }
-  }
-);
-
-// Delete an event
-app.delete(
-  "/api/admin/events/:id",
-  requireAdmin,
-  requireAdminOrigin,
-  async (req, res) => {
-    try {
-      const id = Number(req.params.id);
-
-      if (!Number.isInteger(id) || id < 1) {
-        return res.status(400).json({
-          success: false,
-          message: "Invalid event ID."
-        });
-      }
-
-      const result = await pool.query(
-        `DELETE FROM events
-         WHERE id = $1
-         RETURNING id`,
-        [id]
-      );
-
-      if (result.rowCount === 0) {
-        return res.status(404).json({
-          success: false,
-          message: "Event not found."
-        });
-      }
-
-      return res.json({
-        success: true,
-        message: "Event deleted successfully."
-      });
-    } catch (error) {
-      console.error("Delete event error:", error.message);
-
-      return res.status(500).json({
-        success: false,
-        message: "Could not delete event."
-      });
-    }
-  }
-);
-
 
 // ========================================
 // HOME PAGE CONTENT
@@ -1359,15 +863,11 @@ app.get("/api/home", async (req, res) => {
 app.post("/api/contact", async (req, res) => {
   try {
     const name = String(req.body?.name || "").trim();
-
     const email = String(req.body?.email || "")
       .trim()
       .toLowerCase();
-
     const subject = String(req.body?.subject || "").trim();
-
     const message = String(req.body?.message || "").trim();
-
     const website = String(req.body?.website || "").trim();
 
     if (website) {
@@ -1414,7 +914,9 @@ app.post("/api/contact", async (req, res) => {
     });
   }
 });
-
+// ========================================
+// ADMIN AUTHENTICATION
+// ========================================
 
 app.post(
   "/api/admin/login",
@@ -1515,56 +1017,465 @@ app.post(
       path: "/"
     });
 
-    
-  return res.json({
-    success: true,
-    username: session.username
-  });
-});
+    return res.json({
+      success: true,
+      message: "Logged out successfully."
+    });
+  }
+);
 
 // ========================================
-// ADMIN: CONTACT MESSAGES
+// ADMIN DONATIONS
 // ========================================
 
 app.get(
-  "/api/admin/contact-messages",
+  "/api/admin/donations",
   requireAdmin,
   async (req, res) => {
-    res.setHeader("Cache-Control", "no-store");
-
     try {
       const result = await pool.query(
-        `SELECT *
-         FROM contact_messages
-    
-       LIMIT 200`
+        `SELECT
+           id,
+           phone,
+           amount,
+           status,
+           mpesa_receipt_number,
+           result_desc,
+           created_at,
+           updated_at
+         FROM donations
+         ORDER BY created_at DESC
+         LIMIT 100`
+      );
+
+      const totalResult = await pool.query(
+        `SELECT COALESCE(SUM(amount), 0) AS total
+         FROM donations
+         WHERE status = 'completed'`
       );
 
       return res.json({
         success: true,
-        messages: result.rows
+        total: Number(totalResult.rows[0].total),
+        donations: result.rows
       });
     } catch (error) {
       console.error(
-        "Admin contact messages error:",
+        "Admin donations error:",
         error.message
       );
 
       return res.status(500).json({
         success: false,
-        message: "Unable to load contact messages."
+        message: "Could not load donation records."
+      });
+    }
+  }
+);
+
+// ========================================
+// ADMIN ANNOUNCEMENTS
+// ========================================
+
+app.get(
+  "/api/admin/announcements",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const result = await pool.query(
+        `SELECT id, title, body, published, created_at
+         FROM announcements
+         ORDER BY created_at DESC
+         LIMIT 100`
+      );
+
+      return res.json({
+        success: true,
+        announcements: result.rows
+      });
+    } catch (error) {
+      console.error(
+        "Admin announcements error:",
+        error.message
+      );
+
+      return res.status(500).json({
+        success: false,
+        message: "Could not load announcements."
       });
     }
   }
 );
 
 app.post(
-  "/api/admin/logout",
+  "/api/admin/announcements",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const title = String(req.body?.title || "").trim();
+      const body = String(req.body?.body || "").trim();
+      const published = req.body?.published === true;
 
+      if (
+        title.length < 2 ||
+        title.length > 200 ||
+        body.length < 2
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Please provide a valid title and announcement."
+        });
+      }
 
-/* ========================================
-   ADMIN: CONTACT MESSAGES & PRAYER REQUESTS
-======================================== */
+      const result = await pool.query(
+        `INSERT INTO announcements
+          (title, body, published)
+         VALUES ($1, $2, $3)
+         RETURNING id, title, body, published, created_at`,
+        [title, body, published]
+      );
+
+      return res.status(201).json({
+        success: true,
+        announcement: result.rows[0]
+      });
+    } catch (error) {
+      console.error(
+        "Create announcement error:",
+        error.message
+      );
+
+      return res.status(500).json({
+        success: false,
+        message: "Could not create announcement."
+      });
+    }
+  }
+);
+
+app.put(
+  "/api/admin/announcements/:id",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+      const title = String(req.body?.title || "").trim();
+      const body = String(req.body?.body || "").trim();
+      const published = req.body?.published === true;
+
+      if (
+        !Number.isInteger(id) ||
+        id < 1 ||
+        title.length < 2 ||
+        title.length > 200 ||
+        body.length < 2
+      ) {
+        return res.status(400).json({
+          success: false,
+          message:
+            "Please provide valid announcement details."
+        });
+      }
+
+      const result = await pool.query(
+        `UPDATE announcements
+         SET title = $1,
+             body = $2,
+             published = $3
+         WHERE id = $4
+         RETURNING id, title, body, published, created_at`,
+        [title, body, published, id]
+      );
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Announcement not found."
+        });
+      }
+
+      return res.json({
+        success: true,
+        announcement: result.rows[0]
+      });
+    } catch (error) {
+      console.error(
+        "Update announcement error:",
+        error.message
+      );
+
+      return res.status(500).json({
+        success: false,
+        message: "Could not update announcement."
+      });
+    }
+  }
+);
+
+app.delete(
+  "/api/admin/announcements/:id",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+
+      if (!Number.isInteger(id) || id < 1) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid announcement ID."
+        });
+      }
+
+      const result = await pool.query(
+        `DELETE FROM announcements
+         WHERE id = $1
+         RETURNING id`,
+        [id]
+      );
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Announcement not found."
+        });
+      }
+
+      return res.json({
+        success: true,
+        message: "Announcement deleted successfully."
+      });
+    } catch (error) {
+      console.error(
+        "Delete announcement error:",
+        error.message
+      );
+
+      return res.status(500).json({
+        success: false,
+        message: "Could not delete announcement."
+      });
+    }
+  }
+);
+
+// ========================================
+// ADMIN EVENTS
+// ========================================
+
+app.get(
+  "/api/admin/events",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const result = await pool.query(
+        `SELECT id, title, description, event_date,
+                location, image_url, published
+         FROM events
+         ORDER BY event_date DESC
+         LIMIT 100`
+      );
+
+      return res.json({
+        success: true,
+        events: result.rows
+      });
+    } catch (error) {
+      console.error("Admin events error:", error.message);
+
+      return res.status(500).json({
+        success: false,
+        message: "Could not load events."
+      });
+    }
+  }
+);
+
+app.post(
+  "/api/admin/events",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const title = String(req.body?.title || "").trim();
+      const description = String(req.body?.description || "").trim();
+      const location = String(req.body?.location || "").trim();
+      const imageUrl = String(req.body?.image_url || "").trim();
+      const eventDate = req.body?.event_date;
+      const published = req.body?.published === true;
+
+      if (
+        title.length < 2 ||
+        title.length > 200 ||
+        description.length < 2 ||
+        description.length > 5000 ||
+        location.length > 300 ||
+        imageUrl.length > 2000 ||
+        !eventDate ||
+        !Number.isFinite(Date.parse(eventDate))
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Please provide a valid title, description, date, and event details."
+        });
+      }
+
+      const result = await pool.query(
+        `INSERT INTO events
+          (title, description, event_date, location, image_url, published)
+         VALUES ($1, $2, $3, $4, $5, $6)
+         RETURNING id, title, description, event_date,
+                   location, image_url, published`,
+        [
+          title,
+          description,
+          new Date(eventDate).toISOString(),
+          location || null,
+          imageUrl || null,
+          published
+        ]
+      );
+
+      return res.status(201).json({
+        success: true,
+        event: result.rows[0]
+      });
+    } catch (error) {
+      console.error("Create event error:", error.message);
+
+      return res.status(500).json({
+        success: false,
+        message: "Could not create event."
+      });
+    }
+  }
+);
+
+app.put(
+  "/api/admin/events/:id",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+      const title = String(req.body?.title || "").trim();
+      const description = String(req.body?.description || "").trim();
+      const location = String(req.body?.location || "").trim();
+      const imageUrl = String(req.body?.image_url || "").trim();
+      const eventDate = req.body?.event_date;
+      const published = req.body?.published === true;
+
+      if (
+        !Number.isInteger(id) ||
+        id < 1 ||
+        title.length < 2 ||
+        title.length > 200 ||
+        description.length < 2 ||
+        description.length > 5000 ||
+        location.length > 300 ||
+        imageUrl.length > 2000 ||
+        !eventDate ||
+        !Number.isFinite(Date.parse(eventDate))
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Please provide valid event details."
+        });
+      }
+
+      const result = await pool.query(
+        `UPDATE events
+         SET title = $1,
+             description = $2,
+             event_date = $3,
+             location = $4,
+             image_url = $5,
+             published = $6
+         WHERE id = $7
+         RETURNING id, title, description, event_date,
+                   location, image_url, published`,
+        [
+          title,
+          description,
+          new Date(eventDate).toISOString(),
+          location || null,
+          imageUrl || null,
+          published,
+          id
+        ]
+      );
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Event not found."
+        });
+      }
+
+      return res.json({
+        success: true,
+        event: result.rows[0]
+      });
+    } catch (error) {
+      console.error("Update event error:", error.message);
+
+      return res.status(500).json({
+        success: false,
+        message: "Could not update event."
+      });
+    }
+  }
+);
+
+app.delete(
+  "/api/admin/events/:id",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+
+      if (!Number.isInteger(id) || id < 1) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid event ID."
+        });
+      }
+
+      const result = await pool.query(
+        `DELETE FROM events
+         WHERE id = $1
+         RETURNING id`,
+        [id]
+      );
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Event not found."
+        });
+      }
+
+      return res.json({
+        success: true,
+        message: "Event deleted successfully."
+      });
+    } catch (error) {
+      console.error("Delete event error:", error.message);
+
+      return res.status(500).json({
+        success: false,
+        message: "Could not delete event."
+      });
+    }
+  }
+);
+// ========================================
+// ADMIN: CONTACT MESSAGES
+// ========================================
 
 app.get(
   "/api/admin/contact-messages",
@@ -1595,8 +1506,7 @@ app.get(
   }
 );
 
-
-// =====================================
+// ========================================
 // START SERVER
 // ========================================
 
