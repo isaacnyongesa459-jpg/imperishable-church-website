@@ -3,108 +3,143 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, nofollow">
-  <title>Church Admin | Imperishable Crown</title>
-  <link rel="stylesheet" href="admin.css">
-  <script src="admin.js" defer></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Church Admin Login</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #10251d;
+      color: #fff;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      padding: 30px;
+      background: #fff;
+      color: #222;
+      border-radius: 14px;
+      box-shadow: 0 12px 35px #0005;
+    }
+
+    h1 { margin-top: 0; color: #174b35; }
+    p { line-height: 1.5; color: #555; }
+
+    label {
+      display: block;
+      margin-top: 18px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      margin-top: 8px;
+      padding: 13px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 14px;
+      border: 0;
+      border-radius: 7px;
+      background: #176640;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:disabled { opacity: 0.6; }
+
+    #message {
+      margin-top: 16px;
+      overflow-wrap: anywhere;
+    }
+
+    .back { display: block; margin-top: 20px; }
+  </style>
 </head>
 <body>
-  <section id="loginScreen" class="login-screen">
-    <form id="loginForm" class="login-card">
-      <div class="church-mark">✝</div>
-      <p class="eyebrow">IMPERISHABLE CROWN</p>
-      <h1>Admin sign in</h1>
-      <p class="muted">Church website management</p>
+  <main class="login-card">
+    <h1>Administrator Login</h1>
+    <p>Imperishable Crown Bible Baptist Church</p>
 
-      <label for="username">Administrator username</label>
-      <input id="username" name="username" autocomplete="username" required>
+    <form id="loginForm">
+      <label for="username">Username</label>
+      <input id="username" name="username"
+        autocomplete="username" required>
 
       <label for="password">Password</label>
       <input id="password" name="password" type="password"
         autocomplete="current-password" required>
 
-      <button class="primary full" type="submit">Sign in securely</button>
-      <p id="loginMessage" class="notice" role="status"></p>
+      <button id="loginButton" type="submit">Log In</button>
     </form>
-  </section>
 
-  <div id="adminApp" class="app" hidden>
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="church-mark">✝</div>
-        <div>
-          <strong>Imperishable Crown</strong>
-          <small>Church administration</small>
-        </div>
-      </div>
+    <p id="message" role="status" aria-live="polite"></p>
+    <a class="back" href="index.html">Back to church website</a>
+  </main>
 
-      <nav id="navigation" aria-label="Admin sections">
-        <button data-tab="overview" class="nav-item active">▦ Overview</button>
-        <button data-tab="donations" class="nav-item">₭ Donations</button>
-        <button data-tab="about" class="nav-item">ℹ About church</button>
-        <button data-tab="announcements" class="nav-item">▤ Announcements</button>
-        <button data-tab="leaders" class="nav-item">♙ Leadership</button>
-        <button data-tab="services" class="nav-item">◷ Services</button>
-        <button data-tab="events" class="nav-item">▣ Events</button>
-        <button data-tab="messages" class="nav-item">✉ Contact messages</button>
-      </nav>
+  <script>
+    const API = "https://imperishable-church-mpesa-backend-fa2a.onrender.com";
 
-      <button id="logoutButton" class="logout-button">Log out</button>
-    </aside>
+    const form = document.getElementById("loginForm");
+    const button = document.getElementById("loginButton");
+    const message = document.getElementById("message");
 
-    <main class="main-content">
-      <header class="topbar">
-        <div>
-          <p class="eyebrow">ADMINISTRATION</p>
-          <h1 id="pageTitle">Dashboard overview</h1>
-        </div>
-        <a class="public-link" href="index.html" target="_blank" rel="noopener">
-          View website ↗
-        </a>
-      </header>
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      button.disabled = true;
+      message.textContent = "Signing in...";
 
-      <p id="appMessage" class="notice" role="status"></p>
+      try {
+        const response = await fetch(`${API}/api/admin/login`, {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: form.username.value.trim(),
+            password: form.password.value
+          })
+        });
 
-      <section id="overviewPanel" class="panel"></section>
+        const result = await response.json();
 
-      <section id="listPanel" class="panel" hidden>
-        <div class="panel-heading">
-          <div>
-            <h2 id="listTitle">Records</h2>
-            <p class="muted">Manage the information stored by your church backend.</p>
-          </div>
-          <button id="addButton" class="primary">+ Add new</button>
-        </div>
-        <div id="tableContainer"></div>
-      </section>
+        if (!response.ok || !result.success) {
+          throw new Error(result.message || "Login failed.");
+        }
 
-      <section id="aboutPanel" class="panel" hidden>
-        <h2>Edit About page</h2>
-        <p class="muted">Save the title and main description for your church.</p>
-        <form id="aboutForm" class="editor-form">
-          <label for="aboutTitle">Page title</label>
-          <input id="aboutTitle" name="title" maxlength="200" required>
+        const check = await fetch(`${API}/api/admin/me`, {
+          credentials: "include",
+          cache: "no-store"
+        });
 
-          <label for="aboutBody">Church description</label>
-          <textarea id="aboutBody" name="body" rows="10"
-            maxlength="20000"></textarea>
+        if (!check.ok) {
+          throw new Error(
+            "Login responded successfully, but the session could not be verified. Check browser cookie restrictions and backend CORS settings."
+          );
+        }
 
-          <button class="primary" type="submit">Save About content</button>
-        </form>
-      </section>
-
-      <section id="editorPanel" class="panel" hidden>
-        <div class="panel-heading">
-          <h2 id="editorTitle">Add record</h2>
-          <button id="cancelEdit" class="secondary" type="button">Cancel</button>
-        </div>
-        <form id="recordForm" class="editor-form">
-          <div id="dynamicFields" class="form-grid"></div>
-          <button class="primary" type="submit">Save record</button>
-        </form>
-      </section>
-    </main>
-  </div>
+        message.textContent = "Login successful. Your session is verified.";
+        // The protected dashboard will be added next.
+      } catch (error) {
+        message.textContent = error.message ||
+          "Could not connect. Please try again.";
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>
