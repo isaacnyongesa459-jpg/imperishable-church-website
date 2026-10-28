@@ -248,6 +248,90 @@
 </body>
 </html>
 
+<!-- CONTACT MESSAGES ADMIN SECTION -->
+<section id="contactMessagesSection"
+         style="margin:20px;padding:20px;background:#fff;color:#222;border-radius:12px;">
+  <h2>Contact Messages & Prayer Requests</h2>
+
+  <button id="loadContactMessages" type="button">
+    Load Messages
+  </button>
+
+  <p id="contactMessagesStatus" role="status">
+    Tap Load Messages to view submissions.
+  </p>
+
+  <div id="contactMessagesList"></div>
+</section>
+
+<script>
+(() => {
+  const API =
+    "https://imperishable-church-mpesa-backend-fa2a.onrender.com";
+
+  const button = document.getElementById("loadContactMessages");
+  const status = document.getElementById("contactMessagesStatus");
+  const list = document.getElementById("contactMessagesList");
+
+  button.addEventListener("click", async () => {
+    button.disabled = true;
+    status.textContent = "Loading messages...";
+    list.replaceChildren();
+
+    try {
+      const response = await fetch(
+        `${API}/api/admin/contact-messages`,
+        {
+          credentials: "include"
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.message || `Request failed (${response.status})`
+        );
+      }
+
+      if (!data.messages || data.messages.length === 0) {
+        status.textContent = "No messages found yet.";
+        return;
+      }
+
+      data.messages.forEach((message) => {
+        const card = document.createElement("article");
+        card.style.cssText =
+          "padding:12px;margin:12px 0;border:1px solid #ddd;border-radius:8px;overflow-wrap:anywhere;";
+
+        const heading = document.createElement("h3");
+        heading.textContent = message.subject || "Contact message";
+
+        const sender = document.createElement("p");
+        sender.textContent =
+          `From: ${message.name || "Unknown"} (${message.email || "No email"})`;
+
+        const content = document.createElement("p");
+        content.style.whiteSpace = "pre-wrap";
+        content.textContent = message.message || "";
+
+        card.append(heading, sender, content);
+        list.appendChild(card);
+      });
+
+      status.textContent = `Loaded ${data.messages.length} message(s).`;
+    } catch (error) {
+      status.textContent =
+        error.message || "Unable to load messages.";
+    } finally {
+      button.disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+</html>
+
 <body>
 
   <header>
