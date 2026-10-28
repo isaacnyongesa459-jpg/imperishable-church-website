@@ -449,6 +449,213 @@
 
     loadDashboard();
 
+const announcementForm =
+  document.getElementById("announcementForm");
+
+const announcementId =
+  document.getElementById("announcementId");
+
+const announcementTitle =
+  document.getElementById("announcementTitle");
+
+const announcementBody =
+  document.getElementById("announcementBody");
+
+const announcementPublished =
+  document.getElementById("announcementPublished");
+
+const announcementMessage =
+  document.getElementById("announcementMessage");
+
+const announcementList =
+  document.getElementById("announcementList");
+
+const cancelAnnouncement =
+  document.getElementById("cancelAnnouncement");
+
+
+async function loadAnnouncements() {
+  announcementList.textContent = "Loading announcements...";
+
+  try {
+    const response = await fetch(
+      `${API}/api/admin/announcements`,
+      {
+        credentials: "include",
+        cache: "no-store"
+      }
+    );
+
+    if (response.status === 401) {
+      window.location.replace("admin.html");
+      return;
+    }
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        data.message || "Could not load announcements."
+      );
+    }
+
+    announcementList.replaceChildren();
+
+    if (!data.announcements.length) {
+      announcementList.textContent = "No announcements yet.";
+      return;
+    }
+
+    data.announcements.forEach((item) => {
+      const card = document.createElement("div");
+      card.style.cssText =
+        "border:1px solid #ddd;border-radius:8px;padding:15px;margin-top:12px;";
+
+      const title = document.createElement("h3");
+      title.textContent = item.title;
+
+      const body = document.createElement("p");
+      body.textContent = item.body;
+
+      const status = document.createElement("p");
+      status.textContent = item.published
+        ? "Published"
+        : "Unpublished";
+
+      const edit = document.createElement("button");
+      edit.type = "button";
+      edit.textContent = "Edit";
+      edit.style.marginRight = "8px";
+
+      edit.addEventListener("click", () => {
+        announcementId.value = item.id;
+        announcementTitle.value = item.title;
+        announcementBody.value = item.body;
+        announcementPublished.checked = item.published;
+        announcementMessage.textContent = "Editing announcement.";
+        cancelAnnouncement.hidden = false;
+        document.getElementById("saveAnnouncement").textContent =
+          "Update Announcement";
+
+        announcementForm.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      });
+
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.textContent = "Delete";
+
+      remove.addEventListener("click", async () => {
+        if (!confirm(`Delete "${item.title}" permanently?`)) {
+          return;
+        }
+
+        try {
+          const result = await fetch(
+            `${API}/api/admin/announcements/${encodeURIComponent(item.id)}`,
+            {
+              method: "DELETE",
+              credentials: "include"
+            }
+          );
+
+          const resultData = await result.json();
+
+          if (!result.ok || !resultData.success) {
+            throw new Error(
+              resultData.message || "Delete failed."
+            );
+          }
+
+          announcementMessage.textContent =
+            "Announcement deleted.";
+
+          await loadAnnouncements();
+        } catch (error) {
+          announcementMessage.textContent = error.message;
+        }
+      });
+
+      card.append(title, body, status, edit, remove);
+      announcementList.appendChild(card);
+    });
+  } catch (error) {
+    announcementList.textContent = error.message;
+  }
+}
+
+
+announcementForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const id = announcementId.value;
+
+  const payload = {
+    title: announcementTitle.value.trim(),
+    body: announcementBody.value.trim(),
+    published: announcementPublished.checked
+  };
+
+  const saveButton = document.getElementById("saveAnnouncement");
+  saveButton.disabled = true;
+  announcementMessage.textContent = "Saving...";
+
+  try {
+    const response = await fetch(
+      id
+        ? `${API}/api/admin/announcements/${encodeURIComponent(id)}`
+        : `${API}/api/admin/announcements`,
+      {
+        method: id ? "PUT" : "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || "Could not save announcement.");
+    }
+
+    announcementMessage.textContent =
+      payload.published
+        ? "Announcement saved and marked as published."
+        : "Announcement saved as unpublished.";
+
+    resetAnnouncementForm();
+    await loadAnnouncements();
+  } catch (error) {
+    announcementMessage.textContent = error.message;
+  } finally {
+    saveButton.disabled = false;
+  }
+});
+
+
+function resetAnnouncementForm() {
+  announcementForm.reset();
+  announcementId.value = "";
+  cancelAnnouncement.hidden = true;
+  document.getElementById("saveAnnouncement").textContent =
+    "Save Announcement";
+}
+
+
+cancelAnnouncement.addEventListener("click", () => {
+  resetAnnouncementForm();
+  announcementMessage.textContent = "";
+});
+
+
+loadAnnouncements();
+
+
   </script>
 
 </body>
