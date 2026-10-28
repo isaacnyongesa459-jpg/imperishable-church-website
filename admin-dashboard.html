@@ -734,6 +734,224 @@ cancelAnnouncement.addEventListener("click", () => {
 
 loadAnnouncements();
 
+const eventForm = document.getElementById("eventForm");
+const eventIdInput = document.getElementById("eventId");
+const eventTitleInput = document.getElementById("eventTitle");
+const eventDescriptionInput = document.getElementById("eventDescription");
+const eventDateInput = document.getElementById("eventDate");
+const eventLocationInput = document.getElementById("eventLocation");
+const eventImageInput = document.getElementById("eventImage");
+const eventPublishedInput = document.getElementById("eventPublished");
+const eventMessage = document.getElementById("eventMessage");
+const eventList = document.getElementById("eventList");
+const saveEventButton = document.getElementById("saveEventButton");
+const cancelEventButton = document.getElementById("cancelEventButton");
+
+function eventEscape(value) {
+  return String(value ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+
+function eventDateForInput(value) {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return "";
+
+  const localDate = new Date(
+    date.getTime() - date.getTimezoneOffset() * 60000
+  );
+
+  return localDate.toISOString().slice(0, 16);
+}
+
+function resetEventForm() {
+  eventForm.reset();
+  eventIdInput.value = "";
+  cancelEventButton.hidden = true;
+  saveEventButton.textContent = "Save Event";
+}
+
+async function loadEvents() {
+  eventList.textContent = "Loading events...";
+
+  try {
+    const response = await fetch(`${API}/api/admin/events`, {
+      credentials: "include",
+      cache: "no-store"
+    });
+
+    if (response.status === 401) {
+      window.location.replace("admin.html");
+      return;
+    }
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || "Could not load events.");
+    }
+
+    eventList.replaceChildren();
+
+    if (!data.events.length) {
+      eventList.textContent = "No events have been created yet.";
+      return;
+    }
+
+    data.events.forEach((item) => {
+      const card = document.createElement("article");
+
+      card.style.cssText =
+        "border:1px solid #ddd;border-radius:8px;padding:15px;margin:12px 0;";
+
+      const title = document.createElement("h3");
+      title.textContent = item.title;
+
+      const description = document.createElement("p");
+      description.textContent = item.description;
+
+      const date = document.createElement("p");
+      date.textContent =
+        "Date: " + new Date(item.event_date).toLocaleString();
+
+      const location = document.createElement("p");
+      location.textContent = "Location: " + (item.location || "Not specified");
+
+      const status = document.createElement("p");
+      status.textContent = item.published ? "Published" : "Unpublished";
+
+      const editButton = document.createElement("button");
+      editButton.type = "button";
+      editButton.textContent = "Edit";
+      editButton.style.marginRight = "8px";
+
+      editButton.addEventListener("click", () => {
+        eventIdInput.value = item.id;
+        eventTitleInput.value = item.title || "";
+        eventDescriptionInput.value = item.description || "";
+        eventDateInput.value = eventDateForInput(item.event_date);
+        eventLocationInput.value = item.location || "";
+        eventImageInput.value = item.image_url || "";
+        eventPublishedInput.checked = item.published === true;
+
+        saveEventButton.textContent = "Update Event";
+        cancelEventButton.hidden = false;
+        eventMessage.textContent = "Editing event.";
+
+        eventForm.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      });
+
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.textContent = "Delete";
+
+      deleteButton.addEventListener("click", async () => {
+        if (!confirm(`Permanently delete "${item.title}"?`)) return;
+
+        deleteButton.disabled = true;
+
+        try {
+          const deleteResponse = await fetch(
+            `${API}/api/admin/events/${encodeURIComponent(item.id)}`,
+            {
+              method: "DELETE",
+              credentials: "include"
+            }
+          );
+
+          const deleteData = await deleteResponse.json();
+
+          if (!deleteResponse.ok || !deleteData.success) {
+            throw new Error(deleteData.message || "Could not delete event.");
+          }
+
+          eventMessage.textContent = "Event deleted.";
+          await loadEvents();
+        } catch (error) {
+          eventMessage.textContent = error.message;
+          deleteButton.disabled = false;
+        }
+      });
+
+      card.append(title, description, date, location, status, editButton, deleteButton);
+      eventList.appendChild(card);
+    });
+  } catch (error) {
+    eventList.textContent = error.message;
+  }
+}
+
+eventForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const id = eventIdInput.value;
+  const selectedDate = new Date(eventDateInput.value);
+
+  if (Number.isNaN(selectedDate.getTime())) {
+    eventMessage.textContent = "Please choose a valid event date and time.";
+    return;
+  }
+
+  const payload = {
+    title: eventTitleInput.value.trim(),
+    description: eventDescriptionInput.value.trim(),
+    event_date: selectedDate.toISOString(),
+    location: eventLocationInput.value.trim(),
+    image_url: eventImageInput.value.trim(),
+    published: eventPublishedInput.checked
+  };
+
+  saveEventButton.disabled = true;
+  eventMessage.textContent = "Saving event...";
+
+  try {
+    const response = await fetch(
+      id
+        ? `${API}/api/admin/events/${encodeURIComponent(id)}`
+        : `${API}/api/admin/events`,
+      {
+        method: id ? "PUT" : "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.message || "Could not save event.");
+    }
+
+    eventMessage.textContent = payload.published
+      ? "Event saved and marked as published."
+      : "Event saved as unpublished.";
+
+    resetEventForm();
+    await loadEvents();
+  } catch (error) {
+    eventMessage.textContent = error.message;
+  } finally {
+    saveEventButton.disabled = false;
+  }
+});
+
+cancelEventButton.addEventListener("click", () => {
+  resetEventForm();
+  eventMessage.textContent = "";
+});
+
+loadEvents();
+
 
   </script>
 
