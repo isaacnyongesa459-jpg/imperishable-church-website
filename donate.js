@@ -23,6 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const dropdownMenu = document.getElementById("dropdownMenu");
     const toast = document.getElementById("toastNotification");
     const mainAmount = document.getElementById("mainAmount");
+const usdAmount = document.getElementById("usdAmount");
+const exchangeRateElement =
+    document.getElementById("exchangeRate");
+const exchangeRateUpdated =
+    document.getElementById("exchangeRateUpdated");
+
+let usdToKesRate = null;
     const mpesaAmount = document.getElementById("customMpesaAmount");
     const mpesaPhone = document.getElementById("mpesaPhoneNumber");
     const mpesaBtn = document.getElementById("mpesaBtn");
@@ -163,28 +170,49 @@ document.addEventListener("DOMContentLoaded", () => {
     // LOAD CONFIRMED DONATION TOTAL
     // ========================================
 
-    async function loadDonationTotal() {
-        if (!mainAmount || !backendConfigured) return;
+     
 
-        try {
-            const response = await fetch(
-                `${API_BASE_URL}/api/donations/total`
-            );
+async function loadDonationTotal() {
+    if (!mainAmount || !backendConfigured) return;
 
-            const data = await readResponse(response);
-            const total = Number(data.total);
+    try {
+        const response = await fetch(
+            `${API_BASE_URL}/api/donations/total`
+        );
 
-            if (!Number.isFinite(total) || total < 0) {
-                throw new Error("The server returned an invalid donation total.");
-            }
+        const data = await readResponse(response);
+        const total = Number(data.total);
 
-            mainAmount.textContent = `KES ${formatKES(total)}`;
-        } catch (error) {
-            console.error("Donation total error:", error);
+        if (!Number.isFinite(total) || total < 0) {
+            throw new Error("Invalid donation total.");
         }
-    }
 
-    loadDonationTotal();
+        // Display the confirmed donation total in Kenyan shillings.
+        mainAmount.textContent = `KES ${formatKES(total)}`;
+
+        // Display an estimated USD equivalent when a rate is available.
+        if (usdAmount) {
+            if (usdToKesRate !== null && usdToKesRate > 0) {
+                usdAmount.textContent =
+                    "$" + (total / usdToKesRate).toLocaleString(
+                        "en-US",
+                        {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        }
+                    );
+            } else {
+                usdAmount.textContent =
+                    "USD equivalent unavailable";
+            }
+        }
+    } catch (error) {
+        console.error("Donation total error:", error);
+    }
+}
+
+        
+
 
     // ========================================
     // PRESET M-PESA AMOUNTS
@@ -341,7 +369,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 amount > 250000
             ) {
                 showToast(
-                    "Enter a whole-number donation between KES 10 and KES 250,000."
+                    "Enter a whole-number donation between KES 1 and KES 499,999."
                 );
 
                 if (mpesaAmount) mpesaAmount.focus();
