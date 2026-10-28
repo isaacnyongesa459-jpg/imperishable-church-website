@@ -211,6 +211,85 @@
   </div>
 </section>
 
+<!-- =====================================
+     EVENTS MANAGEMENT
+====================================== -->
+<section class="card" style="margin-top:25px;">
+  <h2>Church Events Management</h2>
+  <p>Create and manage upcoming church events.</p>
+
+  <form id="eventForm">
+    <input type="hidden" id="eventId">
+
+    <label for="eventTitle">Event title</label>
+    <input
+      id="eventTitle"
+      type="text"
+      maxlength="200"
+      required
+      placeholder="e.g. Sunday Worship Service"
+      style="display:block;width:100%;padding:12px;margin:8px 0 15px;"
+    >
+
+    <label for="eventDescription">Description</label>
+    <textarea
+      id="eventDescription"
+      rows="4"
+      maxlength="5000"
+      required
+      placeholder="Describe the event..."
+      style="display:block;width:100%;padding:12px;margin:8px 0 15px;"
+    ></textarea>
+
+    <label for="eventDate">Date and time</label>
+    <input
+      id="eventDate"
+      type="datetime-local"
+      required
+      style="display:block;width:100%;padding:12px;margin:8px 0 15px;"
+    >
+
+    <label for="eventLocation">Location</label>
+    <input
+      id="eventLocation"
+      type="text"
+      maxlength="300"
+      placeholder="Church venue or location"
+      style="display:block;width:100%;padding:12px;margin:8px 0 15px;"
+    >
+
+    <label for="eventImage">Image URL (optional)</label>
+    <input
+      id="eventImage"
+      type="url"
+      maxlength="2000"
+      placeholder="https://example.com/event-image.jpg"
+      style="display:block;width:100%;padding:12px;margin:8px 0 15px;"
+    >
+
+    <label style="display:block;margin:12px 0;">
+      <input id="eventPublished" type="checkbox">
+      Publish event on the public website
+    </label>
+
+    <button id="saveEventButton" type="submit">
+      Save Event
+    </button>
+
+    <button id="cancelEventButton" type="button" hidden>
+      Cancel Edit
+    </button>
+  </form>
+
+  <p id="eventMessage" role="status"></p>
+
+  <hr style="margin:20px 0;">
+
+  <h3>Existing Events</h3>
+  <div id="eventList">Loading events...</div>
+</section>
+
+
   <main>
 
     <h1>Administrator Dashboard</h1>
