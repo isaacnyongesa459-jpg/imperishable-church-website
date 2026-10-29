@@ -557,9 +557,212 @@
       }
     });
 
+    
+    // Church Gallery Management
+    const galleryForm = document.getElementById("galleryForm");
+    const galleryId = document.getElementById("galleryId");
+    const galleryTitle = document.getElementById("galleryTitle");
+    const galleryDescription = document.getElementById("galleryDescription");
+    const galleryImageUrl = document.getElementById("galleryImageUrl");
+    const galleryPublished = document.getElementById("galleryPublished");
+    const galleryStatus = document.getElementById("galleryStatus");
+    const galleryList = document.getElementById("galleryList");
+    const saveGalleryButton = document.getElementById("saveGalleryButton");
+    const cancelGalleryButton = document.getElementById("cancelGalleryButton");
+    const refreshGalleryButton = document.getElementById("refreshGalleryButton");
+
+    async function galleryRequest(path, options = {}) {
+      const response = await fetch(`${API}${path}`, {
+        ...options,
+        credentials: "include",
+        cache: "no-store",
+        headers: {
+          ...(options.headers || {}),
+          ...(options.body ? { "Content-Type": "application/json" } : {})
+        }
+      });
+
+      const data = await response.json();
+
+      if (response.status === 401) {
+        window.location.replace("admin.html");
+        throw new Error("Your administrator session has expired.");
+      }
+
+      if (!response.ok || !data.success) {
+        throw new Error(data.message || `Request failed (${response.status}).`);
+      }
+
+      return data;
+    }
+
+    function resetGalleryForm() {
+      galleryForm.reset();
+      galleryId.value = "";
+      saveGalleryButton.textContent = "Add Photo";
+      cancelGalleryButton.hidden = true;
+    }
+
+    async function loadGallery() {
+      galleryList.textContent = "Loading gallery...";
+      refreshGalleryButton.disabled = true;
+
+      try {
+        const data = await galleryRequest("/api/admin/gallery");
+        const photos = data.photos || data.gallery || data.images || [];
+
+        galleryList.replaceChildren();
+
+        if (!photos.length) {
+          galleryList.textContent = "No gallery photos found yet.";
+          return;
+        }
+
+        photos.forEach((photo) => {
+          const card = document.createElement("article");
+          card.style.cssText =
+            "border:1px solid #ddd;border-radius:10px;padding:15px;margin-top:15px;";
+
+          const title = document.createElement("h3");
+          title.textContent = photo.title || "Untitled photo";
+
+          const image = document.createElement("img");
+          image.src = photo.image_url || "";
+          image.alt = photo.title || "Church gallery photo";
+          image.loading = "lazy";
+          image.style.cssText =
+            "display:block;width:100%;max-width:400px;max-height:260px;object-fit:cover;border-radius:8px;margin:10px 0;";
+          image.addEventListener("error", () => {
+            image.alt = "Image could not be loaded. Check the image URL.";
+          });
+
+          const description = document.createElement("p");
+          description.textContent = photo.description || "No description.";
+
+          const status = document.createElement("p");
+          status.textContent = photo.published ? "Published" : "Unpublished";
+
+          const edit = document.createElement("button");
+          edit.type = "button";
+          edit.textContent = "Edit";
+          edit.style.marginRight = "8px";
+          edit.addEventListener("click", () => {
+            galleryId.value = photo.id;
+            galleryTitle.value = photo.title || "";
+            galleryDescription.value = photo.description || "";
+            galleryImageUrl.value = photo.image_url || "";
+            galleryPublished.checked = Boolean(photo.published);
+            saveGalleryButton.textContent = "Update Photo";
+            cancelGalleryButton.hidden = false;
+            galleryStatus.textContent = "Editing photo.";
+            galleryForm.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+
+          const publish = document.createElement("button");
+          publish.type = "button";
+          publish.textContent = photo.published ? "Unpublish" : "Publish";
+          publish.style.marginRight = "8px";
+          publish.addEventListener("click", async () => {
+            publish.disabled = true;
+            try {
+              await galleryRequest(
+                `/api/admin/gallery/${encodeURIComponent(photo.id)}/publish`,
+                {
+                  method: "PATCH",
+                  body: JSON.stringify({ published: !photo.published })
+                }
+              );
+              galleryStatus.textContent = "Publication status updated.";
+              await loadGallery();
+            } catch (error) {
+              galleryStatus.textContent = error.message;
+              publish.disabled = false;
+            }
+          });
+
+          const remove = document.createElement("button");
+          remove.type = "button";
+          remove.textContent = "Delete";
+          remove.style.background = "#b42318";
+          remove.addEventListener("click", async () => {
+            if (!confirm(`Permanently delete "${photo.title || "this photo"}"?`)) return;
+
+            remove.disabled = true;
+            try {
+              await galleryRequest(
+                `/api/admin/gallery/${encodeURIComponent(photo.id)}`,
+                { method: "DELETE" }
+              );
+              galleryStatus.textContent = "Photo deleted.";
+              await loadGallery();
+            } catch (error) {
+              galleryStatus.textContent = error.message;
+              remove.disabled = false;
+            }
+          });
+
+          card.append(title, image, description, status, edit, publish, remove);
+          galleryList.appendChild(card);
+        });
+      } catch (error) {
+        galleryList.textContent = error.message || "Could not load gallery.";
+      } finally {
+        refreshGalleryButton.disabled = false;
+      }
+    }
+
+    galleryForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const id = galleryId.value.trim();
+      const payload = {
+        title: galleryTitle.value.trim(),
+        description: galleryDescription.value.trim(),
+        image_url: galleryImageUrl.value.trim(),
+        published: galleryPublished.checked
+      };
+
+      if (!payload.title || !payload.image_url) {
+        galleryStatus.textContent = "Enter a title and image URL.";
+        return;
+      }
+
+      saveGalleryButton.disabled = true;
+      galleryStatus.textContent = "Saving photo...";
+
+      try {
+        await galleryRequest(
+          id
+            ? `/api/admin/gallery/${encodeURIComponent(id)}`
+            : "/api/admin/gallery",
+          {
+            method: id ? "PATCH" : "POST",
+            body: JSON.stringify(payload)
+          }
+        );
+
+        galleryStatus.textContent = "Photo saved successfully.";
+        resetGalleryForm();
+        await loadGallery();
+      } catch (error) {
+        galleryStatus.textContent = error.message || "Could not save photo.";
+      } finally {
+        saveGalleryButton.disabled = false;
+      }
+    });
+
+    cancelGalleryButton.addEventListener("click", () => {
+      resetGalleryForm();
+      galleryStatus.textContent = "";
+    });
+
+    refreshGalleryButton.addEventListener("click", loadGallery);
+
     // Initialize Dashboard Loads
     loadDashboard();
     loadAnnouncements();
+    loadGallery();
+
   </script>
 </body>
 </html>
