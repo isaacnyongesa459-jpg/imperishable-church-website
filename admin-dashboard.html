@@ -144,7 +144,7 @@
 <body>
 
   <header>
-    <strong>Imperishable Crown Bible Baptist Church</strong>
+    <strong>Imperishable Crown Outreach Baptist Church</strong>
     <button id="logoutButton" type="button">Log Out</button>
   </header>
   <main>
@@ -253,6 +253,56 @@
       <p id="contactMessagesStatus" role="status">Tap "Load Messages" to view submissions.</p>
       <div id="contactMessagesList"></div>
     </section>
+
+    <section class="card">
+      <h2>Church Photo Gallery</h2>
+      <p>Add photos, edit their details, and choose which photos appear publicly.</p>
+
+      <form id="galleryForm">
+        <input type="hidden" id="galleryId">
+
+        <label for="galleryTitle">Photo title</label>
+        <input
+          id="galleryTitle"
+          type="text"
+          maxlength="200"
+          required
+          placeholder="e.g. Sunday Worship"
+        >
+
+        <label for="galleryDescription">Description (optional)</label>
+        <textarea
+          id="galleryDescription"
+          rows="3"
+          maxlength="5000"
+          placeholder="Describe this photo..."
+        ></textarea>
+
+        <label for="galleryImageUrl">Image URL</label>
+        <input
+          id="galleryImageUrl"
+          type="url"
+          maxlength="2000"
+          required
+          placeholder="https://example.com/church-photo.jpg"
+        >
+
+        <label style="display:block;margin:12px 0;">
+          <input id="galleryPublished" type="checkbox">
+          Publish photo on the public website
+        </label>
+
+        <button id="saveGalleryButton" type="submit">Add Photo</button>
+        <button id="cancelGalleryButton" type="button" hidden>Cancel Edit</button>
+      </form>
+
+      <p id="galleryStatus" role="status"></p>
+      <hr style="margin:20px 0;">
+      <h3>Existing Photos</h3>
+      <button id="refreshGalleryButton" type="button">Refresh Photos</button>
+      <div id="galleryList">Gallery photos will appear here.</div>
+    </section>
+
   </main>
 
   <script>
