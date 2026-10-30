@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 "Join us every Sunday morning for a Spirit-filled worship service. We begin with praise and worship, followed by a powerful message from God's Word. Children's ministry is available. All are welcome — come as you are and leave encouraged!",
             time: "9:00 AM - 12:00 PM",
             location: "Imperishable Crown Bible Baptist Church",
-            image: "1.png"
+            image: "17.png"
         },
         {
             date: "31",
