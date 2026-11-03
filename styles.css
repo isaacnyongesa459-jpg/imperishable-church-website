@@ -1,6 +1,6 @@
 /* ========================================
 IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
-WELCOME PAGE STYLES
+WELCOME PAGE STYLES (MATCHED TO HOME PAGE)
 ======================================== */
 
 /* ========================================
@@ -30,13 +30,8 @@ body {
 
     color: #ffffff;
 
-    /* Navy / blue-purple gradient */
-    background: linear-gradient(
-        135deg,
-        #111827,
-        #162447,
-        #243b6b
-    );
+    /* Solid deep navy background matched to screenshot */
+    background-color: #0b172a;
 }
 
 /* ========================================
@@ -44,37 +39,25 @@ BACKGROUND DECORATION
 ======================================== */
 body::before {
     content: "";
-
     position: absolute;
-
     width: 500px;
     height: 500px;
-
     top: -250px;
     left: -250px;
-
     border-radius: 50%;
-
-    background: rgba(255, 255, 255, 0.035);
-
+    background: rgba(255, 255, 255, 0.02);
     pointer-events: none;
 }
 
 body::after {
     content: "";
-
     position: absolute;
-
     width: 450px;
     height: 450px;
-
     right: -225px;
     bottom: -225px;
-
     border-radius: 50%;
-
-    background: rgba(255, 255, 255, 0.035);
-
+    background: rgba(255, 255, 255, 0.02);
     pointer-events: none;
 }
 
@@ -113,126 +96,126 @@ CHURCH ICON
 
     border-radius: 50%;
 
-    background: rgba(255, 255, 255, 0.08);
-
-    border: 1px solid rgba(255, 255, 255, 0.16);
-
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
+    /* Subtle glass effect */
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.3);
 
     animation: iconFloat 3s ease-in-out infinite;
 }
 
 .church-icon i {
     font-size: 42px;
-
-    color: #b58a25;
+    /* Gold accent */
+    color: #c49a2c;
 }
 
 /* ========================================
 CHURCH NAME
 ======================================== */
 h1 {
-    font-size: clamp(2rem, 5vw, 4rem);
-
+    font-size: clamp(2rem, 5vw, 3.5rem);
     line-height: 1.15;
-
     font-weight: 800;
-
-    letter-spacing: -1px;
-
+    letter-spacing: -0.5px;
     margin-bottom: 15px;
-
     color: #ffffff;
-
-    text-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+    text-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
 }
 
 h1 span {
     display: block;
-
-    font-size: 0.62em;
-
-    font-weight: 600;
-
-    letter-spacing: 1px;
-
-    margin-top: 8px;
-
-    color: #b58a25;
+    font-size: 0.65em;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-top: 10px;
+    color: #ffffff;
 }
 
 /* ========================================
 TAGLINE
 ======================================== */
 .tagline {
-    font-size: clamp(0.95rem, 2vw, 1.2rem);
-
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
     font-weight: 300;
-
     letter-spacing: 0.5px;
-
     color: rgba(255, 255, 255, 0.85);
-
-    margin-bottom: 35px;
+    margin-bottom: 40px;
+    line-height: 1.6;
 }
 
 /* ========================================
-JOIN BUTTON
+BUTTONS CONTAINER
 ======================================== */
-.join-btn {
-    display: inline-flex;
-
-    align-items: center;
-    justify-content: center;
-
-    gap: 12px;
-
-    min-width: 210px;
-
-    padding: 15px 25px;
-
-    border-radius: 50px;
-
-    text-decoration: none;
-
-    font-family: "Poppins", sans-serif;
-
-    font-size: 0.95rem;
-
-    font-weight: 600;
-
-    color: #162447;
-
-    background: #b58a25;
-
-    border: 1px solid #b58a25;
-
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-
-    transition: transform 0.25s ease, box-shadow 0.25s ease,
-                background 0.25s ease, border-color 0.25s ease;
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
 }
 
-.join-btn i {
-    transition: transform 0.25s ease;
+/* ========================================
+PRIMARY BUTTON (Solid Gold - View Services)
+======================================== */
+.join-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 16px 25px;
+    border-radius: 8px; /* Matched to screenshot */
+    text-decoration: none;
+    font-family: "Poppins", sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #0b172a; /* Dark text on gold */
+    background: #c49a2c;
+    border: 2px solid #c49a2c;
+    transition: all 0.25s ease;
 }
 
 .join-btn:hover {
-    transform: translateY(-4px);
-
-    background: #d1a63a;
-
-    border-color: #d1a63a;
-
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.30);
-}
-
-.join-btn:hover i {
-    transform: translateX(5px);
+    background: #d8ac35;
+    border-color: #d8ac35;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(196, 154, 44, 0.25);
 }
 
 .join-btn:active {
-    transform: translateY(-1px);
+    transform: translateY(0);
+}
+
+/* ========================================
+SECONDARY BUTTON (Outlined - Give Online)
+======================================== */
+.secondary-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    padding: 16px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-family: "Poppins", sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    background: transparent;
+    border: 2px solid #c49a2c;
+    transition: all 0.25s ease;
+}
+
+.secondary-btn:hover {
+    background: rgba(196, 154, 44, 0.1);
+    transform: translateY(-2px);
+}
+
+.secondary-btn:active {
+    transform: translateY(0);
 }
 
 /* ========================================
@@ -240,36 +223,24 @@ VERSE
 ======================================== */
 .verse {
     position: absolute;
-
     left: 50%;
     bottom: 30px;
-
     transform: translateX(-50%);
-
     width: min(90%, 700px);
-
     z-index: 2;
-
     display: flex;
-
     justify-content: center;
     align-items: center;
-
     gap: 10px;
-
     text-align: center;
-
-    color: rgba(255, 255, 255, 0.72);
-
+    color: rgba(255, 255, 255, 0.6);
     font-size: 0.85rem;
-
     font-weight: 300;
-
     line-height: 1.6;
 }
 
 .verse i {
-    color: #b58a25;
+    color: #c49a2c;
 }
 
 .verse p {
@@ -278,21 +249,15 @@ VERSE
 
 .verse span {
     font-weight: 500;
-
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.8);
 }
 
 /* ========================================
 ANIMATIONS
 ======================================== */
 @keyframes iconFloat {
-    0%, 100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-8px);
-    }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
 }
 
 @keyframes pageAppear {
@@ -300,7 +265,6 @@ ANIMATIONS
         opacity: 0;
         transform: translateY(20px);
     }
-
     to {
         opacity: 1;
         transform: translateY(0);
@@ -310,17 +274,16 @@ ANIMATIONS
 /* ========================================
 KEYBOARD ACCESSIBILITY
 ======================================== */
-.join-btn:focus-visible {
+.join-btn:focus-visible,
+.secondary-btn:focus-visible {
     outline: 3px solid #ffffff;
-
-    outline-offset: 5px;
+    outline-offset: 4px;
 }
 
 /* ========================================
 MOBILE RESPONSIVENESS
 ======================================== */
 @media (max-width: 600px) {
-
     body {
         padding: 20px;
     }
@@ -332,7 +295,6 @@ MOBILE RESPONSIVENESS
     .church-icon {
         width: 80px;
         height: 80px;
-
         margin-bottom: 20px;
     }
 
@@ -341,43 +303,40 @@ MOBILE RESPONSIVENESS
     }
 
     h1 {
-        font-size: 2rem;
-
-        letter-spacing: -0.5px;
+        font-size: 2.2rem;
     }
 
     h1 span {
-        font-size: 0.65em;
+        font-size: 0.6em;
+        margin-top: 8px;
     }
 
     .tagline {
-        margin-bottom: 28px;
+        font-size: 0.95rem;
+        margin-bottom: 30px;
     }
 
-    .join-btn {
-        width: 100%;
+    .button-group {
+        max-width: 100%;
+    }
 
-        max-width: 260px;
+    .join-btn,
+    .secondary-btn {
+        padding: 14px 20px;
+        font-size: 0.95rem;
     }
 
     .verse {
         bottom: 18px;
-
-        font-size: 0.72rem;
-
+        font-size: 0.75rem;
         width: 90%;
     }
 }
 
-/* ========================================
-VERY SMALL SCREENS
-======================================== */
-@media (max-height: 600px) {
-
+@media (max-height: 650px) {
     .church-icon {
         width: 65px;
         height: 65px;
-
         margin-bottom: 12px;
     }
 
@@ -390,11 +349,12 @@ VERY SMALL SCREENS
     }
 
     .tagline {
-        margin-bottom: 18px;
+        margin-bottom: 20px;
     }
 
-    .join-btn {
-        padding: 11px 22px;
+    .join-btn,
+    .secondary-btn {
+        padding: 12px 20px;
     }
 
     .verse {
