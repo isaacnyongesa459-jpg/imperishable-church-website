@@ -1,319 +1,511 @@
-/* ========================================
-IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
-WELCOME PAGE STYLES
-======================================== */
+/* =================================
+   IMPERISHABLE CROWN
+   CINEMATIC ENTRANCE
+================================= */
 
-/* ========================================
-RESET
-======================================== */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* ========================================
-BODY
-======================================== */
 body {
-  min-height: 100vh;
-  font-family: "Poppins", sans-serif;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-  color: #ffffff;
+    min-height: 100vh;
+    overflow: hidden;
 
-  /* Same navy color family as other pages */
-  background: linear-gradient(135deg, #111827, #162447, #243b6b);
+    font-family: "Poppins", sans-serif;
+
+    background:
+        linear-gradient(
+            rgba(5, 10, 17, 0.62),
+            rgba(5, 10, 17, 0.78)
+        ),
+        url("images/church-entrance.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: white;
 }
 
-/* ========================================
-BACKGROUND DECORATION
-======================================== */
-body::before {
-  content: "";
-  position: absolute;
-  width: 500px;
-  height: 500px;
-  top: -250px;
-  left: -250px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.035);
-  pointer-events: none;
-}
 
-body::after {
-  content: "";
-  position: absolute;
-  width: 450px;
-  height: 450px;
-  right: -225px;
-  bottom: -225px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.035);
-  pointer-events: none;
-}
+/* =================================
+   MAIN CONTENT
+================================= */
 
-/* ========================================
-SPLASH CONTAINER
-======================================== */
 .splash-container {
-  width: min(90%, 850px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  position: relative;
-  z-index: 2;
-  padding: 30px;
-  animation: pageAppear 0.9s ease forwards;
+    width: 90%;
+    max-width: 850px;
+
+    text-align: center;
+
+    position: relative;
+    z-index: 5;
+
+    padding: 25px;
+
+    animation: appear 1.2s ease;
+
+    transition:
+        opacity 0.5s ease,
+        transform 0.7s ease;
 }
 
-/* ========================================
-CHURCH ICON
-======================================== */
 .church-icon {
-  width: 95px;
-  height: 95px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 25px;
-  border-radius: 50%;
+    width: 85px;
+    height: 85px;
 
-  /* Same white-card/glass feeling */
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.25);
-  animation: iconFloat 3s ease-in-out infinite;
+    margin: 0 auto 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(207, 170, 83, 0.7);
+    border-radius: 50%;
+
+    background: rgba(0, 0, 0, 0.3);
+
+    box-shadow: 0 0 35px rgba(181, 138, 37, 0.2);
 }
 
 .church-icon i {
-  font-size: 42px;
-  /* Church gold */
-  color: #b58a25;
+    font-size: 38px;
+    color: #d3aa51;
 }
 
-/* ========================================
-CHURCH NAME
-======================================== */
+.welcome-label {
+    color: #d3aa51;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    letter-spacing: 5px;
+
+    margin-bottom: 15px;
+}
+
+
+/* =================================
+   CHURCH NAME
+================================= */
+
 h1 {
-  font-size: clamp(2rem, 5vw, 4rem);
-  line-height: 1.15;
-  font-weight: 800;
-  letter-spacing: -1px;
-  margin-bottom: 15px;
-  color: #ffffff;
-  text-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+    font-size: clamp(2rem, 5vw, 4rem);
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+    line-height: 1.2;
+
+    text-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
 }
 
 h1 span {
-  display: block;
-  font-size: 0.62em;
-  font-weight: 600;
-  letter-spacing: 1px;
-  margin-top: 8px;
-  /* Same gold used throughout the website */
-  color: #b58a25;
+    display: block;
+
+    font-size: 0.48em;
+
+    letter-spacing: 3px;
+
+    color: #d3aa51;
+
+    margin-top: 12px;
 }
 
-/* ========================================
-TAGLINE
-======================================== */
+.gold-line {
+    width: 85px;
+    height: 2px;
+
+    background: #d3aa51;
+
+    margin: 25px auto;
+}
+
 .tagline {
-  font-size: clamp(0.95rem, 2vw, 1.2rem);
-  font-weight: 300;
-  letter-spacing: 0.5px;
-  color: rgba(255, 255, 255, 0.85);
-  margin-bottom: 35px;
+    font-size: 15px;
+
+    font-weight: 300;
+
+    letter-spacing: 1px;
+
+    color: rgba(255, 255, 255, 0.9);
+
+    margin-bottom: 32px;
 }
 
-/* ========================================
-JOIN BUTTON
-======================================== */
+
+/* =================================
+   JOIN BUTTON
+================================= */
+
 .join-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  min-width: 210px;
-  padding: 15px 25px;
-  border-radius: 50px;
-  text-decoration: none;
-  font-family: "Poppins", sans-serif;
-  font-size: 0.95rem;
-  font-weight: 600;
-  /* Dark navy text on gold */
-  color: #162447;
-  /* Same gold accent */
-  background: #b58a25;
-  border: 1px solid #b58a25;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-  transition: transform 0.25s ease, box-shadow 0.25s ease,
-              background 0.25s ease, border-color 0.25s ease;
-}
+    display: inline-flex;
 
-.join-btn i {
-  transition: transform 0.25s ease;
+    justify-content: center;
+    align-items: center;
+
+    gap: 15px;
+
+    min-width: 220px;
+
+    padding: 16px 28px;
+
+    background: #b58a25;
+
+    color: #111827;
+
+    text-decoration: none;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    letter-spacing: 2px;
+
+    border: 1px solid #d3aa51;
+    border-radius: 4px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+
+    transition: all 0.3s ease;
 }
 
 .join-btn:hover {
-  transform: translateY(-4px);
-  background: #d1a63a;
-  border-color: #d1a63a;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.30);
+    background: #e0bc68;
+
+    transform: translateY(-4px);
+
+    box-shadow: 0 12px 35px rgba(181, 138, 37, 0.35);
+}
+
+.join-btn i {
+    transition: transform 0.3s ease;
 }
 
 .join-btn:hover i {
-  transform: translateX(5px);
+    transform: translateX(6px);
 }
 
-.join-btn:active {
-  transform: translateY(-1px);
+.join-btn:focus-visible {
+    outline: 3px solid white;
+    outline-offset: 5px;
 }
 
-/* ========================================
-VERSE
-======================================== */
+.entrance-note {
+    margin-top: 25px;
+
+    font-size: 11px;
+
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.entrance-note i {
+    color: #d3aa51;
+    margin-right: 5px;
+}
+
+
+/* =================================
+   CINEMATIC CHURCH DOORS
+================================= */
+
+.door {
+    position: fixed;
+
+    top: 0;
+    width: 50%;
+    height: 100vh;
+
+    z-index: 3;
+
+    perspective: 1500px;
+
+    background: #24170e;
+
+    transition:
+        transform 1.7s cubic-bezier(0.77, 0, 0.18, 1);
+
+    pointer-events: none;
+}
+
+.door-left {
+    left: 0;
+
+    transform-origin: right center;
+}
+
+.door-right {
+    right: 0;
+
+    transform-origin: left center;
+}
+
+
+/* =================================
+   WOODEN DOOR DESIGN
+================================= */
+
+.door-frame {
+    position: absolute;
+
+    inset: 12px;
+
+    border: 7px solid #4a2c16;
+
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #432716 0px,
+            #654025 18px,
+            #382012 35px,
+            #754b2a 48px
+        );
+
+    box-shadow:
+        inset 0 0 25px rgba(0, 0, 0, 0.8),
+        0 0 20px rgba(0, 0, 0, 0.7);
+}
+
+.door-panel-design {
+    position: absolute;
+
+    inset: 8% 12%;
+
+    border: 3px solid #9a7040;
+
+    box-shadow:
+        inset 0 0 15px rgba(0, 0, 0, 0.6);
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 220, 150, 0.08),
+            transparent
+        );
+}
+
+.door-panel-design::before,
+.door-panel-design::after {
+    content: "";
+
+    position: absolute;
+
+    left: 10%;
+    right: 10%;
+
+    height: 30%;
+
+    border: 5px solid #865a32;
+
+    box-shadow:
+        inset 0 0 15px rgba(0, 0, 0, 0.6),
+        0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.door-panel-design::before {
+    top: 8%;
+}
+
+.door-panel-design::after {
+    bottom: 8%;
+}
+
+
+/* =================================
+   DOOR HANDLES
+================================= */
+
+.door-handle {
+    position: absolute;
+
+    top: 50%;
+
+    width: 15px;
+    height: 15px;
+
+    border-radius: 50%;
+
+    background: radial-gradient(
+        circle at 30% 30%,
+        #fff0a5,
+        #bd8731,
+        #654014
+    );
+
+    box-shadow:
+        0 0 10px rgba(255, 202, 91, 0.5);
+}
+
+.door-left .door-handle {
+    right: 8%;
+}
+
+.door-right .door-handle {
+    left: 8%;
+}
+
+
+/* =================================
+   OPENING ANIMATION
+================================= */
+
+body.is-opening .door-left {
+    transform: rotateY(-110deg);
+}
+
+body.is-opening .door-right {
+    transform: rotateY(110deg);
+}
+
+body.is-opening .splash-container,
+body.is-opening .verse {
+    opacity: 0;
+
+    transform: scale(0.9);
+
+    pointer-events: none;
+}
+
+body.is-opening .verse {
+    opacity: 0;
+}
+
+
+/* =================================
+   BIBLE VERSE
+================================= */
+
 .verse {
-  position: absolute;
-  left: 50%;
-  bottom: 30px;
-  transform: translateX(-50%);
-  width: min(90%, 700px);
-  z-index: 2;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  text-align: center;
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 0.85rem;
-  font-weight: 300;
-  line-height: 1.6;
+    position: absolute;
+
+    bottom: 25px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 90%;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 10px;
+
+    z-index: 5;
+
+    text-align: center;
+
+    font-size: 12px;
+
+    color: rgba(255, 255, 255, 0.8);
+
+    transition: opacity 0.5s ease;
 }
 
 .verse i {
-  color: #b58a25;
-}
-
-.verse p {
-  margin: 0;
+    color: #d3aa51;
 }
 
 .verse span {
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
+    color: #d3aa51;
+    font-weight: 600;
 }
 
-/* ========================================
-ANIMATIONS
-======================================== */
-@keyframes iconFloat {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-8px);
-  }
+
+/* =================================
+   ANIMATIONS
+================================= */
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(25px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-@keyframes pageAppear {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-/* ========================================
-KEYBOARD ACCESSIBILITY
-======================================== */
-.join-btn:focus-visible {
-  outline: 3px solid #ffffff;
-  outline-offset: 5px;
-}
+/* =================================
+   MOBILE RESPONSIVENESS
+================================= */
 
-/* ========================================
-MOBILE RESPONSIVENESS
-======================================== */
 @media (max-width: 600px) {
-  body {
-    padding: 20px;
-  }
 
-  .splash-container {
-    padding: 20px 10px;
-  }
+    .splash-container {
+        padding: 15px 5px;
+    }
 
-  .church-icon {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 20px;
-  }
+    .church-icon {
+        width: 70px;
+        height: 70px;
+    }
 
-  .church-icon i {
-    font-size: 34px;
-  }
+    .church-icon i {
+        font-size: 30px;
+    }
 
-  h1 {
-    font-size: 2rem;
-    letter-spacing: -0.5px;
-  }
+    .welcome-label {
+        font-size: 10px;
+        letter-spacing: 3px;
+    }
 
-  h1 span {
-    font-size: 0.65em;
-  }
+    h1 {
+        font-size: 2rem;
+    }
 
-  .tagline {
-    margin-bottom: 28px;
-  }
+    h1 span {
+        font-size: 0.45em;
+        letter-spacing: 1.5px;
+        line-height: 1.6;
+    }
 
-  .join-btn {
-    width: 100%;
-    max-width: 260px;
-  }
+    .tagline {
+        font-size: 12px;
+    }
 
-  .verse {
-    bottom: 18px;
-    font-size: 0.72rem;
-    width: 90%;
-  }
+    .join-btn {
+        width: 90%;
+        max-width: 250px;
+    }
+
+    .door-frame {
+        inset: 5px;
+        border-width: 4px;
+    }
+
+    .door-panel-design {
+        inset: 10% 8%;
+    }
+
+    .verse {
+        bottom: 15px;
+        font-size: 10px;
+    }
 }
 
-/* ========================================
-VERY SMALL SCREENS
-======================================== */
-@media (max-height: 600px) {
-  .church-icon {
-    width: 65px;
-    height: 65px;
-    margin-bottom: 12px;
-  }
 
-  .church-icon i {
-    font-size: 28px;
-  }
+/* =================================
+   ACCESSIBILITY
+================================= */
 
-  h1 {
-    font-size: 1.7rem;
-  }
+@media (prefers-reduced-motion: reduce) {
 
-  .tagline {
-    margin-bottom: 18px;
-  }
-
-  .join-btn {
-    padding: 11px 22px;
-  }
-
-  .verse {
-    bottom: 10px;
-  }
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
 }
