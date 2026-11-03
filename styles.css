@@ -1,6 +1,6 @@
 /* ========================================
 IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
-WELCOME PAGE STYLES (MATCHED TO HOME PAGE)
+WELCOME PAGE STYLES (EXACT MATCH)
 ======================================== */
 
 /* ========================================
@@ -17,21 +17,17 @@ BODY
 ======================================== */
 body {
     min-height: 100vh;
-
     font-family: "Poppins", sans-serif;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
     position: relative;
     overflow: hidden;
-
     color: #ffffff;
 
-    /* Solid deep navy background matched to screenshot */
-    background-color: #0b172a;
+    /* EXACT dark navy background from screenshot */
+    background-color: #0a1428;
 }
 
 /* ========================================
@@ -66,18 +62,13 @@ SPLASH CONTAINER
 ======================================== */
 .splash-container {
     width: min(90%, 850px);
-
     display: flex;
     flex-direction: column;
     align-items: center;
-
     text-align: center;
-
     position: relative;
     z-index: 2;
-
     padding: 30px;
-
     animation: pageAppear 0.9s ease forwards;
 }
 
@@ -87,27 +78,21 @@ CHURCH ICON
 .church-icon {
     width: 95px;
     height: 95px;
-
     display: flex;
     justify-content: center;
     align-items: center;
-
     margin-bottom: 25px;
-
     border-radius: 50%;
-
-    /* Subtle glass effect */
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 10px 35px rgba(0, 0, 0, 0.3);
-
     animation: iconFloat 3s ease-in-out infinite;
 }
 
 .church-icon i {
     font-size: 42px;
     /* Gold accent */
-    color: #c49a2c;
+    color: #cda434;
 }
 
 /* ========================================
@@ -115,8 +100,8 @@ CHURCH NAME
 ======================================== */
 h1 {
     font-size: clamp(2rem, 5vw, 3.5rem);
-    line-height: 1.15;
-    font-weight: 800;
+    line-height: 1.2;
+    font-weight: 700;
     letter-spacing: -0.5px;
     margin-bottom: 15px;
     color: #ffffff;
@@ -128,7 +113,7 @@ h1 span {
     font-size: 0.65em;
     font-weight: 700;
     letter-spacing: 0.5px;
-    margin-top: 10px;
+    margin-top: 5px;
     color: #ffffff;
 }
 
@@ -142,6 +127,7 @@ TAGLINE
     color: rgba(255, 255, 255, 0.85);
     margin-bottom: 40px;
     line-height: 1.6;
+    max-width: 600px;
 }
 
 /* ========================================
@@ -150,9 +136,9 @@ BUTTONS CONTAINER
 .button-group {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 16px;
     width: 100%;
-    max-width: 320px;
+    max-width: 340px;
     margin: 0 auto;
 }
 
@@ -163,25 +149,26 @@ PRIMARY BUTTON (Solid Gold - View Services)
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
     width: 100%;
     padding: 16px 25px;
-    border-radius: 8px; /* Matched to screenshot */
+    border-radius: 8px;
     text-decoration: none;
     font-family: "Poppins", sans-serif;
     font-size: 1rem;
     font-weight: 600;
-    color: #0b172a; /* Dark text on gold */
-    background: #c49a2c;
-    border: 2px solid #c49a2c;
+    /* Dark navy text on gold */
+    color: #0a1428; 
+    /* Exact gold from screenshot */
+    background: #cda434; 
+    border: 2px solid #cda434;
     transition: all 0.25s ease;
 }
 
 .join-btn:hover {
-    background: #d8ac35;
-    border-color: #d8ac35;
+    background: #e0b73e;
+    border-color: #e0b73e;
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(196, 154, 44, 0.25);
+    box-shadow: 0 8px 20px rgba(205, 164, 52, 0.25);
 }
 
 .join-btn:active {
@@ -189,13 +176,12 @@ PRIMARY BUTTON (Solid Gold - View Services)
 }
 
 /* ========================================
-SECONDARY BUTTON (Outlined - Give Online)
+SECONDARY BUTTON (Outlined Gold - Give Online)
 ======================================== */
 .secondary-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
     width: 100%;
     padding: 16px 25px;
     border-radius: 8px;
@@ -204,13 +190,15 @@ SECONDARY BUTTON (Outlined - Give Online)
     font-size: 1rem;
     font-weight: 600;
     color: #ffffff;
+    /* Transparent background */
     background: transparent;
-    border: 2px solid #c49a2c;
+    /* Exact gold border from screenshot */
+    border: 2px solid #cda434;
     transition: all 0.25s ease;
 }
 
 .secondary-btn:hover {
-    background: rgba(196, 154, 44, 0.1);
+    background: rgba(205, 164, 52, 0.1);
     transform: translateY(-2px);
 }
 
@@ -240,7 +228,7 @@ VERSE
 }
 
 .verse i {
-    color: #c49a2c;
+    color: #cda434;
 }
 
 .verse p {
@@ -308,7 +296,7 @@ MOBILE RESPONSIVENESS
 
     h1 span {
         font-size: 0.6em;
-        margin-top: 8px;
+        margin-top: 5px;
     }
 
     .tagline {
@@ -322,7 +310,7 @@ MOBILE RESPONSIVENESS
 
     .join-btn,
     .secondary-btn {
-        padding: 14px 20px;
+        padding: 15px 20px;
         font-size: 0.95rem;
     }
 
