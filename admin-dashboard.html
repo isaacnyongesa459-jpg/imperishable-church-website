@@ -165,6 +165,398 @@
         <div id="totalRecords" class="amount">0</div>
       </div>
     </section>
+    
+<!-- =====================================
+     CHURCH MEMBERS MANAGEMENT
+===================================== -->
+
+<section class="card" id="membersSection">
+  <h2>Church Members Management</h2>
+  <p>Register, search and manage church members.</p>
+
+  <form id="memberForm">
+    <input type="hidden" id="memberId">
+
+    <label for="memberFirstName">First Name</label>
+    <input type="text" id="memberFirstName" required maxlength="100"
+      placeholder="Enter first name">
+
+    <label for="memberLastName">Last Name</label>
+    <input type="text" id="memberLastName" required maxlength="100"
+      placeholder="Enter last name">
+
+    <label for="memberGender">Gender</label>
+    <select id="memberGender">
+      <option value="">Select gender</option>
+      <option value="Male">Male</option>
+      <option value="Female">Female</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label for="memberPhone">Phone Number</label>
+    <input type="tel" id="memberPhone" maxlength="30"
+      placeholder="e.g. 0712345678">
+
+    <label for="memberEmail">Email Address</label>
+    <input type="email" id="memberEmail" maxlength="150"
+      placeholder="member@example.com">
+
+    <label for="memberDob">Date of Birth</label>
+    <input type="date" id="memberDob">
+
+    <label for="memberAddress">Address</label>
+    <textarea id="memberAddress" rows="2"
+      placeholder="Enter member's address"></textarea>
+
+    <label for="memberMinistry">Ministry</label>
+    <input type="text" id="memberMinistry" maxlength="100"
+      placeholder="e.g. Youth Ministry">
+
+    <label for="memberStatus">Membership Status</label>
+    <select id="memberStatus">
+      <option value="active">Active</option>
+      <option value="inactive">Inactive</option>
+    </select>
+
+    <button type="submit" id="saveMemberButton">
+      Register Member
+    </button>
+
+    <button type="button" id="cancelMemberEdit" hidden>
+      Cancel Edit
+    </button>
+  </form>
+
+  <p id="memberMessage" role="status"></p>
+
+  <hr style="margin:20px 0;">
+
+  <h3>Registered Members</h3>
+
+  <input
+    type="text"
+    id="memberSearch"
+    placeholder="Search by name, phone or email..."
+  >
+
+  <button type="button" id="refreshMembersButton">
+    Refresh Members
+  </button>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Email</th>
+          <th>Ministry</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="membersTableBody">
+        <tr>
+          <td colspan="6">Loading members...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- =====================================
+     CHURCH ATTENDANCE MANAGEMENT
+===================================== -->
+
+<section class="card" id="attendanceSection">
+  <h2>Church Attendance Management</h2>
+  <p>Record and monitor attendance during church services.</p>
+
+  <form id="attendanceForm">
+    <label for="attendanceMember">Member ID (optional)</label>
+    <input
+      type="number"
+      id="attendanceMember"
+      min="1"
+      placeholder="Enter registered member ID"
+    >
+
+    <label for="attendeeName">Attendee Name</label>
+    <input
+      type="text"
+      id="attendeeName"
+      maxlength="150"
+      required
+      placeholder="Enter attendee's full name"
+    >
+
+    <label for="attendanceService">Service</label>
+    <select id="attendanceService" required>
+      <option value="">Select service</option>
+      <option value="Sunday First Service">Sunday First Service</option>
+      <option value="Sunday Second Service">Sunday Second Service</option>
+      <option value="Midweek Service">Midweek Service</option>
+      <option value="Prayer Meeting">Prayer Meeting</option>
+      <option value="Special Service">Special Service</option>
+    </select>
+
+    <label for="attendanceDate">Attendance Date</label>
+    <input type="date" id="attendanceDate" required>
+
+    <label for="attendanceType">Attendee Type</label>
+    <select id="attendanceType" required>
+      <option value="member">Member</option>
+      <option value="visitor">Visitor</option>
+      <option value="child">Child</option>
+    </select>
+
+    <button type="submit" id="saveAttendanceButton">
+      Record Attendance
+    </button>
+  </form>
+
+  <p id="attendanceMessage" role="status"></p>
+
+  <hr style="margin:20px 0;">
+
+  <h3>Attendance Records</h3>
+
+  <label for="attendanceFilterDate">Filter by Date</label>
+  <input type="date" id="attendanceFilterDate">
+
+  <button type="button" id="loadAttendanceButton">
+    Load Attendance
+  </button>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Service</th>
+          <th>Date</th>
+          <th>Type</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="attendanceTableBody">
+        <tr>
+          <td colspan="5">Loading attendance...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- =====================================
+     CHURCH EXPENSES MANAGEMENT
+===================================== -->
+
+<section class="card" id="expensesSection">
+  <h2>Church Expenses Management</h2>
+  <p>Record and manage church expenditure.</p>
+
+  <form id="expenseForm">
+    <input type="hidden" id="expenseId">
+
+    <label for="expenseTitle">Expense Title</label>
+    <input
+      type="text"
+      id="expenseTitle"
+      maxlength="200"
+      required
+      placeholder="e.g. Electricity bill"
+    >
+
+    <label for="expenseCategory">Expense Category</label>
+    <select id="expenseCategory" required>
+      <option value="">Select category</option>
+      <option value="Utilities">Utilities</option>
+      <option value="Transport">Transport</option>
+      <option value="Equipment">Equipment</option>
+      <option value="Maintenance">Maintenance</option>
+      <option value="Welfare">Welfare</option>
+      <option value="Salaries">Salaries</option>
+      <option value="Events">Events</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label for="expenseAmount">Amount (KES)</label>
+    <input
+      type="number"
+      id="expenseAmount"
+      min="0.01"
+      max="9999999999.99"
+      step="0.01"
+      required
+      placeholder="Enter amount"
+    >
+
+    <label for="expensePaymentMethod">Payment Method</label>
+    <select id="expensePaymentMethod" required>
+      <option value="Cash">Cash</option>
+      <option value="M-PESA">M-PESA</option>
+      <option value="Bank Transfer">Bank Transfer</option>
+      <option value="Cheque">Cheque</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label for="expenseDate">Expense Date</label>
+    <input type="date" id="expenseDate" required>
+
+    <label for="expenseDescription">Description</label>
+    <textarea
+      id="expenseDescription"
+      rows="3"
+      placeholder="Additional details about this expense"
+    ></textarea>
+
+    <button type="submit" id="saveExpenseButton">
+      Record Expense
+    </button>
+
+    <button type="button" id="cancelExpenseEdit" hidden>
+      Cancel Edit
+    </button>
+  </form>
+
+  <p id="expenseMessage" role="status"></p>
+
+  <hr style="margin:20px 0;">
+
+  <h3>Expense Records</h3>
+
+  <label for="expenseFilterCategory">Filter by Category</label>
+  <select id="expenseFilterCategory">
+    <option value="">All Categories</option>
+    <option value="Utilities">Utilities</option>
+    <option value="Transport">Transport</option>
+    <option value="Equipment">Equipment</option>
+    <option value="Maintenance">Maintenance</option>
+    <option value="Welfare">Welfare</option>
+    <option value="Salaries">Salaries</option>
+    <option value="Events">Events</option>
+    <option value="Other">Other</option>
+  </select>
+
+  <label for="expenseStartDate">From Date</label>
+  <input type="date" id="expenseStartDate">
+
+  <label for="expenseEndDate">To Date</label>
+  <input type="date" id="expenseEndDate">
+
+  <button type="button" id="filterExpensesButton">
+    Apply Filters
+  </button>
+
+  <button type="button" id="refreshExpensesButton">
+    Refresh Expenses
+  </button>
+
+  <h3>Total Expenses: <span id="expenseTotal">KES 0.00</span></h3>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Category</th>
+          <th>Amount</th>
+          <th>Payment</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody id="expensesTableBody">
+        <tr>
+          <td colspan="6">Loading expenses...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- =====================================
+     CHURCH FINANCIAL REPORTS
+===================================== -->
+
+<section class="card" id="financialReportsSection">
+  <h2>Church Financial Reports</h2>
+  <p>Monitor donations, expenditure and church finances.</p>
+
+  <div class="dashboard-stats">
+    <div class="stat-card">
+      <h3>Total Donations</h3>
+      <p id="reportTotalDonations">KES 0.00</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Total Expenses</h3>
+      <p id="reportTotalExpenses">KES 0.00</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Available Balance</h3>
+      <p id="reportBalance">KES 0.00</p>
+    </div>
+
+    <div class="stat-card">
+      <h3>Pending Donations</h3>
+      <p id="reportPendingDonations">0</p>
+    </div>
+  </div>
+
+  <hr style="margin:25px 0;">
+
+  <h3>Filter Financial Reports</h3>
+
+  <label for="reportStartDate">Start Date</label>
+  <input type="date" id="reportStartDate">
+
+  <label for="reportEndDate">End Date</label>
+  <input type="date" id="reportEndDate">
+
+  <button type="button" id="generateFinancialReport">
+    Generate Report
+  </button>
+
+  <p id="financialReportMessage" role="status"></p>
+
+  <hr style="margin:25px 0;">
+
+  <h3>Monthly Donations and Expenses</h3>
+
+  <div class="table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Donations</th>
+          <th>Expenses</th>
+          <th>Difference</th>
+        </tr>
+      </thead>
+
+      <tbody id="monthlyFinancialTable">
+        <tr>
+          <td colspan="4">Loading financial reports...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>
+    <strong>Successful Donations:</strong>
+    <span id="successfulDonationCount">0</span>
+  </p>
+
+  <p>
+    <strong>Expense Records:</strong>
+    <span id="financialExpenseCount">0</span>
+  </p>
+</section>
+
     <section class="card">
       <h2>Church Announcements</h2>
       <p>Create and manage announcements for your church.</p>
@@ -758,11 +1150,739 @@
 
     refreshGalleryButton.addEventListener("click", loadGallery);
 
-    // Initialize Dashboard Loads
+   
+// ========================================
+// CHURCH MEMBERS MANAGEMENT
+// ========================================
+
+const memberForm = document.getElementById("memberForm");
+const memberId = document.getElementById("memberId");
+const memberMessage = document.getElementById("memberMessage");
+const membersTableBody = document.getElementById("membersTableBody");
+const memberSearch = document.getElementById("memberSearch");
+const saveMemberButton = document.getElementById("saveMemberButton");
+const cancelMemberEdit = document.getElementById("cancelMemberEdit");
+
+let membersSearchTimeout;
+
+async function memberRequest(path, options = {}) {
+  const response = await fetch(`${API}${path}`, {
+    ...options,
+    credentials: "include",
+    cache: "no-store",
+    headers: {
+      ...(options.headers || {}),
+      ...(options.body ? { "Content-Type": "application/json" } : {})
+    }
+  });
+
+  const data = await response.json();
+
+  if (response.status === 401) {
+    window.location.replace("admin.html");
+    throw new Error("Your session has expired.");
+  }
+
+  if (!response.ok || !data.success) {
+    throw new Error(data.message || "Member request failed.");
+  }
+
+  return data;
+}
+
+async function loadMembers(search = "") {
+  membersTableBody.innerHTML = `
+    <tr><td colspan="6">Loading members...</td></tr>
+  `;
+
+  try {
+    const data = await memberRequest(
+      `/api/admin/members?search=${encodeURIComponent(search)}`
+    );
+
+    membersTableBody.replaceChildren();
+
+    if (!data.members.length) {
+      membersTableBody.innerHTML = `
+        <tr><td colspan="6">No members found.</td></tr>
+      `;
+      return;
+    }
+
+    data.members.forEach(member => {
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${escapeHTML(member.first_name)} ${escapeHTML(member.last_name)}</td>
+        <td>${escapeHTML(member.phone || "—")}</td>
+        <td>${escapeHTML(member.email || "—")}</td>
+        <td>${escapeHTML(member.ministry || "—")}</td>
+        <td>${escapeHTML(member.membership_status || "active")}</td>
+        <td></td>
+      `;
+
+      const actionsCell = row.lastElementChild;
+
+      const editButton = document.createElement("button");
+      editButton.type = "button";
+      editButton.textContent = "Edit";
+      editButton.style.marginRight = "6px";
+
+      editButton.addEventListener("click", () => {
+        memberId.value = member.id;
+        document.getElementById("memberFirstName").value = member.first_name || "";
+        document.getElementById("memberLastName").value = member.last_name || "";
+        document.getElementById("memberGender").value = member.gender || "";
+        document.getElementById("memberPhone").value = member.phone || "";
+        document.getElementById("memberEmail").value = member.email || "";
+        document.getElementById("memberDob").value =
+          member.date_of_birth
+            ? String(member.date_of_birth).slice(0, 10)
+            : "";
+        document.getElementById("memberAddress").value = member.address || "";
+        document.getElementById("memberMinistry").value = member.ministry || "";
+        document.getElementById("memberStatus").value =
+          member.membership_status || "active";
+
+        saveMemberButton.textContent = "Update Member";
+        cancelMemberEdit.hidden = false;
+        memberMessage.textContent = "Editing member details.";
+
+        memberForm.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      });
+
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.textContent = "Delete";
+      deleteButton.style.background = "#b42318";
+
+      deleteButton.addEventListener("click", async () => {
+        const fullName = `${member.first_name} ${member.last_name}`;
+
+        if (!confirm(`Are you sure you want to delete ${fullName}?`)) {
+          return;
+        }
+
+        deleteButton.disabled = true;
+
+        try {
+          await memberRequest(
+            `/api/admin/members/${encodeURIComponent(member.id)}`,
+            { method: "DELETE" }
+          );
+
+          memberMessage.textContent = "Member deleted successfully.";
+          await loadMembers(memberSearch.value.trim());
+        } catch (error) {
+          memberMessage.textContent = error.message;
+          deleteButton.disabled = false;
+        }
+      });
+
+      actionsCell.append(editButton, deleteButton);
+      membersTableBody.appendChild(row);
+    });
+
+  } catch (error) {
+    membersTableBody.innerHTML = `
+      <tr>
+        <td colspan="6">${escapeHTML(error.message)}</td>
+      </tr>
+    `;
+  }
+}
+
+// REGISTER OR UPDATE MEMBER
+memberForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const id = memberId.value;
+
+  const payload = {
+    first_name: document.getElementById("memberFirstName").value.trim(),
+    last_name: document.getElementById("memberLastName").value.trim(),
+    gender: document.getElementById("memberGender").value,
+    phone: document.getElementById("memberPhone").value.trim(),
+    email: document.getElementById("memberEmail").value.trim(),
+    date_of_birth: document.getElementById("memberDob").value || null,
+    address: document.getElementById("memberAddress").value.trim(),
+    ministry: document.getElementById("memberMinistry").value.trim(),
+    membership_status: document.getElementById("memberStatus").value
+  };
+
+  saveMemberButton.disabled = true;
+  memberMessage.textContent = id ? "Updating member..." : "Registering member...";
+
+  try {
+    await memberRequest(
+      id
+        ? `/api/admin/members/${encodeURIComponent(id)}`
+        : "/api/admin/members",
+      {
+        method: id ? "PUT" : "POST",
+        body: JSON.stringify(payload)
+      }
+    );
+
+    memberMessage.textContent = id
+      ? "Member updated successfully."
+      : "Member registered successfully.";
+
+    resetMemberForm();
+    await loadMembers(memberSearch.value.trim());
+
+  } catch (error) {
+    memberMessage.textContent = error.message;
+  } finally {
+    saveMemberButton.disabled = false;
+  }
+});
+
+function resetMemberForm() {
+  memberForm.reset();
+  memberId.value = "";
+  saveMemberButton.textContent = "Register Member";
+  cancelMemberEdit.hidden = true;
+}
+
+cancelMemberEdit.addEventListener("click", () => {
+  resetMemberForm();
+  memberMessage.textContent = "";
+});
+
+memberSearch.addEventListener("input", () => {
+  clearTimeout(membersSearchTimeout);
+
+  membersSearchTimeout = setTimeout(() => {
+    loadMembers(memberSearch.value.trim());
+  }, 350);
+});
+
+document.getElementById("refreshMembersButton")
+  .addEventListener("click", () => {
+    loadMembers(memberSearch.value.trim());
+  });
+
+// ========================================
+// CHURCH ATTENDANCE MANAGEMENT
+// ========================================
+
+const attendanceForm = document.getElementById("attendanceForm");
+const attendanceMessage = document.getElementById("attendanceMessage");
+const attendanceTableBody = document.getElementById("attendanceTableBody");
+
+document.getElementById("attendanceDate").value =
+  new Date().toLocaleDateString("en-CA");
+
+async function loadAttendance() {
+  const date = document.getElementById("attendanceFilterDate").value;
+
+  attendanceTableBody.innerHTML =
+    '<tr><td colspan="5">Loading attendance...</td></tr>';
+
+  try {
+    const query = date
+      ? `?date=${encodeURIComponent(date)}`
+      : "";
+
+    const data = await memberRequest(
+      `/api/admin/attendance${query}`
+    );
+
+    attendanceTableBody.replaceChildren();
+
+    if (!data.attendance || data.attendance.length === 0) {
+      attendanceTableBody.innerHTML =
+        '<tr><td colspan="5">No attendance records found.</td></tr>';
+      return;
+    }
+
+    data.attendance.forEach(record => {
+      const row = document.createElement("tr");
+
+      row.innerHTML = `
+        <td>${escapeHTML(record.attendee_name)}</td>
+        <td>${escapeHTML(record.service_name)}</td>
+        <td>${escapeHTML(String(record.attendance_date).slice(0, 10))}</td>
+        <td>${escapeHTML(record.attendance_type)}</td>
+        <td></td>
+      `;
+
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.textContent = "Delete";
+
+      deleteButton.addEventListener("click", async () => {
+        if (!confirm("Delete this attendance record?")) return;
+
+        deleteButton.disabled = true;
+
+        try {
+          await memberRequest(
+            `/api/admin/attendance/${encodeURIComponent(record.id)}`,
+            { method: "DELETE" }
+          );
+
+          attendanceMessage.textContent =
+            "Attendance record deleted.";
+
+          await loadAttendance();
+
+        } catch (error) {
+          attendanceMessage.textContent = error.message;
+          deleteButton.disabled = false;
+        }
+      });
+
+      row.lastElementChild.appendChild(deleteButton);
+      attendanceTableBody.appendChild(row);
+    });
+
+  } catch (error) {
+    attendanceTableBody.innerHTML = `
+      <tr><td colspan="5">${escapeHTML(error.message)}</td></tr>
+    `;
+  }
+}
+
+// RECORD ATTENDANCE
+attendanceForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const memberValue =
+    document.getElementById("attendanceMember").value.trim();
+
+  const payload = {
+    member_id: memberValue ? Number(memberValue) : null,
+    attendee_name:
+      document.getElementById("attendeeName").value.trim(),
+    service_name:
+      document.getElementById("attendanceService").value,
+    attendance_date:
+      document.getElementById("attendanceDate").value,
+    attendance_type:
+      document.getElementById("attendanceType").value
+  };
+
+  const saveButton =
+    document.getElementById("saveAttendanceButton");
+
+  saveButton.disabled = true;
+  attendanceMessage.textContent = "Saving attendance...";
+
+  try {
+    await memberRequest("/api/admin/attendance", {
+      method: "POST",
+      body: JSON.stringify(payload)
+    });
+
+    attendanceMessage.textContent =
+      "Attendance recorded successfully.";
+
+    attendanceForm.reset();
+
+    document.getElementById("attendanceDate").value =
+      new Date().toLocaleDateString("en-CA");
+
+    await loadAttendance();
+
+  } catch (error) {
+    attendanceMessage.textContent = error.message;
+  } finally {
+    saveButton.disabled = false;
+  }
+});
+
+document.getElementById("loadAttendanceButton")
+  .addEventListener("click", loadAttendance);
+    
+// ========================================
+// CHURCH EXPENSES MANAGEMENT
+// ========================================
+
+const expenseForm = document.getElementById("expenseForm");
+const expenseMessage = document.getElementById("expenseMessage");
+const expensesTableBody = document.getElementById("expensesTableBody");
+const expenseTotal = document.getElementById("expenseTotal");
+const saveExpenseButton = document.getElementById("saveExpenseButton");
+const cancelExpenseEdit = document.getElementById("cancelExpenseEdit");
+
+function getLocalDateString() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+document.getElementById("expenseDate").value = getLocalDateString();
+
+function formatKES(amount) {
+  return new Intl.NumberFormat("en-KE", {
+    style: "currency",
+    currency: "KES"
+  }).format(Number(amount) || 0);
+}
+
+// LOAD EXPENSES
+async function loadExpenses() {
+  expensesTableBody.innerHTML =
+    '<tr><td colspan="6">Loading expenses...</td></tr>';
+
+  try {
+    const category =
+      document.getElementById("expenseFilterCategory").value;
+
+    const startDate =
+      document.getElementById("expenseStartDate").value;
+
+    const endDate =
+      document.getElementById("expenseEndDate").value;
+
+    if (startDate && endDate && startDate > endDate) {
+      throw new Error("The start date cannot be after the end date.");
+    }
+
+    const params = new URLSearchParams();
+
+    if (category) params.set("category", category);
+    if (startDate) params.set("start_date", startDate);
+    if (endDate) params.set("end_date", endDate);
+
+    const query = params.toString()
+      ? `?${params.toString()}`
+      : "";
+
+    const data = await memberRequest(
+      `/api/admin/expenses${query}`
+    );
+
+    expensesTableBody.replaceChildren();
+
+    const records = data.expenses || [];
+
+    if (records.length === 0) {
+      expensesTableBody.innerHTML =
+        '<tr><td colspan="6">No expense records found.</td></tr>';
+
+      expenseTotal.textContent = formatKES(0);
+      return;
+    }
+
+    let total = 0;
+
+    records.forEach(expense => {
+      total += Number(expense.amount) || 0;
+
+      const row = document.createElement("tr");
+
+      const titleCell = document.createElement("td");
+      titleCell.textContent = expense.expense_title || "";
+
+      const categoryCell = document.createElement("td");
+      categoryCell.textContent = expense.category || "";
+
+      const amountCell = document.createElement("td");
+      amountCell.textContent = formatKES(expense.amount);
+
+      const paymentCell = document.createElement("td");
+      paymentCell.textContent = expense.payment_method || "";
+
+      const dateCell = document.createElement("td");
+      dateCell.textContent =
+        String(expense.expense_date || "").slice(0, 10);
+
+      const actionsCell = document.createElement("td");
+
+      // EDIT BUTTON
+      const editButton = document.createElement("button");
+      editButton.type = "button";
+      editButton.textContent = "Edit";
+
+      editButton.addEventListener("click", () => {
+        document.getElementById("expenseId").value = expense.id;
+        document.getElementById("expenseTitle").value =
+          expense.expense_title || "";
+        document.getElementById("expenseCategory").value =
+          expense.category || "";
+        document.getElementById("expenseAmount").value =
+          expense.amount || "";
+        document.getElementById("expensePaymentMethod").value =
+          expense.payment_method || "Cash";
+        document.getElementById("expenseDate").value =
+          String(expense.expense_date || "").slice(0, 10);
+        document.getElementById("expenseDescription").value =
+          expense.description || "";
+
+        saveExpenseButton.textContent = "Update Expense";
+        cancelExpenseEdit.hidden = false;
+
+        expenseMessage.textContent = "Editing expense record.";
+
+        expenseForm.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      });
+
+      // DELETE BUTTON
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.textContent = "Delete";
+
+      deleteButton.addEventListener("click", async () => {
+        if (!confirm("Are you sure you want to delete this expense?")) {
+          return;
+        }
+
+        deleteButton.disabled = true;
+
+        try {
+          await memberRequest(
+            `/api/admin/expenses/${encodeURIComponent(expense.id)}`,
+            { method: "DELETE" }
+          );
+
+          expenseMessage.textContent =
+            "Expense deleted successfully.";
+
+          await loadExpenses();
+
+        } catch (error) {
+          expenseMessage.textContent = error.message;
+          deleteButton.disabled = false;
+        }
+      });
+
+      actionsCell.append(editButton, deleteButton);
+
+      row.append(
+        titleCell,
+        categoryCell,
+        amountCell,
+        paymentCell,
+        dateCell,
+        actionsCell
+      );
+
+      expensesTableBody.appendChild(row);
+    });
+
+    expenseTotal.textContent = formatKES(total);
+
+  } catch (error) {
+    expensesTableBody.innerHTML = `
+      <tr>
+        <td colspan="6">${escapeHTML(error.message)}</td>
+      </tr>
+    `;
+
+    expenseTotal.textContent = formatKES(0);
+  }
+}
+
+// ADD OR UPDATE EXPENSE
+expenseForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const id = document.getElementById("expenseId").value;
+
+  const payload = {
+    expense_title:
+      document.getElementById("expenseTitle").value.trim(),
+
+    category:
+      document.getElementById("expenseCategory").value,
+
+    amount:
+      Number(document.getElementById("expenseAmount").value),
+
+    payment_method:
+      document.getElementById("expensePaymentMethod").value,
+
+    expense_date:
+      document.getElementById("expenseDate").value,
+
+    description:
+      document.getElementById("expenseDescription").value.trim()
+  };
+
+  if (!Number.isFinite(payload.amount) || payload.amount <= 0) {
+    expenseMessage.textContent =
+      "Please enter a valid amount greater than zero.";
+    return;
+  }
+
+  saveExpenseButton.disabled = true;
+
+  expenseMessage.textContent = id
+    ? "Updating expense..."
+    : "Recording expense...";
+
+  try {
+    await memberRequest(
+      id
+        ? `/api/admin/expenses/${encodeURIComponent(id)}`
+        : "/api/admin/expenses",
+      {
+        method: id ? "PUT" : "POST",
+        body: JSON.stringify(payload)
+      }
+    );
+
+    expenseMessage.textContent = id
+      ? "Expense updated successfully."
+      : "Expense recorded successfully.";
+
+    resetExpenseForm();
+    await loadExpenses();
+
+  } catch (error) {
+    expenseMessage.textContent = error.message;
+  } finally {
+    saveExpenseButton.disabled = false;
+  }
+});
+
+// RESET FORM
+function resetExpenseForm() {
+  expenseForm.reset();
+
+  document.getElementById("expenseId").value = "";
+  document.getElementById("expenseDate").value = getLocalDateString();
+
+  saveExpenseButton.textContent = "Record Expense";
+  cancelExpenseEdit.hidden = true;
+}
+
+cancelExpenseEdit.addEventListener("click", () => {
+  resetExpenseForm();
+  expenseMessage.textContent = "";
+});
+
+// FILTER AND REFRESH
+document.getElementById("filterExpensesButton")
+  .addEventListener("click", loadExpenses);
+
+document.getElementById("refreshExpensesButton")
+  .addEventListener("click", loadExpenses);
+
+// ========================================
+// CHURCH FINANCIAL REPORTS
+// ========================================
+
+async function loadFinancialReports() {
+  const message =
+    document.getElementById("financialReportMessage");
+
+  const monthlyTable =
+    document.getElementById("monthlyFinancialTable");
+
+  message.textContent = "Generating financial report...";
+
+  monthlyTable.innerHTML =
+    '<tr><td colspan="4">Loading...</td></tr>';
+
+  try {
+    const startDate =
+      document.getElementById("reportStartDate").value;
+
+    const endDate =
+      document.getElementById("reportEndDate").value;
+
+    if (startDate && endDate && startDate > endDate) {
+      throw new Error("Start date cannot be after end date.");
+    }
+
+    const params = new URLSearchParams();
+
+    if (startDate) params.set("start_date", startDate);
+    if (endDate) params.set("end_date", endDate);
+
+    const query = params.toString()
+      ? `?${params.toString()}`
+      : "";
+
+    const data = await memberRequest(
+      `/api/admin/reports/financial${query}`
+    );
+
+    const summary = data.summary;
+
+    document.getElementById("reportTotalDonations").textContent =
+      formatKES(summary.total_donations);
+
+    document.getElementById("reportTotalExpenses").textContent =
+      formatKES(summary.total_expenses);
+
+    document.getElementById("reportBalance").textContent =
+      formatKES(summary.balance);
+
+    document.getElementById("reportPendingDonations").textContent =
+      summary.pending_donation_count;
+
+    document.getElementById("successfulDonationCount").textContent =
+      summary.successful_donation_count;
+
+    document.getElementById("financialExpenseCount").textContent =
+      summary.expense_count;
+
+    monthlyTable.replaceChildren();
+
+    if (!data.monthly || data.monthly.length === 0) {
+      monthlyTable.innerHTML =
+        '<tr><td colspan="4">No monthly records available.</td></tr>';
+    } else {
+      data.monthly.forEach(item => {
+        const donations = Number(item.donations) || 0;
+        const expenses = Number(item.expenses) || 0;
+
+        const row = document.createElement("tr");
+
+        [
+          item.month,
+          formatKES(donations),
+          formatKES(expenses),
+          formatKES(donations - expenses)
+        ].forEach(value => {
+          const cell = document.createElement("td");
+          cell.textContent = value;
+          row.appendChild(cell);
+        });
+
+        monthlyTable.appendChild(row);
+      });
+    }
+
+    message.textContent = "Financial report generated successfully.";
+
+  } catch (error) {
+    message.textContent = error.message;
+
+    monthlyTable.innerHTML = `
+      <tr>
+        <td colspan="4">${escapeHTML(error.message)}</td>
+      </tr>
+    `;
+  }
+}
+
+document.getElementById("generateFinancialReport")
+  .addEventListener("click", loadFinancialReports);
+
+
+// Initialize Dashboard LoadsDONE
+loadFinancialReports();
+loadExpenses();
+loadAttendance();
     loadDashboard();
     loadAnnouncements();
     loadGallery();
-
+loadMembers();
   </script>
 </body>
 </html>
