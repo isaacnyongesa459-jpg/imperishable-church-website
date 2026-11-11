@@ -139,6 +139,104 @@
     button[type="button"]:not(#logoutButton):hover {
       background: #113827;
     }
+    
+/* ========================================
+   ADMIN DASHBOARD LAYOUT
+======================================== */
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background: #f4f6f9;
+}
+
+.admin-sidebar {
+    width: 250px;
+    min-width: 250px;
+    background: #14213d;
+    color: #ffffff;
+    padding: 25px 15px;
+    min-height: 100vh;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+}
+
+.admin-sidebar h2 {
+    font-size: 19px;
+    margin-bottom: 5px;
+    color: #ffffff;
+}
+
+.admin-sidebar p {
+    color: #cbd5e1;
+    margin-bottom: 30px;
+}
+
+.admin-sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.admin-sidebar nav a {
+    display: block;
+    color: #e2e8f0;
+    text-decoration: none;
+    padding: 12px 14px;
+    border-radius: 7px;
+    transition: 0.2s ease;
+}
+
+.admin-sidebar nav a:hover {
+    background: #263b60;
+    color: #ffffff;
+}
+
+.admin-main {
+    flex: 1;
+    min-width: 0;
+    padding: 30px;
+}
+
+.admin-main .card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 768px) {
+    .admin-layout {
+        flex-direction: column;
+    }
+
+    .admin-sidebar {
+        width: 100%;
+        min-width: 0;
+        min-height: auto;
+        position: relative;
+        padding: 15px;
+    }
+
+    .admin-sidebar nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+
+    .admin-sidebar nav a {
+        padding: 9px 11px;
+        font-size: 13px;
+    }
+
+    .admin-main {
+        padding: 15px;
+    }
+}
+
   </style>
 </head>
 <body>
