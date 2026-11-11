@@ -1968,100 +1968,89 @@ document.getElementById("refreshExpensesButton")
 // ========================================
 
 async function loadFinancialReports() {
-  const message =
-    document.getElementById("financialReportMessage");
+    const message =
+        document.getElementById("financialReportMessage");
 
-  const monthlyTable =
-    document.getElementById("monthlyFinancialTable");
+    const monthlyTable =
+        document.getElementById("monthlyFinancialTable");
 
-  message.textContent = "Generating financial report...";
+    message.textContent = "Generating financial report...";
 
-  monthlyTable.innerHTML =
-    '<tr><td colspan="4">Loading...</td></tr>';
+    monthlyTable.innerHTML =
+        '<tr><td colspan="4">Loading...</td></tr>';
 
-  try {
-    const startDate =
-      document.getElementById("reportStartDate").value;
+    try {
+        const data = await memberRequest(
+            "/api/admin/financial-reports"
+        );
 
-    const endDate =
-      document.getElementById("reportEndDate").value;
+        if (!data.success) {
+            throw new Error(data.message || "Failed to generate report.");
+        }
 
-    if (startDate && endDate && startDate > endDate) {
-      throw new Error("Start date cannot be after end date.");
+        const summary = data.summary || {};
+
+        document.getElementById("reportTotalDonations").textContent =
+            formatKES(Number(summary.total_donations || 0));
+
+        document.getElementById("reportTotalExpenses").textContent =
+            formatKES(Number(summary.total_expenses || 0));
+
+        document.getElementById("reportBalance").textContent =
+            formatKES(Number(summary.balance || 0));
+
+        document.getElementById("reportPendingDonations").textContent = "—";
+
+        document.getElementById("successfulDonationCount").textContent = "—";
+
+        document.getElementById("financialExpenseCount").textContent = "—";
+
+        monthlyTable.replaceChildren();
+
+        const monthlyReports = data.monthly_reports || [];
+
+        if (monthlyReports.length === 0) {
+            monthlyTable.innerHTML =
+                '<tr><td colspan="4">No monthly records available.</td></tr>';
+        } else {
+            monthlyReports.forEach(item => {
+                const donations = Number(item.donations) || 0;
+                const expenses = Number(item.expenses) || 0;
+
+                const row = document.createElement("tr");
+
+                [
+                    item.month,
+                    formatKES(donations),
+                    formatKES(expenses),
+                    formatKES(Number(item.balance ?? donations - expenses))
+                ].forEach(value => {
+                    const cell = document.createElement("td");
+                    cell.textContent = value;
+                    row.appendChild(cell);
+                });
+
+                monthlyTable.appendChild(row);
+            });
+        }
+
+        message.textContent =
+            "Financial report generated successfully.";
+
+    } catch (error) {
+        console.error("Financial reports error:", error);
+
+        message.textContent = error.message;
+
+        monthlyTable.innerHTML = `
+            <tr>
+                <td colspan="4">${escapeHTML(error.message)}</td>
+            </tr>
+        `;
     }
-
-    const params = new URLSearchParams();
-
-    if (startDate) params.set("start_date", startDate);
-    if (endDate) params.set("end_date", endDate);
-
-    const query = params.toString()
-      ? `?${params.toString()}`
-      : "";
-
-    const data = await memberRequest(
-      `/api/admin/reports-reports/financial${query}`
-    );
-
-    const summary = data.summary;
-
-    document.getElementById("reportTotalDonations").textContent =
-      formatKES(summary.total_donations);
-
-    document.getElementById("reportTotalExpenses").textContent =
-      formatKES(summary.total_expenses);
-
-    document.getElementById("reportBalance").textContent =
-      formatKES(summary.balance);
-
-    document.getElementById("reportPendingDonations").textContent =
-      summary.pending_donation_count;
-
-    document.getElementById("successfulDonationCount").textContent =
-      summary.successful_donation_count;
-
-    document.getElementById("financialExpenseCount").textContent =
-      summary.expense_count;
-
-    monthlyTable.replaceChildren();
-
-    if (!data.monthly || data.monthly.length === 0) {
-      monthlyTable.innerHTML =
-        '<tr><td colspan="4">No monthly records available.</td></tr>';
-    } else {
-      data.monthly.forEach(item => {
-        const donations = Number(item.donations) || 0;
-        const expenses = Number(item.expenses) || 0;
-
-        const row = document.createElement("tr");
-
-        [
-          item.month,
-          formatKES(donations),
-          formatKES(expenses),
-          formatKES(donations - expenses)
-        ].forEach(value => {
-          const cell = document.createElement("td");
-          cell.textContent = value;
-          row.appendChild(cell);
-        });
-
-        monthlyTable.appendChild(row);
-      });
-    }
-
-    message.textContent = "Financial report generated successfully.";
-
-  } catch (error) {
-    message.textContent = error.message;
-
-    monthlyTable.innerHTML = `
-      <tr>
-        <td colspan="4">${escapeHTML(error.message)}</td>
-      </tr>
-    `;
-  }
 }
+
+
 
 document.getElementById("generateFinancialReport")
   .addEventListener("click", loadFinancialReports);
