@@ -2603,9 +2603,12 @@ app.get(
    requireAdminOrigin,
    async (req, res) => {
      try {
-       const { name, description, leader_name, meeting_day } = req.body;
+       const { ministry_name, description, leader_name } = req.body;
 
-       if (!name || !name.trim()) {
+       if (
+         typeof ministry_name !== "string" ||
+         !ministry_name.trim()
+       ) {
          return res.status(400).json({
            success: false,
            message: "Ministry name is required."
@@ -2615,15 +2618,14 @@ app.get(
        const result = await pool.query(
          `
          INSERT INTO church_ministries
-           (name, description, leader_name, meeting_day)
-         VALUES ($1, $2, $3, $4)
+           (ministry_name, description, leader_name)
+         VALUES ($1, $2, $3)
          RETURNING *
          `,
          [
-           name.trim(),
-           description || null,
-           leader_name || null,
-           meeting_day || null
+           ministry_name.trim(),
+           description || "",
+           leader_name || null
          ]
        );
 
@@ -2634,9 +2636,12 @@ app.get(
        });
      } catch (error) {
        console.error("Add ministry error:", error);
-       res.status(500).json({
+
+       res.status(error.code === "23505" ? 409 : 500).json({
          success: false,
-         message: "Failed to add ministry."
+         message: error.code === "23505"
+           ? "This ministry already exists."
+           : "Failed to add ministry."
        });
      }
    }
@@ -2649,10 +2654,12 @@ app.get(
    requireAdminOrigin,
    async (req, res) => {
      try {
-       const { id } = req.params;
-       const { name, description, leader_name, meeting_day } = req.body;
+       const { ministry_name, description, leader_name } = req.body;
 
-       if (!name || !name.trim()) {
+       if (
+         typeof ministry_name !== "string" ||
+         !ministry_name.trim()
+       ) {
          return res.status(400).json({
            success: false,
            message: "Ministry name is required."
@@ -2663,23 +2670,21 @@ app.get(
          `
          UPDATE church_ministries
          SET
-           name = $1,
+           ministry_name = $1,
            description = $2,
-           leader_name = $3,
-           meeting_day = $4
-         WHERE id = $5
+           leader_name = $3
+         WHERE id = $4
          RETURNING *
          `,
          [
-           name.trim(),
-           description || null,
+           ministry_name.trim(),
+           description || "",
            leader_name || null,
-           meeting_day || null,
-           id
+           req.params.id
          ]
        );
 
-       if (result.rowCount === 0) {
+       if (!result.rowCount) {
          return res.status(404).json({
            success: false,
            message: "Ministry not found."
@@ -2693,9 +2698,12 @@ app.get(
        });
      } catch (error) {
        console.error("Update ministry error:", error);
-       res.status(500).json({
+
+       res.status(error.code === "23505" ? 409 : 500).json({
          success: false,
-         message: "Failed to update ministry."
+         message: error.code === "23505"
+           ? "Another ministry already has that name."
+           : "Failed to update ministry."
        });
      }
    }
@@ -2709,11 +2717,15 @@ app.get(
    async (req, res) => {
      try {
        const result = await pool.query(
-         `DELETE FROM church_ministries WHERE id = $1 RETURNING id`,
+         `
+         DELETE FROM church_ministries
+         WHERE id = $1
+         RETURNING id
+         `,
          [req.params.id]
        );
 
-       if (result.rowCount === 0) {
+       if (!result.rowCount) {
          return res.status(404).json({
            success: false,
            message: "Ministry not found."
@@ -2734,6 +2746,7 @@ app.get(
    }
  );
 
+ 
 // ========================================
 // ADMIN DONATIONS
 // ========================================
