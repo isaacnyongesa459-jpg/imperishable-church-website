@@ -148,6 +148,28 @@
     <button id="logoutButton" type="button">Log Out</button>
   </header>
   <main>
+    
+<!-- ADMIN DASHBOARD NAVIGATION -->
+<div class="admin-layout">
+
+    <aside class="admin-sidebar">
+        <h2>Imperishable Church</h2>
+        <p>Admin Panel</p>
+
+        <nav>
+            <a href="#dashboardTop">Dashboard</a>
+            <a href="#membersSection">Members</a>
+            <a href="#attendanceSection">Attendance</a>
+            <a href="#expensesSection">Expenses</a>
+            <a href="#financialReportsSection">Financial Reports</a>
+            <a href="#ministriesSection">Ministries</a>
+            <a href="#announcementsSection">Announcements</a>
+            <a href="#gallerySection">Gallery</a>
+        </nav>
+    </aside>
+
+    <main class="admin-main" id="dashboardTop">
+
     <h1>Administrator Dashboard</h1>
 
     <p id="status" class="loading">
@@ -555,6 +577,78 @@
     <strong>Expense Records:</strong>
     <span id="financialExpenseCount">0</span>
   </p>
+</section>
+
+<!-- CHURCH MINISTRIES MANAGEMENT -->
+<section class="card" id="ministriesSection">
+    <h2>Church Ministries Management</h2>
+    <p>Register and manage the church ministries and their leaders.</p>
+
+    <form id="ministryForm">
+        <input type="hidden" id="ministryId">
+
+        <div class="form-group">
+            <label for="ministryName">Ministry Name</label>
+            <input
+                type="text"
+                id="ministryName"
+                placeholder="e.g. Youth Ministry"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="ministryLeader">Ministry Leader</label>
+            <input
+                type="text"
+                id="ministryLeader"
+                placeholder="Enter leader's name"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="ministryDescription">Description</label>
+            <textarea
+                id="ministryDescription"
+                placeholder="Describe the ministry"
+                rows="3"
+            ></textarea>
+        </div>
+
+        <button type="submit" id="saveMinistryBtn">
+            Add Ministry
+        </button>
+
+        <button type="button" id="cancelMinistryEdit"
+                style="display:none;">
+            Cancel Edit
+        </button>
+    </form>
+
+    <hr>
+
+    <h3>Registered Ministries</h3>
+
+    <div style="overflow-x:auto;">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Ministry Name</th>
+                    <th>Leader</th>
+                    <th>Description</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="ministriesTableBody">
+                <tr>
+                    <td colspan="5">Loading ministries...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <p id="ministriesMessage"></p>
 </section>
 
     <section class="card">
@@ -1875,7 +1969,177 @@ document.getElementById("generateFinancialReport")
   .addEventListener("click", loadFinancialReports);
 
 
+// ========================================
+// CHURCH MINISTRIES MANAGEMENT
+// ========================================
+
+const ministryForm = document.getElementById("ministryForm");
+const ministriesTableBody = document.getElementById("ministriesTableBody");
+const ministriesMessage = document.getElementById("ministriesMessage");
+
+async function loadMinistries() {
+    try {
+        const response = await memberRequest("/api/admin/ministries");
+
+        const ministries = Array.isArray(response)
+            ? response
+            : response.ministries || [];
+
+        ministriesTableBody.innerHTML = "";
+
+        if (ministries.length === 0) {
+            ministriesTableBody.innerHTML = `
+                <tr>
+                    <td colspan="5">No ministries registered yet.</td>
+                </tr>
+            `;
+            return;
+        }
+
+        ministries.forEach((ministry, index) => {
+            ministriesTableBody.innerHTML += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${escapeHTML(ministry.ministry_name || "")}</td>
+                    <td>${escapeHTML(ministry.leader_name || "Not assigned")}</td>
+                    <td>${escapeHTML(ministry.description || "")}</td>
+                    <td>
+                        <button type="button"
+                            onclick="editMinistry(${Number(ministry.id)})">
+                            Edit
+                        </button>
+
+                        <button type="button"
+                            onclick="deleteMinistry(${Number(ministry.id)})">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+
+    } catch (error) {
+        console.error("Error loading ministries:", error);
+        ministriesMessage.textContent = error.message || "Failed to load ministries.";
+    }
+}
+
+
+// ADD OR UPDATE MINISTRY
+ministryForm.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const id = document.getElementById("ministryId").value;
+
+    const ministryData = {
+        ministry_name: document.getElementById("ministryName").value.trim(),
+        leader_name: document.getElementById("ministryLeader").value.trim(),
+        description: document.getElementById("ministryDescription").value.trim()
+    };
+
+    if (!ministryData.ministry_name) {
+        ministriesMessage.textContent = "Please enter a ministry name.";
+        return;
+    }
+
+    try {
+        const response = await memberRequest(
+            id ? `/api/admin/ministries/${id}` : "/api/admin/ministries",
+            {
+                method: id ? "PUT" : "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(ministryData)
+            }
+        );
+
+        ministriesMessage.textContent =
+            response.message || "Ministry saved successfully.";
+
+        ministryForm.reset();
+        document.getElementById("ministryId").value = "";
+        document.getElementById("saveMinistryBtn").textContent = "Add Ministry";
+        document.getElementById("cancelMinistryEdit").style.display = "none";
+
+        await loadMinistries();
+
+    } catch (error) {
+        console.error("Error saving ministry:", error);
+        ministriesMessage.textContent = error.message || "Failed to save ministry.";
+    }
+});
+
+
+// EDIT MINISTRY
+async function editMinistry(id) {
+    try {
+        const response = await memberRequest("/api/admin/ministries");
+
+        const ministries = Array.isArray(response)
+            ? response
+            : response.ministries || [];
+
+        const ministry = ministries.find(item => Number(item.id) === Number(id));
+
+        if (!ministry) {
+            ministriesMessage.textContent = "Ministry not found.";
+            return;
+        }
+
+        document.getElementById("ministryId").value = ministry.id;
+        document.getElementById("ministryName").value = ministry.ministry_name || "";
+        document.getElementById("ministryLeader").value = ministry.leader_name || "";
+        document.getElementById("ministryDescription").value = ministry.description || "";
+
+        document.getElementById("saveMinistryBtn").textContent = "Update Ministry";
+        document.getElementById("cancelMinistryEdit").style.display = "inline-block";
+
+        ministryForm.scrollIntoView({ behavior: "smooth" });
+
+    } catch (error) {
+        console.error("Error editing ministry:", error);
+        ministriesMessage.textContent = error.message || "Failed to load ministry details.";
+    }
+}
+
+
+// CANCEL MINISTRY EDIT
+document.getElementById("cancelMinistryEdit").addEventListener("click", function() {
+    ministryForm.reset();
+    document.getElementById("ministryId").value = "";
+    document.getElementById("saveMinistryBtn").textContent = "Add Ministry";
+    this.style.display = "none";
+    ministriesMessage.textContent = "";
+});
+
+
+// DELETE MINISTRY
+async function deleteMinistry(id) {
+    if (!confirm("Are you sure you want to delete this ministry?")) {
+        return;
+    }
+
+    try {
+        const response = await memberRequest(`/api/admin/ministries/${id}`, {
+            method: "DELETE"
+        });
+
+        ministriesMessage.textContent =
+            response.message || "Ministry deleted successfully.";
+
+        await loadMinistries();
+
+    } catch (error) {
+        console.error("Error deleting ministry:", error);
+        ministriesMessage.textContent = error.message || "Failed to delete ministry.";
+    }
+}
+
+
+
 // Initialize Dashboard LoadsDONE
+loadMinistries();
 loadFinancialReports();
 loadExpenses();
 loadAttendance();
