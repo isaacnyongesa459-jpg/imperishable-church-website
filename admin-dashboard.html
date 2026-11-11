@@ -2248,9 +2248,42 @@ async function deleteMinistry(id) {
     }
 }
 
+// ========================================
+// DASHBOARD CHURCH STATISTICS
+// ========================================
 
+async function loadDashboardChurchStatistics() {
+    try {
+        const data = await memberRequest(
+            "/api/admin/dashboard/church-statistics"
+        );
 
+        if (!data.success) {
+            throw new Error(
+                data.message || "Failed to load dashboard statistics."
+            );
+        }
+
+        const stats = data.statistics;
+
+        document.getElementById("dashboardMembers").textContent =
+            Number(stats.total_members || 0);
+
+        document.getElementById("dashboardAttendance").textContent =
+            Number(stats.total_attendance || 0);
+
+        document.getElementById("dashboardMinistries").textContent =
+            Number(stats.total_ministries || 0);
+
+        document.getElementById("dashboardExpenses").textContent =
+            formatKES(Number(stats.total_expenses || 0));
+
+    } catch (error) {
+        console.error("Dashboard statistics error:", error);
+    }
+}
 // Initialize Dashboard LoadsDONE
+loadDashboardChurchStatistics();
 loadMinistries();
 loadFinancialReports();
 loadExpenses();
