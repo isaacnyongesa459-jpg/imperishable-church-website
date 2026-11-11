@@ -2570,6 +2570,54 @@ app.get(
   }
 );
 
+// ========================================
+// ADMIN DASHBOARD CHURCH STATISTICS
+// ========================================
+
+app.get(
+  "/api/admin/dashboard/church-statistics",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const result = await pool.query(`
+        SELECT
+          (SELECT COUNT(*) FROM church_members)
+            AS total_members,
+
+          (SELECT COUNT(*) FROM church_attendance)
+            AS total_attendance,
+
+          (SELECT COUNT(*) FROM church_ministries)
+            AS total_ministries,
+
+          (SELECT COALESCE(SUM(amount), 0)
+           FROM church_expenses)
+            AS total_expenses
+      `);
+
+      const stats = result.rows[0];
+
+      res.json({
+        success: true,
+        statistics: {
+          total_members: Number(stats.total_members),
+          total_attendance: Number(stats.total_attendance),
+          total_ministries: Number(stats.total_ministries),
+          total_expenses: Number(stats.total_expenses)
+        }
+      });
+
+    } catch (error) {
+      console.error("Dashboard statistics error:", error);
+
+      res.status(500).json({
+        success: false,
+        message: "Failed to load dashboard statistics."
+      });
+    }
+  }
+);
+
  // ========================================
  // ADMIN CHURCH MINISTRIES API
  // ========================================
