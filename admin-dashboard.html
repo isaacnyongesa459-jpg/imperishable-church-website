@@ -5,209 +5,433 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Church Admin Dashboard</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+ <style>
+/* ==========================================
+   IMPERISHABLE CHURCH - ADMIN DASHBOARD
+   Professional Dashboard Design
+========================================== */
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f6f4;
-      color: #20342a;
-    }
+:root {
+    --primary: #176b45;
+    --primary-dark: #105236;
+    --primary-light: #e8f5ee;
+    --sidebar: #102d23;
+    --sidebar-hover: #1c4937;
+    --background: #f5f7f6;
+    --surface: #ffffff;
+    --text: #1d2b24;
+    --muted: #718078;
+    --border: #e4eae6;
+    --success: #16834a;
+    --warning: #c78316;
+    --danger: #c0392b;
+    --shadow: 0 4px 18px rgba(20, 50, 35, 0.06);
+}
 
-    header {
-      background: #174b35;
-      color: white;
-      padding: 18px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
-    }
+/* GLOBAL RESET */
 
-    header strong {
-      font-size: 17px;
-    }
+* {
+    box-sizing: border-box;
+}
 
-    #logoutButton {
-      border: 0;
-      border-radius: 7px;
-      padding: 10px 15px;
-      background: #fff;
-      color: #174b35;
-      font-weight: bold;
-      cursor: pointer;
-    }
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 25px;
+}
 
-    main {
-      width: 100%;
-      max-width: 1100px;
-      margin: auto;
-      padding: 25px 18px 40px;
-    }
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+}
 
-    h1 {
-      margin-top: 0;
-    }
+/* HEADER */
 
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 15px;
-      margin-bottom: 25px;
-    }
+header {
+    background: var(--surface);
+    color: var(--text);
+    padding: 17px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+}
 
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 3px 12px #0000000d;
-      margin-top: 25px;
-    }
+header strong {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-dark);
+}
 
-    .card h2 {
-      margin-top: 0;
-      font-size: 16px;
-      color: #666;
-    }
+#logoutButton {
+    border: 1px solid #f0d6d3;
+    border-radius: 8px;
+    padding: 10px 18px;
+    background: #fff;
+    color: var(--danger);
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
 
-    .amount {
-      font-size: 28px;
-      font-weight: bold;
-      color: #176640;
-    }
+#logoutButton:hover {
+    background: #fff2f0;
+}
 
-    .table-card {
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 700px;
-    }
-
-    th, td {
-      padding: 13px 10px;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-
-    th {
-      background: #f0f4f1;
-    }
-
-    .completed { color: #147a3d; font-weight: bold; }
-    .pending { color: #b06b00; font-weight: bold; }
-    .failed { color: #b42318; font-weight: bold; }
-
-    .error {
-      color: #b42318;
-      background: #fff0ef;
-      padding: 14px;
-      border-radius: 8px;
-    }
-
-    .loading { color: #555; }
-
-    input[type="text"],
-    input[type="url"],
-    input[type="datetime-local"],
-    textarea {
-      display: block;
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0 15px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-    }
-
-    button[type="submit"],
-    button[type="button"]:not(#logoutButton) {
-      padding: 10px 16px;
-      border: none;
-      border-radius: 6px;
-      background: #174b35;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    button[type="button"]:not(#logoutButton):hover {
-      background: #113827;
-    }
-    
-/* ========================================
-   ADMIN DASHBOARD LAYOUT
-======================================== */
+/* MAIN DASHBOARD LAYOUT */
 
 .admin-layout {
     display: flex;
     min-height: 100vh;
-    background: #f4f6f9;
+    width: 100%;
+    background: var(--background);
 }
 
+/* SIDEBAR */
+
 .admin-sidebar {
-    width: 250px;
-    min-width: 250px;
-    background: #14213d;
-    color: #ffffff;
-    padding: 25px 15px;
+    width: 255px;
+    min-width: 255px;
+    background: var(--sidebar);
+    color: #fff;
+    padding: 30px 17px;
     min-height: 100vh;
     position: sticky;
     top: 0;
+    height: 100vh;
+    overflow-y: auto;
     align-self: flex-start;
 }
 
 .admin-sidebar h2 {
     font-size: 19px;
-    margin-bottom: 5px;
-    color: #ffffff;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 5px;
+    letter-spacing: -0.3px;
 }
 
 .admin-sidebar p {
-    color: #cbd5e1;
-    margin-bottom: 30px;
+    color: #a8c5b5;
+    font-size: 12px;
+    margin: 0 0 32px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
 }
 
 .admin-sidebar nav {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
 }
 
 .admin-sidebar nav a {
-    display: block;
-    color: #e2e8f0;
+    display: flex;
+    align-items: center;
+    color: #d1dfd7;
     text-decoration: none;
     padding: 12px 14px;
-    border-radius: 7px;
-    transition: 0.2s ease;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
-.admin-sidebar nav a:hover {
-    background: #263b60;
-    color: #ffffff;
+.admin-sidebar nav a:hover,
+.admin-sidebar nav a:focus {
+    background: var(--sidebar-hover);
+    color: #fff;
+    padding-left: 19px;
 }
 
+/* MAIN CONTENT */
+
+main,
 .admin-main {
     flex: 1;
+    width: auto;
+    max-width: none;
     min-width: 0;
-    padding: 30px;
+    margin: 0;
+    padding: 32px;
 }
 
-.admin-main .card {
-    background: #ffffff;
+.admin-main h1 {
+    font-size: 27px;
+    font-weight: 700;
+    color: #183b2b;
+    margin: 0 0 8px;
+    letter-spacing: -0.7px;
+}
+
+.admin-main h2 {
+    color: #263c30;
+}
+
+.admin-main h3 {
+    color: #30483a;
+}
+
+#status {
+    margin-bottom: 24px;
+}
+
+/* STATISTICS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 18px;
+    margin: 22px 0 30px;
+}
+
+.stats .card {
+    margin: 0;
+    padding: 23px;
+    border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 22px;
-    margin-bottom: 25px;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* MOBILE RESPONSIVENESS */
+.stats .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 22px rgba(20, 50, 35, 0.09);
+}
+
+.stats .card h2 {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0 0 12px;
+}
+
+.amount {
+    color: var(--primary);
+    font-size: 27px;
+    font-weight: 750;
+    letter-spacing: -0.7px;
+    overflow-wrap: anywhere;
+}
+
+/* GENERAL CARDS AND SECTIONS */
+
+.card,
+.admin-main .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 25px;
+    margin: 0 0 24px;
+    box-shadow: var(--shadow);
+}
+
+.card h2 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 17px;
+}
+
+.card h3 {
+    font-size: 15px;
+    font-weight: 650;
+}
+
+.card p {
+    color: var(--muted);
+}
+
+/* FORMS */
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    color: #34483c;
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #dce5df;
+    border-radius: 8px;
+    background: #fff;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(23, 107, 69, 0.10);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #a0aaa4;
+}
+
+/* BUTTONS */
+
+button {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+button[type="submit"],
+button[type="button"]:not(#logoutButton) {
+    padding: 11px 19px;
+    border: none;
+    border-radius: 8px;
+    background: var(--primary);
+    color: #fff;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover,
+button[type="button"]:not(#logoutButton):hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* TABLES */
+
+.table-card {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+    background: #fff;
+}
+
+th {
+    background: #f0f6f2;
+    color: #395344;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+th,
+td {
+    padding: 14px 13px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+td {
+    color: #435349;
+    font-size: 13px;
+}
+
+tbody tr:hover {
+    background: #f8fbf9;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* STATUS LABELS */
+
+.completed {
+    color: var(--success);
+    font-weight: 700;
+}
+
+.pending {
+    color: var(--warning);
+    font-weight: 700;
+}
+
+.failed {
+    color: var(--danger);
+    font-weight: 700;
+}
+
+.error {
+    color: var(--danger);
+    background: #fff0ee;
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid #f5d1cc;
+}
+
+.loading {
+    color: var(--muted);
+}
+
+/* DIVIDERS */
+
+hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 25px 0;
+}
+
+/* REPORT FILTERS AND MESSAGE */
+
+#financialReportMessage,
+#ministriesMessage {
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* RESPONSIVE TABLET */
+
+@media (max-width: 1024px) {
+    main,
+    .admin-main {
+        padding: 23px;
+    }
+
+    .admin-sidebar {
+        width: 225px;
+        min-width: 225px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* RESPONSIVE MOBILE */
+
 @media (max-width: 768px) {
     .admin-layout {
         flex-direction: column;
@@ -216,28 +440,88 @@
     .admin-sidebar {
         width: 100%;
         min-width: 0;
+        height: auto;
         min-height: auto;
         position: relative;
-        padding: 15px;
+        padding: 18px;
+        overflow: visible;
+    }
+
+    .admin-sidebar p {
+        margin-bottom: 15px;
     }
 
     .admin-sidebar nav {
+        display: flex;
         flex-direction: row;
-        flex-wrap: wrap;
-        gap: 5px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        gap: 7px;
+        padding-bottom: 8px;
     }
 
     .admin-sidebar nav a {
-        padding: 9px 11px;
-        font-size: 13px;
+        white-space: nowrap;
+        padding: 9px 12px;
+        font-size: 12px;
     }
 
+    .admin-sidebar nav a:hover {
+        padding-left: 12px;
+    }
+
+    main,
     .admin-main {
-        padding: 15px;
+        width: 100%;
+        padding: 17px;
+    }
+
+    .admin-main h1 {
+        font-size: 23px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+    }
+
+    .stats .card {
+        padding: 17px;
+    }
+
+    .amount {
+        font-size: 22px;
+    }
+
+    .card,
+    .admin-main .card {
+        padding: 18px;
+        margin-bottom: 18px;
     }
 }
 
-  </style>
+/* SMALL PHONES */
+
+@media (max-width: 420px) {
+    .stats {
+        grid-template-columns: 1fr;
+    }
+
+    header {
+        padding: 14px 16px;
+    }
+
+    main,
+    .admin-main {
+        padding: 13px;
+    }
+
+    .card,
+    .admin-main .card {
+        padding: 15px;
+    }
+}
+</style>
 </head>
 <body>
 
