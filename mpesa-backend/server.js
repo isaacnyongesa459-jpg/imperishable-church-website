@@ -270,12 +270,19 @@ app.use((req, res, next) => {
 
   next();
 });
+
+
 // ========================================
 // DATABASE INITIALIZATION
 // ========================================
 
 async function initializeDatabase() {
   try {
+
+    // ========================================
+    // 1. M-PESA DONATIONS
+    // ========================================
+
     await pool.query(`
       CREATE TABLE IF NOT EXISTS donations (
         id BIGSERIAL PRIMARY KEY,
@@ -291,6 +298,10 @@ async function initializeDatabase() {
       );
     `);
 
+    // ========================================
+    // 2. CHURCH WEBSITE CONTENT
+    // ========================================
+
     await pool.query(`
       CREATE TABLE IF NOT EXISTS church_content (
         content_key VARCHAR(100) PRIMARY KEY,
@@ -299,6 +310,10 @@ async function initializeDatabase() {
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       );
     `);
+
+    // ========================================
+    // 3. ANNOUNCEMENTS
+    // ========================================
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS announcements (
@@ -309,6 +324,10 @@ async function initializeDatabase() {
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       );
     `);
+
+    // ========================================
+    // 4. CHURCH LEADERS
+    // ========================================
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS leaders (
@@ -323,6 +342,10 @@ async function initializeDatabase() {
       );
     `);
 
+    // ========================================
+    // 5. CHURCH SERVICES
+    // ========================================
+
     await pool.query(`
       CREATE TABLE IF NOT EXISTS services (
         id BIGSERIAL PRIMARY KEY,
@@ -335,6 +358,10 @@ async function initializeDatabase() {
         display_order INTEGER NOT NULL DEFAULT 0
       );
     `);
+
+    // ========================================
+    // 6. CHURCH EVENTS
+    // ========================================
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS events (
@@ -349,6 +376,10 @@ async function initializeDatabase() {
       );
     `);
 
+    // ========================================
+    // 7. CONTACT MESSAGES
+    // ========================================
+
     await pool.query(`
       CREATE TABLE IF NOT EXISTS contact_messages (
         id BIGSERIAL PRIMARY KEY,
@@ -360,9 +391,141 @@ async function initializeDatabase() {
       );
     `);
 
+    // ========================================
+    // 8. CHURCH MEMBERS
+    // ========================================
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS church_members (
+        id BIGSERIAL PRIMARY KEY,
+        first_name VARCHAR(100) NOT NULL,
+        last_name VARCHAR(100) NOT NULL,
+        gender VARCHAR(20),
+        phone VARCHAR(30),
+        email VARCHAR(150),
+        date_of_birth DATE,
+        address TEXT,
+        ministry VARCHAR(100),
+        membership_status VARCHAR(30) DEFAULT 'active',
+        joined_at TIMESTAMPTZ DEFAULT NOW(),
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `);
+
+    // ========================================
+    // 9. CHURCH ATTENDANCE
+    // ========================================
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS church_attendance (
+        id BIGSERIAL PRIMARY KEY,
+        member_id BIGINT REFERENCES church_members(id)
+          ON DELETE SET NULL,
+        attendee_name VARCHAR(200),
+        service_name VARCHAR(150) NOT NULL,
+        attendance_date DATE NOT NULL,
+        attendance_type VARCHAR(30) DEFAULT 'member',
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `);
+
+    // ========================================
+    // 10. CHURCH EXPENSES
+    // ========================================
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS church_expenses (
+        id BIGSERIAL PRIMARY KEY,
+        expense_title VARCHAR(200) NOT NULL,
+        category VARCHAR(100) NOT NULL,
+        amount NUMERIC(12,2) NOT NULL CHECK (amount > 0),
+        payment_method VARCHAR(50),
+        description TEXT,
+        expense_date DATE NOT NULL DEFAULT CURRENT_DATE,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `);
+
+    // ========================================
+    // 11. CHURCH MINISTRIES
+    // ========================================
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS church_ministries (
+        id BIGSERIAL PRIMARY KEY,
+        ministry_name VARCHAR(150) NOT NULL UNIQUE,
+        description TEXT DEFAULT '',
+        leader_name VARCHAR(150),
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `);
+
+    // ========================================
+    // 12. FINANCIAL CATEGORIES
+    // ========================================
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS financial_categories (
+        id BIGSERIAL PRIMARY KEY,
+        category_name VARCHAR(100) NOT NULL UNIQUE,
+        category_type VARCHAR(30) NOT NULL
+          CHECK (category_type IN ('income', 'expense')),
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `);
+
+    // ========================================
+    // 13. ADMIN ACTIVITY LOG
+    // ========================================
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS admin_activity_logs (
+        id BIGSERIAL PRIMARY KEY,
+        admin_username VARCHAR(100),
+        action VARCHAR(200) NOT NULL,
+        details TEXT,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+    `);
+
+    // ========================================
+    // 14. DATABASE INDEXES
+    // ========================================
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_members_name
+      ON church_members(last_name, first_name);
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_attendance_date
+      ON church_attendance(attendance_date);
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_expenses_date
+      ON church_expenses(expense_date);
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_donations_status
+      ON donations(status);
+    `);
+
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS idx_donations_created
+      ON donations(created_at);
+    `);
+
     console.log("All church website database tables are ready.");
+
   } catch (error) {
-    console.error("Database initialization error:", error.message);
+
+    console.error(
+      "Database initialization error:",
+      error.message
+    );
+
     throw error;
   }
 }
@@ -1351,6 +1514,1061 @@ app.delete(
   }
 );
 
+// ========================================
+// CHURCH MEMBERS MANAGEMENT API
+// ========================================
+
+// GET ALL MEMBERS
+app.get(
+  "/api/admin/members",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const search = String(req.query.search || "").trim();
+
+      const result = await pool.query(
+        `SELECT *
+         FROM church_members
+         WHERE first_name ILIKE $1
+            OR last_name ILIKE $1
+            OR phone ILIKE $1
+            OR email ILIKE $1
+         ORDER BY created_at DESC
+         LIMIT 200`,
+        [`%${search}%`]
+      );
+
+      res.json({
+        success: true,
+        members: result.rows
+      });
+
+    } catch (error) {
+      console.error("Fetch members:", error.message);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to fetch members."
+      });
+    }
+  }
+);
+
+
+// REGISTER A NEW MEMBER
+app.post(
+  "/api/admin/members",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const {
+        first_name,
+        last_name,
+        gender,
+        phone,
+        email,
+        date_of_birth,
+        address,
+        ministry
+      } = req.body;
+
+      if (!first_name?.trim() || !last_name?.trim()) {
+        return res.status(400).json({
+          success: false,
+          message: "First name and last name are required."
+        });
+      }
+
+      const result = await pool.query(
+        `INSERT INTO church_members
+         (
+           first_name,
+           last_name,
+           gender,
+           phone,
+           email,
+           date_of_birth,
+           address,
+           ministry
+         )
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+         RETURNING *`,
+        [
+          first_name.trim(),
+          last_name.trim(),
+          gender || null,
+          phone || null,
+          email || null,
+          date_of_birth || null,
+          address || null,
+          ministry || null
+        ]
+      );
+
+      res.status(201).json({
+        success: true,
+        message: "Church member registered successfully.",
+        member: result.rows[0]
+      });
+
+    } catch (error) {
+      console.error("Register member:", error.message);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to register member."
+      });
+    }
+  }
+);
+
+
+// UPDATE MEMBER DETAILS
+app.put(
+  "/api/admin/members/:id",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+
+      if (!Number.isSafeInteger(id) || id <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid member ID."
+        });
+      }
+
+      const {
+        first_name,
+        last_name,
+        gender,
+        phone,
+        email,
+        date_of_birth,
+        address,
+        ministry,
+        membership_status
+      } = req.body;
+
+      if (!first_name?.trim() || !last_name?.trim()) {
+        return res.status(400).json({
+          success: false,
+          message: "First name and last name are required."
+        });
+      }
+
+      const result = await pool.query(
+        `UPDATE church_members
+         SET first_name = $1,
+             last_name = $2,
+             gender = $3,
+             phone = $4,
+             email = $5,
+             date_of_birth = $6,
+             address = $7,
+             ministry = $8,
+             membership_status = $9
+         WHERE id = $10
+         RETURNING *`,
+        [
+          first_name.trim(),
+          last_name.trim(),
+          gender || null,
+          phone || null,
+          email || null,
+          date_of_birth || null,
+          address || null,
+          ministry || null,
+          membership_status || "active",
+          id
+        ]
+      );
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Member not found."
+        });
+      }
+
+      res.json({
+        success: true,
+        message: "Member updated successfully.",
+        member: result.rows[0]
+      });
+
+    } catch (error) {
+      console.error("Update member:", error.message);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to update member."
+      });
+    }
+  }
+);
+
+
+// DELETE MEMBER
+app.delete(
+  "/api/admin/members/:id",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+
+      if (!Number.isSafeInteger(id) || id <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid member ID."
+        });
+      }
+
+      const result = await pool.query(
+        `DELETE FROM church_members
+         WHERE id = $1
+         RETURNING id`,
+        [id]
+      );
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Member not found."
+        });
+      }
+
+      res.json({
+        success: true,
+        message: "Member deleted successfully."
+      });
+
+    } catch (error) {
+      console.error("Delete member:", error.message);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to delete member."
+      });
+    }
+  }
+);
+
+// ========================================
+// CHURCH ATTENDANCE MANAGEMENT API
+// ========================================
+
+
+// ========================================
+// 1. GET ALL ATTENDANCE RECORDS
+// ========================================
+
+app.get(
+  "/api/admin/attendance",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const { date, service, type } = req.query;
+
+      const result = await pool.query(
+        `SELECT
+           a.id,
+           a.member_id,
+           a.attendee_name,
+           a.service_name,
+           a.attendance_date,
+           a.attendance_type,
+           a.created_at,
+           m.first_name,
+           m.last_name
+         FROM church_attendance a
+         LEFT JOIN church_members m
+           ON a.member_id = m.id
+         WHERE ($1::date IS NULL OR a.attendance_date = $1::date)
+           AND ($2::text IS NULL OR a.service_name ILIKE '%' || $2 || '%')
+           AND ($3::text IS NULL OR a.attendance_type = $3)
+         ORDER BY a.attendance_date DESC, a.id DESC
+         LIMIT 500`,
+        [
+          date || null,
+          service || null,
+          type || null
+        ]
+      );
+
+      res.json({
+        success: true,
+        attendance: result.rows
+      });
+
+    } catch (error) {
+      console.error("Fetch attendance:", error.message);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to retrieve attendance records."
+      });
+    }
+  }
+);
+
+
+// ========================================
+// 2. RECORD ATTENDANCE
+// ========================================
+
+app.post(
+  "/api/admin/attendance",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const {
+        member_id,
+        attendee_name,
+        service_name,
+        attendance_date,
+        attendance_type
+      } = req.body;
+
+      if (!service_name?.trim() || !attendance_date) {
+        return res.status(400).json({
+          success: false,
+          message: "Service name and attendance date are required."
+        });
+      }
+
+      // Validate date
+      const parsedDate = new Date(`${attendance_date}T00:00:00Z`);
+
+      if (
+        !/^\d{4}-\d{2}-\d{2}$/.test(attendance_date) ||
+        Number.isNaN(parsedDate.getTime()) ||
+        parsedDate.toISOString().slice(0, 10) !== attendance_date
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Please provide a valid attendance date."
+        });
+      }
+
+      const allowedTypes = ["member", "visitor", "child"];
+
+      const type = attendance_type || "member";
+
+      if (!allowedTypes.includes(type)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid attendance type."
+        });
+      }
+
+      let memberId = null;
+      let name = attendee_name?.trim() || null;
+
+      // Verify member exists
+      if (member_id !== undefined && member_id !== null && member_id !== "") {
+        memberId = Number(member_id);
+
+        if (!Number.isSafeInteger(memberId) || memberId <= 0) {
+          return res.status(400).json({
+            success: false,
+            message: "Invalid member ID."
+          });
+        }
+
+        const member = await pool.query(
+          `SELECT first_name, last_name
+           FROM church_members
+           WHERE id = $1`,
+          [memberId]
+        );
+
+        if (member.rowCount === 0) {
+          return res.status(404).json({
+            success: false,
+            message: "Church member not found."
+          });
+        }
+
+        name = name || 
+          `${member.rows[0].first_name} ${member.rows[0].last_name}`;
+      }
+
+      if (!name) {
+        return res.status(400).json({
+          success: false,
+          message: "Please provide an attendee name."
+        });
+      }
+
+      const result = await pool.query(
+        `INSERT INTO church_attendance (
+           member_id,
+           attendee_name,
+           service_name,
+           attendance_date,
+           attendance_type
+         )
+         VALUES ($1, $2, $3, $4, $5)
+         RETURNING *`,
+        [
+          memberId,
+          name,
+          service_name.trim(),
+          attendance_date,
+          type
+        ]
+      );
+
+      res.status(201).json({
+        success: true,
+        message: "Attendance recorded successfully.",
+        attendance: result.rows[0]
+      });
+
+    } catch (error) {
+      console.error("Record attendance:", error.message);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to record attendance."
+      });
+    }
+  }
+);
+
+
+// ========================================
+// 3. UPDATE ATTENDANCE RECORD
+// ========================================
+
+app.put(
+  "/api/admin/attendance/:id",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+
+      if (!Number.isSafeInteger(id) || id <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid attendance ID."
+        });
+      }
+
+      const {
+        attendee_name,
+        service_name,
+        attendance_date,
+        attendance_type
+      } = req.body;
+
+      if (!attendee_name?.trim() || !service_name?.trim() || !attendance_date) {
+        return res.status(400).json({
+          success: false,
+          message: "Attendee name, service and date are required."
+        });
+      }
+
+      const parsedDate = new Date(`${attendance_date}T00:00:00Z`);
+
+      if (
+        !/^\d{4}-\d{2}-\d{2}$/.test(attendance_date) ||
+        Number.isNaN(parsedDate.getTime()) ||
+        parsedDate.toISOString().slice(0, 10) !== attendance_date
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid attendance date."
+        });
+      }
+
+      const allowedTypes = ["member", "visitor", "child"];
+
+      if (!allowedTypes.includes(attendance_type)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid attendance type."
+        });
+      }
+
+      const result = await pool.query(
+        `UPDATE church_attendance
+         SET attendee_name = $1,
+             service_name = $2,
+             attendance_date = $3,
+             attendance_type = $4
+         WHERE id = $5
+         RETURNING *`,
+        [
+          attendee_name.trim(),
+          service_name.trim(),
+          attendance_date,
+          attendance_type,
+          id
+        ]
+      );
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Attendance record not found."
+        });
+      }
+
+      res.json({
+        success: true,
+        message: "Attendance updated successfully.",
+        attendance: result.rows[0]
+      });
+
+    } catch (error) {
+      console.error("Update attendance:", error.message);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to update attendance."
+      });
+    }
+  }
+);
+
+
+// ========================================
+// 4. DELETE ATTENDANCE RECORD
+// ========================================
+
+app.delete(
+  "/api/admin/attendance/:id",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+
+      if (!Number.isSafeInteger(id) || id <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid attendance ID."
+        });
+      }
+
+      const result = await pool.query(
+        `DELETE FROM church_attendance
+         WHERE id = $1
+         RETURNING id`,
+        [id]
+      );
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Attendance record not found."
+        });
+      }
+
+      res.json({
+        success: true,
+        message: "Attendance record deleted successfully."
+      });
+
+    } catch (error) {
+      console.error("Delete attendance:", error.message);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to delete attendance record."
+      });
+    }
+  }
+);
+
+
+// ========================================
+// 5. ATTENDANCE STATISTICS
+// ========================================
+
+app.get(
+  "/api/admin/attendance/stats",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const { date } = req.query;
+
+      const result = await pool.query(
+        `SELECT
+           COUNT(*)::INTEGER AS total_attendance,
+           COUNT(*) FILTER (
+             WHERE attendance_type = 'member'
+           )::INTEGER AS members,
+           COUNT(*) FILTER (
+             WHERE attendance_type = 'visitor'
+           )::INTEGER AS visitors,
+           COUNT(*) FILTER (
+             WHERE attendance_type = 'child'
+           )::INTEGER AS children
+         FROM church_attendance
+         WHERE ($1::date IS NULL OR attendance_date = $1::date)`,
+        [date || null]
+      );
+
+      res.json({
+        success: true,
+        statistics: result.rows[0]
+      });
+
+    } catch (error) {
+      console.error("Attendance statistics:", error.message);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to retrieve attendance statistics."
+      });
+    }
+  }
+);
+
+
+// ========================================
+// CHURCH EXPENSES MANAGEMENT API
+// ========================================
+
+
+// ========================================
+// 1. GET ALL CHURCH EXPENSES
+// ========================================
+
+app.get(
+  "/api/admin/expenses",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const { category, start_date, end_date } = req.query;
+
+      const result = await pool.query(
+        `SELECT *
+         FROM church_expenses
+         WHERE ($1::text IS NULL OR category = $1)
+           AND ($2::date IS NULL OR expense_date >= $2::date)
+           AND ($3::date IS NULL OR expense_date <= $3::date)
+         ORDER BY expense_date DESC, id DESC
+         LIMIT 500`,
+        [
+          category || null,
+          start_date || null,
+          end_date || null
+        ]
+      );
+
+      res.json({
+        success: true,
+        expenses: result.rows
+      });
+
+    } catch (error) {
+      console.error("Fetch expenses:", error.message);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to retrieve expenses."
+      });
+    }
+  }
+);
+
+
+// ========================================
+// 2. ADD NEW CHURCH EXPENSE
+// ========================================
+
+app.post(
+  "/api/admin/expenses",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const {
+        expense_title,
+        category,
+        amount,
+        payment_method,
+        description,
+        expense_date
+      } = req.body;
+
+      if (!expense_title?.trim() || !category?.trim() || amount === undefined) {
+        return res.status(400).json({
+          success: false,
+          message: "Expense title, category and amount are required."
+        });
+      }
+
+      const expenseAmount = Number(amount);
+
+      if (!Number.isFinite(expenseAmount) || expenseAmount <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Enter a valid expense amount greater than zero."
+        });
+      }
+
+      if (expenseAmount > 9999999999.99) {
+        return res.status(400).json({
+          success: false,
+          message: "Expense amount is too large."
+        });
+      }
+
+      const date = expense_date || new Date().toISOString().slice(0, 10);
+
+      const parsedDate = new Date(`${date}T00:00:00Z`);
+
+      if (
+        !/^\d{4}-\d{2}-\d{2}$/.test(date) ||
+        Number.isNaN(parsedDate.getTime()) ||
+        parsedDate.toISOString().slice(0, 10) !== date
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Enter a valid expense date."
+        });
+      }
+
+      const result = await pool.query(
+        `INSERT INTO church_expenses (
+          expense_title,
+          category,
+          amount,
+          payment_method,
+          description,
+          expense_date
+        )
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING *`,
+        [
+          expense_title.trim(),
+          category.trim(),
+          expenseAmount,
+          payment_method || "Cash",
+          description || "",
+          date
+        ]
+      );
+
+      res.status(201).json({
+        success: true,
+        message: "Church expense recorded successfully.",
+        expense: result.rows[0]
+      });
+
+    } catch (error) {
+      console.error("Add expense:", error.message);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to record expense."
+      });
+    }
+  }
+);
+
+
+// ========================================
+// 3. UPDATE CHURCH EXPENSE
+// ========================================
+
+app.put(
+  "/api/admin/expenses/:id",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+
+      if (!Number.isSafeInteger(id) || id <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid expense ID."
+        });
+      }
+
+      const {
+        expense_title,
+        category,
+        amount,
+        payment_method,
+        description,
+        expense_date
+      } = req.body;
+
+      const expenseAmount = Number(amount);
+
+      if (
+        !expense_title?.trim() ||
+        !category?.trim() ||
+        !Number.isFinite(expenseAmount) ||
+        expenseAmount <= 0 ||
+        expenseAmount > 9999999999.99
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Provide a valid title, category and amount."
+        });
+      }
+
+      const parsedDate = new Date(`${expense_date}T00:00:00Z`);
+
+      if (
+        !/^\d{4}-\d{2}-\d{2}$/.test(expense_date || "") ||
+        Number.isNaN(parsedDate.getTime()) ||
+        parsedDate.toISOString().slice(0, 10) !== expense_date
+      ) {
+        return res.status(400).json({
+          success: false,
+          message: "Enter a valid expense date."
+        });
+      }
+
+      const result = await pool.query(
+        `UPDATE church_expenses
+         SET expense_title = $1,
+             category = $2,
+             amount = $3,
+             payment_method = $4,
+             description = $5,
+             expense_date = $6
+         WHERE id = $7
+         RETURNING *`,
+        [
+          expense_title.trim(),
+          category.trim(),
+          expenseAmount,
+          payment_method || "Cash",
+          description || "",
+          expense_date,
+          id
+        ]
+      );
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Expense record not found."
+        });
+      }
+
+      res.json({
+        success: true,
+        message: "Expense updated successfully.",
+        expense: result.rows[0]
+      });
+
+    } catch (error) {
+      console.error("Update expense:", error.message);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to update expense."
+      });
+    }
+  }
+);
+
+
+// ========================================
+// 4. DELETE CHURCH EXPENSE
+// ========================================
+
+app.delete(
+  "/api/admin/expenses/:id",
+  requireAdmin,
+  requireAdminOrigin,
+  async (req, res) => {
+    try {
+      const id = Number(req.params.id);
+
+      if (!Number.isSafeInteger(id) || id <= 0) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid expense ID."
+        });
+      }
+
+      const result = await pool.query(
+        `DELETE FROM church_expenses
+         WHERE id = $1
+         RETURNING id`,
+        [id]
+      );
+
+      if (result.rowCount === 0) {
+        return res.status(404).json({
+          success: false,
+          message: "Expense record not found."
+        });
+      }
+
+      res.json({
+        success: true,
+        message: "Expense deleted successfully."
+      });
+
+    } catch (error) {
+      console.error("Delete expense:", error.message);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to delete expense."
+      });
+    }
+  }
+);
+
+
+// ========================================
+// 5. EXPENSE STATISTICS
+// ========================================
+
+app.get(
+  "/api/admin/expenses/stats",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      const result = await pool.query(
+        `SELECT
+           COUNT(*)::INTEGER AS total_records,
+           COALESCE(SUM(amount), 0) AS total_expenses,
+           COALESCE(AVG(amount), 0) AS average_expense
+         FROM church_expenses`
+      );
+
+      const monthly = await pool.query(
+        `SELECT
+           TO_CHAR(DATE_TRUNC('month', expense_date), 'YYYY-MM') AS month,
+           SUM(amount) AS total
+         FROM church_expenses
+         WHERE expense_date >= CURRENT_DATE - INTERVAL '11 months'
+         GROUP BY DATE_TRUNC('month', expense_date)
+         ORDER BY DATE_TRUNC('month', expense_date)`
+      );
+
+      res.json({
+        success: true,
+        statistics: result.rows[0],
+        monthly_expenses: monthly.rows
+      });
+
+    } catch (error) {
+      console.error("Expense statistics:", error.message);
+
+      res.status(500).json({
+        success: false,
+        message: "Unable to retrieve expense statistics."
+      });
+    }
+  }
+);
+
+// ========================================
+// ADMIN FINANCIAL REPORTS
+// ========================================
+
+app.get(
+  "/api/admin/financial-reports",
+  requireAdmin,
+  async (req, res) => {
+    try {
+      // 1. Calculate total successful donations
+      const donationsResult = await pool.query(`
+        SELECT COALESCE(SUM(amount), 0) AS total
+        FROM donations
+        WHERE status = 'completed'
+      `);
+
+      // 2. Calculate total church expenses
+      const expensesResult = await pool.query(`
+        SELECT COALESCE(SUM(amount), 0) AS total
+        FROM church_expenses
+      `);
+
+      // 3. Get monthly donations and expenses for the last 6 months
+      const monthlyResult = await pool.query(`
+        SELECT
+          TO_CHAR(months.month_start, 'YYYY-MM') AS month,
+          COALESCE(donations.total, 0) AS donations,
+          COALESCE(expenses.total, 0) AS expenses
+        FROM generate_series(
+          DATE_TRUNC('month', CURRENT_DATE) - INTERVAL '5 months',
+          DATE_TRUNC('month', CURRENT_DATE),
+          INTERVAL '1 month'
+        ) AS months(month_start)
+
+        LEFT JOIN (
+          SELECT
+            DATE_TRUNC('month', created_at) AS month_start,
+            SUM(amount) AS total
+          FROM donations
+          WHERE status = 'completed'
+          GROUP BY DATE_TRUNC('month', created_at)
+        ) donations
+        ON donations.month_start = months.month_start
+
+        LEFT JOIN (
+          SELECT
+            DATE_TRUNC('month', expense_date) AS month_start,
+            SUM(amount) AS total
+          FROM church_expenses
+          GROUP BY DATE_TRUNC('month', expense_date)
+        ) expenses
+        ON expenses.month_start = months.month_start
+
+        ORDER BY months.month_start ASC
+      `);
+
+      const totalDonations = Number(
+        donationsResult.rows[0].total
+      );
+
+      const totalExpenses = Number(
+        expensesResult.rows[0].total
+      );
+
+      return res.json({
+        success: true,
+
+        summary: {
+          total_donations: totalDonations,
+          total_expenses: totalExpenses,
+          balance: totalDonations - totalExpenses
+        },
+
+        monthly_reports: monthlyResult.rows.map(row => ({
+          month: row.month,
+          donations: Number(row.donations),
+          expenses: Number(row.expenses),
+          balance:
+            Number(row.donations) - Number(row.expenses)
+        }))
+      });
+
+    } catch (error) {
+      console.error(
+        "Financial reports error:",
+        error.message
+      );
+
+      return res.status(500).json({
+        success: false,
+        message: "Unable to generate financial reports."
+      });
+    }
+  }
+);
 
 // ========================================
 // ADMIN DONATIONS
