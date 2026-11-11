@@ -2570,6 +2570,170 @@ app.get(
   }
 );
 
+ // ========================================
+ // ADMIN CHURCH MINISTRIES API
+ // ========================================
+
+ // GET ALL MINISTRIES
+ app.get("/api/admin/ministries", requireAdmin, async (req, res) => {
+   try {
+     const result = await pool.query(`
+       SELECT *
+       FROM church_ministries
+       ORDER BY created_at DESC
+     `);
+
+     res.json({
+       success: true,
+       ministries: result.rows
+     });
+   } catch (error) {
+     console.error("Get ministries error:", error);
+     res.status(500).json({
+       success: false,
+       message: "Failed to retrieve ministries."
+     });
+   }
+ });
+
+ // ADD MINISTRY
+ app.post(
+   "/api/admin/ministries",
+   requireAdmin,
+   requireAdminOrigin,
+   async (req, res) => {
+     try {
+       const { name, description, leader_name, meeting_day } = req.body;
+
+       if (!name || !name.trim()) {
+         return res.status(400).json({
+           success: false,
+           message: "Ministry name is required."
+         });
+       }
+
+       const result = await pool.query(
+         `
+         INSERT INTO church_ministries
+           (name, description, leader_name, meeting_day)
+         VALUES ($1, $2, $3, $4)
+         RETURNING *
+         `,
+         [
+           name.trim(),
+           description || null,
+           leader_name || null,
+           meeting_day || null
+         ]
+       );
+
+       res.status(201).json({
+         success: true,
+         message: "Ministry added successfully.",
+         ministry: result.rows[0]
+       });
+     } catch (error) {
+       console.error("Add ministry error:", error);
+       res.status(500).json({
+         success: false,
+         message: "Failed to add ministry."
+       });
+     }
+   }
+ );
+
+ // UPDATE MINISTRY
+ app.put(
+   "/api/admin/ministries/:id",
+   requireAdmin,
+   requireAdminOrigin,
+   async (req, res) => {
+     try {
+       const { id } = req.params;
+       const { name, description, leader_name, meeting_day } = req.body;
+
+       if (!name || !name.trim()) {
+         return res.status(400).json({
+           success: false,
+           message: "Ministry name is required."
+         });
+       }
+
+       const result = await pool.query(
+         `
+         UPDATE church_ministries
+         SET
+           name = $1,
+           description = $2,
+           leader_name = $3,
+           meeting_day = $4
+         WHERE id = $5
+         RETURNING *
+         `,
+         [
+           name.trim(),
+           description || null,
+           leader_name || null,
+           meeting_day || null,
+           id
+         ]
+       );
+
+       if (result.rowCount === 0) {
+         return res.status(404).json({
+           success: false,
+           message: "Ministry not found."
+         });
+       }
+
+       res.json({
+         success: true,
+         message: "Ministry updated successfully.",
+         ministry: result.rows[0]
+       });
+     } catch (error) {
+       console.error("Update ministry error:", error);
+       res.status(500).json({
+         success: false,
+         message: "Failed to update ministry."
+       });
+     }
+   }
+ );
+
+ // DELETE MINISTRY
+ app.delete(
+   "/api/admin/ministries/:id",
+   requireAdmin,
+   requireAdminOrigin,
+   async (req, res) => {
+     try {
+       const result = await pool.query(
+         `DELETE FROM church_ministries WHERE id = $1 RETURNING id`,
+         [req.params.id]
+       );
+
+       if (result.rowCount === 0) {
+         return res.status(404).json({
+           success: false,
+           message: "Ministry not found."
+         });
+       }
+
+       res.json({
+         success: true,
+         message: "Ministry deleted successfully."
+       });
+     } catch (error) {
+       console.error("Delete ministry error:", error);
+       res.status(500).json({
+         success: false,
+         message: "Failed to delete ministry."
+       });
+     }
+   }
+ );
+
 // ========================================
 // ADMIN DONATIONS
 // ========================================
