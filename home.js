@@ -1,198 +1,88 @@
+
+"use strict";
+
 // ========================================
-// IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
+// IMPERISHABLE CROWN OUTREACH BAPTIST CHURCH
 // HOME PAGE JAVASCRIPT
 // ========================================
 
 document.addEventListener("DOMContentLoaded", () => {
-
-    // ========================================
-    // GET ELEMENTS
-    // ========================================
-
-    const hamburger =
-        document.getElementById("hamburger");
-
-    const dropdownMenu =
-        document.getElementById("dropdownMenu");
-
-    const dropdownItems =
-        document.querySelectorAll(".dropdown-item");
-
-
-    // ========================================
-    // CHECK ELEMENTS
-    // ========================================
+    const hamburger = document.getElementById("hamburger");
+    const dropdownMenu = document.getElementById("dropdownMenu");
 
     if (!hamburger || !dropdownMenu) {
-        console.error(
-            "Navigation elements were not found."
-        );
-
+        console.error("Navigation elements were not found.");
         return;
     }
 
+    const dropdownItems = dropdownMenu.querySelectorAll(".dropdown-item");
 
-    // ========================================
-    // OPEN / CLOSE MENU
-    // ========================================
+    // Open the navigation menu
+    function openMenu() {
+        dropdownMenu.classList.add("show");
+        hamburger.setAttribute("aria-expanded", "true");
+        hamburger.setAttribute("aria-label", "Close navigation menu");
 
+        const icon = hamburger.querySelector("i");
+        if (icon) {
+            icon.className = "fas fa-times";
+        }
+    }
+
+    // Close the navigation menu
+    function closeMenu() {
+        dropdownMenu.classList.remove("show");
+        hamburger.setAttribute("aria-expanded", "false");
+        hamburger.setAttribute("aria-label", "Open navigation menu");
+
+        const icon = hamburger.querySelector("i");
+        if (icon) {
+            icon.className = "fas fa-bars";
+        }
+    }
+
+    // Toggle menu when hamburger is clicked
     hamburger.addEventListener("click", (event) => {
-
-        // Prevent the document click event
-        // from immediately closing the menu.
         event.stopPropagation();
 
-        const isOpen =
-            dropdownMenu.classList.toggle("show");
+        const isOpen = dropdownMenu.classList.contains("show");
 
-
-        // Update accessibility state
-        hamburger.setAttribute(
-            "aria-expanded",
-            isOpen
-        );
-
-
-        // Change hamburger icon
         if (isOpen) {
-
-            hamburger.innerHTML =
-                '<i class="fas fa-times"></i>';
-
-            hamburger.setAttribute(
-                "aria-label",
-                "Close navigation menu"
-            );
-
+            closeMenu();
         } else {
-
-            hamburger.innerHTML =
-                '<i class="fas fa-bars"></i>';
-
-            hamburger.setAttribute(
-                "aria-label",
-                "Open navigation menu"
-            );
+            openMenu();
         }
-
     });
 
-
-    // ========================================
-    // CLOSE MENU WHEN CLICKING A LINK
-    // ========================================
-
+    // Close menu after selecting a navigation link
     dropdownItems.forEach((item) => {
-
-        item.addEventListener("click", () => {
-
-            dropdownMenu.classList.remove("show");
-
-            hamburger.setAttribute(
-                "aria-expanded",
-                "false"
-            );
-
-            hamburger.innerHTML =
-                '<i class="fas fa-bars"></i>';
-
-            hamburger.setAttribute(
-                "aria-label",
-                "Open navigation menu"
-            );
-
-        });
-
+        item.addEventListener("click", closeMenu);
     });
 
-
-    // ========================================
-    // CLOSE MENU WHEN CLICKING OUTSIDE
-    // ========================================
-
+    // Close menu when clicking outside it
     document.addEventListener("click", (event) => {
+        const clickedInsideMenu = dropdownMenu.contains(event.target);
+        const clickedHamburger = hamburger.contains(event.target);
 
-        const clickedInsideMenu =
-            dropdownMenu.contains(event.target);
-
-        const clickedHamburger =
-            hamburger.contains(event.target);
-
-
-        if (
-            !clickedInsideMenu &&
-            !clickedHamburger
-        ) {
-
-            dropdownMenu.classList.remove("show");
-
-            hamburger.setAttribute(
-                "aria-expanded",
-                "false"
-            );
-
-            hamburger.innerHTML =
-                '<i class="fas fa-bars"></i>';
-
-            hamburger.setAttribute(
-                "aria-label",
-                "Open navigation menu"
-            );
+        if (!clickedInsideMenu && !clickedHamburger) {
+            closeMenu();
         }
-
     });
 
-
-    // ========================================
-    // CLOSE MENU WITH ESCAPE KEY
-    // ========================================
-
+    // Close menu with Escape key
     document.addEventListener("keydown", (event) => {
-
         if (event.key === "Escape") {
-
-            dropdownMenu.classList.remove("show");
-
-            hamburger.setAttribute(
-                "aria-expanded",
-                "false"
-            );
-
-            hamburger.innerHTML =
-                '<i class="fas fa-bars"></i>';
-
-            hamburger.setAttribute(
-                "aria-label",
-                "Open navigation menu"
-            );
-
+            closeMenu();
             hamburger.focus();
         }
-
     });
 
-
-    // ========================================
-    // CLOSE MENU AFTER WINDOW RESIZE
-    // ========================================
-
+    // Close mobile menu when screen becomes wider
     window.addEventListener("resize", () => {
-
-        dropdownMenu.classList.remove("show");
-
-        hamburger.setAttribute(
-            "aria-expanded",
-            "false"
-        );
-
-        hamburger.innerHTML =
-            '<i class="fas fa-bars"></i>';
-
-        hamburger.setAttribute(
-            "aria-label",
-            "Open navigation menu"
-        );
-
+        if (window.innerWidth > 900) {
+            closeMenu();
+        }
     });
 
+    console.log("Imperishable Crown home page loaded successfully.");
 });
