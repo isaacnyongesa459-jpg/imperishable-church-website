@@ -1,301 +1,355 @@
-/* ========================================
-IMPERISHABLE CROWN BIBLE BAPTIST CHURCH
-WELCOME PAGE STYLES (MATCHED TO HOME PAGE)
-======================================== */
 
-/* ========================================
-RESET
-======================================== */
+/* =====================================================
+   IMPERISHABLE CROWN OUTREACH BAPTIST CHURCH
+   PREMIUM WELCOME PAGE DESIGN
+   Colours: Navy, Champagne Gold, Warm Ivory
+===================================================== */
+
+/* RESET */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* ========================================
-BODY
-======================================== */
+:root {
+    --navy: #071d35;
+    --navy-light: #123653;
+    --gold: #d4af62;
+    --gold-light: #f2d58b;
+    --ivory: #f8f6ef;
+    --white: #ffffff;
+    --text: #172b42;
+    --muted: #687789;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     min-height: 100vh;
-
     font-family: "Poppins", sans-serif;
+    background: var(--ivory);
+    color: var(--text);
+}
 
+/* =====================================================
+   TOP INFORMATION BAR
+===================================================== */
+
+.top-bar {
+    width: 100%;
+    min-height: 43px;
+    background: var(--navy);
+    color: var(--white);
     display: flex;
-    flex-direction: column;
-    justify-content: center;
     align-items: center;
+    padding: 8px 6%;
+}
 
+.top-bar-inner {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.top-bar-inner span {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.9);
+}
+
+.top-bar-inner i {
+    color: var(--gold);
+    margin-right: 7px;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.welcome-header {
+    min-height: 95px;
+    width: 100%;
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 6%;
+    gap: 20px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.06);
     position: relative;
+    z-index: 5;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    text-decoration: none;
+}
+
+.brand-icon {
+    width: 58px;
+    height: 58px;
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    color: var(--gold);
+}
+
+.brand-icon i:first-child {
+    font-size: 21px;
+}
+
+.brand-icon i:last-child {
+    font-size: 15px;
+}
+
+.brand-name {
+    font-family: "Playfair Display", serif;
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.3;
+}
+
+.brand-name small {
+    display: block;
+    font-family: "Poppins", sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.3px;
+    color: var(--muted);
+}
+
+.header-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 14px 24px;
+    border-radius: 7px;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.header-button:hover {
+    background: var(--navy);
+    color: var(--white);
+    transform: translateY(-2px);
+}
+
+/* =====================================================
+   HERO SECTION
+===================================================== */
+
+.welcome-hero {
+    min-height: 620px;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
     overflow: hidden;
 
-    color: #ffffff;
+    background-color: var(--navy);
 
-    /* Deep navy background matched to screenshot */
-    background-color: #0a1428;
+    background-image: url("a_grand_cinematic_church_entrance_web_splash_page-1.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
-/* ========================================
-BACKGROUND DECORATION
-======================================== */
-body::before {
-    content: "";
-
+.hero-overlay {
     position: absolute;
+    inset: 0;
 
-    width: 500px;
-    height: 500px;
-
-    top: -250px;
-    left: -250px;
-
-    border-radius: 50%;
-
-    background: rgba(255, 255, 255, 0.02);
-
-    pointer-events: none;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(4, 23, 44, 0.97) 0%,
+            rgba(4, 23, 44, 0.88) 38%,
+            rgba(4, 23, 44, 0.45) 70%,
+            rgba(4, 23, 44, 0.12) 100%
+        );
 }
 
-body::after {
-    content: "";
-
-    position: absolute;
-
-    width: 450px;
-    height: 450px;
-
-    right: -225px;
-    bottom: -225px;
-
-    border-radius: 50%;
-
-    background: rgba(255, 255, 255, 0.02);
-
-    pointer-events: none;
-}
-
-/* ========================================
-SPLASH CONTAINER
-======================================== */
-.splash-container {
-    width: min(90%, 850px);
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    text-align: center;
-
+.hero-content {
     position: relative;
     z-index: 2;
-
-    padding: 30px;
-
-    animation: pageAppear 0.9s ease forwards;
+    width: 100%;
+    max-width: 850px;
+    padding: 90px 8%;
+    color: var(--white);
+    animation: fadeUp 1s ease;
 }
 
-/* ========================================
-CHURCH ICON
-======================================== */
-.church-icon {
-    width: 95px;
-    height: 95px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
+.hero-label {
+    display: inline-block;
+    color: var(--gold-light);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 3px;
     margin-bottom: 25px;
-
-    border-radius: 50%;
-
-    background: rgba(255, 255, 255, 0.05);
-
-    border: 1px solid rgba(255, 255, 255, 0.1);
-
-    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.3);
-
-    animation: iconFloat 3s ease-in-out infinite;
 }
 
-.church-icon i {
-    font-size: 42px;
-
-    /* Gold accent matched to screenshot */
-    color: #cda434;
+.hero-content h1 {
+    max-width: 750px;
+    font-family: "Playfair Display", serif;
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 700;
+    line-height: 1.13;
+    margin-bottom: 22px;
+    color: var(--white);
 }
 
-/* ========================================
-CHURCH NAME
-======================================== */
-h1 {
-    font-size: clamp(2rem, 5vw, 3.5rem);
-
-    line-height: 1.2;
-
-    font-weight: 800;
-
-    letter-spacing: -0.5px;
-
-    margin-bottom: 15px;
-
-    color: #ffffff;
-
-    text-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
-}
-
-h1 span {
+.hero-content h1 span {
     display: block;
-
-    font-size: 0.62em;
-
-    font-weight: 600;
-
-    letter-spacing: 1px;
-
-    margin-top: 8px;
-
-    color: #cda434;
+    color: var(--gold-light);
 }
 
-/* ========================================
-TAGLINE
-======================================== */
-.tagline {
-    font-size: clamp(0.95rem, 2vw, 1.15rem);
-
+.hero-description {
+    max-width: 590px;
+    font-size: 15px;
+    line-height: 1.9;
     font-weight: 300;
-
-    letter-spacing: 0.5px;
-
-    color: rgba(255, 255, 255, 0.85);
-
-    margin-bottom: 40px;
+    color: rgba(255,255,255,0.88);
+    margin-bottom: 35px;
 }
 
-/* ========================================
-JOIN BUTTON
-======================================== */
-.join-btn {
-    display: inline-flex;
+/* =====================================================
+   HERO BUTTONS
+===================================================== */
 
-    align-items: center;
-    justify-content: center;
-
-    gap: 12px;
-
-    min-width: 220px;
-
-    padding: 16px 28px;
-
-    border-radius: 8px;
-
-    text-decoration: none;
-
-    font-family: "Poppins", sans-serif;
-
-    font-size: 1rem;
-
-    font-weight: 600;
-
-    /* Dark navy text on gold */
-    color: #0a1428;
-
-    /* Solid gold from screenshot */
-    background: #cda434;
-
-    border: 2px solid #cda434;
-
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-
-    transition: all 0.25s ease;
-}
-
-.join-btn i {
-    transition: transform 0.25s ease;
-}
-
-.join-btn:hover {
-    transform: translateY(-4px);
-
-    background: #e0b73e;
-
-    border-color: #e0b73e;
-
-    box-shadow: 0 15px 35px rgba(205, 164, 52, 0.25);
-}
-
-.join-btn:hover i {
-    transform: translateX(5px);
-}
-
-.join-btn:active {
-    transform: translateY(-1px);
-}
-
-/* ========================================
-VERSE
-======================================== */
-.verse {
-    position: absolute;
-
-    left: 50%;
-    bottom: 30px;
-
-    transform: translateX(-50%);
-
-    width: min(90%, 700px);
-
-    z-index: 2;
-
+.hero-actions {
     display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
 
+.primary-button,
+.secondary-button {
+    min-height: 53px;
+    padding: 14px 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 11px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.primary-button {
+    background: var(--gold);
+    color: var(--navy);
+    border: 2px solid var(--gold);
+}
+
+.primary-button:hover {
+    background: var(--gold-light);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(212,175,98,0.2);
+}
+
+.secondary-button {
+    border: 2px solid var(--gold);
+    color: var(--white);
+    background: rgba(7,29,53,0.4);
+}
+
+.secondary-button:hover {
+    background: var(--gold);
+    color: var(--navy);
+    transform: translateY(-4px);
+}
+
+/* =====================================================
+   HERO FEATURES
+===================================================== */
+
+.hero-features {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    margin-top: 45px;
+}
+
+.hero-features span {
+    color: var(--white);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.hero-features i {
+    color: var(--gold);
+    margin-right: 8px;
+}
+
+/* =====================================================
+   HERO BOTTOM STRIP
+===================================================== */
+
+.hero-bottom {
+    position: absolute;
+    z-index: 2;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 20px;
+    display: flex;
     justify-content: center;
     align-items: center;
-
-    gap: 10px;
-
+    flex-wrap: wrap;
+    gap: 15px;
+    background: rgba(7,29,53,0.88);
+    color: var(--gold-light);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
     text-align: center;
-
-    color: rgba(255, 255, 255, 0.6);
-
-    font-size: 0.85rem;
-
-    font-weight: 300;
-
-    line-height: 1.6;
 }
 
-.verse i {
-    color: #cda434;
+.hero-divider {
+    width: 35px;
+    height: 1px;
+    background: var(--gold);
 }
 
-.verse p {
-    margin: 0;
+/* =====================================================
+   ACCESSIBILITY
+===================================================== */
+
+a:focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 4px;
 }
 
-.verse span {
-    font-weight: 500;
+/* =====================================================
+   ANIMATIONS
+===================================================== */
 
-    color: rgba(255, 255, 255, 0.8);
-}
-
-/* ========================================
-ANIMATIONS
-======================================== */
-@keyframes iconFloat {
-    0%, 100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-8px);
-    }
-}
-
-@keyframes pageAppear {
+@keyframes fadeUp {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(25px);
     }
 
     to {
@@ -304,95 +358,193 @@ ANIMATIONS
     }
 }
 
-/* ========================================
-KEYBOARD ACCESSIBILITY
-======================================== */
-.join-btn:focus-visible {
-    outline: 3px solid #ffffff;
+/* =====================================================
+   TABLETS
+===================================================== */
 
-    outline-offset: 5px;
+@media (max-width: 900px) {
+
+    .welcome-header {
+        padding: 15px 4%;
+    }
+
+    .hero-content {
+        padding: 80px 6%;
+    }
+
+    .welcome-hero {
+        min-height: 580px;
+        background-position: 58% center;
+    }
+
+    .hero-overlay {
+        background: linear-gradient(
+            90deg,
+            rgba(4,23,44,0.96),
+            rgba(4,23,44,0.72)
+        );
+    }
 }
 
-/* ========================================
-MOBILE RESPONSIVENESS
-======================================== */
+/* =====================================================
+   MOBILE PHONES
+===================================================== */
+
 @media (max-width: 600px) {
 
-    body {
-        padding: 20px;
+    .top-bar {
+        padding: 10px 15px;
     }
 
-    .splash-container {
-        padding: 20px 10px;
+    .top-bar-inner {
+        justify-content: center;
+        gap: 8px 15px;
     }
 
-    .church-icon {
-        width: 80px;
-        height: 80px;
+    .top-bar-inner span {
+        font-size: 10px;
+    }
 
+    .welcome-header {
+        min-height: 80px;
+        padding: 12px 16px;
+    }
+
+    .brand {
+        gap: 8px;
+    }
+
+    .brand-icon {
+        width: 43px;
+        height: 43px;
+    }
+
+    .brand-icon i:first-child {
+        font-size: 16px;
+    }
+
+    .brand-icon i:last-child {
+        font-size: 12px;
+    }
+
+    .brand-name {
+        font-size: 14px;
+    }
+
+    .brand-name small {
+        font-size: 8px;
+        letter-spacing: 0.5px;
+    }
+
+    .header-button {
+        padding: 11px 13px;
+        font-size: 10px;
+        gap: 6px;
+    }
+
+    .welcome-hero {
+        min-height: 650px;
+        align-items: center;
+        background-position: 60% center;
+    }
+
+    .hero-overlay {
+        background: linear-gradient(
+            90deg,
+            rgba(4,23,44,0.97),
+            rgba(4,23,44,0.83)
+        );
+    }
+
+    .hero-content {
+        padding: 65px 22px 85px;
+    }
+
+    .hero-label {
+        font-size: 10px;
+        letter-spacing: 2px;
         margin-bottom: 20px;
     }
 
-    .church-icon i {
-        font-size: 34px;
+    .hero-content h1 {
+        font-size: clamp(37px, 10vw, 48px);
+        line-height: 1.17;
     }
 
-    h1 {
-        font-size: 2.2rem;
+    .hero-description {
+        font-size: 13px;
+        line-height: 1.8;
+        margin-bottom: 27px;
     }
 
-    h1 span {
-        font-size: 0.65em;
+    .hero-actions {
+        align-items: stretch;
+        flex-direction: column;
+        max-width: 300px;
     }
 
-    .tagline {
-        margin-bottom: 30px;
-    }
-
-    .join-btn {
+    .primary-button,
+    .secondary-button {
         width: 100%;
-
-        max-width: 280px;
+        font-size: 12px;
+        padding: 13px 15px;
     }
 
-    .verse {
-        bottom: 18px;
+    .hero-features {
+        gap: 15px;
+        margin-top: 30px;
+    }
 
-        font-size: 0.72rem;
+    .hero-features span {
+        font-size: 11px;
+    }
 
-        width: 90%;
+    .hero-bottom {
+        font-size: 9px;
+        gap: 8px;
+        letter-spacing: 1px;
+    }
+
+    .hero-divider {
+        width: 20px;
     }
 }
 
-/* ========================================
-VERY SMALL SCREENS
-======================================== */
-@media (max-height: 600px) {
+/* =====================================================
+   VERY SMALL SCREENS
+===================================================== */
 
-    .church-icon {
-        width: 65px;
-        height: 65px;
+@media (max-width: 360px) {
 
-        margin-bottom: 12px;
+    .brand-name {
+        font-size: 12px;
     }
 
-    .church-icon i {
-        font-size: 28px;
+    .brand-name small {
+        font-size: 7px;
     }
 
-    h1 {
-        font-size: 1.7rem;
+    .header-button {
+        padding: 10px;
+        font-size: 9px;
     }
 
-    .tagline {
-        margin-bottom: 18px;
+    .hero-content h1 {
+        font-size: 34px;
     }
+}
 
-    .join-btn {
-        padding: 11px 22px;
-    }
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
 
-    .verse {
-        bottom: 10px;
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
 }
