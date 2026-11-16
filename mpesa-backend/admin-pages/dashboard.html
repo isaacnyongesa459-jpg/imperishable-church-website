@@ -1058,7 +1058,7 @@ hr {
     <p id="ministriesMessage"></p>
 </section>
 
-    <section class="card">
+    <section class="card" id="announcementsSection">
       <h2>Church Announcements</h2>
       <p>Create and manage announcements for your church.</p>
 
@@ -1084,7 +1084,7 @@ hr {
       <div id="announcementList">Loading announcements...</div>
     </section>
 
-    <section class="card">
+    <section class="card" id="eventsSection">
       <h2>Church Events Management</h2>
       <p>Create and manage upcoming church events.</p>
 
@@ -1121,7 +1121,7 @@ hr {
       <div id="eventList">Loading events...</div>
     </section>
 
-    <section class="card table-card">
+    <section class="card table-card" id="donationsSection">
       <h2>Recent Donations</h2>
       <div id="donationMessage">Loading donation records...</div>
 
@@ -1138,7 +1138,7 @@ hr {
         <tbody id="donationBody"></tbody>
       </table>
     </section>
-    <section class="card">
+    <section class="card" id="messagesSection">
       <h2>Contact Messages & Prayer Requests</h2>
       <p>View submissions sent through the website contact form.</p>
 
@@ -1147,7 +1147,7 @@ hr {
       <div id="contactMessagesList"></div>
     </section>
 
-    <section class="card">
+    <section class="card" id="gallerySection">
       <h2>Church Photo Gallery</h2>
       <p>Add photos, edit their details, and choose which photos appear publicly.</p>
 
@@ -1199,7 +1199,8 @@ hr {
   </main>
 
   <script>
-    const API = "https://imperishable-church-mpesa-backend-fa2a.onrender.com";
+    (()=>{let t;try{t=localStorage.getItem('imperishable-theme')}catch{};document.documentElement.dataset.theme=t==='light'||t==='dark'?t:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light')})();
+    const API = window.location.origin;
 
     function escapeHTML(value) {
       return String(value ?? "")
@@ -1210,6 +1211,7 @@ hr {
         .replaceAll("'", "&#039;");
     }
 
+    const themeButton=document.createElement("button");themeButton.type="button";themeButton.className="theme-toggle";themeButton.textContent=document.documentElement.dataset.theme==="dark"?"☀ Light":"◐ Theme";themeButton.addEventListener("click",()=>{const next=document.documentElement.dataset.theme==="dark"?"light":"dark";document.documentElement.dataset.theme=next;try{localStorage.setItem("imperishable-theme",next)}catch{}themeButton.textContent=next==="dark"?"☀ Light":"◐ Theme"});document.querySelector("header")?.append(themeButton);
     // Logout handling
     const logoutButton = document.getElementById("logoutButton");
     logoutButton.addEventListener("click", async () => {
@@ -1220,7 +1222,7 @@ hr {
           credentials: "include"
         });
       } finally {
-        window.location.replace("admin.html");
+        window.location.replace("/admin/login");
       }
     });
     // Load Dashboard & Donations
@@ -1239,13 +1241,13 @@ hr {
         });
 
         if (!sessionResponse.ok) {
-          window.location.replace("admin.html");
+          window.location.replace("/admin/login");
           return;
         }
 
         const session = await sessionResponse.json();
         if (!session.success) {
-          window.location.replace("admin.html");
+          window.location.replace("/admin/login");
           return;
         }
 
@@ -1306,7 +1308,7 @@ hr {
       announcementList.textContent = "Loading announcements...";
       try {
         const response = await fetch(`${API}/api/admin/announcements`, { credentials: "include", cache: "no-store" });
-        if (response.status === 401) { window.location.replace("admin.html"); return; }
+        if (response.status === 401) { window.location.replace("/admin/login"); return; }
         const data = await response.json();
         if (!response.ok || !data.success) throw new Error(data.message || "Could not load announcements.");
 
@@ -1478,7 +1480,7 @@ hr {
       const data = await response.json();
 
       if (response.status === 401) {
-        window.location.replace("admin.html");
+        window.location.replace("/admin/login");
         throw new Error("Your administrator session has expired.");
       }
 
@@ -1680,7 +1682,7 @@ async function memberRequest(path, options = {}) {
   const data = await response.json();
 
   if (response.status === 401) {
-    window.location.replace("admin.html");
+    window.location.replace("/admin/login");
     throw new Error("Your session has expired.");
   }
 

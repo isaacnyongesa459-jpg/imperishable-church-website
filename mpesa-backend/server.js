@@ -9,6 +9,8 @@ process.on("unhandledRejection", (reason) => {
 });
 
 const express = require("express");
+const fs = require("fs");
+const path = require("path");
 const { Pool } = require("pg");
 const crypto = require("crypto");
 const app = express();
@@ -16,7 +18,7 @@ const app = express();
 const ADMIN_COOKIE_NAME = "__Host-admin_session";
 const ADMIN_SESSION_HOURS = 8;
 const ADMIN_FRONTEND_ORIGIN =
-  "https://isaacnyongesa459-jpg.github.io";
+  "https://imperishable-church-mpesa-backend-fa2a.onrender.com";
 
 const adminLoginAttempts = new Map();
 
@@ -245,14 +247,16 @@ pool.query(`
 // ========================================
 
 app.use((req, res, next) => {
-  res.setHeader(
-    "Access-Control-Allow-Origin",
-    FRONTEND_ORIGIN
-  );
+  const origin = req.get("origin");
+  const allowedOrigins = [FRONTEND_ORIGIN, ADMIN_FRONTEND_ORIGIN];
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Vary", "Origin");
+  }
 
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, OPTIONS"
+    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
   );
 
   res.setHeader(
@@ -1375,6 +1379,33 @@ app.post(
     });
   }
 );
+
+// Admin views are delivered by the authenticated backend, not GitHub Pages.
+const ADMIN_VIEW_DIR = path.join(__dirname, "admin-pages");
+const ADMIN_SECTIONS = {
+  dashboard: "dashboardTop", members: "membersSection", attendance: "attendanceSection",
+  expenses: "expensesSection", reports: "financialReportsSection", ministries: "ministriesSection",
+  announcements: "announcementsSection", events: "eventsSection", donations: "donationsSection",
+  messages: "messagesSection", gallery: "gallerySection"
+};
+app.get(["/admin", "/admin/login"], (req, res) => {
+  res.setHeader("Cache-Control", "no-store");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.sendFile(path.join(ADMIN_VIEW_DIR, "login.html"));
+});
+app.get("/admin/:section", requireAdmin, (req, res) => {
+  const section = req.params.section;
+  if (!Object.prototype.hasOwnProperty.call(ADMIN_SECTIONS, section)) return res.sendStatus(404);
+  fs.readFile(path.join(ADMIN_VIEW_DIR, "dashboard.html"), "utf8", (error, html) => {
+    if (error) return res.sendStatus(500);
+    const nav = Object.entries(ADMIN_SECTIONS).map(([key, id]) => `<a href="/admin/${key}">${key[0].toUpperCase()+key.slice(1)}</a>`).join("");
+    html = html.replace(/<nav>[\s\S]*?<\/nav>/, `<nav>${nav}</nav>`);
+    html = html.replace("</body>", `<script>document.documentElement.dataset.adminPage=${JSON.stringify(section)}; const selected=${JSON.stringify(ADMIN_SECTIONS[section])}; document.querySelectorAll('.admin-main > section').forEach(el=>{if(el.id!==selected)el.hidden=true}); if(selected==='dashboardTop')document.querySelectorAll('.admin-main > section').forEach(el=>el.hidden=false);</script></body>`);
+    res.setHeader("Cache-Control", "private, no-store");
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.type("html").send(html);
+  });
+});
 
 /* ========================================
    CHURCH PHOTO GALLERY API

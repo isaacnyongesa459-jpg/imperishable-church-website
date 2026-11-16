@@ -89,7 +89,7 @@
 
 <body>
   <main class="login-card">
-    <h1>Administrator Login</h1>
+    <button id="themeToggle" type="button" aria-label="Switch theme">Theme</button><h1>Administrator Login</h1>
 
     <p>Imperishable Crown Outreach Baptist Church</p>
 
@@ -124,8 +124,7 @@
   </main>
 
   <script>
-    const API =
-      "https://imperishable-church-mpesa-backend-fa2a.onrender.com";
+    const API = window.location.origin;
 
     const form = document.getElementById("loginForm");
     const button = document.getElementById("loginButton");
@@ -178,7 +177,7 @@
         message.textContent =
           "Login successful. Opening dashboard...";
 
-        window.location.href = "admin-dashboard.html";
+        window.location.href = "/admin/dashboard";
 
       } catch (error) {
         message.textContent =
@@ -188,5 +187,7 @@
       }
     });
   </script>
+  <script>(()=>{let t;try{t=localStorage.getItem('imperishable-theme')}catch{};const d=t==='dark'||t==='light'?t:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=d;const b=document.getElementById('themeToggle');const paint=()=>{b.textContent=document.documentElement.dataset.theme==='dark'?'☀ Light':'◐ Dark';};b.addEventListener('click',()=>{const n=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=n;try{localStorage.setItem('imperishable-theme',n)}catch{}paint()});paint();})();</script>
+  <style>:root[data-theme="dark"] body{background:#111b19;color:#e7eee8}:root[data-theme="dark"] .login-card{background:#182522;color:#e7eee8}:root[data-theme="dark"] p{color:#aab9af}:root[data-theme="dark"] input{background:#101816;color:#e7eee8;border-color:#53645a}</style>
 </body>
 </html>

@@ -55,3 +55,10 @@ Use the Safaricom Daraja sandbox for testing before considering production payme
 The frontend must send API requests to the deployed backend's public HTTPS URL. A GitHub Pages website cannot run this Node.js backend itself.
 
 Before accepting real donations, set a valid Paystack secret key and webhook URL, then test payment success, cancellation, failure, callback handling, database recording, and security protections. The secret is used only by the server; donations count only after the backend verifies their status, amount, and currency with Paystack.
+
+
+## Administrator dashboard
+
+Admin sign-in and management views are delivered by the backend at `/admin/login` and `/admin/<section>` (dashboard, members, attendance, expenses, reports, ministries, announcements, events, donations, messages, and gallery). Section pages require the signed administrator session cookie; all `/api/admin/*` data operations remain protected by the same server-side middleware. Public pages link directly to the backend sign-in page. Set `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and a unique random `ADMIN_SESSION_SECRET` (at least 32 characters) in Render's environment settings; never commit credential values.
+
+GitHub Pages cannot enforce authorization for static files. Therefore admin views are not served from the public Pages site; the Express backend is the protected page origin. The public repository itself remains inspectable, so protection applies to the deployed admin routes and data/API operations, not to source code visibility.
