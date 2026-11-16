@@ -1,4 +1,4 @@
-const CACHE_NAME = "imperishable-church-v8";
+const CACHE_NAME = "imperishable-church-v10";
 const START_PAGE = "./index.html";
 
 const PRECACHE_FILES = [
@@ -7,10 +7,11 @@ const PRECACHE_FILES = [
     "./styles.css",
     "./script.js",
     "./site.css",
+    "./home.css",
     "./manifest.json",
     "./app-icon-192.png",
     "./file_00000000975082088f440ded4bccbf30.png",
-    "./a_grand_cinematic_church_entrance_web_splash_page-1.png"
+    "./11.jpg"
 ];
 
 /* INSTALL: save the core files for offline use */
