@@ -315,7 +315,63 @@
 
                         </form>
                     </div>
+<!-- PAYSTACK DONATION -->
+<div class="donation-card paystack-card">
 
+    <div class="payment-heading">
+        <div class="payment-icon">
+            <i class="fas fa-credit-card" aria-hidden="true"></i>
+        </div>
+
+        <div>
+            <h3>Donate with Paystack</h3>
+            <p>Pay securely with Visa, Mastercard, or Mobile Money.</p>
+        </div>
+    </div>
+
+    <form id="paystackForm" novalidate>
+
+        <div class="form-group">
+            <label for="paystackEmail">Email Address</label>
+            <input
+                type="email"
+                id="paystackEmail"
+                name="email"
+                placeholder="e.g. name@example.com"
+                required
+            />
+        </div>
+
+        <div class="form-group">
+            <label for="paystackAmount">Donation amount (KES)</label>
+            <input
+                type="number"
+                id="paystackAmount"
+                name="paystackAmount"
+                min="10"
+                max="250000"
+                step="1"
+                inputmode="numeric"
+                placeholder="Enter amount, e.g. 1000"
+                required
+            />
+        </div>
+
+        <button
+            type="button"
+            class="donate-btn paystack-btn"
+            id="paystackBtn"
+        >
+            <i class="fas fa-lock" aria-hidden="true"></i>
+            Donate with Paystack
+        </button>
+
+        <p class="payment-note">
+            Secured by Paystack. You will be prompted to complete your payment safely via card or mobile money.
+        </p>
+
+    </form>
+</div>
                     <!-- PAYPAL DONATION -->
                     <div class="donation-card paypal-card">
 
