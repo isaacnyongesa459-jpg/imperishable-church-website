@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const paintTheme=()=>{const dark=document.documentElement.dataset.theme==='dark';themeButton.textContent=dark?'☀ Light':'◐ Theme';themeButton.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');};
   themeButton.addEventListener('click',()=>{const next=document.documentElement.dataset.theme==='dark'?'light':'dark';document.documentElement.dataset.theme=next;try{localStorage.setItem('imperishable-theme',next);}catch{}paintTheme();});
   const header=document.querySelector('.header-inner'); if(header){header.append(themeButton);paintTheme();}
+  document.querySelectorAll('.main-nav a[href^="https://imperishable-church-mpesa-backend-fa2a.onrender.com/admin/login"]').forEach(a=>{const u=new URL(a.href);u.searchParams.set('theme',document.documentElement.dataset.theme);a.href=u.toString();});
 
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.querySelector('#mainNav');
