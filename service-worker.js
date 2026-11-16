@@ -1,4 +1,4 @@
-const CACHE_NAME = "imperishable-church-v7";
+const CACHE_NAME = "imperishable-church-v8";
 const START_PAGE = "./index.html";
 
 const PRECACHE_FILES = [
@@ -6,10 +6,7 @@ const PRECACHE_FILES = [
     "./index.html",
     "./styles.css",
     "./script.js",
-    "./home.html",
-    "./home.css",
-    "./home.js",
-    "./pwa.js",
+    "./site.css",
     "./manifest.json",
     "./app-icon-192.png",
     "./file_00000000975082088f440ded4bccbf30.png",

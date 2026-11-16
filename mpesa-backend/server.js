@@ -128,7 +128,7 @@ function requireAdminOrigin(req, res, next) {
   next();
 }
 
-app.use(express.json({ limit: "100kb" }));
+app.use(express.json({ limit: "100kb", verify: (req, res, buffer) => { req.rawBody = Buffer.from(buffer); } }));
 // ========================================
 // CONFIGURATION
 // ========================================
@@ -293,6 +293,18 @@ async function initializeDatabase() {
         status TEXT NOT NULL DEFAULT 'pending',
         mpesa_receipt_number TEXT,
         result_desc TEXT,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+    `);
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS paystack_donations (
+        id BIGSERIAL PRIMARY KEY,
+        reference TEXT UNIQUE NOT NULL,
+        email VARCHAR(254) NOT NULL,
+        amount INTEGER NOT NULL,
+        currency VARCHAR(3) NOT NULL DEFAULT 'KES',
+        status TEXT NOT NULL DEFAULT 'pending',
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       );
@@ -776,6 +788,134 @@ app.post("/api/donations/mpesa", async (req, res) => {
 });
 
 // ========================================
+// PAYSTACK DONATIONS
+// ========================================
+function paystackConfigured() {
+  return Boolean(process.env.PAYSTACK_SECRET_KEY);
+}
+async function verifyPaystackTransaction(reference) {
+  if (!paystackConfigured()) {
+    const error = new Error("Paystack is not configured on the server.");
+    error.status = 503;
+    throw error;
+  }
+  const result = await fetch(
+    `https://api.paystack.co/transaction/verify/${encodeURIComponent(reference)}`,
+    { headers: { Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}` } }
+  );
+  const payload = await result.json();
+  if (!result.ok || !payload.status || !payload.data) {
+    const error = new Error(payload.message || "Unable to verify this payment.");
+    error.status = result.ok ? 400 : 502;
+    throw error;
+  }
+  const transaction = payload.data;
+  const payment = await pool.query(
+    `SELECT amount, currency FROM paystack_donations WHERE reference = $1`,
+    [reference]
+  );
+  if (payment.rowCount === 0) {
+    const error = new Error("Donation reference not found.");
+    error.status = 404;
+    throw error;
+  }
+  const expected = payment.rows[0];
+  const successful = transaction.status === "success" &&
+    Number(transaction.amount) === Number(expected.amount) * 100 &&
+    transaction.currency === expected.currency;
+  const status = successful ? "completed" :
+    transaction.status === "success" ? "failed" :
+    transaction.status === "failed" || transaction.status === "abandoned" ? "failed" : "pending";
+  await pool.query(
+    `UPDATE paystack_donations SET status = $1, updated_at = NOW() WHERE reference = $2`,
+    [status, reference]
+  );
+  return { status, reference, amount: Number(expected.amount), currency: expected.currency };
+}
+app.post("/api/donations/paystack/initialize", async (req, res) => {
+  try {
+    if (!paystackConfigured()) {
+      return res.status(503).json({ error: "Online card donations are not configured yet." });
+    }
+    const email = String(req.body?.email || "").trim().toLowerCase();
+    const amount = Number(req.body?.amount);
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return res.status(400).json({ error: "Enter a valid email address." });
+    }
+    if (!Number.isSafeInteger(amount) || amount < 10 || amount > 250000) {
+      return res.status(400).json({ error: "Enter a whole-number donation between KES 10 and KES 250,000." });
+    }
+    const callbackUrl = process.env.PAYSTACK_CALLBACK_URL ||
+      `${FRONTEND_ORIGIN}/imperishable-church-website/donate.html`;
+    const response = await fetch("https://api.paystack.co/transaction/initialize", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email,
+        amount: amount * 100,
+        currency: "KES",
+        callback_url: callbackUrl,
+        metadata: { purpose: "Church donation", church: "Imperishable Crown Outreach Baptist Church" }
+      })
+    });
+    const payload = await response.json();
+    if (!response.ok || !payload.status || !payload.data?.authorization_url || !payload.data?.reference) {
+      console.error("Paystack initialization failed:", payload.message || "Unknown error");
+      return res.status(502).json({ error: "Paystack could not start the payment. Please try again." });
+    }
+    await pool.query(
+      `INSERT INTO paystack_donations (reference, email, amount, currency, status)
+       VALUES ($1, $2, $3, 'KES', 'pending')
+       ON CONFLICT (reference) DO NOTHING`,
+      [payload.data.reference, email, amount]
+    );
+    return res.json({ authorizationUrl: payload.data.authorization_url, reference: payload.data.reference });
+  } catch (error) {
+    console.error("Paystack initialize error:", error.message);
+    return res.status(error.status || 500).json({ error: error.message || "Could not start the donation." });
+  }
+});
+app.post("/api/donations/paystack/verify", async (req, res) => {
+  try {
+    const reference = String(req.body?.reference || "").trim();
+    if (!reference || reference.length > 100) {
+      return res.status(400).json({ error: "A valid payment reference is required." });
+    }
+    const result = await verifyPaystackTransaction(reference);
+    if (result.status !== "completed") {
+      return res.status(result.status === "failed" ? 402 : 202).json({
+        ...result,
+        message: result.status === "failed" ? "This donation was not completed. No payment was recorded." : "Payment is still processing. Please check again shortly."
+      });
+    }
+    return res.json({ ...result, message: "Your donation has been confirmed. Thank you for giving." });
+  } catch (error) {
+    console.error("Paystack verification error:", error.message);
+    return res.status(error.status || 500).json({ error: error.message || "Could not verify the payment." });
+  }
+});
+app.post("/api/paystack/webhook", async (req, res) => {
+  const signature = req.get("x-paystack-signature") || "";
+  const expectedSignature = crypto.createHmac("sha512", process.env.PAYSTACK_SECRET_KEY || "")
+    .update(req.rawBody || Buffer.alloc(0)).digest("hex");
+  if (!paystackConfigured() || !safeStringEqual(signature, expectedSignature)) {
+    return res.sendStatus(401);
+  }
+  if (req.body?.event === "charge.success" && req.body?.data?.reference) {
+    try {
+      await verifyPaystackTransaction(String(req.body.data.reference));
+    } catch (error) {
+      console.error("Paystack webhook verification error:", error.message);
+      return res.sendStatus(500);
+    }
+  }
+  return res.sendStatus(200);
+});
+
+// ========================================
 // M-PESA CALLBACK
 // ========================================
 
@@ -873,9 +1013,10 @@ app.get(
 app.get("/api/donations/total", async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT COALESCE(SUM(amount), 0) AS total
-       FROM donations
-       WHERE status = 'completed'`
+      `SELECT
+         (SELECT COALESCE(SUM(amount), 0) FROM donations WHERE status = 'completed') +
+         (SELECT COALESCE(SUM(amount), 0) FROM paystack_donations WHERE status = 'completed')
+         AS total`
     );
 
     return res.json({
