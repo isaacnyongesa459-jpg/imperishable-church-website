@@ -23,16 +23,23 @@ document.addEventListener("DOMContentLoaded", () => {
     const dropdownMenu = document.getElementById("dropdownMenu");
     const toast = document.getElementById("toastNotification");
     const mainAmount = document.getElementById("mainAmount");
-const usdAmount = document.getElementById("usdAmount");
-const exchangeRateElement =
-    document.getElementById("exchangeRate");
-const exchangeRateUpdated =
-    document.getElementById("exchangeRateUpdated");
+    const usdAmount = document.getElementById("usdAmount");
+    const exchangeRateElement = document.getElementById("exchangeRate");
+    const exchangeRateUpdated = document.getElementById("exchangeRateUpdated");
 
-let usdToKesRate = null;
+    let usdToKesRate = null;
+
+    // M-Pesa Elements
     const mpesaAmount = document.getElementById("customMpesaAmount");
     const mpesaPhone = document.getElementById("mpesaPhoneNumber");
     const mpesaBtn = document.getElementById("mpesaBtn");
+
+    // Paystack Elements
+    const paystackEmail = document.getElementById("paystackEmail");
+    const paystackAmount = document.getElementById("paystackAmount");
+    const paystackBtn = document.getElementById("paystackBtn");
+
+    // PayPal Elements
     const paypalAmount = document.getElementById("paypalAmount");
     const paypalBtn = document.getElementById("paypalBtn");
 
@@ -170,49 +177,47 @@ let usdToKesRate = null;
     // LOAD CONFIRMED DONATION TOTAL
     // ========================================
 
-     
+    async function loadDonationTotal() {
+        if (!mainAmount || !backendConfigured) return;
 
-async function loadDonationTotal() {
-    if (!mainAmount || !backendConfigured) return;
+        try {
+            const response = await fetch(
+                `${API_BASE_URL}/api/donations/total`
+            );
 
-    try {
-        const response = await fetch(
-            `${API_BASE_URL}/api/donations/total`
-        );
+            const data = await readResponse(response);
+            const total = Number(data.total);
 
-        const data = await readResponse(response);
-        const total = Number(data.total);
-
-        if (!Number.isFinite(total) || total < 0) {
-            throw new Error("Invalid donation total.");
-        }
-
-        // Display the confirmed donation total in Kenyan shillings.
-        mainAmount.textContent = `KES ${formatKES(total)}`;
-
-        // Display an estimated USD equivalent when a rate is available.
-        if (usdAmount) {
-            if (usdToKesRate !== null && usdToKesRate > 0) {
-                usdAmount.textContent =
-                    "$" + (total / usdToKesRate).toLocaleString(
-                        "en-US",
-                        {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                        }
-                    );
-            } else {
-                usdAmount.textContent =
-                    "USD equivalent unavailable";
+            if (!Number.isFinite(total) || total < 0) {
+                throw new Error("Invalid donation total.");
             }
+
+            // Display the confirmed donation total in Kenyan shillings.
+            mainAmount.textContent = `KES ${formatKES(total)}`;
+
+            // Display an estimated USD equivalent when a rate is available.
+            if (usdAmount) {
+                if (usdToKesRate !== null && usdToKesRate > 0) {
+                    usdAmount.textContent =
+                        "$" + (total / usdToKesRate).toLocaleString(
+                            "en-US",
+                            {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            }
+                        );
+                } else {
+                    usdAmount.textContent =
+                        "USD equivalent unavailable";
+                }
+            }
+        } catch (error) {
+            console.error("Donation total error:", error);
         }
-    } catch (error) {
-        console.error("Donation total error:", error);
     }
-}
 
-        
-
+    // Initial load call
+    loadDonationTotal();
 
     // ========================================
     // PRESET M-PESA AMOUNTS
@@ -284,7 +289,7 @@ async function loadDonationTotal() {
     }
 
     // ========================================
-    // CHECK PAYMENT STATUS
+    // CHECK PAYMENT STATUS (M-PESA)
     // ========================================
 
     function wait(milliseconds) {
@@ -369,7 +374,7 @@ async function loadDonationTotal() {
                 amount > 250000
             ) {
                 showToast(
-                    "Enter a whole-number donation between KES 1 and KES 499,999."
+                    "Enter a whole-number donation between KES 10 and KES 250,000."
                 );
 
                 if (mpesaAmount) mpesaAmount.focus();
@@ -440,6 +445,91 @@ async function loadDonationTotal() {
     }
 
     // ========================================
+    // PAYSTACK DONATION INTEGRATION
+    // ========================================
+
+    if (paystackBtn) {
+        paystackBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            const email = paystackEmail ? paystackEmail.value.trim() : "";
+            const amount = Number(paystackAmount ? paystackAmount.value : 0);
+
+            if (!email || !email.includes("@")) {
+                showToast("Please enter a valid email address for Paystack.");
+                if (paystackEmail) paystackEmail.focus();
+                return;
+            }
+
+            if (!Number.isSafeInteger(amount) || amount < 10 || amount > 250000) {
+                showToast("Enter a valid donation amount between KES 10 and KES 250,000 for Paystack.");
+                if (paystackAmount) paystackAmount.focus();
+                return;
+            }
+
+            // Ensure Paystack SDK script is available
+            if (typeof PaystackPop === "undefined") {
+                showToast("Paystack payment gateway failed to load. Please check your internet connection.");
+                return;
+            }
+
+            // Paystack requires amount in lowest currency unit (e.g., KES cents -> multiply by 100)
+            const amountInCents = Math.round(amount * 100);
+
+            const originalPaystackHTML = paystackBtn.innerHTML;
+            paystackBtn.disabled = true;
+            paystackBtn.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Opening Paystack...';
+
+            try {
+                let handler = PaystackPop.setup({
+                    key: 'pk_test_your_actual_public_key_here', // Replace with your live or test Paystack Public Key
+                    email: email,
+                    amount: amountInCents,
+                    currency: 'KES',
+                    metadata: {
+                        custom_fields: [
+                            {
+                                display_name: "Ministry Support",
+                                variable_name: "ministry_support",
+                                value: "Imperishable Crown Outreach Baptist Church"
+                            }
+                        ]
+                    },
+                    callback: function(response) {
+                        showToast(`Paystack donation successful! Reference: ${response.reference}`);
+                        
+                        // Clear input fields
+                        if (paystackEmail) paystackEmail.value = "";
+                        if (paystackAmount) paystackAmount.value = "";
+
+                        // Refresh total donations amount
+                        loadDonationTotal();
+                    },
+                    onClose: function() {
+                        showToast("Paystack payment window was closed before completion.");
+                    }
+                });
+
+                handler.openIframe();
+            } catch (err) {
+                console.error("Paystack error:", err);
+                showToast("Unable to initialize Paystack checkout.");
+            } finally {
+                paystackBtn.disabled = false;
+                paystackBtn.innerHTML = originalPaystackHTML;
+            }
+        });
+    }
+
+    if (paystackAmount) {
+        paystackAmount.addEventListener("input", () => {
+            if (Number(paystackAmount.value) < 0) {
+                paystackAmount.value = "";
+            }
+        });
+    }
+
+    // ========================================
     // PAYPAL
     // ========================================
 
@@ -462,7 +552,7 @@ async function loadDonationTotal() {
             }
 
             showToast(
-                "PayPal payments are not connected yet. Please use M-PESA while this feature is being configured."
+                "PayPal payments are not connected yet. Please use M-PESA or Paystack while this feature is being configured."
             );
         });
     }
