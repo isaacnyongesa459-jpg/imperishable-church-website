@@ -1,0 +1,36 @@
+{
+  "routes": [
+    {
+      "path": "/",
+      "title": "Home"
+    },
+    {
+      "path": "/index.html",
+      "title": "Home"
+    },
+    {
+      "path": "/about.html",
+      "title": "About"
+    },
+    {
+      "path": "/services.html",
+      "title": "Services"
+    },
+    {
+      "path": "/leadership.html",
+      "title": "Leadership"
+    },
+    {
+      "path": "/events.html",
+      "title": "Events"
+    },
+    {
+      "path": "/donate.html",
+      "title": "Give"
+    },
+    {
+      "path": "/contact.html",
+      "title": "Contact"
+    }
+  ]
+}
