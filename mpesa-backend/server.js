@@ -1395,7 +1395,7 @@ app.get("/admin/:section", requireAdmin, (req, res) => {
   const section = req.params.section;
   if (!Object.prototype.hasOwnProperty.call(ADMIN_SECTIONS, section)) return res.sendStatus(404);
   let html = adminViews.dashboard;
-  const nav = Object.entries(ADMIN_SECTIONS).map(([key, id]) => `<a href="/admin/${key}">${key[0].toUpperCase()+key.slice(1)}</a>`).join("") + `<a class="church-site-link" href="https://isaacnyongesa459-jpg.github.io/imperishable-church-website/index.html">Church website</a>`;
+  const nav = Object.entries(ADMIN_SECTIONS).map(([key, id]) => `<a href="/admin/${key}"${key === section ? ' aria-current="page"' : ""}>${key[0].toUpperCase()+key.slice(1)}</a>`).join("") + `<a class="church-site-link" href="https://isaacnyongesa459-jpg.github.io/imperishable-church-website/index.html">Church website</a>`;
   html = html.replace(/<nav>[\s\S]*?<\/nav>/, `<nav>${nav}</nav>`);
   html = html.replace("</body>", `<script>document.documentElement.dataset.adminPage=${JSON.stringify(section)}; const selected=${JSON.stringify(ADMIN_SECTIONS[section])}; document.querySelectorAll('.admin-main > section').forEach(el=>{if(el.id!==selected)el.hidden=true}); if(selected==='dashboardTop')document.querySelectorAll('.admin-main > section').forEach(el=>el.hidden=false); const siteLink=document.querySelector('.church-site-link'); if(siteLink) siteLink.href += '?theme='+encodeURIComponent(document.documentElement.dataset.theme);</script></body>`);
   res.setHeader("Cache-Control", "private, no-store");
