@@ -12,6 +12,42 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    const hamburger = document.getElementById("hamburger");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    const menuLinks = dropdownMenu?.querySelectorAll("a") || [];
+
+    function closeMenu(returnFocus = false) {
+        if (!hamburger || !dropdownMenu) return;
+        dropdownMenu.classList.remove("show");
+        hamburger.setAttribute("aria-expanded", "false");
+        hamburger.setAttribute("aria-label", "Open navigation menu");
+        const icon = hamburger.querySelector("i");
+        if (icon) icon.className = "fas fa-bars";
+        if (returnFocus) hamburger.focus();
+    }
+
+    if (hamburger && dropdownMenu) {
+        hamburger.setAttribute("aria-expanded", "false");
+        hamburger.addEventListener("click", event => {
+            event.stopPropagation();
+            const isOpen = dropdownMenu.classList.toggle("show");
+            hamburger.setAttribute("aria-expanded", String(isOpen));
+            hamburger.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
+            const icon = hamburger.querySelector("i");
+            if (icon) icon.className = isOpen ? "fas fa-times" : "fas fa-bars";
+        });
+        menuLinks.forEach(link => link.addEventListener("click", () => closeMenu()));
+        document.addEventListener("click", event => {
+            if (!dropdownMenu.contains(event.target) && !hamburger.contains(event.target)) closeMenu();
+        });
+        document.addEventListener("keydown", event => {
+            if (event.key === "Escape" && dropdownMenu.classList.contains("show")) closeMenu(true);
+        });
+        window.addEventListener("resize", () => {
+            if (window.innerWidth > 768) closeMenu();
+        });
+    }
+
     const joinButton = document.getElementById("joinButton");
 
     if (joinButton) {

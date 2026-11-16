@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // ========================================
     // CHURCH EVENTS
-    // ✅ Images are now "1.png", "2.png", ... (same folder)
+    // Event cards reuse the existing numbered JPEG photos in this folder.
     // ✅ Added detailed info for the modal
     // ========================================
 
@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 "Join us every Sunday morning for a Spirit-filled worship service. We begin with praise and worship, followed by a powerful message from God's Word. Children's ministry is available. All are welcome — come as you are and leave encouraged!",
             time: "9:00 AM - 12:00 PM",
             location: "Imperishable Crown Bible Baptist Church",
-            image: "17.png"
+            image: "17.jpg"
         },
         {
             date: "31",
@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 "An evening of food, testimonies, and warm fellowship. Bring a friend and let's build each other up in love. We'll share a meal together and pray for one another.",
             time: "5:00 PM - 7:00 PM",
             location: "Church Grounds",
-            image: "2.png"
+            image: "2.jpg"
         },
         {
             date: "08",
@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 "This week we continue our verse-by-verse study of the book of Romans. Bring your Bible, a notebook, and questions. Perfect for both new believers and seasoned students of the Word.",
             time: "4:00 PM - 6:00 PM",
             location: "Church Hall",
-            image: "3.png"
+            image: "3.jpg"
         },
         {
             date: "15",
@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 "A special Sunday dedicated to extended worship, prayer, and thanksgiving. Our choir and worship team will lead us into God's presence. Come expectant!",
             time: "9:00 AM - 12:00 PM",
             location: "Imperishable Crown Bible Baptist Church",
-            image: "4.png"
+            image: "4.jpg"
         },
         {
             date: "22",
@@ -142,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 "Youth from all walks of life gather for games, testimonies, and a short, relevant message. A safe place to grow in faith, make friends, and ask real questions about life and God.",
             time: "3:00 PM - 5:00 PM",
             location: "Church Hall",
-            image: "5.png"
+            image: "5.jpg"
         },
         {
             date: "29",
@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 "A special service to reflect on God's goodness over the year. We'll have testimonies, special music, and a thanksgiving message. Come and share what God has done for you!",
             time: "9:00 AM - 12:00 PM",
             location: "Imperishable Crown Bible Baptist Church",
-            image: "6.png"
+            image: "6.jpg"
         }
     ];
 
