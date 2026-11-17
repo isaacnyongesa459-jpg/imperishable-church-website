@@ -2,10 +2,14 @@
   "routes": [
     {
       "path": "/",
-      "title": "Home"
+      "title": "Welcome"
     },
     {
       "path": "/index.html",
+      "title": "Welcome"
+    },
+    {
+      "path": "/home.html",
       "title": "Home"
     },
     {

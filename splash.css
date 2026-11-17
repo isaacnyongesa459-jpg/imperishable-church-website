@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+
+:root {
+  color-scheme: light;
+  --ink: #172c2b;
+  --gold: #c89a4b;
+  --cream: #f7f5ef;
+}
+
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: #fff;
+  font-family: 'DM Sans', Arial, sans-serif;
+  background: var(--ink);
+}
+
+.splash {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    linear-gradient(105deg, rgba(13, 35, 33, .92) 0%, rgba(13, 35, 33, .70) 48%, rgba(13, 35, 33, .35) 100%),
+    url('a_grand_cinematic_church_entrance_web_splash_page-1.png') center / cover no-repeat;
+}
+
+.splash::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(circle at 80% 45%, rgba(200, 154, 75, .22), transparent 32%);
+}
+
+.splash-content {
+  width: min(760px, calc(100% - 40px));
+  padding: 48px 0;
+  text-align: left;
+}
+
+.splash-mark {
+  width: 74px;
+  height: 74px;
+  object-fit: contain;
+  margin-bottom: 28px;
+  filter: drop-shadow(0 12px 22px rgba(0,0,0,.22));
+}
+
+.splash-kicker {
+  margin: 0 0 15px;
+  color: #e8c98f;
+  font-size: .76rem;
+  font-weight: 700;
+  letter-spacing: .19em;
+  text-transform: uppercase;
+}
+
+.splash h1 {
+  max-width: 680px;
+  margin: 0;
+  font: 600 clamp(3rem, 8vw, 6.7rem)/.96 'Playfair Display', Georgia, serif;
+  letter-spacing: -.045em;
+}
+
+.splash h1 em { color: #e6c27e; font-style: normal; }
+.splash p {
+  max-width: 535px;
+  margin: 28px 0 0;
+  color: rgba(255,255,255,.84);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  line-height: 1.75;
+}
+
+.splash-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
+.splash-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 50px;
+  padding: 0 22px;
+  border: 1px solid var(--gold);
+  color: var(--ink);
+  background: var(--gold);
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform .2s ease, background .2s ease;
+}
+.splash-button:hover, .splash-button:focus-visible { background: #e0b866; transform: translateY(-2px); }
+.splash-button.secondary { color: #fff; background: transparent; border-color: rgba(255,255,255,.45); }
+.splash-button.secondary:hover, .splash-button.secondary:focus-visible { background: rgba(255,255,255,.12); }
+.splash-note { margin-top: 38px; color: rgba(255,255,255,.62); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
+
+@media (max-width: 600px) {
+  .splash-content { padding: 30px 0; }
+  .splash-mark { width: 60px; height: 60px; margin-bottom: 22px; }
+  .splash h1 { font-size: clamp(2.8rem, 15vw, 4.4rem); }
+  .splash-actions, .splash-button { width: 100%; }
+  .splash-button { justify-content: center; }
+}
