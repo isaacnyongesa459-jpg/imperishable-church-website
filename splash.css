@@ -22,19 +22,8 @@ body {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  isolation: isolate;
-  overflow: hidden;
-  background:
-    linear-gradient(105deg, rgba(13, 35, 33, .92) 0%, rgba(13, 35, 33, .70) 48%, rgba(13, 35, 33, .35) 100%),
-    url('a_grand_cinematic_church_entrance_web_splash_page-1.png') center / cover no-repeat;
-}
-
-.splash::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: radial-gradient(circle at 80% 45%, rgba(200, 154, 75, .22), transparent 32%);
+  padding: 32px 0;
+  background: linear-gradient(145deg, #172c2b 0%, #1d3834 58%, #25453f 100%);
 }
 
 .splash-content {
@@ -48,7 +37,6 @@ body {
   height: 74px;
   object-fit: contain;
   margin-bottom: 28px;
-  filter: drop-shadow(0 12px 22px rgba(0,0,0,.22));
 }
 
 .splash-kicker {
@@ -96,7 +84,8 @@ body {
 .splash-note { margin-top: 38px; color: rgba(255,255,255,.62); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
 
 @media (max-width: 600px) {
-  .splash-content { padding: 30px 0; }
+  .splash { padding: 24px 0; }
+  .splash-content { padding: 22px 0; }
   .splash-mark { width: 60px; height: 60px; margin-bottom: 22px; }
   .splash h1 { font-size: clamp(2.8rem, 15vw, 4.4rem); }
   .splash-actions, .splash-button { width: 100%; }
