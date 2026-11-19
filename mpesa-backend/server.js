@@ -918,7 +918,7 @@ async function getAllCurrencyRates() {
 
 async function convertCurrency(amount, base, quote) {
   const rate = await getFrankfurterRate(base, quote);
-  return { amount: Math.round(amount * rate * 100) / 100, rate: rate.rate, rateDate: rate.date };
+  return { amount: Math.round(amount * rate.rate * 100) / 100, rate: rate.rate, rateDate: rate.date };
 }
 
 app.get("/api/currency/rates", async (_req, res) => {
