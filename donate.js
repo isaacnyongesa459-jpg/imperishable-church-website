@@ -557,6 +557,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!response.ok || !config.usdToKes) throw new Error(config.error || "PayPal exchange rate is unavailable.");
             paypalRate = Number(config.usdToKes);
             if (paypalExchangeRate) paypalExchangeRate.textContent = `1 USD ≈ KES ${formatKes(paypalRate)} · rate refreshed ${new Date(config.rateUpdatedAt).toLocaleString("en-KE")}`;
+            usdToKesRate = paypalRate;
+            if (exchangeRateElement) exchangeRateElement.textContent = `1 USD ≈ KES ${formatKES(usdToKesRate)} · updated ${new Date(config.rateUpdatedAt).toLocaleString("en-KE")}`;
+            loadDonationTotal();
             updatePaypalConversion();
             if (!config.enabled || !config.clientId) {
                 if (paypalStatus) paypalStatus.textContent = "PayPal is not configured on the donation server yet.";
