@@ -312,6 +312,22 @@ async function initializeDatabase() {
         updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       );
     `);
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS paypal_donations (
+        id BIGSERIAL PRIMARY KEY,
+        order_id TEXT UNIQUE NOT NULL,
+        email VARCHAR(254) NOT NULL,
+        amount_usd NUMERIC(12, 2) NOT NULL,
+        amount_kes NUMERIC(12, 2) NOT NULL,
+        fx_rate NUMERIC(12, 6) NOT NULL,
+        currency VARCHAR(3) NOT NULL DEFAULT 'USD',
+        status TEXT NOT NULL DEFAULT 'pending',
+        paypal_status TEXT,
+        capture_id TEXT UNIQUE,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+    `);
 
     // ========================================
     // 2. CHURCH WEBSITE CONTENT
@@ -791,6 +807,177 @@ app.post("/api/donations/mpesa", async (req, res) => {
 });
 
 // ========================================
+// PAYPAL DONATIONS
+// ========================================
+const PAYPAL_ENV = process.env.PAYPAL_ENV === "live" ? "live" : "sandbox";
+const PAYPAL_API_BASE = PAYPAL_ENV === "live"
+  ? "https://api-m.paypal.com"
+  : "https://api-m.sandbox.paypal.com";
+const PAYPAL_CURRENCY = "USD";
+const PAYPAL_MAX_USD = 10000;
+const PAYPAL_FX_URL = process.env.PAYPAL_FX_URL || "https://open.er-api.com/v6/latest/USD";
+let paypalFxCache = null;
+
+function paypalConfigured() {
+  return Boolean(process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET);
+}
+
+async function getPayPalAccessToken() {
+  if (!paypalConfigured()) {
+    const error = new Error("PayPal is not configured on the server.");
+    error.status = 503;
+    throw error;
+  }
+  const credentials = Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`).toString("base64");
+  const response = await fetch(`${PAYPAL_API_BASE}/v1/oauth2/token`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${credentials}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+      Accept: "application/json"
+    },
+    body: "grant_type=client_credentials"
+  });
+  const payload = await response.json();
+  if (!response.ok || !payload.access_token) {
+    const error = new Error("PayPal authentication failed.");
+    error.status = 502;
+    throw error;
+  }
+  return payload.access_token;
+}
+
+async function getUsdKesRate() {
+  const cacheAge = 15 * 60 * 1000;
+  if (paypalFxCache && Date.now() - paypalFxCache.updatedAt < cacheAge) return paypalFxCache;
+  const response = await fetch(PAYPAL_FX_URL, { headers: { Accept: "application/json" } });
+  const payload = await response.json();
+  const rate = Number(payload?.rates?.KES);
+  if (!response.ok || !Number.isFinite(rate) || rate <= 0) {
+    const error = new Error("Unable to retrieve the USD to KES exchange rate.");
+    error.status = 502;
+    throw error;
+  }
+  paypalFxCache = { rate, updatedAt: Date.now() };
+  return paypalFxCache;
+}
+
+function validatePaypalDonationInput(body) {
+  const email = String(body?.email || "").trim().toLowerCase();
+  const amountUsd = Number(body?.amountUsd);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    const error = new Error("Enter a valid email address.");
+    error.status = 400;
+    throw error;
+  }
+  if (!Number.isFinite(amountUsd) || amountUsd < 1 || amountUsd > PAYPAL_MAX_USD) {
+    const error = new Error(`Enter a PayPal donation between USD 1 and USD ${PAYPAL_MAX_USD}.`);
+    error.status = 400;
+    throw error;
+  }
+  return { email, amountUsd: Math.round(amountUsd * 100) / 100 };
+}
+
+app.get("/api/donations/paypal/config", async (_req, res) => {
+  try {
+    const fx = await getUsdKesRate();
+    return res.json({
+      enabled: paypalConfigured(),
+      clientId: paypalConfigured() ? process.env.PAYPAL_CLIENT_ID : null,
+      environment: PAYPAL_ENV,
+      currency: PAYPAL_CURRENCY,
+      usdToKes: fx.rate,
+      rateUpdatedAt: new Date(fx.updatedAt).toISOString()
+    });
+  } catch (error) {
+    return res.status(error.status || 502).json({ error: error.message });
+  }
+});
+
+app.post("/api/donations/paypal/create-order", async (req, res) => {
+  try {
+    const { email, amountUsd } = validatePaypalDonationInput(req.body);
+    const fx = await getUsdKesRate();
+    const token = await getPayPalAccessToken();
+    const response = await fetch(`${PAYPAL_API_BASE}/v2/checkout/orders`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+        "PayPal-Request-Id": crypto.randomUUID()
+      },
+      body: JSON.stringify({
+        intent: "CAPTURE",
+        purchase_units: [{
+          reference_id: "church-donation",
+          description: "Imperishable Crown Outreach Baptist Church donation",
+          custom_id: "church-donation",
+          amount: { currency_code: PAYPAL_CURRENCY, value: amountUsd.toFixed(2) }
+        }],
+        application_context: {
+          brand_name: "Imperishable Crown Outreach Baptist Church",
+          shipping_preference: "NO_SHIPPING",
+          user_action: "PAY_NOW",
+          return_url: `${FRONTEND_ORIGIN}/imperishable-church-website/donate.html`,
+          cancel_url: `${FRONTEND_ORIGIN}/imperishable-church-website/donate.html`
+        }
+      })
+    });
+    const payload = await response.json();
+    if (!response.ok || !payload.id) {
+      console.error("PayPal order creation failed:", payload.message || payload.name || "Unknown error");
+      return res.status(502).json({ error: "PayPal could not start the donation. Please try again." });
+    }
+    const amountKes = Math.round(amountUsd * fx.rate * 100) / 100;
+    await pool.query(
+      `INSERT INTO paypal_donations (order_id, email, amount_usd, amount_kes, fx_rate, status, paypal_status)
+       VALUES ($1, $2, $3, $4, $5, 'pending', $6)
+       ON CONFLICT (order_id) DO NOTHING`,
+      [payload.id, email, amountUsd, amountKes, fx.rate, payload.status || "CREATED"]
+    );
+    return res.json({ orderId: payload.id, amountUsd, amountKes, usdToKes: fx.rate, currency: PAYPAL_CURRENCY });
+  } catch (error) {
+    console.error("PayPal order error:", error.message);
+    return res.status(error.status || 500).json({ error: error.message || "Could not start the PayPal donation." });
+  }
+});
+
+app.post("/api/donations/paypal/capture-order", async (req, res) => {
+  try {
+    const orderId = String(req.body?.orderId || "").trim();
+    if (!/^[A-Z0-9-]{5,100}$/i.test(orderId)) return res.status(400).json({ error: "A valid PayPal order is required." });
+    const record = await pool.query(
+      `SELECT order_id, email, amount_usd, amount_kes, fx_rate, currency, status, capture_id
+       FROM paypal_donations WHERE order_id = $1`, [orderId]
+    );
+    if (record.rowCount === 0) return res.status(404).json({ error: "PayPal donation record not found." });
+    const donation = record.rows[0];
+    if (donation.status === "completed") {
+      return res.json({ status: "completed", orderId, captureId: donation.capture_id, amountUsd: Number(donation.amount_usd), amountKes: Number(donation.amount_kes), usdToKes: Number(donation.fx_rate), currency: donation.currency });
+    }
+    const token = await getPayPalAccessToken();
+    const response = await fetch(`${PAYPAL_API_BASE}/v2/checkout/orders/${encodeURIComponent(orderId)}/capture`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", Prefer: "return=representation" }
+    });
+    const payload = await response.json();
+    const capture = payload.purchase_units?.[0]?.payments?.captures?.[0];
+    const capturedAmount = Number(capture?.amount?.value);
+    const successful = response.ok && payload.status === "COMPLETED" && capture?.status === "COMPLETED" && capture?.amount?.currency_code === donation.currency && capturedAmount === Number(donation.amount_usd);
+    const status = successful ? "completed" : response.ok && payload.status === "PAYER_ACTION_REQUIRED" ? "pending" : "failed";
+    await pool.query(
+      `UPDATE paypal_donations SET status = $1, paypal_status = $2, capture_id = COALESCE($3, capture_id), updated_at = NOW() WHERE order_id = $4`,
+      [status, payload.status || capture?.status || "UNKNOWN", capture?.id || null, orderId]
+    );
+    if (!successful) return res.status(status === "pending" ? 202 : 402).json({ status, message: status === "pending" ? "PayPal payment is still processing." : "PayPal did not confirm this donation. No donation was recorded." });
+    return res.json({ status, orderId, captureId: capture.id, amountUsd: Number(donation.amount_usd), amountKes: Number(donation.amount_kes), usdToKes: Number(donation.fx_rate), currency: donation.currency, message: "Your donation has been confirmed. Thank you for giving." });
+  } catch (error) {
+    console.error("PayPal capture error:", error.message);
+    return res.status(error.status || 500).json({ error: error.message || "Could not capture the PayPal donation." });
+  }
+});
+
 // PAYSTACK DONATIONS
 // ========================================
 function paystackConfigured() {
@@ -1018,7 +1205,8 @@ app.get("/api/donations/total", async (req, res) => {
     const result = await pool.query(
       `SELECT
          (SELECT COALESCE(SUM(amount), 0) FROM donations WHERE status = 'completed') +
-         (SELECT COALESCE(SUM(amount), 0) FROM paystack_donations WHERE status = 'completed')
+         (SELECT COALESCE(SUM(amount), 0) FROM paystack_donations WHERE status = 'completed') +
+         (SELECT COALESCE(SUM(amount_kes), 0) FROM paypal_donations WHERE status = 'completed')
          AS total`
     );
 
@@ -2973,24 +3161,25 @@ app.get(
   async (req, res) => {
     try {
       const result = await pool.query(
-        `SELECT
-           id,
-           phone,
-           amount,
-           status,
-           mpesa_receipt_number,
-           result_desc,
-           created_at,
-           updated_at
+        `SELECT id, 'M-PESA' AS source, phone, NULL::text AS email,
+                amount, NULL::numeric AS amount_usd, amount AS amount_kes,
+                status, mpesa_receipt_number, result_desc, created_at, updated_at
          FROM donations
+         UNION ALL
+         SELECT id, 'PayPal' AS source, NULL::text AS phone, email,
+                ROUND(amount_kes)::integer AS amount,
+                amount_usd, amount_kes, status, capture_id AS mpesa_receipt_number,
+                paypal_status AS result_desc, created_at, updated_at
+         FROM paypal_donations
          ORDER BY created_at DESC
          LIMIT 100`
       );
 
       const totalResult = await pool.query(
-        `SELECT COALESCE(SUM(amount), 0) AS total
-         FROM donations
-         WHERE status = 'completed'`
+        `SELECT
+           (SELECT COALESCE(SUM(amount), 0) FROM donations WHERE status = 'completed') +
+           (SELECT COALESCE(SUM(amount), 0) FROM paystack_donations WHERE status = 'completed') +
+           (SELECT COALESCE(SUM(amount_kes), 0) FROM paypal_donations WHERE status = 'completed') AS total`
       );
 
       return res.json({
