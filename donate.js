@@ -500,6 +500,28 @@ document.addEventListener("DOMContentLoaded", () => {
         updateCurrencyEquivalents();
     }
 
+    function loadPayPalSdk(clientId) {
+        return new Promise((resolve, reject) => {
+            if (window.paypal?.Buttons) {
+                resolve(window.paypal);
+                return;
+            }
+            const existing = document.querySelector('script[data-paypal-sdk="true"]');
+            if (existing) {
+                existing.addEventListener("load", () => window.paypal?.Buttons ? resolve(window.paypal) : reject(new Error("PayPal SDK did not initialize.")), { once: true });
+                existing.addEventListener("error", () => reject(new Error("PayPal checkout could not load.")), { once: true });
+                return;
+            }
+            const script = document.createElement("script");
+            script.async = true;
+            script.dataset.paypalSdk = "true";
+            script.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&currency=USD&intent=capture&components=buttons`;
+            script.onload = () => window.paypal?.Buttons ? resolve(window.paypal) : reject(new Error("PayPal SDK did not initialize."));
+            script.onerror = () => reject(new Error("PayPal checkout could not load."));
+            document.head.appendChild(script);
+        });
+    }
+
     async function setupPayPal() {
         if (!paypalBtn) return;
         try {
