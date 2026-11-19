@@ -959,9 +959,10 @@ app.post("/api/donations/paypal/create-order", async (req, res) => {
       const providerDetail = payload.details?.[0] || {};
       const providerIssue = providerDetail.issue || providerDetail.description || "PayPal rejected the order request.";
       const providerField = providerDetail.field || "unknown_field";
+      const providerValue = providerDetail.value || "not_provided";
       const debugId = payload.debug_id || "not_provided";
-      console.error("PayPal order rejected:", response.status, providerCode, providerIssue, providerField, debugId);
-      return res.status(502).json({ error: `PayPal rejected the order: ${providerCode}. ${providerIssue} Field: ${providerField}. No donation was charged.`, providerStatus: response.status, providerCode, providerField, debugId });
+      console.error("PayPal order rejected:", response.status, providerCode, providerIssue, providerField, providerValue, debugId);
+      return res.status(502).json({ error: `PayPal rejected the order: ${providerCode}. ${providerIssue} Field: ${providerField}. No donation was charged.`, providerStatus: response.status, providerCode, providerField, providerValue, debugId });
     }
     await pool.query(`INSERT INTO paypal_donations (order_id, email, amount_usd, amount_kes, fx_rate, currency, original_amount, original_currency, payment_amount, payment_currency, exchange_rate, exchange_rate_date, provider, transaction_reference, status, paypal_status) VALUES ($1,$2,$3,$4,$5,'USD',$6,$7,$3,'USD',$5,$8,'paypal',$1,'pending',$9) ON CONFLICT (order_id) DO NOTHING`, [payload.id, email, amountUsd, originalCurrency === "KES" ? originalAmount : (await convertCurrency(originalAmount, originalCurrency, "KES")).amount, conversion.rate, originalAmount, originalCurrency, conversion.rateDate, payload.status || "CREATED"]);
     return res.json({ orderId: payload.id, originalAmount, originalCurrency, amountUsd, rate: conversion.rate, rateDate: conversion.rateDate, currency: "USD" });
