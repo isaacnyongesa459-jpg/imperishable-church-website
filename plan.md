@@ -32,3 +32,7 @@ Extend the existing Imperishable Crown donation page and Node/PostgreSQL backend
 - Brand essence: a transparent, welcoming church giving experience; trustworthy, warm, clear.
 - Brand voice: “Give with a joyful heart.” and “Your generosity supports the Gospel ministry.”
 - Signature brand color: warm church gold `#b88a50`.
+
+## Fixed church location and weather
+
+The homepage uses one central `window.CHURCH_CONFIG` in `site.js` with the permanent church latitude `1.233251`, longitude `34.936605`, country Kenya, currency KES, and timezone `Africa/Nairobi`. The local clock and date use `Intl.DateTimeFormat` with that timezone, never the visitor’s device timezone. The weather panel calls the exact Open-Meteo forecast URL for those coordinates, refreshes every ten minutes, and shows a graceful unavailable state if the provider cannot be reached. No browser geolocation API is used.

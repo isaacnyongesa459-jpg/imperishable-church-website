@@ -1,3 +1,12 @@
+window.CHURCH_CONFIG = Object.freeze({
+  name: 'Imperishable Crown Bible Baptist Church',
+  country: 'Kenya',
+  currency: 'KES',
+  timezone: 'Africa/Nairobi',
+  coordinates: Object.freeze({ latitude: '1.233251', longitude: '34.936605' }),
+  weatherUrl: 'https://api.open-meteo.com/v1/forecast?latitude=1.233251&longitude=34.936605&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,rain,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Africa%2FNairobi'
+});
+
 (() => {
   const key='imperishable-theme';
   let saved=null; try { saved=localStorage.getItem(key); } catch {}
@@ -5,6 +14,7 @@
   document.documentElement.dataset.theme=initial;
 })();
 document.addEventListener('DOMContentLoaded', () => {
+  const church=window.CHURCH_CONFIG;
   const themeButton=document.createElement('button');
   themeButton.type='button'; themeButton.className='theme-toggle'; themeButton.setAttribute('aria-label','Switch to dark mode');
   const paintTheme=()=>{const dark=document.documentElement.dataset.theme==='dark';themeButton.textContent=dark?'☀ Light':'◐ Theme';themeButton.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');};
@@ -21,7 +31,41 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeMenu();toggle.focus();}});
     window.addEventListener('resize',()=>{if(window.innerWidth>760)closeMenu();});
   }
-  document.querySelectorAll('[data-year]').forEach(el=>el.textContent=new Date().getFullYear());
+  document.querySelectorAll('[data-year]').forEach(el=>el.textContent=new Intl.DateTimeFormat('en-KE',{timeZone:church.timezone,year:'numeric'}).format(new Date()));
+
+  const churchClock=document.querySelector('[data-church-clock]');
+  const churchDate=document.querySelector('[data-church-date]');
+  const updateChurchClock=()=>{
+    const now=new Date();
+    if(churchClock){churchClock.textContent=new Intl.DateTimeFormat('en-KE',{timeZone:church.timezone,hour:'numeric',minute:'2-digit',second:'2-digit',hour12:true}).format(now);churchClock.dateTime=now.toISOString();}
+    if(churchDate)churchDate.textContent=new Intl.DateTimeFormat('en-KE',{timeZone:church.timezone,weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now);
+  };
+  if(churchClock||churchDate){updateChurchClock();window.setInterval(updateChurchClock,1000);}
+
+  const weather=document.querySelector('[data-church-weather]');
+  if(weather){
+    const summary=weather.querySelector('[data-weather-summary]');
+    const details=weather.querySelector('[data-weather-details]');
+    const labels={0:'Clear sky',1:'Mainly clear',2:'Partly cloudy',3:'Overcast',45:'Foggy',48:'Rime fog',51:'Light drizzle',53:'Drizzle',55:'Heavy drizzle',56:'Freezing drizzle',57:'Heavy freezing drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',66:'Freezing rain',67:'Heavy freezing rain',71:'Light snow',73:'Snow',75:'Heavy snow',77:'Snow grains',80:'Light showers',81:'Rain showers',82:'Heavy showers',85:'Snow showers',86:'Heavy snow showers',95:'Thunderstorm',96:'Thunderstorm with hail',99:'Thunderstorm with heavy hail'};
+    const loadWeather=async()=>{
+      try{
+        const response=await fetch(church.weatherUrl,{cache:'no-store'});
+        if(!response.ok)throw new Error('Weather request failed');
+        const data=await response.json();
+        const current=data.current;
+        if(!current)throw new Error('Weather data unavailable');
+        const label=labels[current.weather_code]||'Current conditions';
+        if(summary)summary.textContent=`${label} · ${Math.round(current.temperature_2m)}°C`;
+        if(details)details.textContent=`Feels like ${Math.round(current.apparent_temperature)}°C · ${Math.round(current.relative_humidity_2m)}% humidity · Wind ${Math.round(current.wind_speed_10m)} km/h`;
+      }catch(error){
+        console.warn('Church weather unavailable:',error);
+        if(summary)summary.textContent='Weather temporarily unavailable';
+        if(details)details.textContent=`Church location · ${church.timezone}`;
+      }
+    };
+    loadWeather();
+    window.setInterval(loadWeather,10*60*1000);
+  }
   const form=document.querySelector('#contactForm');
   if(form) form.addEventListener('submit',async e=>{
     e.preventDefault();

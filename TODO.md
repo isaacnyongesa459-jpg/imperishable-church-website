@@ -7,3 +7,5 @@
 - [x] Donation persistence stores original amount/currency, converted payment amount/currency, exchange rate/date, provider, transaction reference, and verified status without deleting historical records.
 - [x] Paystack frontend, routes, webhooks, environment documentation, and active totals are removed while unrelated M-PESA, PayPal, church-admin, and historical database records remain intact.
 - [x] Existing website branding, responsive behavior, navigation, admin access, and non-donation pages remain unchanged.
+- [x] The homepage uses the permanent church coordinates latitude `1.233251` and longitude `34.936605`, timezone `Africa/Nairobi`, country Kenya, and currency KES from one central configuration.
+- [x] The homepage displays the church location, a local clock and date based on `Intl.DateTimeFormat` with `Africa/Nairobi`, and Open-Meteo weather for the church coordinates; it never requests visitor GPS, refreshes weather periodically, and handles unavailable weather gracefully.
