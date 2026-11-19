@@ -1,7 +1,7 @@
 
 # Imperishable Crown Bible Baptist Church — M-PESA Backend
 
-This Node.js backend starts M-PESA STK Push payments through Safaricom Daraja and records donation results in PostgreSQL.
+This Node.js backend starts M-PESA STK Push payments through Safaricom Daraja, converts KES/USD/INR donations with Frankfurter reference rates, runs PayPal Live USD checkout, and records verified donation results in PostgreSQL.
 
 ## Files
 
@@ -16,12 +16,10 @@ This Node.js backend starts M-PESA STK Push payments through Safaricom Daraja an
 - `POST /api/donations/mpesa` — initiates an M-PESA STK Push.
 - `POST /api/mpesa/callback` — receives Safaricom payment callbacks.
 - `GET /api/donations/status/:checkoutRequestId` — checks a payment status.
-- `GET /api/donations/total` — returns the total of completed M-PESA, Paystack, and PayPal donations, with PayPal converted to the recorded KES equivalent.
-- `POST /api/donations/paystack/initialize` — starts hosted Paystack checkout.
-- `POST /api/donations/paystack/verify` — verifies a transaction with Paystack before recording it.
-- `POST /api/paystack/webhook` — validates Paystack webhook signatures and reconciles successful payments.
-- `GET /api/donations/paypal/config` — returns the public PayPal client ID, environment, and cached USD/KES rate.
-- `POST /api/donations/paypal/create-order` — creates a PayPal USD order and records the USD amount, KES equivalent, and rate used.
+- `GET /api/donations/total` — returns completed M-PESA and PayPal donations in the reporting total, with PayPal converted to the recorded KES equivalent.
+- `GET /api/currency/rates` — returns cached Frankfurter indicative rates for KES, USD, and INR in all six directions.
+- `GET /api/donations/paypal/config` — returns the public PayPal client ID, environment, and current currency-rate set.
+- `POST /api/donations/paypal/create-order` — validates the original KES/USD/INR amount, converts it server-side to USD, and creates a PayPal order.
 - `POST /api/donations/paypal/capture-order` — captures and verifies the approved PayPal order before marking it completed.
 
 ## Required environment variables
@@ -37,14 +35,11 @@ This Node.js backend starts M-PESA STK Push payments through Safaricom Daraja an
 
 Optional:
 
-- `PAYSTACK_SECRET_KEY` (required to enable Paystack)
-- `PAYSTACK_CALLBACK_URL` (optional; defaults to the GitHub Pages donation return page)
-- `PAYPAL_ENV` (`sandbox` for testing; set to `live` only when ready to accept real payments)
+- `PAYPAL_ENV` (`sandbox` for testing; `live` for production)
 - `PAYPAL_CLIENT_ID` and `PAYPAL_CLIENT_SECRET` (PayPal app credentials; keep both in Render only)
-- `PAYPAL_FX_URL` (optional exchange-rate endpoint; defaults to the USD/KES endpoint in `.env.example`)
 - `MPESA_ACCOUNT_REFERENCE`
 
-Configure actual values privately in Render Environment settings. Set the Paystack webhook URL to `https://<backend-host>/api/paystack/webhook`. Never commit credentials, database URLs, or `.env` files to GitHub.
+Configure actual values privately in Render Environment settings. Frankfurter is used as the public reference-rate source; no Frankfurter secret is required. Never commit credentials, database URLs, or `.env` files to GitHub.
 
 ## Deployment
 
@@ -54,13 +49,13 @@ The backend is intended to run as a Render Web Service using:
 - Build command: `npm install`
 - Start command: `npm start`
 
-Use the Safaricom Daraja sandbox and PayPal Sandbox before considering production payments. PayPal donations are charged in USD. The page displays an approximate KES equivalent, and the backend stores that equivalent and the exchange rate captured when the PayPal order is created. PayPal does not collect KES in this flow; the KES figure is for donor clarity and church reporting.
+M-PESA accepts KES only. PayPal Live settles in USD; donors may select KES, USD, or INR and the backend converts the selected amount using the cached Frankfurter rate immediately before creating the PayPal order. The selected amount, original currency, USD payment amount, KES reporting amount, provider, transaction reference, exchange-rate date, and verified status are stored. All displayed conversions are clearly labeled indicative reference rates.
 
 ## Important
 
 The frontend must send API requests to the deployed backend's public HTTPS URL. A GitHub Pages website cannot run this Node.js backend itself.
 
-Before accepting real donations, configure PayPal Sandbox credentials and test successful payment, cancellation, failure, database recording, amount/currency verification, and the USD/KES display. Then add the PayPal Live client ID and secret to Render, change `PAYPAL_ENV` to `live`, redeploy, and verify a small real transaction. The secret is used only by the server; donations count only after the backend verifies the PayPal capture status, amount, and currency.
+Historical `paystack_donations` rows are retained so existing records are not deleted, but Paystack routes, frontend controls, webhooks, environment variables, and active totals have been removed. The secret is used only by the server; donations count only after the backend verifies the PayPal capture status, amount, and currency or receives a verified Daraja callback.
 
 
 ## Administrator dashboard

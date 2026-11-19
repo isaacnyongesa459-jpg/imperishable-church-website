@@ -25,28 +25,27 @@ document.addEventListener("DOMContentLoaded", () => {
     const mainAmount = document.getElementById("mainAmount");
     const usdAmount = document.getElementById("usdAmount");
     const exchangeRateElement = document.getElementById("exchangeRate");
-    const exchangeRateUpdated = document.getElementById("exchangeRateUpdated");
 
     let usdToKesRate = null;
+    let currencyRates = {};
+    let currencyRateDate = null;
 
-    // M-Pesa Elements
+    // M-Pesa Elements (KES only)
     const mpesaAmount = document.getElementById("customMpesaAmount");
     const mpesaPhone = document.getElementById("mpesaPhoneNumber");
     const mpesaBtn = document.getElementById("mpesaBtn");
 
-    // Paystack Elements
-    const paystackEmail = document.getElementById("paystackEmail");
-    const paystackAmount = document.getElementById("paystackAmount");
-    const paystackBtn = document.getElementById("paystackBtn");
-
-    // PayPal Elements
+    // PayPal Elements (PayPal settles the server-verified order in USD)
     const paypalEmail = document.getElementById("paypalEmail");
-    const paypalAmount = document.getElementById("paypalAmount");
+    const donationCurrency = document.getElementById("donationCurrency");
+    const donationCurrencyLabel = document.getElementById("donationCurrencyLabel");
+    const donationAmount = document.getElementById("donationAmount");
     const paypalBtn = document.getElementById("paypalBtn");
     const paypalStatus = document.getElementById("paypalStatus");
-    const paypalKesEquivalent = document.getElementById("paypalKesEquivalent");
-    const paypalExchangeRate = document.getElementById("paypalExchangeRate");
-    let paypalRate = null;
+    const kesEquivalent = document.getElementById("kesEquivalent");
+    const usdEquivalent = document.getElementById("usdEquivalent");
+    const inrEquivalent = document.getElementById("inrEquivalent");
+    const currencyRateInfo = document.getElementById("currencyRateInfo");
 
     const amountButtons = document.querySelectorAll(
         '.amount-btn[data-method="mpesa"]'
@@ -221,8 +220,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Initial load call
-    loadDonationTotal();
 
     // ========================================
     // PRESET M-PESA AMOUNTS
@@ -450,119 +447,65 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ========================================
-    // PAYSTACK SERVER-VERIFIED DONATION
+    // THREE-CURRENCY CONVERSION + PAYPAL LIVE
     // ========================================
-    async function verifyReturnedPaystackPayment() {
-        const params = new URLSearchParams(window.location.search);
-        const reference = params.get("reference") || params.get("trxref");
-        if (!reference) return;
-        window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
-        showToast("Checking your donation securely with Paystack...");
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/donations/paystack/verify`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ reference })
-            });
-            const data = await readResponse(response);
-            if (data.status !== "completed") {
-                showToast(data.message || "Payment is still being processed. Please check again shortly.");
-                return;
-            }
-            showToast(`${data.message} Reference: ${data.reference}`);
-            if (paystackEmail) paystackEmail.value = "";
-            if (paystackAmount) paystackAmount.value = "";
-            await loadDonationTotal();
-        } catch (error) {
-            showToast(error.message || "We could not verify this payment. Please contact the church with your Paystack reference.");
-        }
-    }
-    verifyReturnedPaystackPayment();
+    const currencyNames = { KES: "Kenyan Shillings", USD: "United States Dollars", INR: "Indian Rupees" };
 
-    if (paystackBtn) {
-        paystackBtn.addEventListener("click", async (event) => {
-            event.preventDefault();
-            const email = paystackEmail ? paystackEmail.value.trim() : "";
-            const amount = Number(paystackAmount ? paystackAmount.value : 0);
-            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-                showToast("Please enter a valid email address for Paystack.");
-                if (paystackEmail) paystackEmail.focus();
-                return;
-            }
-            if (!Number.isSafeInteger(amount) || amount < 10 || amount > 250000) {
-                showToast("Enter a whole-number donation between KES 10 and KES 250,000.");
-                if (paystackAmount) paystackAmount.focus();
-                return;
-            }
-            const originalHTML = paystackBtn.innerHTML;
-            paystackBtn.disabled = true;
-            paystackBtn.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> Connecting securely...';
-            try {
-                const response = await fetch(`${API_BASE_URL}/api/donations/paystack/initialize`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, amount })
-                });
-                const data = await readResponse(response);
-                if (!data.authorizationUrl || !data.reference) {
-                    throw new Error("Paystack did not return a secure checkout link.");
-                }
-                window.location.assign(data.authorizationUrl);
-            } catch (error) {
-                showToast(error.message || "Unable to start Paystack checkout. Please try again.");
-                paystackBtn.disabled = false;
-                paystackBtn.innerHTML = originalHTML;
-            }
-        });
+    function formatCurrency(amount, currency) {
+        const locales = { KES: "en-KE", USD: "en-US", INR: "en-IN" };
+        return new Intl.NumberFormat(locales[currency] || "en", { style: "currency", currency, maximumFractionDigits: 2 }).format(Number(amount));
     }
 
-    if (paystackAmount) {
-        paystackAmount.addEventListener("input", () => {
-            if (Number(paystackAmount.value) < 0) paystackAmount.value = "";
-        });
+    function getRate(base, quote) {
+        return base === quote ? 1 : Number(currencyRates[`${base}/${quote}`]);
     }
 
-    // ========================================
-    // PAYPAL
-    // ========================================
-    function formatKes(value) {
-        return Number(value).toLocaleString("en-KE", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-
-    function updatePaypalConversion() {
-        const amount = Number(paypalAmount ? paypalAmount.value : 0);
-        if (!paypalKesEquivalent || !paypalRate || !Number.isFinite(amount) || amount <= 0) {
-            if (paypalKesEquivalent) paypalKesEquivalent.textContent = "Enter an amount to see the KES equivalent.";
+    function updateCurrencyEquivalents() {
+        if (!donationAmount || !donationCurrency) return;
+        const base = donationCurrency.value;
+        const amount = Number(donationAmount.value);
+        if (!Number.isFinite(amount) || amount <= 0 || !Object.keys(currencyRates).length) {
+            [kesEquivalent, usdEquivalent, inrEquivalent].forEach((element) => { if (element) element.textContent = "Enter an amount to see the equivalent."; });
             return;
         }
-        paypalKesEquivalent.textContent = `USD ${amount.toFixed(2)} ≈ KES ${formatKes(amount * paypalRate)}`;
+        const values = { KES: amount * getRate(base, "KES"), USD: amount * getRate(base, "USD"), INR: amount * getRate(base, "INR") };
+        if (kesEquivalent) kesEquivalent.textContent = formatCurrency(values.KES, "KES");
+        if (usdEquivalent) usdEquivalent.textContent = formatCurrency(values.USD, "USD");
+        if (inrEquivalent) inrEquivalent.textContent = formatCurrency(values.INR, "INR");
     }
 
-    function loadPayPalSdk(clientId, environment) {
-        return new Promise((resolve, reject) => {
-            if (window.paypal) return resolve(window.paypal);
-            const script = document.createElement("script");
-            script.src = `${environment === "live" ? "https://www.paypal.com" : "https://www.sandbox.paypal.com"}/sdk/js?client-id=${encodeURIComponent(clientId)}&currency=USD&intent=capture&components=buttons`;
-            script.onload = () => resolve(window.paypal);
-            script.onerror = () => reject(new Error("PayPal checkout could not be loaded."));
-            document.head.appendChild(script);
-        });
+    function updateCurrencyInput() {
+        if (!donationCurrency || !donationAmount) return;
+        const currency = donationCurrency.value;
+        const maximum = currency === "KES" ? 250000 : currency === "INR" ? 900000 : 10000;
+        donationAmount.max = String(maximum);
+        donationAmount.step = currency === "KES" ? "1" : "0.01";
+        donationAmount.placeholder = currency === "KES" ? "e.g. 1000" : currency === "USD" ? "e.g. 10.00" : "e.g. 1000";
+        if (donationCurrencyLabel) donationCurrencyLabel.textContent = currency;
+        updateCurrencyEquivalents();
+    }
+
+    async function loadCurrencyRates() {
+        const response = await fetch(`${API_BASE_URL}/api/currency/rates`);
+        const data = await readResponse(response);
+        if (!data.rates || !data.rateDate) throw new Error("Indicative currency rates are temporarily unavailable.");
+        currencyRates = data.rates;
+        currencyRateDate = data.rateDate;
+        usdToKesRate = getRate("USD", "KES");
+        if (currencyRateInfo) currencyRateInfo.textContent = `${data.source} indicative reference rates · date ${data.rateDate}`;
+        if (exchangeRateElement) exchangeRateElement.textContent = `Indicative rate: 1 USD ≈ ${formatCurrency(usdToKesRate, "KES")} · date ${data.rateDate}`;
+        updateCurrencyEquivalents();
     }
 
     async function setupPayPal() {
         if (!paypalBtn) return;
         try {
+            await loadCurrencyRates();
+            await loadDonationTotal();
             const response = await fetch(`${API_BASE_URL}/api/donations/paypal/config`);
-            const config = await response.json();
-            if (!response.ok || !config.usdToKes) throw new Error(config.error || "PayPal exchange rate is unavailable.");
-            paypalRate = Number(config.usdToKes);
-            if (paypalExchangeRate) paypalExchangeRate.textContent = `1 USD ≈ KES ${formatKes(paypalRate)} · rate refreshed ${new Date(config.rateUpdatedAt).toLocaleString("en-KE")}`;
-            usdToKesRate = paypalRate;
-            if (exchangeRateElement) exchangeRateElement.textContent = `1 USD ≈ KES ${formatKES(usdToKesRate)} · updated ${new Date(config.rateUpdatedAt).toLocaleString("en-KE")}`;
-            loadDonationTotal();
-            updatePaypalConversion();
+            const config = await readResponse(response);
             if (!config.enabled || !config.clientId) {
-                if (paypalStatus) paypalStatus.textContent = "PayPal is not configured on the donation server yet.";
+                if (paypalStatus) paypalStatus.textContent = "PayPal Live is not configured on the donation server.";
                 return;
             }
             const paypal = await loadPayPalSdk(config.clientId, config.environment);
@@ -570,44 +513,40 @@ document.addEventListener("DOMContentLoaded", () => {
                 style: { layout: "vertical", shape: "rect", label: "paypal" },
                 createOrder: async () => {
                     const email = String(paypalEmail?.value || "").trim().toLowerCase();
-                    const amountUsd = Number(paypalAmount?.value || 0);
+                    const currency = String(donationCurrency?.value || "KES").toUpperCase();
+                    const amount = Number(donationAmount?.value || 0);
+                    const maximum = currency === "KES" ? 250000 : currency === "INR" ? 900000 : 10000;
                     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("Enter a valid email address.");
-                    if (!Number.isFinite(amountUsd) || amountUsd < 1 || amountUsd > 10000) throw new Error("Enter a PayPal donation between USD 1 and USD 10,000.");
+                    if (!Number.isFinite(amount) || amount <= 0 || amount > maximum) throw new Error(`Enter a valid ${currency} donation amount up to ${maximum.toLocaleString("en-US")}.`);
                     if (paypalStatus) paypalStatus.textContent = "Creating your secure PayPal donation order…";
-                    const orderResponse = await fetch(`${API_BASE_URL}/api/donations/paypal/create-order`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ email, amountUsd })
-                    });
-                    const order = await orderResponse.json();
-                    if (!orderResponse.ok || !order.orderId) throw new Error(order.error || "Could not start PayPal checkout.");
-                    paypalRate = Number(order.usdToKes) || paypalRate;
-                    updatePaypalConversion();
+                    const orderResponse = await fetch(`${API_BASE_URL}/api/donations/paypal/create-order`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, currency, amount }) });
+                    const order = await readResponse(orderResponse);
+                    if (!order.orderId) throw new Error("PayPal did not return a secure order.");
                     return order.orderId;
                 },
                 onApprove: async (data) => {
                     if (paypalStatus) paypalStatus.textContent = "Confirming your PayPal payment…";
-                    const captureResponse = await fetch(`${API_BASE_URL}/api/donations/paypal/capture-order`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ orderId: data.orderID })
-                    });
-                    const result = await captureResponse.json();
-                    if (!captureResponse.ok || result.status !== "completed") throw new Error(result.message || result.error || "PayPal did not confirm this donation.");
-                    if (paypalStatus) paypalStatus.textContent = `Donation confirmed: USD ${Number(result.amountUsd).toFixed(2)} ≈ KES ${formatKes(result.amountKes)}. PayPal capture: ${result.captureId}.`;
-                    if (paypalAmount) paypalAmount.value = "";
-                    return result;
+                    const captureResponse = await fetch(`${API_BASE_URL}/api/donations/paypal/capture-order`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ orderId: data.orderID }) });
+                    const result = await readResponse(captureResponse);
+                    if (result.status !== "completed") throw new Error(result.message || "PayPal did not confirm this donation.");
+                    if (paypalStatus) paypalStatus.textContent = `Donation confirmed: ${formatCurrency(result.originalAmount, result.originalCurrency)} · PayPal settled ${formatCurrency(result.amountUsd, "USD")}.`;
+                    if (donationAmount) donationAmount.value = "";
+                    updateCurrencyEquivalents();
+                    await loadDonationTotal();
                 },
                 onCancel: () => { if (paypalStatus) paypalStatus.textContent = "PayPal checkout was cancelled. No donation was recorded."; },
                 onError: (error) => { console.error("PayPal error:", error); if (paypalStatus) paypalStatus.textContent = "PayPal could not complete this donation. No donation was recorded."; }
             }).render(paypalBtn);
         } catch (error) {
-            console.error("PayPal setup error:", error);
+            console.error("Currency/PayPal setup error:", error);
+            if (currencyRateInfo) currencyRateInfo.textContent = error.message || "Indicative rates are temporarily unavailable.";
             if (paypalStatus) paypalStatus.textContent = error.message || "PayPal is temporarily unavailable.";
         }
     }
 
-    if (paypalAmount) paypalAmount.addEventListener("input", updatePaypalConversion);
+    if (donationCurrency) donationCurrency.addEventListener("change", updateCurrencyInput);
+    if (donationAmount) donationAmount.addEventListener("input", updateCurrencyEquivalents);
+    updateCurrencyInput();
     setupPayPal();
 
 });
