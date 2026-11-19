@@ -38,3 +38,7 @@ Extend the existing Imperishable Crown donation page and Node/PostgreSQL backend
 The homepage uses one central `window.CHURCH_CONFIG` in `site.js` with the permanent church latitude `1.233251`, longitude `34.936605`, country Kenya, currency KES, and timezone `Africa/Nairobi`. The local clock and date use `Intl.DateTimeFormat` with that timezone, never the visitor’s device timezone. The weather panel calls the exact Open-Meteo forecast URL for those coordinates, refreshes every ten minutes, and shows a graceful unavailable state if the provider cannot be reached. No browser geolocation API is used.
 
 The complete widget is rendered once on `contact.html`, at the bottom of the contact content immediately before the footer, beside the existing live church map/location block. It uses a responsive two-column layout that stacks on small screens; the previous homepage and service-strip copies are removed so the live widget is not duplicated.
+
+## Requested public integrations
+
+The contact page exposes only the supplied YouTube channel, Facebook profile, and Instagram profile. Google Maps uses official Maps URLs for a named church-place search and driving navigation to the permanent church coordinates, alongside the existing embedded map. No additional social links or visitor-location API are introduced.

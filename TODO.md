@@ -10,3 +10,4 @@
 - [x] The homepage uses the permanent church coordinates latitude `1.233251` and longitude `34.936605`, timezone `Africa/Nairobi`, country Kenya, and currency KES from one central configuration.
 - [x] The homepage displays the church location, a local clock and date based on `Intl.DateTimeFormat` with `Africa/Nairobi`, and Open-Meteo weather for the church coordinates; it never requests visitor GPS, refreshes weather periodically, and handles unavailable weather gracefully.
 - [x] The complete live weather, clock, date, and church-location widget appears once at the bottom of the contact page, immediately before the footer and side by side with the existing live map/location block on desktop; it stacks readably on mobile and is not duplicated on the homepage or elsewhere.
+- [x] The contact page includes only the supplied YouTube, Facebook, and Instagram links, plus official Google Maps place-search and driving-navigation actions for the fixed church coordinates.

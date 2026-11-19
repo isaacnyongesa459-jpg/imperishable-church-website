@@ -45,3 +45,6 @@
 
 .contact-location-row{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:stretch;margin-top:42px}.contact-location-row .map-box{margin-top:0}.contact-weather-widget{min-width:0}.contact-weather-widget .church-weather-card{width:100%;height:100%;border-radius:18px}.contact-weather-widget .church-weather-main{min-height:310px;padding:24px 24px 14px}.contact-weather-widget .church-weather-location{padding-inline:24px}.contact-weather-widget .church-weather-forecast{margin-inline:14px;margin-bottom:14px}
 @media (max-width:760px){.contact-location-row{grid-template-columns:1fr;gap:30px}.contact-weather-widget .church-weather-card{border-radius:18px}.contact-weather-widget .church-weather-main{min-height:245px}}
+
+.social-links a{color:var(--gold2);font-weight:600}.social-links a:hover{color:#fff}.map-actions{display:flex;flex-wrap:wrap;gap:15px 25px}
+@media (max-width:760px){.map-actions{display:grid;gap:10px}}
