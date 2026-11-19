@@ -46,7 +46,23 @@ document.addEventListener('DOMContentLoaded', () => {
   if(weather){
     const summary=weather.querySelector('[data-weather-summary]');
     const details=weather.querySelector('[data-weather-details]');
+    const temperature=weather.querySelector('[data-weather-temp]');
+    const visual=weather.querySelector('.church-weather-visual');
+    const forecast=weather.querySelector('[data-weather-forecast]');
     const labels={0:'Clear sky',1:'Mainly clear',2:'Partly cloudy',3:'Overcast',45:'Foggy',48:'Rime fog',51:'Light drizzle',53:'Drizzle',55:'Heavy drizzle',56:'Freezing drizzle',57:'Heavy freezing drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',66:'Freezing rain',67:'Heavy freezing rain',71:'Light snow',73:'Snow',75:'Heavy snow',77:'Snow grains',80:'Light showers',81:'Rain showers',82:'Heavy showers',85:'Snow showers',86:'Heavy snow showers',95:'Thunderstorm',96:'Thunderstorm with hail',99:'Thunderstorm with heavy hail'};
+    const icons={0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',56:'🌧️',57:'🌧️',61:'🌦️',63:'🌧️',65:'🌧️',66:'🌧️',67:'🌧️',71:'🌨️',73:'🌨️',75:'❄️',77:'🌨️',80:'🌦️',81:'🌧️',82:'🌧️',85:'🌨️',86:'❄️',95:'⛈️',96:'⛈️',99:'⛈️'};
+    const renderForecast=(daily)=>{
+      if(!forecast||!daily?.time)return;
+      forecast.replaceChildren();
+      daily.time.slice(0,4).forEach((date,index)=>{
+        const item=document.createElement('div');item.className='forecast-item';
+        const day=document.createElement('span');day.textContent=index===0?'Today':new Intl.DateTimeFormat('en-KE',{timeZone:church.timezone,weekday:'short'}).format(new Date(`${date}T12:00:00`));
+        const icon=document.createElement('b');icon.className='forecast-icon';icon.textContent=icons[daily.weather_code[index]]||'☁️';icon.setAttribute('aria-hidden','true');
+        const condition=document.createElement('strong');condition.textContent=labels[daily.weather_code[index]]||'Forecast';
+        const high=document.createElement('small');high.textContent=`${Math.round(daily.temperature_2m_max[index])}° / ${Math.round(daily.temperature_2m_min[index])}°`;
+        item.append(day,icon,condition,high);forecast.append(item);
+      });
+    };
     const loadWeather=async()=>{
       const controller=new AbortController();
       const timeout=window.setTimeout(()=>controller.abort(),8000);
@@ -57,12 +73,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const current=data.current;
         if(!current)throw new Error('Weather data unavailable');
         const label=labels[current.weather_code]||'Current conditions';
-        if(summary)summary.textContent=`${label} · ${Math.round(current.temperature_2m)}°C`;
+        if(visual)visual.innerHTML=`<span aria-hidden="true">${icons[current.weather_code]||'☁️'}</span>`;
+        if(summary)summary.textContent=label;
+        if(temperature)temperature.textContent=`${Math.round(current.temperature_2m)}°`;
         if(details)details.textContent=`Feels like ${Math.round(current.apparent_temperature)}°C · ${Math.round(current.relative_humidity_2m)}% humidity · Wind ${Math.round(current.wind_speed_10m)} km/h`;
+        renderForecast(data.daily);
       }catch(error){
         console.warn('Church weather unavailable:',error);
         if(summary)summary.textContent='Weather temporarily unavailable';
+        if(temperature)temperature.textContent='--°';
         if(details)details.textContent=`Church location · ${church.timezone}`;
+        if(forecast)forecast.innerHTML='<div class="forecast-unavailable">Forecast temporarily unavailable</div>';
       }finally{window.clearTimeout(timeout);}
     };
     loadWeather();
