@@ -48,8 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const details=weather.querySelector('[data-weather-details]');
     const labels={0:'Clear sky',1:'Mainly clear',2:'Partly cloudy',3:'Overcast',45:'Foggy',48:'Rime fog',51:'Light drizzle',53:'Drizzle',55:'Heavy drizzle',56:'Freezing drizzle',57:'Heavy freezing drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',66:'Freezing rain',67:'Heavy freezing rain',71:'Light snow',73:'Snow',75:'Heavy snow',77:'Snow grains',80:'Light showers',81:'Rain showers',82:'Heavy showers',85:'Snow showers',86:'Heavy snow showers',95:'Thunderstorm',96:'Thunderstorm with hail',99:'Thunderstorm with heavy hail'};
     const loadWeather=async()=>{
+      const controller=new AbortController();
+      const timeout=window.setTimeout(()=>controller.abort(),8000);
       try{
-        const response=await fetch(church.weatherUrl,{cache:'no-store'});
+        const response=await fetch(church.weatherUrl,{cache:'no-store',signal:controller.signal});
         if(!response.ok)throw new Error('Weather request failed');
         const data=await response.json();
         const current=data.current;
@@ -61,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.warn('Church weather unavailable:',error);
         if(summary)summary.textContent='Weather temporarily unavailable';
         if(details)details.textContent=`Church location · ${church.timezone}`;
-      }
+      }finally{window.clearTimeout(timeout);}
     };
     loadWeather();
     window.setInterval(loadWeather,10*60*1000);
