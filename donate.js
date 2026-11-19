@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const toast = document.getElementById("toastNotification");
     const mainAmount = document.getElementById("mainAmount");
     const usdAmount = document.getElementById("usdAmount");
+    const inrAmount = document.getElementById("inrAmount");
     const exchangeRateElement = document.getElementById("exchangeRate");
 
     let usdToKesRate = null;
@@ -199,20 +200,22 @@ document.addEventListener("DOMContentLoaded", () => {
             // Display the confirmed donation total in Kenyan shillings.
             mainAmount.textContent = `KES ${formatKES(total)}`;
 
-            // Display an estimated USD equivalent when a rate is available.
+            // Display USD and INR estimates from this same confirmed KES total.
             if (usdAmount) {
-                if (usdToKesRate !== null && usdToKesRate > 0) {
-                    usdAmount.textContent =
-                        "$" + (total / usdToKesRate).toLocaleString(
-                            "en-US",
-                            {
-                                minimumFractionDigits: 2,
-                                maximumFractionDigits: 2
-                            }
-                        );
+                const kesToUsdRate = Number(currencyRates["KES/USD"]);
+                if (Number.isFinite(kesToUsdRate) && kesToUsdRate > 0) {
+                    usdAmount.textContent = formatCurrency(total * kesToUsdRate, "USD");
                 } else {
                     usdAmount.textContent =
                         "USD equivalent unavailable";
+                }
+            }
+            if (inrAmount) {
+                const kesToInrRate = Number(currencyRates["KES/INR"]);
+                if (Number.isFinite(kesToInrRate) && kesToInrRate > 0) {
+                    inrAmount.textContent = formatCurrency(total * kesToInrRate, "INR");
+                } else {
+                    inrAmount.textContent = "INR equivalent unavailable";
                 }
             }
         } catch (error) {
@@ -547,6 +550,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (donationCurrency) donationCurrency.addEventListener("change", updateCurrencyInput);
     if (donationAmount) donationAmount.addEventListener("input", updateCurrencyEquivalents);
     updateCurrencyInput();
+    loadDonationTotal();
     setupPayPal();
 
 });
