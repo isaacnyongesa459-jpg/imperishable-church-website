@@ -979,7 +979,10 @@ app.post("/api/donations/paypal/capture-order", async (req, res) => {
     const successful = response.ok && payload.status === "COMPLETED" && capture?.status === "COMPLETED" && capture?.amount?.currency_code === donation.currency && capturedAmount === Number(donation.amount_usd);
     const status = successful ? "completed" : response.ok && payload.status === "PAYER_ACTION_REQUIRED" ? "pending" : "failed";
     await pool.query(`UPDATE paypal_donations SET status=$1, paypal_status=$2, capture_id=COALESCE($3,capture_id), updated_at=NOW() WHERE order_id=$4`, [status, payload.status || capture?.status || "UNKNOWN", capture?.id || null, orderId]);
-    if (!successful) return res.status(status === "pending" ? 202 : 402).json({ status, message: status === "pending" ? "PayPal payment is still processing." : "PayPal did not confirm this donation. No donation was recorded." });
+    if (!successful) {
+      const providerStatus = payload.status || capture?.status || "NOT_CONFIRMED";
+      return res.status(status === "pending" ? 202 : 402).json({ status, providerStatus, message: status === "pending" ? "PayPal payment is still processing." : `PayPal returned ${providerStatus}. No donation was recorded.` });
+    }
     return res.json({ status, orderId, captureId: capture.id, originalAmount: Number(donation.original_amount), originalCurrency: donation.original_currency, amountUsd: Number(donation.amount_usd), amountKes: Number(donation.amount_kes), currency: donation.currency, message: "Your donation has been confirmed. Thank you for giving." });
   } catch (error) {
     console.error("PayPal capture error:", error.message);

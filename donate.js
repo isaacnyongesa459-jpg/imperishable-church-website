@@ -550,17 +550,22 @@ document.addEventListener("DOMContentLoaded", () => {
                     return order.orderId;
                 },
                 onApprove: async (data) => {
-                    if (paypalStatus) paypalStatus.textContent = "Confirming your PayPal payment…";
+                    try {
+                        if (paypalStatus) paypalStatus.textContent = "Confirming your PayPal payment…";
                     const captureResponse = await fetch(`${API_BASE_URL}/api/donations/paypal/capture-order`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ orderId: data.orderID }) });
                     const result = await readResponse(captureResponse);
                     if (result.status !== "completed") throw new Error(result.message || "PayPal did not confirm this donation.");
                     if (paypalStatus) paypalStatus.textContent = `Donation confirmed: ${formatCurrency(result.originalAmount, result.originalCurrency)} · PayPal settled ${formatCurrency(result.amountUsd, "USD")}.`;
                     if (donationAmount) donationAmount.value = "";
                     updateCurrencyEquivalents();
-                    await loadDonationTotal();
+                        await loadDonationTotal();
+                    } catch (error) {
+                        console.error("PayPal capture error:", error);
+                        if (paypalStatus) paypalStatus.textContent = error.message || "PayPal could not confirm this donation. No donation was recorded.";
+                    }
                 },
                 onCancel: () => { if (paypalStatus) paypalStatus.textContent = "PayPal checkout was cancelled. No donation was recorded."; },
-                onError: (error) => { console.error("PayPal error:", error); if (paypalStatus) paypalStatus.textContent = "PayPal could not complete this donation. No donation was recorded."; }
+                onError: (error) => { console.error("PayPal error:", error); if (paypalStatus && !paypalStatus.textContent.includes("No donation was recorded")) paypalStatus.textContent = "PayPal could not complete this donation. No donation was recorded."; }
             }).render(paypalBtn);
         } catch (error) {
             console.error("Currency/PayPal setup error:", error);
