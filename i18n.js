@@ -124,7 +124,15 @@
   }
 
   function addLanguageSelector() {
-    if (document.getElementById('siteLanguage')) return;
+    const existing = document.getElementById('siteLanguage');
+    if (existing) {
+      const config = LANGUAGES[locale];
+      existing.value = locale;
+      existing.setAttribute('aria-label', config.label);
+      const existingLabel = document.querySelector('label[for="siteLanguage"]');
+      if (existingLabel) existingLabel.textContent = config.label;
+      return;
+    }
     const header = document.querySelector('.header-inner');
     const splash = document.querySelector('.splash-content');
     const host = header || splash;
