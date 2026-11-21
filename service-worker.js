@@ -1,4 +1,4 @@
-const CACHE_NAME = "imperishable-church-v14";
+const CACHE_NAME = "imperishable-church-v15";
 const START_PAGE = "./index.html";
 const PRECACHE_FILES = ["./", "./index.html", "./about.html", "./services.html", "./leadership.html", "./events.html", "./donate.html", "./contact.html", "./site.css", "./i18n.js", "./locales/en/translation.json", "./locales/fr/translation.json", "./locales/sw/translation.json", "./locales/hi/translation.json", "./locales/ar/translation.json", "./locales/de/translation.json", "./locales/es/translation.json", "./locales/pt/translation.json", "./locales/zh/translation.json", "./locales/ja/translation.json", "./site.js", "./donate.js", "./manifest.json", "./app-icon-192.png", "./app-icon-512.png", "./church-logo-mark.png", "./11.jpg", "./2.jpg"];
 self.addEventListener("install", event => event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(PRECACHE_FILES)).then(() => self.skipWaiting())));

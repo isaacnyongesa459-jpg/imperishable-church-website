@@ -1,5 +1,12 @@
 # Imperishable Crown Website Upgrade — Outcome Checklist
 
+## Delivered increment — localized CMS foundation
+
+- [x] Added ordered migration `002_multilingual_cms_content.sql` that extends the existing `church_content` table, preserves/backfills its legacy About row, and adds locale, page/section, HTTPS image URL plus alternative text, ordering, publication, updater, and lookup-index fields without dropping existing content.
+- [x] Added a permission-protected website-content editor and list/upsert API using the existing `content:manage` capability. Drafts are absent from public APIs; writes validate page/section keys, supported locale, lengths, HTTPS image URLs and required alt text, display order, and explicit publish state, and audit metadata without storing the section copy in the audit event.
+- [x] Added a published-only public content API with per-section English fallback across the ten existing locale codes; connected Home `hero`/`story` and About `main`/`history` bindings through `textContent`, preserving static fallback copy and HTTPS-only CMS images.
+- [x] Verified 14 backend unit tests, JavaScript syntax, whitespace checks, and migration/publication/upsert behavior against a disposable local PostgreSQL database; no Render/production database or live payment was used.
+
 ## Verified existing foundation to preserve
 
 - [x] The existing project is an HTML/CSS/JavaScript public website with eight current HTML entries, ten locale catalogs, shared site behavior, a PWA manifest/service worker, and a separate Node.js/Express backend using PostgreSQL.

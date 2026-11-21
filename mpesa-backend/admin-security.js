@@ -46,6 +46,7 @@ const ADMIN_SECTION_PERMISSIONS = Object.freeze({
 });
 
 const ADMIN_API_PERMISSION_RULES = Object.freeze([
+  { pattern: /^\/api\/admin\/content(?:\/|$)/, permission: "content:manage" },
   { pattern: /^\/api\/admin\/gallery(?:\/|$)/, permission: "media:manage" },
   { pattern: /^\/api\/admin\/expenses(?:\/|$)/, permission: "finance:manage" },
   { pattern: /^\/api\/admin\/financial-reports\/?$/, permission: "reports:manage" },

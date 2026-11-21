@@ -36,9 +36,12 @@ test("migration runner discovers and applies each checked-in migration once", as
   const pool = { connect: async () => client };
   await runMigrations(pool);
   await runMigrations(pool);
-  assert.deepEqual([...client.applied], ["001_admin_role_access.sql"]);
+  assert.deepEqual([...client.applied], [
+    "001_admin_role_access.sql",
+    "002_multilingual_cms_content.sql"
+  ]);
   assert.equal(client.roleSeedRuns, 1);
-  assert.equal(client.commits, 1);
+  assert.equal(client.commits, 2);
   assert.equal(client.rollbacks, 0);
   assert.equal(client.releases, 2);
 });

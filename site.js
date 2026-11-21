@@ -34,6 +34,45 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   document.querySelectorAll('[data-year]').forEach(el=>el.textContent=new Intl.DateTimeFormat(intlLocale(),{timeZone:church.timezone,year:'numeric'}).format(new Date()));
 
+  const pageName=window.location.pathname.split('/').pop()||'index.html';
+  const cmsPage=pageName==='home.html'?'home':pageName==='about.html'?'about':null;
+  const cmsBindings={
+    home:{hero:{heading:'.hero h1',body:'.hero .lead',background:'.hero'},story:{heading:'.story-copy h2',body:'.story-copy p:first-of-type',image:'.photo-frame img'}},
+    about:{main:{heading:'.page-hero h1',body:'.page-hero > .container > p'},history:{heading:'.story-copy h2',body:'.story-copy p:first-of-type',image:'.photo-frame img'}}
+  };
+  let cmsRequest=0;
+  const loadCmsContent=async()=>{
+    if(!cmsPage)return;
+    const request=++cmsRequest;
+    const locale=String(window.ChurchI18n?.locale||document.documentElement.dataset.language||'en').toLowerCase().split(/[-_]/)[0];
+    try{
+      const response=await fetch(`https://imperishable-church-mpesa-backend-fa2a.onrender.com/api/content/${cmsPage}?lang=${encodeURIComponent(locale)}`,{cache:'no-store'});
+      if(!response.ok)throw new Error(`CMS request failed (${response.status})`);
+      const data=await response.json();
+      if(request!==cmsRequest)return;
+      for(const section of data.sections||[]){
+        const binding=cmsBindings[cmsPage][section.section_key];
+        if(!binding)continue;
+        const heading=binding.heading&&document.querySelector(binding.heading);
+        const body=binding.body&&document.querySelector(binding.body);
+        const image=binding.image&&document.querySelector(binding.image);
+        const background=binding.background&&document.querySelector(binding.background);
+        if(heading&&section.title)heading.textContent=section.title;
+        if(body&&section.body)body.textContent=section.body;
+        if(section.image_url){
+          try{
+            const url=new URL(section.image_url);
+            if(url.protocol==='https:'){
+              if(image){image.src=url.href;if(section.image_alt)image.alt=section.image_alt;}
+              if(background)background.style.setProperty('--cms-hero-image',`url("${url.href}")`);
+            }
+          }catch{}
+        }
+      }
+    }catch(error){console.warn('Published church page content is unavailable; keeping the built-in copy.',error);}
+  };
+  if(cmsPage){loadCmsContent();document.addEventListener('church:localechange',loadCmsContent);}
+
   const churchClock=document.querySelector('[data-church-clock]');
   const churchDate=document.querySelector('[data-church-date]');
   const updateChurchClock=()=>{

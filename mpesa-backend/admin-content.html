@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="color-scheme" content="light">
+  <title>Website content | Imperishable Crown</title>
+  <style>
+    :root { color-scheme:light; --green:#173a32; --green-2:#24564a; --gold:#b88a50; --paper:#f7f5ef; --line:#dedbd1; --ink:#24312e; --muted:#65736e; --danger:#8a2f2b; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.5 Poppins,system-ui,-apple-system,"Segoe UI",sans-serif; }
+    header { background:var(--green); color:white; padding:20px clamp(18px,4vw,48px); display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    header h1 { margin:0; font-size:clamp(1.2rem,3vw,1.75rem); }
+    header a,header button { color:white; background:transparent; border:1px solid #ffffff80; border-radius:8px; padding:9px 13px; text-decoration:none; font:inherit; cursor:pointer; }
+    main { width:min(1180px,calc(100% - 32px)); margin:32px auto 64px; }
+    .intro { margin-bottom:24px; }
+    .intro p,.small { color:var(--muted); }
+    .panel { background:white; border:1px solid var(--line); border-radius:14px; padding:clamp(18px,3vw,28px); margin:20px 0; box-shadow:0 8px 26px #173a320c; }
+    h2 { color:var(--green); margin:0 0 16px; font-size:1.2rem; }
+    form.grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+    label { display:grid; gap:6px; font-weight:600; font-size:.93rem; }
+    input,select,textarea { width:100%; min-height:44px; padding:9px 11px; border:1px solid #abb6b0; border-radius:7px; background:white; color:var(--ink); font:inherit; }
+    textarea { min-height:150px; resize:vertical; }
+    input:focus,select:focus,textarea:focus,button:focus-visible,a:focus-visible { outline:3px solid #b88a5080; outline-offset:2px; }
+    .full { grid-column:1/-1; }
+    .check { display:flex; align-items:center; gap:10px; min-height:44px; }
+    .check input { width:20px; min-height:20px; }
+    .button { border:0; border-radius:7px; background:var(--green-2); color:white; padding:11px 16px; font:inherit; font-weight:700; cursor:pointer; }
+    .button:hover { background:var(--green); }
+    .button:disabled { opacity:.55; cursor:not-allowed; }
+    .button.secondary { background:#e9eee9; color:var(--green); border:1px solid var(--line); }
+    .message { min-height:1.5em; margin:12px 0 0; color:var(--green-2); }
+    .message.error { color:var(--danger); }
+    .table-wrap { overflow:auto; }
+    table { width:100%; border-collapse:collapse; min-width:760px; }
+    th,td { border-bottom:1px solid var(--line); padding:12px 10px; text-align:left; vertical-align:top; }
+    th { color:var(--green); font-size:.88rem; }
+    .status { font-weight:600; }
+    .actions { display:flex; gap:8px; align-items:center; }
+    @media(max-width:650px) { header { align-items:flex-start; flex-wrap:wrap; } header .actions { display:flex; gap:8px; } form.grid { grid-template-columns:1fr; } .full { grid-column:auto; } main { margin-top:20px; } }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; animation:none!important; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Website content</h1>
+    <div class="actions">
+      <a href="/admin/dashboard">Dashboard</a>
+      <button type="button" id="logoutButton">Sign out</button>
+    </div>
+  </header>
+  <main>
+    <section class="intro" aria-labelledby="pageIntro">
+      <h2 id="pageIntro">Manage published page sections</h2>
+      <p>This editor updates existing church website content records. Public pages use the selected language and fall back to English. Draft sections stay private. Copy is rendered as plain text; media is currently URL-based (uploads are not implemented), HTTPS-only, and requires descriptive alternative text. Public bindings currently support Home sections <code>hero</code>/<code>story</code> and About sections <code>main</code>/<code>history</code>; other keys can be stored for later page integrations.</p>
+    </section>
+    <section class="panel" aria-labelledby="editHeading">
+      <h2 id="editHeading">Edit a page section</h2>
+      <form id="contentForm" class="grid">
+        <label>Page<select name="pageKey" required>
+          <option value="home">Home</option><option value="about">About</option><option value="services">Services</option><option value="events">Events</option><option value="leadership">Leadership</option><option value="contact">Contact</option>
+        </select></label>
+        <label>Section key<input name="sectionKey" required maxlength="40" pattern="[a-z0-9_-]+" placeholder="hero" autocomplete="off"></label>
+        <label>Language<select name="locale" required>
+          <option value="en">English</option><option value="fr">Français</option><option value="sw">Kiswahili</option><option value="hi">हिन्दी</option><option value="ar">العربية</option><option value="de">Deutsch</option><option value="es">Español</option><option value="pt">Português</option><option value="zh">中文</option><option value="ja">日本語</option>
+        </select></label>
+        <label>Display order<input name="displayOrder" type="number" min="0" max="10000" step="1" value="0" required></label>
+        <label class="full">Heading/title<input name="title" maxlength="200"></label>
+        <label class="full">Body text<textarea name="body" maxlength="10000"></textarea></label>
+        <label class="full">Image URL (optional, HTTPS only)<input name="imageUrl" type="url" maxlength="2000" placeholder="https://…"></label>
+        <label class="full">Image alternative text (required when an image URL is set)<input name="imageAlt" maxlength="250" placeholder="Describe the image for visitors using screen readers"></label>
+        <label class="check full"><input name="published" type="checkbox" checked> Publish this section on the public website</label>
+        <div class="full actions"><button class="button" id="saveButton" type="submit">Save section</button><button class="button secondary" id="newButton" type="button">Clear form</button></div>
+      </form>
+      <p id="formMessage" class="message" role="status" aria-live="polite"></p>
+    </section>
+    <section class="panel" aria-labelledby="listHeading">
+      <h2 id="listHeading">Saved sections</h2>
+      <label style="max-width:260px;margin-bottom:14px">Filter by page<select id="pageFilter"><option value="">All pages</option><option value="home">Home</option><option value="about">About</option><option value="services">Services</option><option value="events">Events</option><option value="leadership">Leadership</option><option value="contact">Contact</option></select></label>
+      <p id="listMessage" class="message" role="status" aria-live="polite">Loading content…</p>
+      <div class="table-wrap"><table>
+        <caption class="small" style="text-align:left;padding:8px 0">Published items are visible to the public. Choose Edit to change a language variant.</caption>
+        <thead><tr><th scope="col">Page / section</th><th scope="col">Language</th><th scope="col">Heading</th><th scope="col">Status</th><th scope="col">Action</th></tr></thead>
+        <tbody id="contentBody"></tbody>
+      </table></div>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const form = document.getElementById("contentForm");
+      const formMessage = document.getElementById("formMessage");
+      const listMessage = document.getElementById("listMessage");
+      const contentBody = document.getElementById("contentBody");
+      const pageFilter = document.getElementById("pageFilter");
+      const localeNames = { en:"English", fr:"Français", sw:"Kiswahili", hi:"हिन्दी", ar:"العربية", de:"Deutsch", es:"Español", pt:"Português", zh:"中文", ja:"日本語" };
+
+      async function api(url, options = {}) {
+        const response = await fetch(url, {
+          credentials: "same-origin",
+          cache: "no-store",
+          ...options,
+          headers: { "Content-Type": "application/json", ...(options.headers || {}) }
+        });
+        const data = await response.json().catch(() => ({}));
+        if (response.status === 401) {
+          location.assign("/admin/login");
+          throw new Error("Your session has expired. Sign in again.");
+        }
+        if (!response.ok || data.success === false) throw new Error(data.message || "The request could not be completed.");
+        return data;
+      }
+
+      function message(node, text, isError = false) {
+        node.textContent = text;
+        node.classList.toggle("error", isError);
+      }
+
+      function clearForm() {
+        form.reset();
+        form.elements.pageKey.value = "home";
+        form.elements.locale.value = "en";
+        form.elements.displayOrder.value = "0";
+        form.elements.published.checked = true;
+        document.getElementById("editHeading").textContent = "Edit a page section";
+      }
+
+      function editItem(item) {
+        form.elements.pageKey.value = item.page_key;
+        form.elements.sectionKey.value = item.section_key;
+        form.elements.locale.value = item.locale;
+        form.elements.displayOrder.value = String(item.display_order);
+        form.elements.title.value = item.title || "";
+        form.elements.body.value = item.body || "";
+        form.elements.imageUrl.value = item.image_url || "";
+        form.elements.imageAlt.value = item.image_alt || "";
+        form.elements.published.checked = Boolean(item.published);
+        document.getElementById("editHeading").textContent = `Edit ${item.page_key} / ${item.section_key} (${localeNames[item.locale] || item.locale})`;
+        form.scrollIntoView({ behavior: "smooth", block: "start" });
+        form.elements.title.focus();
+      }
+
+      async function loadContent() {
+        message(listMessage, "Loading content…");
+        contentBody.replaceChildren();
+        try {
+          const query = pageFilter.value ? `?page=${encodeURIComponent(pageFilter.value)}` : "";
+          const data = await api(`/api/admin/content${query}`);
+          const items = data.items || [];
+          for (const item of items) {
+            const row = document.createElement("tr");
+            const pageCell = document.createElement("td");
+            const pageName = document.createElement("strong");
+            pageName.textContent = `${item.page_key} / ${item.section_key}`;
+            pageCell.append(pageName);
+            const localeCell = document.createElement("td");
+            localeCell.textContent = localeNames[item.locale] || item.locale;
+            const titleCell = document.createElement("td");
+            titleCell.textContent = item.title || "—";
+            const statusCell = document.createElement("td");
+            statusCell.className = "status";
+            statusCell.textContent = item.published ? "Published" : "Draft";
+            const actionCell = document.createElement("td");
+            const button = document.createElement("button");
+            button.type = "button";
+            button.className = "button secondary";
+            button.textContent = "Edit";
+            button.addEventListener("click", () => editItem(item));
+            actionCell.append(button);
+            row.append(pageCell, localeCell, titleCell, statusCell, actionCell);
+            contentBody.append(row);
+          }
+          message(listMessage, items.length ? `${items.length} section${items.length === 1 ? "" : "s"} loaded.` : "No saved sections for this filter.");
+        } catch (error) {
+          message(listMessage, error.message, true);
+        }
+      }
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!form.reportValidity()) return;
+        const button = document.getElementById("saveButton");
+        button.disabled = true;
+        message(formMessage, "Saving section…");
+        const data = new FormData(form);
+        const payload = {
+          pageKey: data.get("pageKey"),
+          sectionKey: data.get("sectionKey").trim(),
+          locale: data.get("locale"),
+          displayOrder: Number(data.get("displayOrder")),
+          title: data.get("title").trim(),
+          body: data.get("body").trim(),
+          imageUrl: data.get("imageUrl").trim(),
+          imageAlt: data.get("imageAlt").trim(),
+          published: form.elements.published.checked
+        };
+        try {
+          await api("/api/admin/content", { method: "PUT", body: JSON.stringify(payload) });
+          message(formMessage, payload.published ? "Section saved and published." : "Draft saved. It is not visible to public visitors.");
+          await loadContent();
+        } catch (error) {
+          message(formMessage, error.message, true);
+        } finally {
+          button.disabled = false;
+        }
+      });
+
+      document.getElementById("newButton").addEventListener("click", clearForm);
+      pageFilter.addEventListener("change", loadContent);
+      document.getElementById("logoutButton").addEventListener("click", async () => {
+        try { await api("/api/admin/logout", { method: "POST", body: "{}" }); }
+        finally { location.assign("/admin/login"); }
+      });
+      api("/api/admin/me").then(loadContent).catch((error) => message(listMessage, error.message, true));
+    })();
+  </script>
+</body>
+</html>

@@ -77,8 +77,9 @@ This is a substantial multi-release upgrade. Implement and validate each phase s
 
 - Root `*.html`, `*.css`, and `*.js`: current public pages and shared browser behavior. Add new public route files and page scripts/styles incrementally; reuse `site.js`, `i18n.js`, shared design tokens, and existing navigation/footer patterns.
 - `locales/*/translation.json`: existing static translations; add keys for new interfaces consistently across the ten catalogs.
-- `manus-routes.json`: complete public-page route manifest, kept synchronized as new pages are added.
+- `manus-routes.json`: complete public-page route manifest, kept synchronized as new routes are added.
 - `mpesa-backend/server.js`: existing server bootstrap and stable routes during early migrations; gradually mount route modules without changing endpoint contracts for donations.
+- `mpesa-backend/cms-content.js` and `admin-content.html`: localized public content reads, role-protected CMS listing/upserts, and the backend-served editor; current bindings cover only Home and About while the broader page inventory remains in scope.
 - `mpesa-backend/admin-views.js`: current backend-served protected admin UI; retain the same origin and session model while expanding sections/forms.
 - `mpesa-backend/routes/`: proposed REST routes grouped by auth/users, content, media, events/sermons, prayer, finance/reports, and existing payments where extraction is safe.
 - `mpesa-backend/services/`: proposed business logic for permissions, content publication, finance aggregation, media storage, and payment-to-ledger reconciliation.

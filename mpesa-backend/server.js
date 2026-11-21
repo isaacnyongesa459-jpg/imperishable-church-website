@@ -23,6 +23,7 @@ const {
   permissionForAdminApi
 } = require("./admin-security");
 const { runMigrations, ensureBootstrapSuperAdmin } = require("./migrate");
+const { createCmsContentRouter } = require("./cms-content");
 const app = express();
 
 const ADMIN_COOKIE_NAME = "__Host-admin_session";
@@ -362,6 +363,8 @@ app.use((req, res, next) => {
 
   next();
 });
+
+app.use("/api", createCmsContentRouter({ pool, requirePermission, requireAdminOrigin }));
 
 
 // ========================================
@@ -1213,7 +1216,8 @@ app.get("/api/about", async (req, res) => {
     const result = await pool.query(
       `SELECT title, body
        FROM church_content
-       WHERE content_key = 'about'`
+       WHERE content_key = 'about'
+         AND published = TRUE`
     );
 
     if (result.rowCount === 0) {
@@ -1793,6 +1797,13 @@ app.get(["/admin", "/admin/login"], (req, res) => {
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.type("html").send(adminViews.login);
 });
+app.get("/admin/content", requirePermission("content:manage"), (req, res) => {
+  res.setHeader("Cache-Control", "private, no-store");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Referrer-Policy", "no-referrer");
+  res.sendFile(path.join(__dirname, "admin-content.html"));
+});
 app.get("/admin/users", requirePermission("users:manage"), (req, res) => {
   res.setHeader("Cache-Control", "private, no-store");
   res.setHeader("X-Content-Type-Options", "nosniff");
@@ -1827,7 +1838,10 @@ app.get("/admin/:section", async (req, res) => {
     const userLink = hasPermission(admin.permissions, "users:manage")
       ? `<a href="/admin/users">User management</a>`
       : "";
-    const nav = sectionLinks + userLink + `<a class="church-site-link" href="https://isaacnyongesa459-jpg.github.io/imperishable-church-website/index.html">Church website</a>`;
+    const contentLink = hasPermission(admin.permissions, "content:manage")
+      ? `<a href="/admin/content">Website content</a>`
+      : "";
+    const nav = sectionLinks + contentLink + userLink + `<a class="church-site-link" href="https://isaacnyongesa459-jpg.github.io/imperishable-church-website/index.html">Church website</a>`;
     html = html.replace(/<nav>[\s\S]*?<\/nav>/, `<nav aria-label="Admin dashboard sections">${nav}</nav>`);
     html = html.replace("</body>", `<script>document.documentElement.dataset.adminPage=${JSON.stringify(section)}; const selected=${JSON.stringify(ADMIN_SECTIONS[section])}; document.querySelectorAll('.admin-main > section').forEach(el=>{if(el.id!==selected)el.hidden=true}); if(selected==='dashboardTop')document.querySelectorAll('.admin-main > section').forEach(el=>el.hidden=false); const siteLink=document.querySelector('.church-site-link'); if(siteLink) siteLink.href += '?theme='+encodeURIComponent(document.documentElement.dataset.theme);</script></body>`);
     res.setHeader("Cache-Control", "private, no-store");

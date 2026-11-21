@@ -57,6 +57,8 @@ test("existing admin sections expose only features granted to each role", () => 
 });
 
 test("existing admin APIs map to least-privilege feature permissions", () => {
+  assert.equal(permissionForAdminApi("/api/admin/content"), "content:manage");
+  assert.equal(permissionForAdminApi("/api/admin/content/home"), "content:manage");
   assert.equal(permissionForAdminApi("/api/admin/expenses"), "finance:manage");
   assert.equal(permissionForAdminApi("/api/admin/expenses/stats"), "finance:manage");
   assert.equal(permissionForAdminApi("/api/admin/financial-reports"), "reports:manage");
