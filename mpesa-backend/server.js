@@ -10,8 +10,19 @@ process.on("unhandledRejection", (reason) => {
 
 const express = require("express");
 const adminViews = require("./admin-views");
+const { retainOnlyAdminSection } = require("./admin-view-filter");
 const { Pool } = require("pg");
 const crypto = require("crypto");
+const path = require("node:path");
+const {
+  SUPPORTED_ROLES,
+  hashPassword,
+  verifyPassword,
+  hasPermission,
+  hasAdminSectionAccess,
+  permissionForAdminApi
+} = require("./admin-security");
+const { runMigrations, ensureBootstrapSuperAdmin } = require("./migrate");
 const app = express();
 
 const ADMIN_COOKIE_NAME = "__Host-admin_session";
@@ -70,10 +81,14 @@ function verifyAdminToken(token) {
       Buffer.from(encoded, "base64url").toString("utf8")
     );
 
+    const isLegacyBootstrapSession =
+      !payload.userId && payload.username === process.env.ADMIN_USERNAME;
     if (
-      payload.username !== process.env.ADMIN_USERNAME ||
+      typeof payload.username !== "string" ||
+      (!/^\d+$/.test(String(payload.userId || "")) && !isLegacyBootstrapSession) ||
       !Number.isFinite(payload.exp) ||
-      payload.exp <= Date.now()
+      payload.exp <= Date.now() ||
+      (payload.authVersion !== undefined && !Number.isInteger(payload.authVersion))
     ) {
       return null;
     }
@@ -101,20 +116,94 @@ function getAdminToken(req) {
   return null;
 }
 
-function requireAdmin(req, res, next) {
+async function resolveAdminSession(req) {
   const token = getAdminToken(req);
   const session = verifyAdminToken(token);
+  if (!session) return null;
 
-  if (!session) {
-    return res.status(401).json({
-      success: false,
-      message: "Administrator login required."
-    });
+  const accountQuery = session.userId
+    ? `SELECT u.id::text AS id, u.username, u.display_name, u.is_active,
+              u.auth_version, COALESCE(ARRAY_AGG(DISTINCT r.role_key)
+                FILTER (WHERE r.role_key IS NOT NULL), ARRAY[]::varchar[]) AS roles,
+              COALESCE(JSONB_AGG(DISTINCT r.permissions)
+                FILTER (WHERE r.role_key IS NOT NULL), '[]'::jsonb) AS role_permissions
+       FROM admin_users u
+       LEFT JOIN admin_user_roles ur ON ur.user_id = u.id
+       LEFT JOIN admin_roles r ON r.id = ur.role_id
+       WHERE u.id = $1
+       GROUP BY u.id`
+    : `SELECT u.id::text AS id, u.username, u.display_name, u.is_active,
+              u.auth_version, COALESCE(ARRAY_AGG(DISTINCT r.role_key)
+                FILTER (WHERE r.role_key IS NOT NULL), ARRAY[]::varchar[]) AS roles,
+              COALESCE(JSONB_AGG(DISTINCT r.permissions)
+                FILTER (WHERE r.role_key IS NOT NULL), '[]'::jsonb) AS role_permissions
+       FROM admin_users u
+       LEFT JOIN admin_user_roles ur ON ur.user_id = u.id
+       LEFT JOIN admin_roles r ON r.id = ur.role_id
+       WHERE u.username = $1
+       GROUP BY u.id`;
+  const account = await pool.query(accountQuery, [session.userId || session.username]);
+  if (!account.rowCount) return null;
+  const row = account.rows[0];
+  if (!row.is_active || Number(row.auth_version) !== Number(session.authVersion || 0)) {
+    return null;
   }
 
-  req.admin = { username: session.username };
-  next();
+  const rolePermissions = Array.isArray(row.role_permissions)
+    ? row.role_permissions
+    : [];
+  return {
+    id: row.id,
+    username: row.username,
+    displayName: row.display_name,
+    roles: row.roles || [],
+    permissions: rolePermissions.flatMap((permissions) =>
+      Array.isArray(permissions) ? permissions : []
+    )
+  };
 }
+
+function authorizeAdmin({ superAdminOnly = false, permission = null } = {}) {
+  return async (req, res, next) => {
+    try {
+      const admin = await resolveAdminSession(req);
+      if (!admin) {
+        return res.status(401).json({
+          success: false,
+          message: "Administrator login required."
+        });
+      }
+      if (superAdminOnly && !admin.roles.includes("super_admin")) {
+        return res.status(403).json({
+          success: false,
+          message: "Super Administrator permission required."
+        });
+      }
+      if (permission && !hasPermission(admin.permissions, permission)) {
+        return res.status(403).json({
+          success: false,
+          message: "You do not have permission to perform this action."
+        });
+      }
+      req.admin = admin;
+      return next();
+    } catch (error) {
+      console.error("Administrator authorization error:", error.message);
+      return res.status(500).json({
+        success: false,
+        message: "Unable to verify administrator access."
+      });
+    }
+  };
+}
+
+const requireAdmin = (req, res, next) => {
+  const permission = permissionForAdminApi(req.path);
+  return permission
+    ? authorizeAdmin({ permission })(req, res, next)
+    : authorizeAdmin({ superAdminOnly: true })(req, res, next);
+};
+const requirePermission = (permission) => authorizeAdmin({ permission });
 
 function requireAdminOrigin(req, res, next) {
   if (
@@ -1358,11 +1447,15 @@ app.post("/api/contact", async (req, res) => {
 app.post(
   "/api/admin/login",
   requireAdminOrigin,
-  (req, res) => {
+  async (req, res) => {
     res.setHeader("Cache-Control", "no-store");
 
-    const username = req.body?.username;
-    const password = req.body?.password;
+    const username = typeof req.body?.username === "string"
+      ? req.body.username.trim()
+      : "";
+    const password = typeof req.body?.password === "string"
+      ? req.body.password
+      : "";
 
     const now = Date.now();
     const key = req.ip || "unknown";
@@ -1381,15 +1474,40 @@ app.post(
       });
     }
 
-    const validCredentials =
-      typeof process.env.ADMIN_USERNAME === "string" &&
-      process.env.ADMIN_USERNAME.length > 0 &&
-      typeof process.env.ADMIN_PASSWORD === "string" &&
-      process.env.ADMIN_PASSWORD.length > 0 &&
+    let account = null;
+    let validCredentials = false;
+    if (
+      username.length > 0 && username.length <= 60 &&
+      password.length > 0 && password.length <= 1024 &&
       typeof process.env.ADMIN_SESSION_SECRET === "string" &&
-      process.env.ADMIN_SESSION_SECRET.length >= 32 &&
-      safeStringEqual(username, process.env.ADMIN_USERNAME) &&
-      safeStringEqual(password, process.env.ADMIN_PASSWORD);
+      process.env.ADMIN_SESSION_SECRET.length >= 32
+    ) {
+      try {
+        const result = await pool.query(
+          `SELECT u.id::text AS id, u.username, u.password_hash,
+                  u.is_active, u.auth_version,
+                  COALESCE(ARRAY_AGG(DISTINCT r.role_key)
+                    FILTER (WHERE r.role_key IS NOT NULL), ARRAY[]::varchar[]) AS roles
+           FROM admin_users u
+           LEFT JOIN admin_user_roles ur ON ur.user_id = u.id
+           LEFT JOIN admin_roles r ON r.id = ur.role_id
+           WHERE u.username = $1
+           GROUP BY u.id`,
+          [username]
+        );
+        account = result.rows[0] || null;
+        validCredentials = Boolean(
+          account && account.is_active && account.roles.length &&
+          await verifyPassword(password, account.password_hash)
+        );
+      } catch (error) {
+        console.error("Administrator login lookup failed:", error.message);
+        return res.status(503).json({
+          success: false,
+          message: "Administrator sign-in is temporarily unavailable."
+        });
+      }
+    }
 
     if (!validCredentials) {
       attempt.count += 1;
@@ -1404,7 +1522,9 @@ app.post(
     adminLoginAttempts.delete(key);
 
     const token = signAdminPayload({
-      username: process.env.ADMIN_USERNAME,
+      userId: account.id,
+      username: account.username,
+      authVersion: Number(account.auth_version),
       exp: Date.now() + ADMIN_SESSION_HOURS * 60 * 60 * 1000
     });
 
@@ -1423,22 +1543,33 @@ app.post(
   }
 );
 
-app.get("/api/admin/me", (req, res) => {
+app.get("/api/admin/me", async (req, res) => {
   res.setHeader("Cache-Control", "no-store");
 
-  const session = verifyAdminToken(getAdminToken(req));
+  try {
+    const admin = await resolveAdminSession(req);
+    if (!admin) {
+      return res.status(401).json({
+        success: false,
+        message: "Not logged in."
+      });
+    }
 
-  if (!session) {
-    return res.status(401).json({
+    return res.json({
+      success: true,
+      id: admin.id,
+      username: admin.username,
+      displayName: admin.displayName,
+      roles: admin.roles,
+      permissions: admin.permissions
+    });
+  } catch (error) {
+    console.error("Administrator session lookup failed:", error.message);
+    return res.status(503).json({
       success: false,
-      message: "Not logged in."
+      message: "Unable to verify the administrator session."
     });
   }
-
-  return res.json({
-    success: true,
-    username: session.username
-  });
 });
 
 app.post(
@@ -1461,6 +1592,194 @@ app.post(
   }
 );
 
+app.get("/api/admin/users", requirePermission("users:manage"), async (req, res) => {
+  res.setHeader("Cache-Control", "private, no-store");
+  try {
+    const result = await pool.query(`
+      SELECT u.id::text AS id, u.username, u.display_name, u.is_active,
+             u.is_bootstrap, u.created_at,
+             COALESCE(ARRAY_AGG(DISTINCT r.role_key)
+               FILTER (WHERE r.role_key IS NOT NULL), ARRAY[]::varchar[]) AS roles
+      FROM admin_users u
+      LEFT JOIN admin_user_roles ur ON ur.user_id = u.id
+      LEFT JOIN admin_roles r ON r.id = ur.role_id
+      GROUP BY u.id
+      ORDER BY u.created_at ASC, u.id ASC
+    `);
+    return res.json({ success: true, users: result.rows });
+  } catch (error) {
+    console.error("Admin user listing failed:", error.message);
+    return res.status(500).json({ success: false, message: "Unable to load administrator accounts." });
+  }
+});
+
+app.post(
+  "/api/admin/users",
+  requireAdminOrigin,
+  requirePermission("users:manage"),
+  async (req, res) => {
+    res.setHeader("Cache-Control", "private, no-store");
+    const username = typeof req.body?.username === "string" ? req.body.username.trim() : "";
+    const displayName = typeof req.body?.displayName === "string" ? req.body.displayName.trim() : "";
+    const password = typeof req.body?.password === "string" ? req.body.password : "";
+    const roleKey = typeof req.body?.role === "string" ? req.body.role : "";
+    if (!/^[A-Za-z0-9][A-Za-z0-9._-]{2,59}$/.test(username) ||
+        displayName.length < 2 || displayName.length > 120 ||
+        password.length < 12 || Buffer.byteLength(password, "utf8") > 1024 ||
+        !SUPPORTED_ROLES.includes(roleKey)) {
+      return res.status(400).json({
+        success: false,
+        message: "Provide a valid username, display name, 12-character minimum password, and supported role."
+      });
+    }
+
+    const client = await pool.connect();
+    try {
+      const passwordHash = await hashPassword(password);
+      await client.query("BEGIN");
+      const created = await client.query(
+        `INSERT INTO admin_users (username, display_name, password_hash)
+         VALUES ($1, $2, $3)
+         RETURNING id::text AS id, username, display_name, is_active, created_at`,
+        [username, displayName, passwordHash]
+      );
+      const user = created.rows[0];
+      await client.query(
+        `INSERT INTO admin_user_roles (user_id, role_id, assigned_by)
+         SELECT $1, id, $2 FROM admin_roles WHERE role_key = $3`,
+        [user.id, req.admin.id, roleKey]
+      );
+      await client.query(
+        `INSERT INTO admin_activity_logs (admin_username, action, details)
+         VALUES ($1, 'admin.user.created', $2)`,
+        [req.admin.username, JSON.stringify({ username, role: roleKey })]
+      );
+      await client.query("COMMIT");
+      return res.status(201).json({ success: true, user: { ...user, roles: [roleKey] } });
+    } catch (error) {
+      await client.query("ROLLBACK");
+      if (error.code === "23505") {
+        return res.status(409).json({ success: false, message: "That username is already in use." });
+      }
+      console.error("Administrator account creation failed:", error.message);
+      return res.status(500).json({ success: false, message: "Unable to create the administrator account." });
+    } finally {
+      client.release();
+    }
+  }
+);
+
+app.patch(
+  "/api/admin/users/:id",
+  requireAdminOrigin,
+  requirePermission("users:manage"),
+  async (req, res) => {
+    res.setHeader("Cache-Control", "private, no-store");
+    const userId = req.params.id;
+    const roleKey = req.body?.role;
+    const isActive = req.body?.isActive;
+    const displayName = typeof req.body?.displayName === "string" ? req.body.displayName.trim() : undefined;
+    if (!/^\d+$/.test(userId) ||
+        (roleKey !== undefined && !SUPPORTED_ROLES.includes(roleKey)) ||
+        (isActive !== undefined && typeof isActive !== "boolean") ||
+        (displayName !== undefined && (displayName.length < 2 || displayName.length > 120)) ||
+        (roleKey === undefined && isActive === undefined && displayName === undefined)) {
+      return res.status(400).json({ success: false, message: "Invalid administrator update." });
+    }
+
+    const client = await pool.connect();
+    try {
+      await client.query("BEGIN");
+      const lockedAccount = await client.query(
+        "SELECT id FROM admin_users WHERE id = $1 FOR UPDATE",
+        [userId]
+      );
+      if (!lockedAccount.rowCount) {
+        await client.query("ROLLBACK");
+        return res.status(404).json({ success: false, message: "Administrator account not found." });
+      }
+      const existing = await client.query(
+        `SELECT u.id::text AS id, u.username, u.display_name, u.is_active,
+                u.is_bootstrap,
+                COALESCE(ARRAY_AGG(DISTINCT r.role_key)
+                  FILTER (WHERE r.role_key IS NOT NULL), ARRAY[]::varchar[]) AS roles
+         FROM admin_users u
+         LEFT JOIN admin_user_roles ur ON ur.user_id = u.id
+         LEFT JOIN admin_roles r ON r.id = ur.role_id
+         WHERE u.id = $1
+         GROUP BY u.id`,
+        [userId]
+      );
+      const current = existing.rows[0];
+      const willRemainSuperAdmin =
+        (roleKey === undefined ? current.roles.includes("super_admin") : roleKey === "super_admin") &&
+        (isActive === undefined ? current.is_active : isActive);
+      if (current.roles.includes("super_admin") && !willRemainSuperAdmin) {
+        await client.query("SELECT pg_advisory_xact_lock($1)", [731942602]);
+        const activeAdmins = await client.query(`
+          SELECT COUNT(DISTINCT u.id)::int AS count
+          FROM admin_users u
+          JOIN admin_user_roles ur ON ur.user_id = u.id
+          JOIN admin_roles r ON r.id = ur.role_id AND r.role_key = 'super_admin'
+          WHERE u.is_active = TRUE
+        `);
+        if (activeAdmins.rows[0].count <= 1) {
+          await client.query("ROLLBACK");
+          return res.status(409).json({ success: false, message: "At least one active Super Administrator must remain." });
+        }
+      }
+      if (current.is_bootstrap && (roleKey !== undefined && roleKey !== "super_admin" || isActive === false)) {
+        await client.query("ROLLBACK");
+        return res.status(400).json({ success: false, message: "The bootstrap Super Administrator account cannot be demoted or deactivated." });
+      }
+      if (String(current.id) === String(req.admin.id) && isActive === false) {
+        await client.query("ROLLBACK");
+        return res.status(400).json({ success: false, message: "You cannot deactivate your own account." });
+      }
+
+      if (roleKey !== undefined) {
+        await client.query("DELETE FROM admin_user_roles WHERE user_id = $1", [userId]);
+        await client.query(
+          `INSERT INTO admin_user_roles (user_id, role_id, assigned_by)
+           SELECT $1, id, $2 FROM admin_roles WHERE role_key = $3`,
+          [userId, req.admin.id, roleKey]
+        );
+      }
+      const updated = await client.query(
+        `UPDATE admin_users
+         SET display_name = COALESCE($2, display_name),
+             is_active = COALESCE($3, is_active),
+             auth_version = auth_version + 1,
+             updated_at = NOW()
+         WHERE id = $1
+         RETURNING id::text AS id, username, display_name, is_active, created_at`,
+        [userId, displayName ?? null, isActive ?? null]
+      );
+      const auditDetails = {
+        username: current.username,
+        role: roleKey ?? current.roles[0] ?? null,
+        isActive: isActive ?? current.is_active
+      };
+      await client.query(
+        `INSERT INTO admin_activity_logs (admin_username, action, details)
+         VALUES ($1, 'admin.user.updated', $2)`,
+        [req.admin.username, JSON.stringify(auditDetails)]
+      );
+      await client.query("COMMIT");
+      return res.json({
+        success: true,
+        user: { ...updated.rows[0], roles: roleKey ? [roleKey] : current.roles }
+      });
+    } catch (error) {
+      await client.query("ROLLBACK");
+      console.error("Administrator account update failed:", error.message);
+      return res.status(500).json({ success: false, message: "Unable to update the administrator account." });
+    } finally {
+      client.release();
+    }
+  }
+);
+
 // Admin views are delivered by the authenticated backend, not GitHub Pages.
 const ADMIN_SECTIONS = {
   dashboard: "dashboardTop", members: "membersSection", attendance: "attendanceSection",
@@ -1468,21 +1787,58 @@ const ADMIN_SECTIONS = {
   announcements: "announcementsSection", events: "eventsSection", donations: "donationsSection",
   messages: "messagesSection", gallery: "gallerySection"
 };
+const ADMIN_SECTION_MARKUP_IDS = [...Object.values(ADMIN_SECTIONS), "churchStatistics"];
 app.get(["/admin", "/admin/login"], (req, res) => {
   res.setHeader("Cache-Control", "no-store");
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.type("html").send(adminViews.login);
 });
-app.get("/admin/:section", requireAdmin, (req, res) => {
-  const section = req.params.section;
-  if (!Object.prototype.hasOwnProperty.call(ADMIN_SECTIONS, section)) return res.sendStatus(404);
-  let html = adminViews.dashboard;
-  const nav = Object.entries(ADMIN_SECTIONS).map(([key, id]) => `<a href="/admin/${key}"${key === section ? ' aria-current="page"' : ""}>${key[0].toUpperCase()+key.slice(1)}</a>`).join("") + `<a class="church-site-link" href="https://isaacnyongesa459-jpg.github.io/imperishable-church-website/index.html">Church website</a>`;
-  html = html.replace(/<nav>[\s\S]*?<\/nav>/, `<nav aria-label="Admin dashboard sections">${nav}</nav>`);
-  html = html.replace("</body>", `<script>document.documentElement.dataset.adminPage=${JSON.stringify(section)}; const selected=${JSON.stringify(ADMIN_SECTIONS[section])}; document.querySelectorAll('.admin-main > section').forEach(el=>{if(el.id!==selected)el.hidden=true}); if(selected==='dashboardTop')document.querySelectorAll('.admin-main > section').forEach(el=>el.hidden=false); const siteLink=document.querySelector('.church-site-link'); if(siteLink) siteLink.href += '?theme='+encodeURIComponent(document.documentElement.dataset.theme);</script></body>`);
+app.get("/admin/users", requirePermission("users:manage"), (req, res) => {
   res.setHeader("Cache-Control", "private, no-store");
   res.setHeader("X-Content-Type-Options", "nosniff");
-  res.type("html").send(html);
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("Referrer-Policy", "no-referrer");
+  res.sendFile(path.join(__dirname, "admin-users.html"));
+});
+app.get("/admin/:section", async (req, res) => {
+  const section = req.params.section;
+  if (!Object.prototype.hasOwnProperty.call(ADMIN_SECTIONS, section)) return res.sendStatus(404);
+  try {
+    const admin = await resolveAdminSession(req);
+    if (!admin) return res.redirect("/admin/login");
+    if (!hasAdminSectionAccess(admin, section)) {
+      res.setHeader("Cache-Control", "private, no-store");
+      res.setHeader("X-Content-Type-Options", "nosniff");
+      res.setHeader("X-Frame-Options", "DENY");
+      return res.status(403).type("html").send("<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>Access denied</title><main><h1>Access denied</h1><p>Your administrator role cannot open this section.</p><a href=\"/admin/login\">Return to administrator login</a></main></html>");
+    }
+    let html = adminViews.dashboard;
+    if (section !== "dashboard") {
+      html = retainOnlyAdminSection(
+        html,
+        ADMIN_SECTIONS[section],
+        ADMIN_SECTION_MARKUP_IDS
+      );
+    }
+    const sectionLinks = Object.entries(ADMIN_SECTIONS)
+      .filter(([key]) => hasAdminSectionAccess(admin, key))
+      .map(([key]) => `<a href="/admin/${key}"${key === section ? ' aria-current="page"' : ""}>${key[0].toUpperCase()+key.slice(1)}</a>`)
+      .join("");
+    const userLink = hasPermission(admin.permissions, "users:manage")
+      ? `<a href="/admin/users">User management</a>`
+      : "";
+    const nav = sectionLinks + userLink + `<a class="church-site-link" href="https://isaacnyongesa459-jpg.github.io/imperishable-church-website/index.html">Church website</a>`;
+    html = html.replace(/<nav>[\s\S]*?<\/nav>/, `<nav aria-label="Admin dashboard sections">${nav}</nav>`);
+    html = html.replace("</body>", `<script>document.documentElement.dataset.adminPage=${JSON.stringify(section)}; const selected=${JSON.stringify(ADMIN_SECTIONS[section])}; document.querySelectorAll('.admin-main > section').forEach(el=>{if(el.id!==selected)el.hidden=true}); if(selected==='dashboardTop')document.querySelectorAll('.admin-main > section').forEach(el=>el.hidden=false); const siteLink=document.querySelector('.church-site-link'); if(siteLink) siteLink.href += '?theme='+encodeURIComponent(document.documentElement.dataset.theme);</script></body>`);
+    res.setHeader("Cache-Control", "private, no-store");
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("X-Frame-Options", "DENY");
+    res.setHeader("Referrer-Policy", "no-referrer");
+    return res.type("html").send(html);
+  } catch (error) {
+    console.error("Admin section authorization error:", error.message);
+    return res.status(500).type("text/plain").send("Unable to verify administrator access.");
+  }
 });
 
 /* ========================================
@@ -3541,6 +3897,11 @@ app.get(
 async function startServer() {
   try {
     await initializeDatabase();
+    await runMigrations(pool);
+    const createdBootstrapAdmin = await ensureBootstrapSuperAdmin(pool);
+    if (createdBootstrapAdmin) {
+      console.log("Bootstrapped the configured owner account with a hashed password.");
+    }
 
     app.listen(PORT, "0.0.0.0", () => {
       console.log(

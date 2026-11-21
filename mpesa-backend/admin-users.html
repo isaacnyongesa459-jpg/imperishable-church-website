@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="color-scheme" content="light">
+  <title>Administrator accounts | Imperishable Crown</title>
+  <style>
+    :root { color-scheme: light; --green:#173a32; --green-2:#24564a; --gold:#b88a50; --paper:#f7f5ef; --line:#dedbd1; --ink:#24312e; --muted:#65736e; --danger:#8a2f2b; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.5 Poppins,system-ui,-apple-system,"Segoe UI",sans-serif; }
+    header { background:var(--green); color:white; padding:20px clamp(18px,4vw,48px); display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    header h1 { margin:0; font-size:clamp(1.2rem,3vw,1.75rem); }
+    header a, header button { color:white; background:transparent; border:1px solid #ffffff80; border-radius:8px; padding:9px 13px; text-decoration:none; font:inherit; cursor:pointer; }
+    main { width:min(1100px,calc(100% - 32px)); margin:32px auto 64px; }
+    .intro { margin-bottom:24px; }
+    .intro p { color:var(--muted); max-width:74ch; }
+    .panel { background:white; border:1px solid var(--line); border-radius:14px; padding:clamp(18px,3vw,28px); margin:20px 0; box-shadow:0 8px 26px #173a320c; }
+    h2 { color:var(--green); margin:0 0 16px; font-size:1.2rem; }
+    form.grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+    label { display:grid; gap:6px; font-weight:600; font-size:.93rem; }
+    input,select { width:100%; min-height:44px; padding:9px 11px; border:1px solid #abb6b0; border-radius:7px; background:white; color:var(--ink); font:inherit; }
+    input:focus,select:focus,button:focus-visible,a:focus-visible { outline:3px solid #b88a5080; outline-offset:2px; }
+    .full { grid-column:1/-1; }
+    .button { border:0; border-radius:7px; background:var(--green-2); color:white; padding:11px 16px; font:inherit; font-weight:700; cursor:pointer; }
+    .button:hover { background:var(--green); }
+    .button:disabled { opacity:.55; cursor:not-allowed; }
+    .message { min-height:1.5em; margin:12px 0 0; color:var(--green-2); }
+    .message.error { color:var(--danger); }
+    .table-wrap { overflow:auto; }
+    table { width:100%; border-collapse:collapse; min-width:680px; }
+    th,td { border-bottom:1px solid var(--line); padding:12px 10px; text-align:left; vertical-align:middle; }
+    th { color:var(--green); font-size:.88rem; }
+    td select { min-width:165px; }
+    .status { font-weight:600; }
+    .small { color:var(--muted); font-size:.88rem; }
+    @media(max-width:650px) { header { align-items:flex-start; flex-wrap:wrap; } header .actions { display:flex; gap:8px; } form.grid { grid-template-columns:1fr; } .full { grid-column:auto; } main { margin-top:20px; } }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; animation:none!important; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Administrator accounts</h1>
+    <div class="actions">
+      <a href="/admin/dashboard">Dashboard</a>
+      <button type="button" id="logoutButton">Sign out</button>
+    </div>
+  </header>
+  <main>
+    <section class="intro" aria-labelledby="pageIntro">
+      <h2 id="pageIntro">Manage access carefully</h2>
+      <p>Create accounts using the least-privilege role needed. Passwords are stored as one-way scrypt hashes. Account changes are audited, and role/status changes revoke existing sessions. The configured bootstrap Super Administrator cannot be demoted or deactivated.</p>
+    </section>
+    <section class="panel" aria-labelledby="createHeading">
+      <h2 id="createHeading">Create administrator</h2>
+      <form id="createForm" class="grid">
+        <label>Username<input name="username" required minlength="3" maxlength="60" autocomplete="off" pattern="[A-Za-z0-9][A-Za-z0-9._-]{2,59}"></label>
+        <label>Display name<input name="displayName" required minlength="2" maxlength="120" autocomplete="name"></label>
+        <label>Temporary password<input name="password" type="password" required minlength="12" maxlength="128" autocomplete="new-password"></label>
+        <label>Role<select name="role" required>
+          <option value="pastor">Pastor</option>
+          <option value="treasurer">Treasurer</option>
+          <option value="media_administrator">Media Administrator</option>
+          <option value="prayer_team_member">Prayer Team Member</option>
+          <option value="super_admin">Super Administrator</option>
+        </select></label>
+        <div class="full"><button class="button" id="createButton" type="submit">Create account</button><p class="small">Give the temporary password to the account holder securely outside this website; never send it in a public message.</p></div>
+      </form>
+      <p id="createMessage" class="message" role="status" aria-live="polite"></p>
+    </section>
+    <section class="panel" aria-labelledby="usersHeading">
+      <h2 id="usersHeading">Current accounts</h2>
+      <p id="listMessage" class="message" role="status" aria-live="polite">Loading accounts…</p>
+      <div class="table-wrap">
+        <table>
+          <caption class="small" style="text-align:left;padding:8px 0">Account roles and active status. Updating a role or status signs that account out.</caption>
+          <thead><tr><th scope="col">Account</th><th scope="col">Role</th><th scope="col">Status</th><th scope="col">Action</th></tr></thead>
+          <tbody id="usersBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script>
+    (() => {
+      const roleNames = {
+        super_admin: "Super Administrator",
+        pastor: "Pastor",
+        treasurer: "Treasurer",
+        media_administrator: "Media Administrator",
+        prayer_team_member: "Prayer Team Member"
+      };
+      const roles = Object.keys(roleNames);
+      const createForm = document.getElementById("createForm");
+      const createMessage = document.getElementById("createMessage");
+      const listMessage = document.getElementById("listMessage");
+      const usersBody = document.getElementById("usersBody");
+      let signedInUserId = null;
+
+      async function api(url, options = {}) {
+        const response = await fetch(url, {
+          credentials: "same-origin",
+          cache: "no-store",
+          ...options,
+          headers: { "Content-Type": "application/json", ...(options.headers || {}) }
+        });
+        const data = await response.json().catch(() => ({}));
+        if (response.status === 401) {
+          location.assign("/admin/login");
+          throw new Error("Your session has expired. Sign in again.");
+        }
+        if (!response.ok || data.success === false) throw new Error(data.message || "The request could not be completed.");
+        return data;
+      }
+
+      function setMessage(node, text, error = false) {
+        node.textContent = text;
+        node.classList.toggle("error", error);
+      }
+
+      function roleSelect(current) {
+        const select = document.createElement("select");
+        select.setAttribute("aria-label", "Administrator role");
+        roles.forEach((role) => {
+          const option = document.createElement("option");
+          option.value = role;
+          option.textContent = roleNames[role];
+          option.selected = role === current;
+          select.append(option);
+        });
+        return select;
+      }
+
+      async function loadUsers() {
+        listMessage.textContent = "Loading accounts…";
+        try {
+          const data = await api("/api/admin/users");
+          usersBody.replaceChildren();
+          for (const user of data.users || []) {
+            const row = document.createElement("tr");
+            const accountCell = document.createElement("td");
+            const name = document.createElement("strong");
+            name.textContent = user.display_name;
+            const username = document.createElement("div");
+            username.className = "small";
+            username.textContent = user.username + (user.is_bootstrap ? " · bootstrap owner" : "");
+            accountCell.append(name, username);
+
+            const roleCell = document.createElement("td");
+            const select = roleSelect((user.roles || [])[0]);
+            roleCell.append(select);
+            const statusCell = document.createElement("td");
+            const active = document.createElement("input");
+            active.type = "checkbox";
+            active.checked = Boolean(user.is_active);
+            active.setAttribute("aria-label", "Account active");
+            statusCell.append(active);
+            const saveCell = document.createElement("td");
+            const save = document.createElement("button");
+            save.className = "button";
+            save.type = "button";
+            save.textContent = "Save";
+            if (String(user.id) === String(signedInUserId)) {
+              save.disabled = true;
+              save.title = "Sign in as another Super Administrator to change your own access.";
+            }
+            save.addEventListener("click", async () => {
+              save.disabled = true;
+              try {
+                await api(`/api/admin/users/${encodeURIComponent(user.id)}`, {
+                  method: "PATCH",
+                  body: JSON.stringify({ role: select.value, isActive: active.checked })
+                });
+                setMessage(listMessage, "Account updated. Its previous sessions are no longer valid.");
+                await loadUsers();
+              } catch (error) {
+                setMessage(listMessage, error.message, true);
+                save.disabled = false;
+              }
+            });
+            saveCell.append(save);
+            row.append(accountCell, roleCell, statusCell, saveCell);
+            usersBody.append(row);
+          }
+          setMessage(listMessage, data.users?.length ? "Accounts loaded." : "No administrator accounts found.");
+        } catch (error) {
+          setMessage(listMessage, error.message, true);
+        }
+      }
+
+      createForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const button = document.getElementById("createButton");
+        button.disabled = true;
+        setMessage(createMessage, "Creating account…");
+        const payload = Object.fromEntries(new FormData(createForm).entries());
+        try {
+          await api("/api/admin/users", { method: "POST", body: JSON.stringify(payload) });
+          createForm.reset();
+          setMessage(createMessage, "Account created. Share its temporary password securely with the account holder.");
+          await loadUsers();
+        } catch (error) {
+          setMessage(createMessage, error.message, true);
+        } finally {
+          button.disabled = false;
+        }
+      });
+
+      document.getElementById("logoutButton").addEventListener("click", async () => {
+        try { await api("/api/admin/logout", { method: "POST", body: "{}" }); }
+        finally { location.assign("/admin/login"); }
+      });
+
+      api("/api/admin/me").then((data) => {
+        signedInUserId = data.id;
+        return loadUsers();
+      }).catch((error) => setMessage(listMessage, error.message, true));
+    })();
+  </script>
+</body>
+</html>

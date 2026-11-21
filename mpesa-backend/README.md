@@ -7,6 +7,10 @@ This Node.js backend starts M-PESA STK Push payments through Safaricom Daraja, c
 
 - `package.json` — project dependencies and start command.
 - `server.js` — Express API, Daraja integration, callback handling, and donation records.
+- `admin-view-filter.js` — removes unauthorized sections from the shared legacy dashboard before sending role-scoped pages.
+- `migrations/` — ordered additive PostgreSQL migrations, applied transactionally before the server begins accepting requests.
+- `admin-security.js` and `migrate.js` — password hashing, role definitions, migration execution, and initial owner-account bootstrap.
+- `admin-users.html` — user-management screen, served only through its authenticated backend route.
 - `.env.example` — example of the required environment variable names.
 - `.gitignore` — excludes private environment files and dependencies from Git.
 
@@ -21,6 +25,7 @@ This Node.js backend starts M-PESA STK Push payments through Safaricom Daraja, c
 - `GET /api/donations/paypal/config` — returns the public PayPal client ID, environment, and current currency-rate set.
 - `POST /api/donations/paypal/create-order` — validates the original KES/USD/INR amount, converts it server-side to USD, and creates a PayPal order.
 - `POST /api/donations/paypal/capture-order` — captures and verifies the approved PayPal order before marking it completed.
+- `GET /api/admin/users`, `POST /api/admin/users`, `PATCH /api/admin/users/:id` — Super Administrator-only account management; responses never include password hashes.
 
 ## Required environment variables
 
@@ -60,6 +65,10 @@ Historical `paystack_donations` rows are retained so existing records are not de
 
 ## Administrator dashboard
 
-Admin sign-in and management views are delivered by the backend at `/admin/login` and `/admin/<section>` (dashboard, members, attendance, expenses, reports, ministries, announcements, events, donations, messages, and gallery). Section pages require the signed administrator session cookie; all `/api/admin/*` data operations remain protected by the same server-side middleware. Public pages link directly to the backend sign-in page. Set `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and a unique random `ADMIN_SESSION_SECRET` (at least 32 characters) in Render's environment settings; never commit credential values.
+Admin sign-in and management views are delivered by the backend at `/admin/login`, `/admin/users`, and `/admin/<section>` (dashboard, members, attendance, expenses, reports, ministries, announcements, events, donations, messages, and gallery). Section pages require the signed administrator session cookie; all `/api/admin/*` data operations remain protected by server-side authorization. Public pages link directly to the backend sign-in page. Set `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and a unique random `ADMIN_SESSION_SECRET` (at least 32 characters) in Render's environment settings; never commit credential values.
+
+On startup, the backend applies unapplied files in `migrations/` under a PostgreSQL advisory lock and transaction, then creates the configured owner account only if it does not already exist. The owner password is stored as a salted scrypt hash; changing `ADMIN_PASSWORD` in Render does not overwrite an existing database password. The new `/admin/users` screen and `/api/admin/users` endpoints let the Super Administrator add accounts for Super Administrator, Pastor, Treasurer, Media Administrator, or Prayer Team Member roles, and update role/active status. Role/status changes increment the account's session version to revoke existing sessions; at least one active Super Administrator is required and the bootstrap owner cannot be demoted/deactivated.
+
+Current least-privilege access for existing modules is limited to implemented features: Pastors can manage ministries, announcements, and events; Treasurers can manage expenses and view donation history and financial reports; Media Administrators can manage the gallery. Dashboard summaries, members, attendance, contact messages, user administration, and unmapped admin APIs remain Super-Administrator-only. Admin navigation and each served non-dashboard page are filtered server-side; every mapped data API independently checks its permission. Sermon/livestream and private prayer-request workflows are not yet implemented, so role creation does not grant those unfinished capabilities. Run `npm test` for the dependency-free security and view-filter tests.
 
 GitHub Pages cannot enforce authorization for static files. Therefore admin views are not served from the public Pages site; the Express backend is the protected page origin. The public repository itself remains inspectable, so protection applies to the deployed admin routes and data/API operations, not to source code visibility.
