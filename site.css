@@ -48,3 +48,7 @@
 
 .social-links a{color:var(--gold2);font-weight:600}.social-links a:hover{color:#fff}.map-actions{display:flex;flex-wrap:wrap;gap:15px 25px}
 @media (max-width:760px){.map-actions{display:grid;gap:10px}}
+
+.language-switcher{display:flex;align-items:center;flex:0 0 auto}.language-switcher select{max-width:132px;min-height:40px;padding:7px 10px;border:1px solid var(--line);border-radius:3px;background:var(--paper);color:var(--ink);font:600 .78rem var(--sans);cursor:pointer}.language-switcher select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+html[dir="rtl"] body{font-family:"Noto Naskh Arabic","Noto Sans Arabic",Tahoma,Arial,sans-serif}html[dir="rtl"] .schedule th,html[dir="rtl"] .schedule td{text-align:right}html[dir="rtl"] .belief{border-left:0;border-right:2px solid var(--gold)}html[dir="rtl"] .page-hero:after{right:auto;left:8%}html[dir="rtl"] .church-weather-temp{text-align:left}html[dir="rtl"] .toast{right:auto;left:20px}html[dir="rtl"] .header-inner,html[dir="rtl"] .main-nav{direction:rtl}
+@media(max-width:430px){.header-inner{gap:8px}.language-switcher select{max-width:98px;min-height:38px;padding:6px;font-size:.72rem}}

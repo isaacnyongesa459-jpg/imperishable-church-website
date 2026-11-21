@@ -82,6 +82,7 @@ body {
 .splash-button.secondary { color: #fff; background: transparent; border-color: rgba(255,255,255,.45); }
 .splash-button.secondary:hover, .splash-button.secondary:focus-visible { background: rgba(255,255,255,.12); }
 .splash-note { margin-top: 38px; color: rgba(255,255,255,.62); font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
+.language-switcher{display:flex;align-items:center;margin:18px 0}.language-switcher select{min-height:42px;padding:8px 12px;border:1px solid rgba(255,255,255,.4);border-radius:3px;background:#172c2b;color:#fff;font:600 .85rem 'DM Sans',Arial,sans-serif;cursor:pointer}.language-switcher select:focus-visible{outline:3px solid #e6c27e;outline-offset:2px}html[dir="rtl"] body{font-family:"Noto Naskh Arabic","Noto Sans Arabic",Tahoma,Arial,sans-serif}html[dir="rtl"] .splash-content{text-align:right}
 
 @media (max-width: 600px) {
   .splash { padding: 24px 0; }

@@ -30,6 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let usdToKesRate = null;
     let currencyRates = {};
     let currencyRateDate = null;
+    let currencyRateSource = null;
+    let confirmedTotal = null;
 
     // M-Pesa Elements (KES only)
     const mpesaAmount = document.getElementById("customMpesaAmount");
@@ -172,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // ========================================
 
     function formatKES(amount) {
-        return Number(amount).toLocaleString("en-KE", {
+        return Number(amount).toLocaleString(window.ChurchI18n?.locale || "en-KE", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
@@ -196,6 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!Number.isFinite(total) || total < 0) {
                 throw new Error("Invalid donation total.");
             }
+            confirmedTotal = total;
 
             // Display the confirmed donation total in Kenyan shillings.
             mainAmount.textContent = `KES ${formatKES(total)}`;
@@ -456,7 +459,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function formatCurrency(amount, currency) {
         const locales = { KES: "en-KE", USD: "en-US", INR: "en-IN" };
-        return new Intl.NumberFormat(locales[currency] || "en", { style: "currency", currency, maximumFractionDigits: 2 }).format(Number(amount));
+        return new Intl.NumberFormat(window.ChurchI18n?.locale || locales[currency] || "en", { style: "currency", currency, maximumFractionDigits: 2 }).format(Number(amount));
     }
 
     function getRate(base, quote) {
@@ -477,13 +480,30 @@ document.addEventListener("DOMContentLoaded", () => {
         if (inrEquivalent) inrEquivalent.textContent = formatCurrency(values.INR, "INR");
     }
 
+    document.addEventListener("church:localechange", () => {
+        if (confirmedTotal !== null) {
+            if (mainAmount) mainAmount.textContent = `KES ${formatKES(confirmedTotal)}`;
+            const kesToUsdRate = Number(currencyRates["KES/USD"]);
+            const kesToInrRate = Number(currencyRates["KES/INR"]);
+            if (usdAmount) usdAmount.textContent = Number.isFinite(kesToUsdRate) && kesToUsdRate > 0 ? formatCurrency(confirmedTotal * kesToUsdRate, "USD") : "USD equivalent unavailable";
+            if (inrAmount) inrAmount.textContent = Number.isFinite(kesToInrRate) && kesToInrRate > 0 ? formatCurrency(confirmedTotal * kesToInrRate, "INR") : "INR equivalent unavailable";
+        }
+        updateCurrencyEquivalents();
+        if (currencyRateDate) {
+            const rateLabel = window.ChurchI18n?.t("indicative reference rates · date") || "indicative reference rates · date";
+            if (currencyRateInfo) currencyRateInfo.textContent = `${currencyRateSource || ""} ${rateLabel} ${currencyRateDate}`.trim();
+            if (exchangeRateElement && usdToKesRate) exchangeRateElement.textContent = `${window.ChurchI18n?.t("Indicative rate") || "Indicative rate"}: 1 USD ≈ ${formatCurrency(usdToKesRate, "KES")} · ${currencyRateDate}`;
+        }
+    });
+
     function updateCurrencyInput() {
         if (!donationCurrency || !donationAmount) return;
         const currency = donationCurrency.value;
         const maximum = currency === "KES" ? 250000 : currency === "INR" ? 900000 : 10000;
         donationAmount.max = String(maximum);
         donationAmount.step = currency === "KES" ? "1" : "0.01";
-        donationAmount.placeholder = currency === "KES" ? "e.g. 1000" : currency === "USD" ? "e.g. 10.00" : "e.g. 1000";
+        const placeholder = currency === "USD" ? "e.g. 10.00" : "e.g. 1000";
+        donationAmount.placeholder = placeholder;
         if (donationCurrencyLabel) donationCurrencyLabel.textContent = currency;
         updateCurrencyEquivalents();
     }
@@ -494,9 +514,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!data.rates || !data.rateDate) throw new Error("Indicative currency rates are temporarily unavailable.");
         currencyRates = data.rates;
         currencyRateDate = data.rateDate;
+        currencyRateSource = data.source;
         usdToKesRate = getRate("USD", "KES");
-        if (currencyRateInfo) currencyRateInfo.textContent = `${data.source} indicative reference rates · date ${data.rateDate}`;
-        if (exchangeRateElement) exchangeRateElement.textContent = `Indicative rate: 1 USD ≈ ${formatCurrency(usdToKesRate, "KES")} · date ${data.rateDate}`;
+        if (currencyRateInfo) currencyRateInfo.textContent = `${data.source} ${window.ChurchI18n?.t("indicative reference rates · date") || "indicative reference rates · date"} ${data.rateDate}`;
+        if (exchangeRateElement) exchangeRateElement.textContent = `${window.ChurchI18n?.t("Indicative rate") || "Indicative rate"}: 1 USD ≈ ${formatCurrency(usdToKesRate, "KES")} · ${data.rateDate}`;
         updateCurrencyEquivalents();
     }
 
@@ -542,7 +563,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const amount = Number(donationAmount?.value || 0);
                     const maximum = currency === "KES" ? 250000 : currency === "INR" ? 900000 : 10000;
                     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) throw new Error("Enter a valid email address.");
-                    if (!Number.isFinite(amount) || amount <= 0 || amount > maximum) throw new Error(`Enter a valid ${currency} donation amount up to ${maximum.toLocaleString("en-US")}.`);
+                    if (!Number.isFinite(amount) || amount <= 0 || amount > maximum) throw new Error(`${window.ChurchI18n?.t("Enter a valid donation amount up to") || "Enter a valid donation amount up to"} ${maximum.toLocaleString(window.ChurchI18n?.locale || "en-US")} ${currency}.`);
                     if (paypalStatus) paypalStatus.textContent = "Creating your secure PayPal donation order…";
                     const orderResponse = await fetch(`${API_BASE_URL}/api/donations/paypal/create-order`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ email, currency, amount }) });
                     const order = await readResponse(orderResponse);
@@ -555,7 +576,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const captureResponse = await fetch(`${API_BASE_URL}/api/donations/paypal/capture-order`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ orderId: data.orderID }) });
                     const result = await readResponse(captureResponse);
                     if (result.status !== "completed") throw new Error(result.message || "PayPal did not confirm this donation.");
-                    if (paypalStatus) paypalStatus.textContent = `Donation confirmed: ${formatCurrency(result.originalAmount, result.originalCurrency)} · PayPal settled ${formatCurrency(result.amountUsd, "USD")}.`;
+                    if (paypalStatus) paypalStatus.textContent = `${window.ChurchI18n?.t("Donation confirmed:") || "Donation confirmed:"} ${formatCurrency(result.originalAmount, result.originalCurrency)} · ${window.ChurchI18n?.t("PayPal settled") || "PayPal settled"} ${formatCurrency(result.amountUsd, "USD")}.`;
                     if (donationAmount) donationAmount.value = "";
                     updateCurrencyEquivalents();
                         await loadDonationTotal();
