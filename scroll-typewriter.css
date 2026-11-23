@@ -1,0 +1,9 @@
+/* Scroll-triggered typewriter reveals: text stays in normal flow and remains available to assistive technology. */
+.typewriter-char{opacity:1;transition:opacity 80ms ease-out}
+.typewriter-target.is-typing .typewriter-char:not(.is-visible){opacity:0}
+.typewriter-target.is-typing::after{display:inline-block;height:.9em;margin-inline-start:2px;border-inline-start:2px solid var(--gold,#b88a50);vertical-align:-.08em;content:"";animation:typewriter-caret-blink .82s steps(1,end) infinite}
+.typewriter-sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}
+@keyframes typewriter-caret-blink{50%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.typewriter-char{transition:none!important}.typewriter-target.is-typing::after{display:none!important;animation:none!important}}
+@media(forced-colors:active){.typewriter-target.is-typing .typewriter-char:not(.is-visible){opacity:1}.typewriter-target.is-typing::after{display:none}}
+.typewriter-sr-only{user-select:none;-webkit-user-select:none}
