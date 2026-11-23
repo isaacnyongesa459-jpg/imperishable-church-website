@@ -63,3 +63,24 @@ Historical `paystack_donations` rows are retained so existing records are not de
 Admin sign-in and management views are delivered by the backend at `/admin/login` and `/admin/<section>` (dashboard, members, attendance, expenses, reports, ministries, announcements, events, donations, messages, and gallery). Section pages require the signed administrator session cookie; all `/api/admin/*` data operations remain protected by the same server-side middleware. Public pages link directly to the backend sign-in page. Set `ADMIN_USERNAME`, `ADMIN_PASSWORD`, and a unique random `ADMIN_SESSION_SECRET` (at least 32 characters) in Render's environment settings; never commit credential values.
 
 GitHub Pages cannot enforce authorization for static files. Therefore admin views are not served from the public Pages site; the Express backend is the protected page origin. The public repository itself remains inspectable, so protection applies to the deployed admin routes and data/API operations, not to source code visibility.
+
+
+## Children Sponsorship Programme
+
+The public website page is `children-sponsorship.html`; the backend public directory is `GET /api/sponsorships`. It returns only active, published sponsor profiles and child profiles with explicit profile consent. A public portrait is served through `GET /api/sponsorships/media/:type/:id` only if the profile is approved and photo consent is recorded. The response omits addresses, school locations, phone numbers, exact birth dates, guardian details and internal notes. Profiles without permission are not included; an empty directory does not imply that no children need support.
+
+The authenticated backend dashboard section is `/admin/children-sponsors`. The management API is protected by the existing signed administrator session and origin check:
+
+- `GET /api/admin/children-sponsors/overview` — private sponsor/child records, assignment history and statistics.
+- `POST`, `PUT /:id`, `DELETE /:id` under `/api/admin/sponsors` — create, update and deactivate sponsor records. Deactivation retains history.
+- `POST`, `PUT /:id`, `DELETE /:id` under `/api/admin/children` — register, update and archive children. Archiving ends active assignments without deleting history.
+- `POST /api/admin/sponsorships` — assign or reassign an active child; one active sponsor per child, one sponsor may support multiple children.
+- `DELETE /api/admin/sponsorships/:id` — end an active assignment while keeping its historical record.
+- `POST /api/admin/sponsorship-photos/:type/:id` — upload/replace a JPG, PNG or WebP portrait (max 5 MB).
+- `GET /api/admin/sponsorship-media/:type/:id` — authenticated delivery of a private portrait.
+
+Startup creates `sponsors`, `sponsored_children`, `sponsorships` and `sponsorship_audit_log` in the existing PostgreSQL database and idempotently adds 30 inactive sponsor placeholders labelled Sponsor 01–30. They are marked as placeholders and excluded from public directories and sponsor totals until an administrator edits them into actual records. Child records start empty; no invented child identities or photographs are used. A partial unique index ensures no child has more than one active sponsor.
+
+Photo upload requires the following values set privately in the deployed backend environment: `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, and `CLOUDINARY_API_SECRET`. Uploads use authenticated Cloudinary image delivery; the application proxies bytes only after an administrator session check or a public consent/publishing check. Until these settings are configured, the management interface and records work, while photo upload returns a clear configuration-required response. Never put Cloudinary credentials in static site code or commit real values.
+
+The child profile form intentionally uses an approved display name and optional age rather than date of birth. Administrators must obtain appropriate guardian/sponsor consent and complete church safeguarding review before checking publication/photo-consent settings. GitHub Pages serves only the public directory UI; private child records and the management interface remain on the authenticated backend origin.

@@ -42,3 +42,22 @@ The complete widget is rendered once on `contact.html`, at the bottom of the con
 ## Requested public integrations
 
 The contact page exposes only the supplied YouTube channel, Facebook profile, and Instagram profile. Google Maps uses official Maps URLs for a named church-place search and driving navigation to the permanent church coordinates, alongside the existing embedded map. No additional social links or visitor-location API are introduced.
+
+
+# Children Sponsorship Programme Implementation
+
+## Scope and architecture
+Extend the existing static church website and Node/Express/PostgreSQL backend without replacing pages or touching the M-Pesa/Daraja payment flow. Public pages use the current HTML/CSS/vanilla-JavaScript setup and existing green, gold and paper palette. The backend retains the existing administrator session and PostgreSQL connection. No additional database is introduced.
+
+## Implementation
+- Add `children-sponsorship.html`, `children-sponsorship.css` and `children-sponsorship.js`. The shared top navigation has the requested eight-item order; keep the existing donation page reachable through its footer and programme giving link. The directory fetches only an explicit public-field allowlist from the backend and shows neutral empty states rather than inventing children or real-looking sponsor identities.
+- Add `mpesa-backend/children-sponsors.js` for additive PostgreSQL tables (`sponsors`, `sponsored_children`, `sponsorships`, and an audit log), 30 clearly marked inactive sponsor placeholders, public consent-filtered queries, admin-only CRUD, assignment/reassignment history, statistics, and protected media routes. Enforce one active sponsor per child while allowing one sponsor to support multiple children.
+- Add `mpesa-backend/children-admin-view.js` and integrate it as an authenticated section in the existing backend-served dashboard. Reuse the current `requireAdmin` and `requireAdminOrigin` middleware; do not serve the management UI or sensitive child data through static GitHub Pages.
+- Reuse current `multer` and `cloudinary` dependencies for max-5-MB image uploads, validate actual file signatures, and store images using Cloudinary authenticated delivery. Image read routes proxy private assets after verifying admin authorization or (for the public directory) an approved, consented profile. Cloudinary environment credentials remain server-only and optional until uploads are configured.
+- Update navigation links, `manus-routes.json`, service-worker precache/version, backend documentation, and these outcomes while retaining existing donation work.
+
+## Safeguarding and public disclosure
+Do not collect exact birth dates, addresses, school locations, telephone numbers or sensitive family histories in public profiles. Keep child and sponsor image references private at rest. Only profiles explicitly marked public and consented are returned by the public endpoint; public images additionally require photo consent. Sponsorship changes, archiving and deactivation retain prior relationship records in PostgreSQL.
+
+## Design
+Continue the site’s existing calm editorial church style: dark green, warm gold and paper colors, Playfair Display/DM Sans hierarchy, a restrained hero illustration and profile placeholders (not fabricated photographs), responsive cards, keyboard-accessible forms and reduced-motion support. The brand promise is dignified practical care; microcopy emphasizes consent, privacy and a safe route to inquire.
