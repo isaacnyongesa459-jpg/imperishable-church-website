@@ -34,10 +34,18 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-year]').forEach(el=>el.textContent=new Intl.DateTimeFormat('en-KE',{timeZone:church.timezone,year:'numeric'}).format(new Date()));
 
   const churchClock=document.querySelector('[data-church-clock]');
+  const churchClockValue=churchClock?.querySelector('[data-clock-value]');
+  const churchClockPeriod=churchClock?.querySelector('[data-clock-period]');
+  const churchClockFormatter=new Intl.DateTimeFormat('en-KE',{timeZone:church.timezone,hour:'numeric',minute:'2-digit',second:'2-digit',hour12:true});
   const churchDate=document.querySelector('[data-church-date]');
   const updateChurchClock=()=>{
     const now=new Date();
-    if(churchClock){churchClock.textContent=new Intl.DateTimeFormat('en-KE',{timeZone:church.timezone,hour:'numeric',minute:'2-digit',second:'2-digit',hour12:true}).format(now);churchClock.dateTime=now.toISOString();}
+    if(churchClock){
+      const parts=Object.fromEntries(churchClockFormatter.formatToParts(now).map(part=>[part.type,part.value]));
+      if(churchClockValue&&churchClockPeriod){churchClockValue.textContent=`${parts.hour}:${parts.minute}:${parts.second}`;churchClockPeriod.textContent=(parts.dayPeriod||'').toLowerCase();}
+      else churchClock.textContent=churchClockFormatter.format(now);
+      churchClock.dateTime=now.toISOString();
+    }
     if(churchDate)churchDate.textContent=new Intl.DateTimeFormat('en-KE',{timeZone:church.timezone,weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(now);
   };
   if(churchClock||churchDate){updateChurchClock();window.setInterval(updateChurchClock,1000);}
@@ -55,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if(!forecast||!daily?.time)return;
       forecast.replaceChildren();
       daily.time.slice(0,4).forEach((date,index)=>{
-        const item=document.createElement('div');item.className='forecast-item';
+        const item=document.createElement('div');item.className='forecast-item';item.setAttribute('role','listitem');
         const day=document.createElement('span');day.textContent=index===0?'Today':new Intl.DateTimeFormat('en-KE',{timeZone:church.timezone,weekday:'short'}).format(new Date(`${date}T12:00:00`));
         const icon=document.createElement('b');icon.className='forecast-icon';icon.textContent=icons[daily.weather_code[index]]||'☁️';icon.setAttribute('aria-hidden','true');
         const condition=document.createElement('strong');condition.textContent=labels[daily.weather_code[index]]||'Forecast';
