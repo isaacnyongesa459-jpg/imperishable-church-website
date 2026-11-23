@@ -9,9 +9,12 @@ process.on("unhandledRejection", (reason) => {
 });
 
 const express = require("express");
+const fs = require("node:fs");
+const path = require("node:path");
 const adminViews = require("./admin-views");
 const childrenAdminView = require("./children-admin-view");
 const { initializeChildrenSponsors, createChildrenSponsorsRouter } = require("./children-sponsors");
+const { createAdminModulesRouter } = require("./admin-modules");
 const { Pool } = require("pg");
 const crypto = require("crypto");
 const app = express();
@@ -20,6 +23,14 @@ const ADMIN_COOKIE_NAME = "__Host-admin_session";
 const ADMIN_SESSION_HOURS = 8;
 const ADMIN_FRONTEND_ORIGIN =
   "https://imperishable-church-mpesa-backend-fa2a.onrender.com";
+
+const ADMIN_ROLE_MODULES = {
+  owner: ["*"],
+  administrator: ["dashboard", "donations", "finances", "events", "announcements", "sermons", "services", "leadership", "ministries", "sponsorships", "members", "attendance", "messages", "gallery", "settings", "account"],
+  finance_manager: ["dashboard", "donations", "finances", "settings", "account"],
+  content_manager: ["dashboard", "events", "announcements", "sermons", "services", "leadership", "ministries", "gallery", "settings", "account"],
+  pastoral_care: ["dashboard", "members", "attendance", "messages", "sponsorships", "settings", "account"]
+};
 
 const adminLoginAttempts = new Map();
 
@@ -35,6 +46,28 @@ function safeStringEqual(a, b) {
     aBuffer.length === bBuffer.length &&
     crypto.timingSafeEqual(aBuffer, bBuffer)
   );
+}
+
+function hashAdminPassword(password) {
+  const salt = crypto.randomBytes(16).toString("base64url");
+  return new Promise((resolve, reject) => {
+    crypto.scrypt(password, salt, 64, (error, derived) => {
+      if (error) return reject(error);
+      return resolve(`scrypt$${salt}$${derived.toString("base64url")}`);
+    });
+  });
+}
+
+function verifyAdminPassword(password, encoded) {
+  const [scheme, salt, hash] = String(encoded || "").split("$");
+  if (scheme !== "scrypt" || !salt || !hash) return Promise.resolve(false);
+  return new Promise((resolve, reject) => {
+    crypto.scrypt(password, salt, 64, (error, derived) => {
+      if (error) return reject(error);
+      const expected = Buffer.from(hash, "base64url");
+      return resolve(expected.length === derived.length && crypto.timingSafeEqual(expected, derived));
+    });
+  });
 }
 
 function signAdminPayload(payload) {
@@ -72,11 +105,8 @@ function verifyAdminToken(token) {
       Buffer.from(encoded, "base64url").toString("utf8")
     );
 
-    if (
-      payload.username !== process.env.ADMIN_USERNAME ||
-      !Number.isFinite(payload.exp) ||
-      payload.exp <= Date.now()
-    ) {
+    if (typeof payload.username !== "string" || !payload.username ||
+        !Number.isFinite(payload.exp) || payload.exp <= Date.now()) {
       return null;
     }
 
@@ -103,19 +133,99 @@ function getAdminToken(req) {
   return null;
 }
 
-function requireAdmin(req, res, next) {
+async function loadAdminSession(req, res, next) {
   const token = getAdminToken(req);
   const session = verifyAdminToken(token);
-
   if (!session) {
+    if (req.adminPageRequest) return res.redirect(302, "/admin/login");
     return res.status(401).json({
       success: false,
       message: "Administrator login required."
     });
   }
+  try {
+    const result = session.userId
+      ? await pool.query(
+          `SELECT id, username, role, active, token_version
+           FROM admin_users WHERE id = $1 LIMIT 1`,
+          [session.userId]
+        )
+      : await pool.query(
+          `SELECT id, username, role, active, token_version
+           FROM admin_users WHERE LOWER(username) = LOWER($1) LIMIT 1`,
+          [session.username]
+        );
+    const admin = result.rows[0];
+    if (!admin || !admin.active ||
+        (Number.isInteger(session.tokenVersion) && session.tokenVersion !== admin.token_version)) {
+      res.clearCookie(ADMIN_COOKIE_NAME, { httpOnly: true, secure: true, sameSite: "none", path: "/" });
+      if (req.adminPageRequest) return res.redirect(302, "/admin/login");
+      return res.status(401).json({ success: false, message: "Administrator session is no longer active." });
+    }
+    req.admin = {
+      userId: admin.id,
+      username: admin.username,
+      role: admin.role,
+      modules: ADMIN_ROLE_MODULES[admin.role] || []
+    };
+    return next();
+  } catch (error) {
+    console.error("Administrator session lookup failed:", error.message);
+    return res.status(503).json({ success: false, message: "Administrator access could not be verified." });
+  }
+}
 
-  req.admin = { username: session.username };
-  next();
+function requireAdmin(req, res, next) {
+  if (req.admin) return next();
+  return loadAdminSession(req, res, next);
+}
+
+function hasAdminModuleAccess(admin, moduleName) {
+  return Boolean(admin && (admin.modules.includes("*") || admin.modules.includes(moduleName)));
+}
+
+function permissionForAdminApi(pathname) {
+  const path = pathname.replace(/\/+$/, "") || "/";
+  const rules = [
+    ["/users", "users"], ["/settings", "settings"], ["/account", "account"], ["/sermons", "sermons"],
+    ["/services", "services"], ["/leaders", "leadership"], ["/ministries", "ministries"],
+    ["/announcements", "announcements"], ["/events", "events"], ["/gallery", "gallery"],
+    ["/donations", "donations"], ["/expenses", "finances"], ["/financial-reports", "finances"],
+    ["/dashboard/church-statistics", "finances"], ["/dashboard", "dashboard"],
+    ["/members", "members"], ["/attendance", "attendance"],
+    ["/contact-messages", "messages"], ["/children-sponsors", "sponsorships"],
+    ["/sponsors", "sponsorships"], ["/children", "sponsorships"], ["/sponsorships", "sponsorships"],
+    ["/sponsorship-photos", "sponsorships"], ["/sponsorship-media", "sponsorships"]
+  ];
+  const matched = rules.find(([prefix]) => path === prefix || path.startsWith(prefix + "/"));
+  return matched ? matched[1] : null;
+}
+
+function requireAdminPage(moduleName) {
+  return (req, res, next) => {
+    req.adminPageRequest = true;
+    loadAdminSession(req, res, (error) => {
+      if (error) return next(error);
+      if (!hasAdminModuleAccess(req.admin, moduleName)) {
+        return res.status(403).type("html").send("<!doctype html><html lang=\"en\"><meta charset=\"utf-8\"><title>Access restricted</title><body><main><h1>Access restricted</h1><p>Your administrator role does not permit this page.</p><a href=\"/admin/dashboard\">Return to your dashboard</a></main></body></html>");
+      }
+      return next();
+    });
+  };
+}
+
+function requireAdminApiPermission(req, res, next) {
+  const exempt = new Set(["/login", "/logout", "/me"]);
+  if (exempt.has(req.path)) return next();
+  return requireAdmin(req, res, (error) => {
+    if (error) return next(error);
+    const moduleName = permissionForAdminApi(req.path);
+    if (!moduleName) return res.status(404).json({ success: false, message: "Admin API route not found." });
+    if (!hasAdminModuleAccess(req.admin, moduleName)) {
+      return res.status(403).json({ success: false, message: "Your administrator role cannot access this data." });
+    }
+    return next();
+  });
 }
 
 function requireAdminOrigin(req, res, next) {
@@ -213,6 +323,7 @@ pool.query(`
     description TEXT DEFAULT '',
     image_url TEXT NOT NULL,
     published BOOLEAN NOT NULL DEFAULT FALSE,
+    cloudinary_public_id TEXT,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
   )
 `)
@@ -276,6 +387,27 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use("/api/admin", requireAdminApiPermission);
+app.use("/api/admin", (req, res, next) => {
+  const audit = ["POST", "PUT", "PATCH", "DELETE"].includes(req.method) &&
+    !["/login", "/logout", "/account/password"].includes(req.path);
+  if (audit && req.admin) {
+    res.on("finish", () => {
+      if (res.statusCode < 200 || res.statusCode >= 400) return;
+      pool.query(
+        "INSERT INTO admin_activity_logs(admin_username,action,details) VALUES($1,$2,$3)",
+        [req.admin.username, `${req.method} ${req.path}`.slice(0, 200), "Completed successfully."]
+      ).catch((error) => console.error("Admin activity log failed:", error.message));
+    });
+  }
+  return next();
+});
+app.use("/api/admin", createAdminModulesRouter(pool, {
+  requireAdmin,
+  requireAdminOrigin,
+  hashAdminPassword,
+  verifyAdminPassword
+}));
 app.use(createChildrenSponsorsRouter(pool, { requireAdmin, requireAdminOrigin }));
 
 // ========================================
@@ -439,9 +571,23 @@ async function initializeDatabase() {
         email VARCHAR(254) NOT NULL,
         subject VARCHAR(200) NOT NULL,
         message TEXT NOT NULL,
+        status VARCHAR(20) NOT NULL DEFAULT 'new'
+          CHECK (status IN ('new','in_progress','resolved','archived')),
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       );
     `);
+    await pool.query(`ALTER TABLE contact_messages
+      ADD COLUMN IF NOT EXISTS status VARCHAR(20) NOT NULL DEFAULT 'new'`);
+    await pool.query(`CREATE TABLE IF NOT EXISTS church_gallery (
+      id SERIAL PRIMARY KEY,
+      title VARCHAR(200) NOT NULL,
+      description TEXT DEFAULT '',
+      image_url TEXT NOT NULL,
+      published BOOLEAN NOT NULL DEFAULT FALSE,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )`);
+    await pool.query(`ALTER TABLE church_gallery
+      ADD COLUMN IF NOT EXISTS cloudinary_public_id TEXT`);
 
     // ========================================
     // 8. CHURCH MEMBERS
@@ -540,6 +686,40 @@ async function initializeDatabase() {
       );
     `);
 
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS admin_users (
+        id BIGSERIAL PRIMARY KEY,
+        username VARCHAR(100) NOT NULL,
+        password_hash TEXT NOT NULL,
+        role VARCHAR(32) NOT NULL DEFAULT 'administrator'
+          CHECK (role IN ('owner','administrator','finance_manager','content_manager','pastoral_care')),
+        active BOOLEAN NOT NULL DEFAULT TRUE,
+        token_version INTEGER NOT NULL DEFAULT 1,
+        preferences JSONB NOT NULL DEFAULT '{}'::jsonb,
+        last_login_at TIMESTAMPTZ,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+      CREATE UNIQUE INDEX IF NOT EXISTS idx_admin_users_username_ci
+        ON admin_users (LOWER(username));
+      CREATE TABLE IF NOT EXISTS church_sermons (
+        id BIGSERIAL PRIMARY KEY,
+        title VARCHAR(200) NOT NULL,
+        speaker VARCHAR(150) NOT NULL DEFAULT '',
+        scripture_reference VARCHAR(200) NOT NULL DEFAULT '',
+        description TEXT NOT NULL DEFAULT '',
+        preached_at DATE,
+        video_url TEXT NOT NULL DEFAULT '',
+        audio_url TEXT NOT NULL DEFAULT '',
+        resource_public_id TEXT,
+        resource_format VARCHAR(12),
+        resource_name VARCHAR(255),
+        published BOOLEAN NOT NULL DEFAULT FALSE,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      );
+    `);
+
     // ========================================
     // 14. DATABASE INDEXES
     // ========================================
@@ -568,6 +748,22 @@ async function initializeDatabase() {
       CREATE INDEX IF NOT EXISTS idx_donations_created
       ON donations(created_at);
     `);
+
+    if (process.env.ADMIN_USERNAME && process.env.ADMIN_PASSWORD &&
+        process.env.ADMIN_SESSION_SECRET && process.env.ADMIN_SESSION_SECRET.length >= 32) {
+      const currentOwner = await pool.query(
+        "SELECT id, role FROM admin_users WHERE LOWER(username) = LOWER($1) LIMIT 1",
+        [process.env.ADMIN_USERNAME]
+      );
+      if (currentOwner.rowCount === 0) {
+        const passwordHash = await hashAdminPassword(process.env.ADMIN_PASSWORD);
+        await pool.query(
+          `INSERT INTO admin_users (username, password_hash, role)
+           VALUES ($1, $2, 'owner')`,
+          [process.env.ADMIN_USERNAME, passwordHash]
+        );
+      }
+    }
 
     console.log("All church website database tables are ready.");
 
@@ -1361,11 +1557,11 @@ app.post("/api/contact", async (req, res) => {
 app.post(
   "/api/admin/login",
   requireAdminOrigin,
-  (req, res) => {
+  async (req, res) => {
     res.setHeader("Cache-Control", "no-store");
 
-    const username = req.body?.username;
-    const password = req.body?.password;
+    const username = typeof req.body?.username === "string" ? req.body.username.trim() : "";
+    const password = typeof req.body?.password === "string" ? req.body.password : "";
 
     const now = Date.now();
     const key = req.ip || "unknown";
@@ -1384,63 +1580,57 @@ app.post(
       });
     }
 
-    const validCredentials =
-      typeof process.env.ADMIN_USERNAME === "string" &&
-      process.env.ADMIN_USERNAME.length > 0 &&
-      typeof process.env.ADMIN_PASSWORD === "string" &&
-      process.env.ADMIN_PASSWORD.length > 0 &&
-      typeof process.env.ADMIN_SESSION_SECRET === "string" &&
-      process.env.ADMIN_SESSION_SECRET.length >= 32 &&
-      safeStringEqual(username, process.env.ADMIN_USERNAME) &&
-      safeStringEqual(password, process.env.ADMIN_PASSWORD);
-
-    if (!validCredentials) {
+    if (!username || username.length > 100 || password.length > 512 ||
+        typeof process.env.ADMIN_SESSION_SECRET !== "string" || process.env.ADMIN_SESSION_SECRET.length < 32) {
       attempt.count += 1;
       adminLoginAttempts.set(key, attempt);
-
-      return res.status(401).json({
-        success: false,
-        message: "Invalid username or password."
-      });
+      return res.status(401).json({ success: false, message: "Invalid username or password." });
     }
-
-    adminLoginAttempts.delete(key);
-
-    const token = signAdminPayload({
-      username: process.env.ADMIN_USERNAME,
-      exp: Date.now() + ADMIN_SESSION_HOURS * 60 * 60 * 1000
-    });
-
-    res.cookie(ADMIN_COOKIE_NAME, token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "none",
-      path: "/",
-      maxAge: ADMIN_SESSION_HOURS * 60 * 60 * 1000
-    });
-
-    return res.json({
-      success: true,
-      message: "Login successful."
-    });
+    try {
+      const result = await pool.query(
+        `SELECT id, username, password_hash, role, active, token_version
+         FROM admin_users WHERE LOWER(username) = LOWER($1) LIMIT 1`,
+        [username]
+      );
+      const admin = result.rows[0];
+      const validCredentials = Boolean(admin && admin.active && await verifyAdminPassword(password, admin.password_hash));
+      if (!validCredentials) {
+        attempt.count += 1;
+        adminLoginAttempts.set(key, attempt);
+        return res.status(401).json({ success: false, message: "Invalid username or password." });
+      }
+      await pool.query("UPDATE admin_users SET last_login_at=NOW() WHERE id=$1", [admin.id]);
+      adminLoginAttempts.delete(key);
+      const token = signAdminPayload({
+        userId: admin.id,
+        username: admin.username,
+        tokenVersion: admin.token_version,
+        exp: Date.now() + ADMIN_SESSION_HOURS * 60 * 60 * 1000
+      });
+      res.cookie(ADMIN_COOKIE_NAME, token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+        maxAge: ADMIN_SESSION_HOURS * 60 * 60 * 1000
+      });
+      return res.json({ success: true, message: "Login successful." });
+    } catch (error) {
+      console.error("Administrator login error:", error.message);
+      return res.status(503).json({ success: false, message: "Administrator sign-in is temporarily unavailable." });
+    }
   }
 );
 
-app.get("/api/admin/me", (req, res) => {
+app.get("/api/admin/me", requireAdmin, async (req, res) => {
   res.setHeader("Cache-Control", "no-store");
-
-  const session = verifyAdminToken(getAdminToken(req));
-
-  if (!session) {
-    return res.status(401).json({
-      success: false,
-      message: "Not logged in."
-    });
-  }
-
+  const result = await pool.query("SELECT preferences FROM admin_users WHERE id=$1", [req.admin.userId]);
   return res.json({
     success: true,
-    username: session.username
+    username: req.admin.username,
+    role: req.admin.role,
+    modules: req.admin.modules,
+    preferences: result.rows[0]?.preferences || {}
   });
 });
 
@@ -1464,32 +1654,66 @@ app.post(
   }
 );
 
-// Admin views are delivered by the authenticated backend, not GitHub Pages.
-const ADMIN_SECTIONS = {
-  dashboard: "dashboardTop", members: "membersSection", attendance: "attendanceSection",
-  expenses: "expensesSection", reports: "financialReportsSection", ministries: "ministriesSection",
-  announcements: "announcementsSection", events: "eventsSection", donations: "donationsSection",
-  messages: "messagesSection", gallery: "gallerySection", "children-sponsors": "childrenSponsorsSection"
+// Admin HTML stays on the authenticated backend origin, not GitHub Pages.
+const ADMIN_PAGES = {
+  dashboard: { module: "dashboard", file: "admin-dashboard.html" },
+  donations: { module: "donations", file: "admin-donations.html" },
+  finances: { module: "finances", file: "admin-finances.html" },
+  events: { module: "events", file: "admin-events.html" },
+  announcements: { module: "announcements", file: "admin-announcements.html" },
+  sermons: { module: "sermons", file: "admin-sermons.html" },
+  services: { module: "services", file: "admin-services.html" },
+  leadership: { module: "leadership", file: "admin-leadership.html" },
+  ministries: { module: "ministries", file: "admin-ministries.html" },
+  sponsorships: { module: "sponsorships", file: "admin-sponsorships.html" },
+  members: { module: "members", file: "admin-members.html" },
+  attendance: { module: "attendance", file: "admin-attendance.html" },
+  messages: { module: "messages", file: "admin-messages.html" },
+  gallery: { module: "gallery", file: "admin-gallery.html" },
+  users: { module: "users", file: "admin-users.html" },
+  settings: { module: "settings", file: "admin-settings.html" }
+};
+const ADMIN_ROUTE_ALIASES = {
+  expenses: "/admin/finances#expenses",
+  reports: "/admin/finances#reports",
+  "children-sponsors": "/admin/sponsorships"
 };
 app.get(["/admin", "/admin/login"], (req, res) => {
   res.setHeader("Cache-Control", "no-store");
   res.setHeader("X-Content-Type-Options", "nosniff");
   res.type("html").send(adminViews.login);
 });
-app.get("/admin/:section", requireAdmin, (req, res) => {
+app.use("/admin-assets", express.static(path.join(__dirname, "admin-assets"), {
+  fallthrough: false,
+  maxAge: "1h",
+  setHeaders(res) { res.setHeader("X-Content-Type-Options", "nosniff"); }
+}));
+app.get("/admin/:section", (req, res, next) => {
   const section = req.params.section;
-  if (!Object.prototype.hasOwnProperty.call(ADMIN_SECTIONS, section)) return res.sendStatus(404);
-  let html = adminViews.dashboard;
-  const nav = Object.entries(ADMIN_SECTIONS).map(([key, id]) => `<a href="/admin/${key}"${key === section ? ' aria-current="page"' : ""}>${key === "children-sponsors" ? "Children &amp; Sponsors" : key[0].toUpperCase()+key.slice(1)}</a>`).join("") + `<a class="church-site-link" href="https://isaacnyongesa459-jpg.github.io/imperishable-church-website/index.html">Church website</a>`;
-  html = html.replace(/<nav>[\s\S]*?<\/nav>/, `<nav aria-label="Admin dashboard sections">${nav}</nav>`);
-  if (section === "children-sponsors") {
-    html = html.replace("</main>", `${childrenAdminView.section}</main>`);
-    html = html.replace("</head>", `${childrenAdminView.styles}</head>`);
-  }
-  html = html.replace("</body>", `<script>document.documentElement.dataset.adminPage=${JSON.stringify(section)};</script>${section === "children-sponsors" ? childrenAdminView.script : ""}<script>const selected=${JSON.stringify(ADMIN_SECTIONS[section])}; document.querySelectorAll('.admin-main > section').forEach(el=>{if(el.id!==selected)el.hidden=true}); if(selected==='dashboardTop')document.querySelectorAll('.admin-main > section').forEach(el=>{el.hidden=false}); const siteLink=document.querySelector('.church-site-link'); if(siteLink) siteLink.href += '?theme='+encodeURIComponent(document.documentElement.dataset.theme);</script></body>`);
-  res.setHeader("Cache-Control", "private, no-store");
-  res.setHeader("X-Content-Type-Options", "nosniff");
-  res.type("html").send(html);
+  if (ADMIN_ROUTE_ALIASES[section]) return res.redirect(302, ADMIN_ROUTE_ALIASES[section]);
+  const pageKey = section.startsWith("admin-")
+    ? section.slice("admin-".length).replace(/\.html$/, "")
+    : section.replace(/\.html$/, "");
+  const page = ADMIN_PAGES[pageKey];
+  if (!page) return res.sendStatus(404);
+  return requireAdminPage(page.module)(req, res, () => {
+    const file = path.join(__dirname, "admin-pages", page.file);
+    res.setHeader("Cache-Control", "private, no-store");
+    res.setHeader("X-Content-Type-Options", "nosniff");
+    res.setHeader("Referrer-Policy", "same-origin");
+    if (pageKey === "sponsorships") {
+      try {
+        let html = fs.readFileSync(file, "utf8");
+        html = html.replace("<!-- SPONSORSHIP_CONTENT -->", childrenAdminView.section);
+        html = html.replace("</head>", `${childrenAdminView.styles}</head>`);
+        html = html.replace("</body>", `${childrenAdminView.script}</body>`);
+        return res.type("html").send(html);
+      } catch (error) {
+        return next(error);
+      }
+    }
+    return res.sendFile(file, (error) => { if (error) next(error); });
+  });
 });
 
 /* ========================================

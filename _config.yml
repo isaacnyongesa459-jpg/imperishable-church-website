@@ -1,0 +1,3 @@
+exclude:
+  - mpesa-backend/admin-pages
+  - mpesa-backend/admin-assets

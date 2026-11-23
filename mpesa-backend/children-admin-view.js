@@ -29,7 +29,7 @@ const styles = String.raw`
 const script = String.raw`
 <script>
 (()=>{
- if(document.documentElement.dataset.adminPage!=="children-sponsors")return;
+ if(document.documentElement.dataset.adminPage!=="sponsorships")return;
  const $=id=>document.getElementById(id);const message=$("csMessage");let state={sponsors:[],children:[],relationships:[]};
  const setMessage=(text,error)=>{message.textContent=text||"";message.classList.toggle("error",!!error)};
  const request=async(path,options={})=>{const response=await fetch(path,{credentials:"same-origin",cache:"no-store",...options});let data={};try{data=await response.json()}catch{}if(!response.ok)throw new Error(data.message||"Request failed.");return data};
