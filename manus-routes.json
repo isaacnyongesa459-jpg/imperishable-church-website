@@ -39,6 +39,10 @@
     {
       "path": "/contact.html",
       "title": "Contact"
+    },
+    {
+      "path": "/bible.html",
+      "title": "Holy Bible"
     }
   ]
 }

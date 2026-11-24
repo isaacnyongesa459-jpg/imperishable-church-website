@@ -48,3 +48,5 @@
 
 .social-links a{color:var(--gold2);font-weight:600}.social-links a:hover{color:#fff}.map-actions{display:flex;flex-wrap:wrap;gap:15px 25px}
 @media (max-width:760px){.map-actions{display:grid;gap:10px}}
+
+@media(min-width:761px) and (max-width:1120px){.main-nav{gap:8px}.main-nav a{font-size:.68rem}.header-cta,.theme-toggle{display:none}}

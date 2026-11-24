@@ -15,6 +15,7 @@ const adminViews = require("./admin-views");
 const childrenAdminView = require("./children-admin-view");
 const { initializeChildrenSponsors, createChildrenSponsorsRouter } = require("./children-sponsors");
 const { createAdminModulesRouter } = require("./admin-modules");
+const { createBibleApiRouter } = require("./bible-api");
 const { Pool } = require("pg");
 const crypto = require("crypto");
 const app = express();
@@ -386,6 +387,9 @@ app.use((req, res, next) => {
 
   next();
 });
+
+// Bible text is fetched from external providers; this router never reads or writes PostgreSQL.
+app.use(createBibleApiRouter());
 
 app.use("/api/admin", requireAdminApiPermission);
 app.use("/api/admin", (req, res, next) => {
